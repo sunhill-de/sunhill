@@ -1,44 +1,73 @@
 {
-	"name" : "sunhill/sunhill",
-	"autoload" : {
-		"files": [
-			"src/Helpers/sunhill_helpers.php"
-		],
-		"psr-4": {
-			"Sunhill\\" : "src/",
-			"Sunhill\\Tests\\" : "tests/"
-		}		
-	},
-	"authors" : [{
-			"name" : "Klaus Dimde",
-			"email" : "klaus@dimde.info"
-		}
-	],
-	"minimum-stability" : "dev",
-	"require" : {
-		"laravel/framework" : "^11.0"
-	},
-	"reuiqre-dev" : {
-		"phpunit/phpunit" : "^10.0",
-		"orchestra/testbench" : "^9.0",
-		"pestphp/pest-plugin-laravel" : "2.x-dev",
-		"pestphp/pest" : "^2.34",
-		"pestphp/pest-plugin-drift" : "^2.5",
-		"mockery/mockery" : "1.7.x-dev"
-	},
-	"extra" : {
-		"laravel" : {
-			"providers" : [
-				"Sunhill\\Sunhill\\SunhillServiceProvider"
-			]
-		}
-	},
-	"config" : {
-		"allow-plugins" : {
-			"pestphp/pest-plugin" : true
-		}
-	},
-	"require-dev" : {
-		"pestphp/pest" : "3.x-dev"
-	}
+    "name": "sunhill/sunhill",
+    "autoload": {
+        "files": [
+            "src/Helpers/sunhill_helpers.php"
+        ],
+        "psr-4": {
+            "Sunhill\\": "src/",
+            "Sunhill\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Klaus Dimde",
+            "email": "klaus@dimde.info"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "laravel/framework": "^11.0"
+    },
+    "reuiqre-dev": {
+        "phpunit/phpunit": "^10.0",
+        "orchestra/testbench": "9.x",
+        "pestphp/pest-plugin-laravel": "2.x-dev",
+        "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-drift": "^2.5",
+        "mockery/mockery": "1.7.x-dev"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sunhill\\Sunhill\\SunhillServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "3.x-dev",
+        "orchestra/testbench": "9.x-dev"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": [
+            "@php vendor/bin/phpstan analyse --verbose --ansi"
+        ],
+        "test": [
+            "@php vendor/bin/pest"
+        ]
+    }
 }
