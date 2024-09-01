@@ -1,35 +1,41 @@
 {
-    "name": "sunhill/sunhill",
-    "autoload": {
-        "Sunhill\\":"src/",
-        "Sunhill\\Tests\\":"tests/"
-    },
-    "authors": [{
-                    "name":"Klaus Dimde",
-                    "email":"klaus@dimde.info"
-                }],
-    "minimum-stability":"dev",
-    "require": {
-        "laravel/framework": "^11.0"
-    },
-    "reuiqre-dev": {
-        "phpunit/phpunit": "^10.0",
-        "orchestra/testbench":"^9.0",
-        "pestphp/pest-plugin-laravel": "2.x-dev",
-        "pestphp/pest":"^2.34",
-        "pestphp/pest-plugin-drift":"^2.5",
-        "mockery/mockery":"1.7.x-dev"
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Sunhill\\Sunhill\\SunhillServiceProvider"                
-            ]
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin":true
-        }
-    }    
+	"name" : "sunhill/sunhill",
+	"autoload" : {
+		"psr-4": {
+			"Sunhill\\" : "src/",
+			"Sunhill\\Tests\\" : "tests/"
+		}		
+	},
+	"authors" : [{
+			"name" : "Klaus Dimde",
+			"email" : "klaus@dimde.info"
+		}
+	],
+	"minimum-stability" : "dev",
+	"require" : {
+		"laravel/framework" : "^11.0"
+	},
+	"reuiqre-dev" : {
+		"phpunit/phpunit" : "^10.0",
+		"orchestra/testbench" : "^9.0",
+		"pestphp/pest-plugin-laravel" : "2.x-dev",
+		"pestphp/pest" : "^2.34",
+		"pestphp/pest-plugin-drift" : "^2.5",
+		"mockery/mockery" : "1.7.x-dev"
+	},
+	"extra" : {
+		"laravel" : {
+			"providers" : [
+				"Sunhill\\Sunhill\\SunhillServiceProvider"
+			]
+		}
+	},
+	"config" : {
+		"allow-plugins" : {
+			"pestphp/pest-plugin" : true
+		}
+	},
+	"require-dev" : {
+		"pestphp/pest" : "3.x-dev"
+	}
 }
