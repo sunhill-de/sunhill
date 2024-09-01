@@ -1,6 +1,9 @@
 {
 	"name" : "sunhill/sunhill",
 	"autoload" : {
+		"files": [
+			"src/Helpers/sunhill_helpers.php"
+		],
 		"psr-4": {
 			"Sunhill\\" : "src/",
 			"Sunhill\\Tests\\" : "tests/"
