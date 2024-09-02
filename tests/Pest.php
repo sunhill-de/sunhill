@@ -140,7 +140,7 @@ expect()->extend('toBeOne', function () {
      * @param unknown $test
      * @return boolean
      */
-    function checkArrays($expect,$test) {
+    function checkArrays(array $expect,array $test) {
         foreach ($expect as $key => $value) {
             if (!array_key_exists($key, $test)) {
                 return false;
@@ -159,7 +159,7 @@ expect()->extend('toBeOne', function () {
      * @param unknown $expect
      * @param unknown $test
      */
-    function assertArrayContains($expect,$test) {
+    function assertArrayContains(array $expect,array $test) {
         if (!$this->checkArrays($expect,$test)) {
             $this->fail("The expected array is not contained in the passed one");
             return;
