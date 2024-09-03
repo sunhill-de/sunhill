@@ -5,11 +5,8 @@ namespace Sunhill;
 use Illuminate\Support\ServiceProvider;
 use Sunhill\Checker\Checks;
 use Sunhill\Console\Check;
-use Sunhill\Filter\FilterManager;
 use Sunhill\Managers\PropertiesManager;
 use Sunhill\InfoMarket\Market;
-
-use Sunhill\Managers\FilterManager;
 use Sunhill\Managers\PluginManager;
 use Sunhill\Managers\SiteManager;
 use Sunhill\Components\OptionalLink;
@@ -52,6 +49,7 @@ use Sunhill\Semantics\Temperature;
 use Sunhill\Semantics\Timestamp;
 use Sunhill\Semantics\URL;
 use Sunhill\Semantics\UUID4;
+use Sunhill\Managers\FilterManager;
 
 class SunhillServiceProvider extends ServiceProvider
 {
