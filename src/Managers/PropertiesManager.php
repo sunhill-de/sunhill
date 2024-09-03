@@ -18,7 +18,6 @@
 namespace Sunhill\Managers;
 
 use Sunhill\Managers\Exceptions\PropertyClassDoesntExistException;
-use Sunhill\AbstractProperty;
 use Sunhill\Managers\Exceptions\GivenClassNotAPropertyException;
 use Sunhill\Managers\Exceptions\PropertyNameAlreadyRegisteredException;
 use Sunhill\Managers\Exceptions\PropertyNotRegisteredException;
@@ -26,9 +25,9 @@ use Sunhill\Managers\Exceptions\UnitNameAlreadyRegisteredException;
 use Sunhill\Managers\Exceptions\UnitNotRegisteredException;
 use Sunhill\Objects\AbstractPersistantRecord;
 use Sunhill\Objects\ObjectDescriptor;
-use Sunhill\AbstractRecordProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Objects\Mysql\MysqlStorage;
+use Sunhill\Properties\AbstractProperty;
 
 /**
  * The PropertiesManager is accessed via the Properties facade. It's a singelton class
