@@ -13,18 +13,18 @@
  * Coverage: unknown
  * PSR-State: complete
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\Facades\Storage;
-use Sunhill\ORM\Query\BasicQuery;
-use Sunhill\ORM\Managers\Exceptions\InvalidAttributeIDException;
+use Sunhill\Facades\Storage;
+use Sunhill\Query\BasicQuery;
+use Sunhill\Managers\Exceptions\InvalidAttributeIDException;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Sunhill\ORM\Properties\Exceptions\InvalidNameException;
-use Sunhill\ORM\Managers\Exceptions\InvalidTypeException;
-use Sunhill\ORM\Managers\Exceptions\NotAnORMClassException;
-use Sunhill\ORM\Facades\Classes;
+use Sunhill\Properties\Exceptions\InvalidNameException;
+use Sunhill\Managers\Exceptions\InvalidTypeException;
+use Sunhill\Managers\Exceptions\NotAnORMClassException;
+use Sunhill\Facades\Classes;
 
 /**
  * The AttributeManager is accessed via the Attributes facade. It's a singelton class

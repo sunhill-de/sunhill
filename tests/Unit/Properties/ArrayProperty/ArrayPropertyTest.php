@@ -1,13 +1,13 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Properties\Exceptions\InvalidParameterException;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Types\TypeVarchar;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
-use Sunhill\Properties\Storage\AbstractStorage;
-use Sunhill\Properties\Properties\ArrayProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Properties\Exceptions\InvalidParameterException;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Storage\AbstractStorage;
+use Sunhill\Properties\ArrayProperty;
 
 test('set allowed type', function ($types, $pass) {
     Properties::shouldReceive('isPropertyRegistered')->andReturn($pass);

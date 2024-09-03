@@ -12,10 +12,10 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Properties\Storage;
+namespace Sunhill\Storage;
 
-use Sunhill\Properties\Storage\Exceptions\FieldNotAvaiableException;
-use Sunhill\Properties\Storage\Exceptions\FieldNotAnArrayException;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Storage\Exceptions\FieldNotAnArrayException;
 
 class StaticStorage extends AbstractStorage
 {

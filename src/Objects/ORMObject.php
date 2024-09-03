@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Properties\Objects;
+namespace Sunhill\Objects;
 
 class ORMObject extends AbstractPersistantRecord
 {

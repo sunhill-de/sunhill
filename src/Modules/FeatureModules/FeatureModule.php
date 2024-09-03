@@ -11,15 +11,15 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Framework\Modules\FeatureModules;
+namespace Sunhill\Modules\FeatureModules;
 
-use Sunhill\Framework\Response\AbstractResponse;
-use Sunhill\Framework\Traits\NameAndDescription;
-use Sunhill\Framework\Modules\AbstractModule;
-use Sunhill\Framework\Modules\Exceptions\CantProcessModuleException;
-use Sunhill\Framework\Traits\Children;
-use Sunhill\Framework\Modules\Exceptions\CantProcessResponseException;
-use Sunhill\Framework\Response\ViewResponses\DefaultTileViewResponse;
+use Sunhill\Response\AbstractResponse;
+use Sunhill\Traits\NameAndDescription;
+use Sunhill\Modules\AbstractModule;
+use Sunhill\Modules\Exceptions\CantProcessModuleException;
+use Sunhill\Traits\Children;
+use Sunhill\Modules\Exceptions\CantProcessResponseException;
+use Sunhill\Response\ViewResponses\DefaultTileViewResponse;
 
 /**
  * This class is a base class for a feature modules. A feature module is a collection of logical

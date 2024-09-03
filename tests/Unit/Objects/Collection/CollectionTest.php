@@ -1,6 +1,6 @@
 <?php
 
-use Sunhill\Properties\Tests\TestCase;
+use Sunhill\Tests\TestCase;
 
 uses(TestCase::class);
 

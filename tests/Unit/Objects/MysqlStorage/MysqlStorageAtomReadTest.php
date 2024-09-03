@@ -1,10 +1,10 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\MysqlStorage;
+namespace Sunhill\Tests\Unit\Objects\MysqlStorage;
 
-use Sunhill\Properties\Tests\TestCase;
+use Sunhill\Tests\TestCase;
 use Illuminate\Support\Facades\DB;
-use Sunhill\Properties\Objects\Mysql\MysqlStorageAtom;
+use Sunhill\Objects\Mysql\MysqlStorageAtom;
 
 uses(TestCase::class);
 

@@ -1,8 +1,8 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
-use Sunhill\Properties\Storage\AbstractCachedStorage;
+use Sunhill\Storage\AbstractCachedStorage;
 
 class TestAbstractCachedStorage extends AbstractCachedStorage
 {

@@ -12,22 +12,22 @@
  * Tests: tests/Unit/Managers/ManagerClassesTest.php
  * Coverage: 98,8% (2023-03-23)
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\ORMException;
+use Sunhill\ORMException;
 use Illuminate\Support\Facades\Lang;
 use Sunhill\Basic\Utils\Descriptor;
-use Sunhill\ORM\Objects\ORMObject;
-use Sunhill\ORM\Objects\Utils\ObjectMigrator;
-use Sunhill\ORM\Storage\StorageBase;
+use Sunhill\Objects\ORMObject;
+use Sunhill\Objects\Utils\ObjectMigrator;
+use Sunhill\Storage\StorageBase;
 use Doctrine\Common\Lexer\Token;
-use Sunhill\ORM\Facades\Classes;
-use Sunhill\ORM\Facades\Storage;
-use Sunhill\ORM\Query\BasicQuery;
-use Sunhill\ORM\Managers\Exceptions\ClassNotAccessibleException;
-use Sunhill\ORM\Managers\Exceptions\ClassNotORMException;
-use Sunhill\ORM\Managers\Exceptions\ClassNameForbiddenException;
-use Sunhill\ORM\Managers\ClassQuery\ClassQuery;
+use Sunhill\Facades\Classes;
+use Sunhill\Facades\Storage;
+use Sunhill\Query\BasicQuery;
+use Sunhill\Managers\Exceptions\ClassNotAccessibleException;
+use Sunhill\Managers\Exceptions\ClassNotORMException;
+use Sunhill\Managers\Exceptions\ClassNameForbiddenException;
+use Sunhill\Managers\ClassQuery\ClassQuery;
 
  /**
   * Wrapper class for handling of objectclasses. It provides some public static methods to get informations about
@@ -37,7 +37,7 @@ use Sunhill\ORM\Managers\ClassQuery\ClassQuery;
   * The problem is that objectclasses a called by namespace and autoloader and there is no sufficient method to 
   * get the installed objectclasses at the momement, so we have to read out the specific directories.
   * Definition of objectclass:
-  * A descendand of Sunhill\ORM\Objects\ORMObject which represents a storable dataobject
+  * A descendand of Sunhill\Objects\ORMObject which represents a storable dataobject
   * @author lokal
   * Test: Unit/Managers/ManagerClassesTest.php
   */

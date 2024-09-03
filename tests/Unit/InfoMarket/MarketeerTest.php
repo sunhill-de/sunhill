@@ -1,8 +1,8 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Tests\TestSupport\Marketeers\TestMarketeer1;
-use Sunhill\Properties\Tests\TestSupport\Marketeers\TestMarketeer2;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\TestSupport\Marketeers\TestMarketeer1;
+use Sunhill\Tests\TestSupport\Marketeers\TestMarketeer2;
 
 
 test('simple read', function () {

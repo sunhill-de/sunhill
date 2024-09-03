@@ -13,8 +13,8 @@
 
 namespace Sunhill\Plugins;
 
-use Sunhill\Framework\Plugins\Exceptions\FileNotFoundException;
-use Sunhill\Framework\Plugins\Exceptions\FileAlreadyExistsException;
+use Sunhill\Plugins\Exceptions\FileNotFoundException;
+use Sunhill\Plugins\Exceptions\FileAlreadyExistsException;
 use Illuminate\Support\Facades\Schema;
 
 abstract class PluginInstaller

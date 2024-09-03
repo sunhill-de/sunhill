@@ -12,7 +12,7 @@ use Sunhill\InfoMarket\Market;
 use Sunhill\Managers\FilterManager;
 use Sunhill\Managers\PluginManager;
 use Sunhill\Managers\SiteManager;
-use Sunhill\Framework\Components\OptionalLink;
+use Sunhill\Components\OptionalLink;
 use Illuminate\Support\Facades\Blade;
 use Sunhill\Facades\Site;
 

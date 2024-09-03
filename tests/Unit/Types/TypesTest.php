@@ -1,19 +1,19 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Types\TypeVarchar;
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Types\TypeFloat;
-use Sunhill\Properties\Types\TypeBoolean;
-use Sunhill\Properties\Types\TypeDateTime;
-use Sunhill\Properties\Types\TypeDate;
-use Sunhill\Properties\Types\TypeTime;
-use Sunhill\Properties\Types\TypeText;
-use Sunhill\Properties\Types\TypeEnum;
-use Sunhill\Properties\Tests\TestSupport\Storages\TestAbstractStorage;
-use Sunhill\Properties\Types\TypeCalculated;
-use Sunhill\Properties\Storage\AbstractStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Types\TypeFloat;
+use Sunhill\Types\TypeBoolean;
+use Sunhill\Types\TypeDateTime;
+use Sunhill\Types\TypeDate;
+use Sunhill\Types\TypeTime;
+use Sunhill\Types\TypeText;
+use Sunhill\Types\TypeEnum;
+use Sunhill\Tests\TestSupport\Storages\TestAbstractStorage;
+use Sunhill\Types\TypeCalculated;
+use Sunhill\Storage\AbstractStorage;
 function getTestType($type, $setters)
 {
     $test = new $type();

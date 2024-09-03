@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Framework\Crud;
+namespace Sunhill\Crud;
 
 class AbstractCrudEngine
 {

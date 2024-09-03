@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Tests\TestSupport\Properties;
+namespace Sunhill\Tests\TestSupport\Properties;
 
-use Sunhill\Properties\Properties\RecordProperty;
+use Sunhill\Properties\RecordProperty;
 
 class NonAbstractRecordProperty extends RecordProperty
 {

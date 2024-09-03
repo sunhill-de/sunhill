@@ -16,11 +16,11 @@
 
 namespace Sunhill\InfoMarket;
 
-use Sunhill\Properties\InfoMarket\Exceptions\CantProcessMarketeerException;
-use Sunhill\Properties\InfoMarket\Exceptions\MarketeerHasNoNameException;
-use Sunhill\Properties\Properties\AbstractProperty;
-use Sunhill\Properties\InfoMarket\Exceptions\PathNotFoundException;
-use Sunhill\Properties\InfoMarket\Exceptions\UnknownFormatException;
+use Sunhill\InfoMarket\Exceptions\CantProcessMarketeerException;
+use Sunhill\InfoMarket\Exceptions\MarketeerHasNoNameException;
+use Sunhill\Properties\AbstractProperty;
+use Sunhill\InfoMarket\Exceptions\PathNotFoundException;
+use Sunhill\InfoMarket\Exceptions\UnknownFormatException;
 
 class Market 
 {

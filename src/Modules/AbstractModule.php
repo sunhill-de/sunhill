@@ -11,10 +11,10 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Framework\Modules;
+namespace Sunhill\Modules;
 
-use Sunhill\Framework\Traits\NameAndDescription;
-use Sunhill\Framework\Traits\Owner;
+use Sunhill\Traits\NameAndDescription;
+use Sunhill\Traits\Owner;
 
 /**
  * The class defines the rudimental functions that each module should share. That is

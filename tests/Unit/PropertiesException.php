@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Properties;
+namespace Sunhill;
 
 use Sunhill\Basic\SunhillException;
 

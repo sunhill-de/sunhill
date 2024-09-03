@@ -1,10 +1,10 @@
 <?php
 
-namespace Sunhill\Properties\Objects;
+namespace Sunhill\Objects;
 
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Objects\Exceptions\NameNotGivenException;
-use Sunhill\Properties\Properties\AbstractProperty;
+use Sunhill\Facades\Properties;
+use Sunhill\Objects\Exceptions\NameNotGivenException;
+use Sunhill\Properties\AbstractProperty;
 
 class ObjectDescriptor
 {

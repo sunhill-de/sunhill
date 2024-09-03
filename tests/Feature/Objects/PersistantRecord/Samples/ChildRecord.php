@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples;
+namespace Sunhill\Tests\Feature\Objects\PersistantRecord\Samples;
 
-use Sunhill\Properties\Objects\ObjectDescriptor;
+use Sunhill\Objects\ObjectDescriptor;
 
 class ChildRecord extends ParentRecord
 {

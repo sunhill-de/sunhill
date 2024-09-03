@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Response\ViewResponses;
+namespace Sunhill\Response\ViewResponses;
 
-use Sunhill\Framework\Response\AbstractResponse;
+use Sunhill\Response\AbstractResponse;
 
 abstract class FileResponse extends AbstractResponse
 {

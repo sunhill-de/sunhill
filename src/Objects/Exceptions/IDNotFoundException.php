@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Objects\Exceptions;
+namespace Sunhill\Objects\Exceptions;
 
-use Sunhill\Properties\Properties\Exceptions\PropertyException;
+use Sunhill\Properties\Exceptions\PropertyException;
 
 class IDNotFoundException extends PropertyException
 {

@@ -14,15 +14,15 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Properties\Tracer;
+namespace Sunhill\Tracer;
 
-use Sunhill\Properties\InfoMarket\Market;
-use Sunhill\Properties\Tracer\Exceptions\PathAlreadyTracedException;
-use Sunhill\Properties\Tracer\Exceptions\PathNotTracedException;
-use Sunhill\Properties\InfoMarket\Exceptions\PathNotFoundException;
-use Sunhill\Properties\Facades\InfoMarket;
-use Sunhill\Properties\Tracer\Exceptions\InvalidRangeException;
-use Sunhill\Properties\Properties\Exceptions\InvalidParameterException;
+use Sunhill\InfoMarket\Market;
+use Sunhill\Tracer\Exceptions\PathAlreadyTracedException;
+use Sunhill\Tracer\Exceptions\PathNotTracedException;
+use Sunhill\InfoMarket\Exceptions\PathNotFoundException;
+use Sunhill\Facades\InfoMarket;
+use Sunhill\Tracer\Exceptions\InvalidRangeException;
+use Sunhill\Properties\Exceptions\InvalidParameterException;
 
 abstract class AbstractTracerBackend
 {

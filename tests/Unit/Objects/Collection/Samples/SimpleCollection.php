@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\Collection\Samples;
+namespace Sunhill\Tests\Unit\Objects\Collection\Samples;
 
-use Sunhill\Properties\Objects\Collection;
-use Sunhill\Properties\Objects\AbstractPersistantRecord;
+use Sunhill\Objects\Collection;
+use Sunhill\Objects\AbstractPersistantRecord;
 
 class SimpleCollection extends Collection
 {

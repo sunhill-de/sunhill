@@ -10,7 +10,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Semantics;
+namespace Sunhill\Semantics;
 
 class IPv4Address extends NetworkAddress
 {

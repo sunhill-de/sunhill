@@ -10,9 +10,9 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties;
+namespace Sunhill\Properties;
 
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
+use Sunhill\Properties\Exceptions\InvalidValueException;
 use Illuminate\Support\Facades\Log;
 
 abstract class AbstractSimpleProperty extends AbstractProperty

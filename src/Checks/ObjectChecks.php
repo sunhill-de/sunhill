@@ -14,12 +14,12 @@
  * PSR-Status: complete
  */
 
-namespace Sunhill\ORM\Checks;
+namespace Sunhill\Checks;
 
 use Sunhill\Basic\Checker\Checker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Sunhill\ORM\Facades\Classes;
+use Sunhill\Facades\Classes;
 use Sunhill\Basic\Utils\Descriptor;
 
 /**

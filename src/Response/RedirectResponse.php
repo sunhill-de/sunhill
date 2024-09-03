@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Framework\Response;
+namespace Sunhill\Response;
 
 class RedirectResponse extends AbstractResponse
 {

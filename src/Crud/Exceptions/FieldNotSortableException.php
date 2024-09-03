@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Crud\Exceptions;
+namespace Sunhill\Crud\Exceptions;
 
-use Sunhill\Framework\FrameworkUserException;
+use Sunhill\FrameworkUserException;
 
 class FieldNotSortableException extends FrameworkUserException
 {

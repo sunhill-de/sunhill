@@ -11,7 +11,7 @@
  * Tests: none
  * Coverage: unknown
  */
-namespace Sunhill\Framework\Modules;
+namespace Sunhill\Modules;
 
 class SkinModule extends AbstractModule
 {

@@ -11,9 +11,9 @@
  * Tests: tests/Unit/Managers/ManagerClassesTest.php
  * Coverage: 98,8% (2023-03-23)
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\Managers\Exceptions\DuplicateEntryException;
+use Sunhill\Managers\Exceptions\DuplicateEntryException;
 
 abstract class RegistableManagerBase extends ManagerBase
 {

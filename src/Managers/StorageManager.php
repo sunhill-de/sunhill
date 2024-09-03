@@ -17,13 +17,13 @@
  * Coverage: unknown
  * PSR-State: complete
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\Properties\Property;
-use Sunhill\ORM\Storage\StorageBase;
-use Sunhill\ORM\Storage\Mysql\MysqlStorage;
-use Sunhill\ORM\Query\BasicQuery;
-use Sunhill\ORM\Storage\Mysql\MysqlStorageSupport;
+use Sunhill\Properties\Property;
+use Sunhill\Storage\StorageBase;
+use Sunhill\Storage\Mysql\MysqlStorage;
+use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\Mysql\MysqlStorageSupport;
 
 /**
  * The StorageManager is accessed via the Storage facade. It's a singelton class

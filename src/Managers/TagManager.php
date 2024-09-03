@@ -13,16 +13,16 @@
  * Coverage: unknown
  * PSR-State: complete
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
 use Illuminate\Support\Facades\DB;
 use Sunhill\Basic\Utils\Descriptor;
-use Sunhill\ORM\Objects\Tag;
-use Sunhill\ORM\Objects\TagException;
-use Sunhill\ORM\Query\BasicQuery;
-use Sunhill\ORM\Facades\Storage;
+use Sunhill\Objects\Tag;
+use Sunhill\Objects\TagException;
+use Sunhill\Query\BasicQuery;
+use Sunhill\Facades\Storage;
 
-define('TagNamespace','Sunhill\ORM\Objects\Tag');
+define('TagNamespace','Sunhill\Objects\Tag');
 
 /**
  * The TagManager is accessed via the Tags facade. It's a singelton class
@@ -50,7 +50,7 @@ class TagManager
       * 
       * @param unknown $input
       * @throws TagException When the search fails or is not unique 
-      * @return NULL|\Sunhill\ORM\Objects\Tag|unknown
+      * @return NULL|\Sunhill\Objects\Tag|unknown
       */
      public function getTag($input): Tag
      {
@@ -77,7 +77,7 @@ class TagManager
       * Loads the tag with the given id when it exists.
       * 
       * @param int $id
-      * @return \Sunhill\ORM\Objects\Tag|NULL return null when this tag doesnt exist.
+      * @return \Sunhill\Objects\Tag|NULL return null when this tag doesnt exist.
       */
      public function loadTag(int $id)
      {

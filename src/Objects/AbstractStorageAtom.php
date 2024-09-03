@@ -1,11 +1,11 @@
 <?php
 
-namespace Sunhill\Properties\Objects;
+namespace Sunhill\Objects;
 
-use Sunhill\Properties\Objects\Exceptions\StorageAtomTypeNotDefinedException;
-use Sunhill\Properties\Objects\Exceptions\IDNotFoundException;
-use Sunhill\Properties\Objects\Exceptions\InvalidPrefixCalledException;
-use Sunhill\Properties\Objects\Exceptions\InvalidPostfixCalledException;
+use Sunhill\Objects\Exceptions\StorageAtomTypeNotDefinedException;
+use Sunhill\Objects\Exceptions\IDNotFoundException;
+use Sunhill\Objects\Exceptions\InvalidPrefixCalledException;
+use Sunhill\Objects\Exceptions\InvalidPostfixCalledException;
 use Illuminate\Support\Str;
 
 abstract class AbstractStorageAtom

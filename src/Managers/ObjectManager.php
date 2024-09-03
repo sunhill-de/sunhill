@@ -14,15 +14,15 @@
  * Depenencies: ClassManager
  * PSR-State: complete
  */
- namespace Sunhill\ORM\Managers;
+ namespace Sunhill\Managers;
 
 use Illuminate\Support\Facades\DB;
 
-use Sunhill\ORM\ORMException;
-use Sunhill\ORM\Facades\Classes;
-use Sunhill\ORM\Objects\ORMObject;
-use Sunhill\ORM\Objects\Utils\ObjectPromotor;
-use Sunhill\ORM\Objects\Utils\ObjectDegrader;
+use Sunhill\ORMException;
+use Sunhill\Facades\Classes;
+use Sunhill\Objects\ORMObject;
+use Sunhill\Objects\Utils\ObjectPromotor;
+use Sunhill\Objects\Utils\ObjectDegrader;
 
 class ObjectManagerException extends ORMException {}
 
@@ -121,7 +121,7 @@ class ObjectManager
 		public function getPartialObjectList($class = 'object', string $order = 'id', int $delta = 0, int $limit = -1, bool $nochildren = false)
 		{
 		    if ($class == 'object') {
-		        $class_path= 'Sunhill\ORM\Objects\ORMObject';
+		        $class_path= 'Sunhill\Objects\ORMObject';
 		    } else {
 		        $class_path = $this->searchClassNamespace($class);
 		    }

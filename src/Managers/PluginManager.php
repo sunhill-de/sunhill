@@ -3,11 +3,11 @@
 namespace Sunhill\Managers;
 
 use Illuminate\Support\Facades\Config;
-use Sunhill\Framework\Managers\Exceptions\InvalidPlugInException;
-use Sunhill\Framework\Plugins\Plugin;
-use Sunhill\Framework\Plugins\PluginQuery;
-use Sunhill\Framework\Managers\Exceptions\UnmatchedPluginDependencyException;
-use Sunhill\Framework\Managers\Exceptions\PluginNotFoundException;
+use Sunhill\Managers\Exceptions\InvalidPlugInException;
+use Sunhill\Plugins\Plugin;
+use Sunhill\Plugins\PluginQuery;
+use Sunhill\Managers\Exceptions\UnmatchedPluginDependencyException;
+use Sunhill\Managers\Exceptions\PluginNotFoundException;
 
 class PluginManager 
 {

@@ -1,11 +1,11 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Storage\Exceptions\FieldNotAvaiableException;
-use Sunhill\Properties\Tests\TestSupport\Storages\DummySimpleWriteableStorage;
-use Sunhill\Properties\Tests\TestSupport\Storages\DummyGroupCacheStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Tests\TestSupport\Storages\DummySimpleWriteableStorage;
+use Sunhill\Tests\TestSupport\Storages\DummyGroupCacheStorage;
 use Illuminate\Support\Facades\Cache;
-use Sunhill\Properties\Storage\Exceptions\CacheIDNotSetException;
+use Sunhill\Storage\Exceptions\CacheIDNotSetException;
 
 
 test('read value', function () {

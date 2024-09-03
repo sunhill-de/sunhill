@@ -11,7 +11,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties\Exceptions;
+namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, if a function was passed a parameter that could not be parsed

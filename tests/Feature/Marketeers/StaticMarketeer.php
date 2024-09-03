@@ -1,10 +1,10 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Feature\Marketeers;
+namespace Sunhill\Tests\Feature\Marketeers;
 
-use Sunhill\Properties\InfoMarket\Marketeer;
-use Sunhill\Properties\Types\TypeVarchar;
-use Sunhill\Properties\Semantics\EMail;
+use Sunhill\InfoMarket\Marketeer;
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Semantics\EMail;
 
 class StaticMarketeer extends Marketeer
 {

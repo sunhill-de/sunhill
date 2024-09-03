@@ -1,12 +1,12 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\InfoMarket\Exceptions\PathNotFoundException;
-use Sunhill\Properties\InfoMarket\Exceptions\CantProcessMarketeerException;
-use Sunhill\Properties\InfoMarket\Market;
-use Sunhill\Properties\Tests\TestSupport\Marketeers\TestMarketeer1;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\InfoMarket\Exceptions\PathNotFoundException;
+use Sunhill\InfoMarket\Exceptions\CantProcessMarketeerException;
+use Sunhill\InfoMarket\Market;
+use Sunhill\Tests\TestSupport\Marketeers\TestMarketeer1;
 
-uses(\Sunhill\Properties\Tests\TestSupport\Markets\GetMarket::class);
+uses(\Sunhill\Tests\TestSupport\Markets\GetMarket::class);
 
 it('fails with invalid arguments for registerMarketeer', function($marketeer) {
     $test = new Market();

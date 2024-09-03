@@ -1,14 +1,14 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\ObjectDescriptor;
+namespace Sunhill\Tests\Unit\Objects\ObjectDescriptor;
 
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Objects\ObjectDescriptor;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Objects\Exceptions\MethodNotDefinedException;
-use Sunhill\Properties\Properties\RecordProperty;
-use Sunhill\Properties\Properties\AbstractProperty;
+use Sunhill\Tests\TestCase;
+use Sunhill\Objects\ObjectDescriptor;
+use Sunhill\Facades\Properties;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Objects\Exceptions\MethodNotDefinedException;
+use Sunhill\Properties\RecordProperty;
+use Sunhill\Properties\AbstractProperty;
 
 uses(TestCase::class);
 

@@ -13,9 +13,9 @@
  * Coverage: 98,8% (2023-03-23)
  */
 
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\Query\BasicQuery;
+use Sunhill\Query\BasicQuery;
 
 abstract class ManagerBase
 {

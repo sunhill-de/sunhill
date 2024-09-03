@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Framework\Traits;
+namespace Sunhill\Traits;
 
 trait Owner
 {

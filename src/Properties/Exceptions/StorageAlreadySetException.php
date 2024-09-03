@@ -13,7 +13,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties\Exceptions;
+namespace Sunhill\Properties\Exceptions;
 
 /**
  * the StorageAlreadySetException is raised when setStorage() is called an a storage

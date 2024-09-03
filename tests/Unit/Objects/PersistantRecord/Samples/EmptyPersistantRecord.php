@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\PersistantRecord\Samples;
+namespace Sunhill\Tests\Unit\Objects\PersistantRecord\Samples;
 
-use Sunhill\Properties\Objects\AbstractPersistantRecord;
-use Sunhill\Properties\Objects\ObjectDescriptor;
+use Sunhill\Objects\AbstractPersistantRecord;
+use Sunhill\Objects\ObjectDescriptor;
 
 class EmptyPersistantRecord extends AbstractPersistantRecord
 {

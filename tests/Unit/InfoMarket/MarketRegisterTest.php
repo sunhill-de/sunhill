@@ -1,11 +1,11 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\InfoMarket\Market;
-use Sunhill\Properties\InfoMarket\Exceptions\MarketeerHasNoNameException;
-use Sunhill\Properties\InfoMarket\Exceptions\CantProcessMarketeerException;
-use Sunhill\Properties\Tests\TestSupport\Marketeers\TestMarketeer1;
-use Sunhill\Properties\Tests\TestSupport\Marketeers\TestMarketeer2;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\InfoMarket\Market;
+use Sunhill\InfoMarket\Exceptions\MarketeerHasNoNameException;
+use Sunhill\InfoMarket\Exceptions\CantProcessMarketeerException;
+use Sunhill\Tests\TestSupport\Marketeers\TestMarketeer1;
+use Sunhill\Tests\TestSupport\Marketeers\TestMarketeer2;
 
 
 test('register marketeer', function () {

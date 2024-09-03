@@ -12,6 +12,6 @@
  * Tests: none
  * Coverage: none
  */
-namespace Sunhill\ORM\Managers\Exceptions;
+namespace Sunhill\Managers\Exceptions;
 
 class ClassNameForbiddenException extends ClassManagerException {}

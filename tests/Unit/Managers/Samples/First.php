@@ -1,10 +1,10 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\RecordSetupWorker\Samples;
+namespace Sunhill\Tests\Unit\Objects\RecordSetupWorker\Samples;
 
-namespace Sunhill\Properties\Tests\Unit\Managers\Samples;
+namespace Sunhill\Tests\Unit\Managers\Samples;
 
-use Sunhill\Properties\Objects\AbstractPersistantRecord;
+use Sunhill\Objects\AbstractPersistantRecord;
 
 class First extends AbstractPersistantRecord
 {

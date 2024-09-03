@@ -1,8 +1,8 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Properties\Exceptions\InvalidNameException;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Properties\Exceptions\InvalidNameException;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 test('names', function ($name, bool $forbidden) {
     if ($forbidden) {
         $this->expectException(InvalidNameException::class);

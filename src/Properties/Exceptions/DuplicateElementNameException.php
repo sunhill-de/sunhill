@@ -13,7 +13,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties\Exceptions;
+namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, when a read or write attemt is performed with no set storage

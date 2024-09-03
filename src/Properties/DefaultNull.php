@@ -10,6 +10,6 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties;
+namespace Sunhill\Properties;
 
 class DefaultNull {}

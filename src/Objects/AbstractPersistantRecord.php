@@ -1,14 +1,14 @@
 <?php
 
-namespace Sunhill\Properties\Objects;
+namespace Sunhill\Objects;
 
-use Sunhill\Properties\Properties\AbstractRecordProperty;
-use Sunhill\Properties\Properties\AbstractProperty;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Properties\AbstractArrayProperty;
-use Sunhill\Properties\Objects\Exceptions\TypeCannotBeEmbeddedException;
-use Sunhill\Properties\Objects\Exceptions\TypeAlreadyEmbeddedException;
-use Sunhill\Properties\Properties\Exceptions\DuplicateElementNameException;
+use Sunhill\Properties\AbstractRecordProperty;
+use Sunhill\Properties\AbstractProperty;
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\AbstractArrayProperty;
+use Sunhill\Objects\Exceptions\TypeCannotBeEmbeddedException;
+use Sunhill\Objects\Exceptions\TypeAlreadyEmbeddedException;
+use Sunhill\Properties\Exceptions\DuplicateElementNameException;
 
 class AbstractPersistantRecord extends AbstractRecordProperty
 {

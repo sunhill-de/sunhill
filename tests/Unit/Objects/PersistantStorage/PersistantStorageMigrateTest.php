@@ -1,11 +1,11 @@
 <?php
 
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Tests\Unit\Objects\PersistantStorage\Samples\DummyPersistantStorage;
-use Sunhill\Properties\Objects\AbstractPersistantRecord;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Objects\AbstractStorageAtom;
-use Sunhill\Properties\Properties\ArrayProperty;
+use Sunhill\Tests\TestCase;
+use Sunhill\Tests\Unit\Objects\PersistantStorage\Samples\DummyPersistantStorage;
+use Sunhill\Objects\AbstractPersistantRecord;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Objects\AbstractStorageAtom;
+use Sunhill\Properties\ArrayProperty;
 
 uses(TestCase::class);
 

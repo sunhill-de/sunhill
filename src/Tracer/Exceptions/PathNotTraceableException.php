@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Tracer\Exceptions;
+namespace Sunhill\Tracer\Exceptions;
 
-use Sunhill\Properties\PropertiesException;
+use Sunhill\PropertiesException;
 
 class PathNotTraceableException extends PropertiesException
 {

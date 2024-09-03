@@ -13,7 +13,7 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Properties\Storage;
+namespace Sunhill\Storage;
 
 use Illuminate\Support\Facades\Cache;
 

@@ -1,9 +1,9 @@
 <?php
 
-use Sunhill\Framework\Tests\TestCase;
-use Sunhill\Framework\Modules\FeatureModules\FeatureModule;
-use Sunhill\Framework\Response\ViewResponses\ViewResponse;
-use Sunhill\Framework\Modules\Exceptions\CantProcessResponseException;
+use Sunhill\Tests\TestCase;
+use Sunhill\Modules\FeatureModules\FeatureModule;
+use Sunhill\Response\ViewResponses\ViewResponse;
+use Sunhill\Modules\Exceptions\CantProcessResponseException;
 
 uses(TestCase::class);
 

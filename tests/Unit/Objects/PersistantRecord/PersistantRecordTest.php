@@ -1,15 +1,15 @@
 <?php
 
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Objects\Exceptions\TypeCannotBeEmbeddedException;
-use Sunhill\Properties\Tests\Unit\Objects\PersistantRecord\Samples\EmptyPersistantRecord;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Properties\AbstractRecordProperty;
-use Sunhill\Properties\Types\TypeVarchar;
-use Sunhill\Properties\Objects\Exceptions\TypeAlreadyEmbeddedException;
-use Sunhill\Properties\Properties\Exceptions\DuplicateElementNameException;
-use Sunhill\Properties\Storage\AbstractStorage;
+use Sunhill\Tests\TestCase;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Objects\Exceptions\TypeCannotBeEmbeddedException;
+use Sunhill\Tests\Unit\Objects\PersistantRecord\Samples\EmptyPersistantRecord;
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\AbstractRecordProperty;
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Objects\Exceptions\TypeAlreadyEmbeddedException;
+use Sunhill\Properties\Exceptions\DuplicateElementNameException;
+use Sunhill\Storage\AbstractStorage;
 
 uses(TestCase::class);
 

@@ -12,14 +12,14 @@
  * Tests: tests/Unit/Managers/CollectionManagerTest.php 
  * Coverage: unknown
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\Managers\Exceptions\CollectionClassDoesntExistException;
-use Sunhill\ORM\Objects\Collection;
-use Sunhill\ORM\Managers\Exceptions\IsNotACollectionException;
-use Sunhill\ORM\Query\BasicQuery;
-use Sunhill\ORM\Managers\Exceptions\ClassNotORMException;
-use Sunhill\ORM\Managers\CollectionQuery\CollectionQuery;
+use Sunhill\Managers\Exceptions\CollectionClassDoesntExistException;
+use Sunhill\Objects\Collection;
+use Sunhill\Managers\Exceptions\IsNotACollectionException;
+use Sunhill\Query\BasicQuery;
+use Sunhill\Managers\Exceptions\ClassNotORMException;
+use Sunhill\Managers\CollectionQuery\CollectionQuery;
 
 class CollectionManager extends PropertiesCollectionManager
 {

@@ -1,7 +1,7 @@
 <?php
 
-namespace Sunhill\Framework\Response\Exceptions;
+namespace Sunhill\Response\Exceptions;
 
-use Sunhill\Framework\FrameworkException;
+use Sunhill\FrameworkException;
 
 class MissingTemplateException extends ResponseException {}

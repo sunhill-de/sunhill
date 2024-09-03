@@ -1,7 +1,7 @@
 <?php
 
-namespace Sunhill\Properties\Storage\Exceptions;
+namespace Sunhill\Storage\Exceptions;
 
-use Sunhill\Properties\PropertiesException;
+use Sunhill\PropertiesException;
 
 class CacheIDNotSetException extends PropertiesException {}

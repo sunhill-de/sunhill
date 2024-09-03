@@ -1,9 +1,9 @@
 <?php
 
-use Sunhill\Properties\Storage\StaticStorage;
-use Sunhill\Properties\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Storage\StaticStorage;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 test('write and read simple value', function () {
     $test = new StaticStorage();

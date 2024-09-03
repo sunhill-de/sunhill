@@ -16,7 +16,7 @@
 
 namespace Sunhill\InfoMarket;
 
-use Sunhill\Properties\Properties\RecordProperty;
+use Sunhill\Properties\RecordProperty;
 
 class Marketeer extends RecordProperty
 {

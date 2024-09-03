@@ -11,9 +11,9 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Types;
+namespace Sunhill\Types;
 
-use Sunhill\Properties\Exceptions\InvalidParameterException;
+use Sunhill\Exceptions\InvalidParameterException;
 
 class TypeTime extends TypeDateTime
 {

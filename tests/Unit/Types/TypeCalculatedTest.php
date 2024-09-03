@@ -1,10 +1,10 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Types\TypeCalculated;
-use Sunhill\Properties\Properties\Exceptions\NoCallbackSetException;
-use Sunhill\Properties\Storage\AbstractStorage;
-use Sunhill\Properties\Properties\Exceptions\PropertyNotWriteableException;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Types\TypeCalculated;
+use Sunhill\Properties\Exceptions\NoCallbackSetException;
+use Sunhill\Storage\AbstractStorage;
+use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
 
 it('fails when riting to calculated', function() {
     $storage = Mockery::mock(AbstractStorage::class);

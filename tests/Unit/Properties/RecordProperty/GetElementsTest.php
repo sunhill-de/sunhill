@@ -1,7 +1,7 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractRecordProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\TestSupport\Properties\NonAbstractRecordProperty;
 test('get element names', function () {
     $test = new NonAbstractRecordProperty();
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Sunhill\ORM\Managers\CollectionQuery;
+namespace Sunhill\Managers\CollectionQuery;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Sunhill\ORM\Query\ConditionBuilder;
-use Sunhill\ORM\Facades\Classes;
-use Sunhill\ORM\Facades\Collections;
+use Sunhill\Query\ConditionBuilder;
+use Sunhill\Facades\Classes;
+use Sunhill\Facades\Collections;
 
 class CollectionConditionBuilder extends ConditionBuilder
 {

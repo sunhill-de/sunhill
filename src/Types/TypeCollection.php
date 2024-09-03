@@ -11,11 +11,11 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Types;
+namespace Sunhill\Types;
 
-use Sunhill\Properties\Exceptions\InvalidParameterException;
-use Sunhill\Properties\Facades\Collections;
-use Sunhill\Properties\Properties\AbstractSimpleProperty;
+use Sunhill\Exceptions\InvalidParameterException;
+use Sunhill\Facades\Collections;
+use Sunhill\Properties\AbstractSimpleProperty;
 
 class TypeCollection extends AbstractSimpleProperty
 {

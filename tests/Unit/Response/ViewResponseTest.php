@@ -1,9 +1,9 @@
 <?php
 
-use Sunhill\Framework\Response\Exceptions\MissingTemplateException;
-use Sunhill\Framework\Tests\Responses\SampleViewResponse;
+use Sunhill\Response\Exceptions\MissingTemplateException;
+use Sunhill\Tests\Responses\SampleViewResponse;
 
-uses(\Sunhill\Framework\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 it('throws exception when no template is set', function() {
     $test = new SampleViewResponse();

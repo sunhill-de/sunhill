@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunhill\Properties\Objects\Mysql;
+namespace Sunhill\Objects\Mysql;
 
-use Sunhill\Properties\Objects\AbstractPersistantStorage;
-use Sunhill\Properties\Objects\AbstractStorageAtom;
+use Sunhill\Objects\AbstractPersistantStorage;
+use Sunhill\Objects\AbstractStorageAtom;
 
 class MysqlStorage extends AbstractPersistantStorage
 {

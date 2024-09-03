@@ -1,9 +1,9 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
-use Sunhill\Properties\Tests\TestSupport\Properties\TraitRecordProperty;
-use Sunhill\Properties\Tests\TestSupport\Storages\TestAbstractIDStorage;
+use Sunhill\Tests\TestSupport\Properties\TraitRecordProperty;
+use Sunhill\Tests\TestSupport\Storages\TestAbstractIDStorage;
 
 test('write and read properties', function () {
     $test = new TraitRecordProperty();

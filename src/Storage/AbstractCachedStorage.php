@@ -13,9 +13,9 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Properties\Storage;
+namespace Sunhill\Storage;
 
-use Sunhill\Properties\Storage\Exceptions\PropertyNotFoundException;
+use Sunhill\Storage\Exceptions\PropertyNotFoundException;
 
 abstract class AbstractCachedStorage extends AbstractStorage
 {

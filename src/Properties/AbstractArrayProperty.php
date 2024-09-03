@@ -10,12 +10,12 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties;
+namespace Sunhill;
 
-use Sunhill\Properties\Exceptions\InvalidParameterException;
+use Sunhill\Exceptions\InvalidParameterException;
 use Mockery\Matcher\Type;
 use Sunhill\Facades\Properties;
-use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Exceptions\InvalidValueException;
 
 abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,\Iterator
 {

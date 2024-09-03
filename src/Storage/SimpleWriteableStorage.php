@@ -12,9 +12,9 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Properties\Storage;
+namespace Sunhill\Storage;
 
-use Sunhill\Properties\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 
 abstract class SimpleWriteableStorage extends SimpleStorage
 {

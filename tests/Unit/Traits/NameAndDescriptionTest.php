@@ -1,8 +1,8 @@
 <?php
 
-use Sunhill\Framework\Traits\NameAndDescription;
+use Sunhill\Traits\NameAndDescription;
 
-uses(\Sunhill\Framework\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 class DummyNameAndDescriptionObject {
     

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunhill\Framework\Crud;
+namespace Sunhill\Crud;
 
-use Sunhill\Framework\Response\ViewResponses\ViewResponse;
-use Sunhill\Framework\Crud\Exceptions\FieldNotSortableException;
+use Sunhill\Response\ViewResponses\ViewResponse;
+use Sunhill\Crud\Exceptions\FieldNotSortableException;
 
 class CrudListResponse extends ViewResponse
 {
@@ -47,7 +47,7 @@ class CrudListResponse extends ViewResponse
      * Setter of $limit
      * 
      * @param int $limit
-     * @return \Sunhill\Framework\Crud\CrudListResponse
+     * @return \Sunhill\Crud\CrudListResponse
      */
     public function setLimit(int $limit): self
     {

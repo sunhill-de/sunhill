@@ -1,17 +1,17 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Properties\Exceptions\NoStorageSetException;
-use Sunhill\Properties\Properties\Exceptions\PropertyNotReadableException;
-use Sunhill\Properties\Properties\Exceptions\UserNotAuthorizedForReadingException;
-use Sunhill\Properties\Tests\TestSupport\TestUserManager;
-use Sunhill\Properties\Properties\Exceptions\NoUserManagerInstalledException;
-use Sunhill\Properties\Properties\Exceptions\PropertyNotWriteableException;
-use Sunhill\Properties\Properties\Exceptions\UserNotAuthorizedForWritingException;
-use Sunhill\Properties\Properties\Exceptions\UserNotAuthorizedForModifyException;
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractProperty;
-use Sunhill\Properties\Tests\TestSupport\Storages\TestAbstractIDStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Properties\Exceptions\NoStorageSetException;
+use Sunhill\Properties\Exceptions\PropertyNotReadableException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
+use Sunhill\Tests\TestSupport\TestUserManager;
+use Sunhill\Properties\Exceptions\NoUserManagerInstalledException;
+use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyException;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
+use Sunhill\Tests\TestSupport\Storages\TestAbstractIDStorage;
 test('set storage', function () {
     $storage = new TestAbstractIDStorage();
     $storage->setID(1);

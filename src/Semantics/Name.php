@@ -10,9 +10,9 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Semantics;
+namespace Sunhill\Semantics;
 
-use Sunhill\Properties\Types\TypeVarchar;
+use Sunhill\Types\TypeVarchar;
 
 class Name extends TypeVarchar
 {

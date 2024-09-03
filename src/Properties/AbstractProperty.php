@@ -10,24 +10,24 @@
  * Coverage: 87.82 (2024-03-08)
  */
 
-namespace Sunhill\Properties\Properties;
+namespace Sunhill\Properties;
 
-use Sunhill\Properties\Properties\Exceptions\InvalidNameException;
-use Sunhill\Properties\Properties\Exceptions\UninitializedValueException;
-use Sunhill\Properties\Properties\Exceptions\PropertyNotReadableException;
-use Sunhill\Properties\Properties\Exceptions\UserNotAuthorizedForReadingException;
-use Sunhill\Properties\Properties\Exceptions\NoUserManagerInstalledException;
-use Sunhill\Properties\Properties\Exceptions\PropertyNotWriteableException;
-use Sunhill\Properties\Properties\Exceptions\UserNotAuthorizedForWritingException;
-use Sunhill\Properties\Storage\AbstractStorage;
-use Sunhill\Properties\Properties\Exceptions\NoStorageSetException;
-use Sunhill\Properties\Properties\Exceptions\PropertyException;
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
+use Sunhill\Properties\Exceptions\InvalidNameException;
+use Sunhill\Properties\Exceptions\UninitializedValueException;
+use Sunhill\Properties\Exceptions\PropertyNotReadableException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
+use Sunhill\Properties\Exceptions\NoUserManagerInstalledException;
+use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
+use Sunhill\Storage\AbstractStorage;
+use Sunhill\Properties\Exceptions\NoStorageSetException;
+use Sunhill\Properties\Exceptions\PropertyException;
+use Sunhill\Properties\Exceptions\InvalidValueException;
 use Illuminate\Support\Facades\Log;
-use Sunhill\Properties\Properties\Exceptions\UserNotAuthorizedForModifyException;
-use Sunhill\Properties\Properties\Exceptions\InvalidTypeOrSemanticException;
-use Sunhill\Properties\Properties\Exceptions\PropertyKeyDoesntExistException;
-use Sunhill\Properties\Facades\Properties;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyException;
+use Sunhill\Properties\Exceptions\InvalidTypeOrSemanticException;
+use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
+use Sunhill\Facades\Properties;
 
 abstract class AbstractProperty
 {

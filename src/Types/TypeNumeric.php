@@ -11,10 +11,10 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Types;
+namespace Sunhill\Types;
 
-use Sunhill\Properties\Exceptions\InvalidParameterException;
-use Sunhill\Properties\Properties\AbstractSimpleProperty;
+use Sunhill\Exceptions\InvalidParameterException;
+use Sunhill\Properties\AbstractSimpleProperty;
 
 abstract class TypeNumeric extends AbstractSimpleProperty
 {

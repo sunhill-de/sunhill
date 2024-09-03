@@ -1,10 +1,10 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Properties\Exceptions\PropertyDoesntExistException;
-use Sunhill\Properties\Properties\AbstractSimpleProperty;
-use Sunhill\Properties\Properties\AbstractRecordProperty;
-use Sunhill\Properties\Properties\RecordProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Properties\Exceptions\PropertyDoesntExistException;
+use Sunhill\Properties\AbstractSimpleProperty;
+use Sunhill\Properties\AbstractRecordProperty;
+use Sunhill\Properties\RecordProperty;
 
 class GetValueProperty extends AbstractSimpleProperty {
 

@@ -11,7 +11,7 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Framework\Modules;
+namespace Sunhill\Modules;
 
 /**
  * An import modules provider a possibility to import data from any source into this framwork

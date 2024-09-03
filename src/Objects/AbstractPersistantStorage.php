@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Objects;
+namespace Sunhill\Objects;
 
-use Sunhill\Properties\Storage\AbstractIDStorage;
+use Sunhill\Storage\AbstractIDStorage;
 
 abstract class AbstractPersistantStorage extends AbstractIDStorage
 {

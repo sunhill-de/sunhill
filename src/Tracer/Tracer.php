@@ -1,10 +1,10 @@
 <?php
 
-namespace Sunhill\Properties\Tracer;
+namespace Sunhill\Tracer;
 
-use Sunhill\Properties\InfoMarket\Market;
-use Sunhill\Properties\Facades\InfoMarket;
-use Sunhill\Properties\Tracer\Exceptions\PathNotTraceableException;
+use Sunhill\InfoMarket\Market;
+use Sunhill\Facades\InfoMarket;
+use Sunhill\Tracer\Exceptions\PathNotTraceableException;
 
 class Tracer
 {

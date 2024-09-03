@@ -1,11 +1,11 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Properties\Exceptions\CantProcessPropertyException;
-use Sunhill\Properties\Properties\Exceptions\DuplicateElementNameException;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractRecordProperty;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\CantProcessPropertyException;
+use Sunhill\Properties\Exceptions\DuplicateElementNameException;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractRecordProperty;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 test('add by object', function () {
     $test = new NonAbstractRecordProperty();
     $element = new NonAbstractProperty();

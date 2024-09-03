@@ -14,9 +14,9 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Properties\Tracer\Backends;
+namespace Sunhill\Tracer\Backends;
 
-use Sunhill\Properties\Tracer\AbstractTracerBackend;
+use Sunhill\Tracer\AbstractTracerBackend;
 
 class FileTracerBackend extends AbstractTracerBackend
 {

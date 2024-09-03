@@ -1,12 +1,12 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\PersistantRecord\Samples;
+namespace Sunhill\Tests\Unit\Objects\PersistantRecord\Samples;
 
-use Sunhill\Properties\Objects\AbstractPersistantRecord;
-use Sunhill\Properties\Objects\ObjectDescriptor;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Types\TypeVarchar;
+use Sunhill\Objects\AbstractPersistantRecord;
+use Sunhill\Objects\ObjectDescriptor;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Facades\Properties;
+use Sunhill\Types\TypeVarchar;
 
 class ChildRecord extends ParentRecord
 {

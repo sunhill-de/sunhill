@@ -1,11 +1,11 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Unit\Plugins;
+namespace Sunhill\Tests\Unit\Plugins;
 
-use Sunhill\Framework\Tests\TestCase;
+use Sunhill\Tests\TestCase;
 use IsaEken\PluginSystem\Enums\PluginState;
-use Sunhill\Framework\Plugins\PluginQuery;
-use Sunhill\Framework\Tests\Unit\Plugins\TestPlugins\TestPluginA;
+use Sunhill\Plugins\PluginQuery;
+use Sunhill\Tests\Unit\Plugins\TestPlugins\TestPluginA;
 
 uses(TestCase::class);
 

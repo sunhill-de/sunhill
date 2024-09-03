@@ -14,11 +14,11 @@
  * @todo localization
  */
 
-namespace Sunhill\ORM\Console;
+namespace Sunhill\Console;
 
 use Illuminate\Console\Command;
-use Sunhill\ORM\Facades\Classes;
-use Sunhill\ORM\Facades\Collections;
+use Sunhill\Facades\Classes;
+use Sunhill\Facades\Collections;
 
 class MigrateObjects extends Command
 {

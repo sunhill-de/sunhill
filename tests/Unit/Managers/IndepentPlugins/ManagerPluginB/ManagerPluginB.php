@@ -1,6 +1,6 @@
 <?php
 
-use Sunhill\Framework\Plugins\Plugin;
+use Sunhill\Plugins\Plugin;
 
 class ManagerPluginB extends Plugin
 {

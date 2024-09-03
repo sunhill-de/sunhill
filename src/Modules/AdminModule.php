@@ -11,7 +11,7 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Framework\Modules;
+namespace Sunhill\Modules;
 
 /**
  * This class is a basic class for all admin modules. An admin module is a module that collects some

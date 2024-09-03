@@ -10,15 +10,15 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties;
+namespace Sunhill\Properties;
 
-use Sunhill\Properties\Properties\Exceptions\CantProcessPropertyException;
-use Sunhill\Properties\Properties\Exceptions\DuplicateElementNameException;
-use Sunhill\Properties\Properties\Exceptions\PropertyDoesntExistException;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Storage\AbstractStorage;
-use Sunhill\Properties\Properties\Exceptions\StorageAlreadySetException;
-use Sunhill\Properties\Storage\StaticStorage;
+use Sunhill\Properties\Exceptions\CantProcessPropertyException;
+use Sunhill\Properties\Exceptions\DuplicateElementNameException;
+use Sunhill\Properties\Exceptions\PropertyDoesntExistException;
+use Sunhill\Facades\Properties;
+use Sunhill\Storage\AbstractStorage;
+use Sunhill\Properties\Exceptions\StorageAlreadySetException;
+use Sunhill\Storage\StaticStorage;
 use Ramsey\Collection\AbstractArray;
 
 class RecordProperty extends AbstractRecordProperty

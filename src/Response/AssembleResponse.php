@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunhill\Framework\Response;
+namespace Sunhill\Response;
 
-use Sunhill\Framework\Response\AbstractResponse;
-use Sunhill\Framework\Plugins\Exceptions\FileNotFoundException;
+use Sunhill\Response\AbstractResponse;
+use Sunhill\Plugins\Exceptions\FileNotFoundException;
 
 abstract class AssembleResponse extends AbstractResponse
 {

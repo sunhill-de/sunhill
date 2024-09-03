@@ -1,9 +1,9 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Properties\Exceptions\UninitializedValueException;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractSimpleProperty;
-use Sunhill\Properties\Tests\TestSupport\Storages\TestAbstractIDStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Properties\Exceptions\UninitializedValueException;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractSimpleProperty;
+use Sunhill\Tests\TestSupport\Storages\TestAbstractIDStorage;
 test('default', function () {
     $test = new NonAbstractSimpleProperty();
     $test->default(5);

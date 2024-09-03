@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Unit\Crud;
+namespace Sunhill\Tests\Unit\Crud;
 
-use Sunhill\Framework\Tests\TestCase;
+use Sunhill\Tests\TestCase;
 
 uses(TestCase::class);
 

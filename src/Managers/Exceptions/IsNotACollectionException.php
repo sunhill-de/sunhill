@@ -12,8 +12,8 @@
  * Tests: none
  * Coverage: none
  */
-namespace Sunhill\ORM\Managers\Exceptions;
+namespace Sunhill\Managers\Exceptions;
 
-use Sunhill\ORM\Managers\ORMManagerException;
+use Sunhill\Managers\ORMManagerException;
 
 class IsNotACollectionException extends CollectionManagerException {}

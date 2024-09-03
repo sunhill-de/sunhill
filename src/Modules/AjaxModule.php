@@ -11,7 +11,7 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Framework\Modules;
+namespace Sunhill\Modules;
 
 class AjaxModule extends AbstractModule
 {

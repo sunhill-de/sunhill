@@ -1,8 +1,8 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Storage\Exceptions\FieldNotAvaiableException;
-use Sunhill\Properties\Tests\TestSupport\Storages\DummySimpleWriteableStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Tests\TestSupport\Storages\DummySimpleWriteableStorage;
 
 
 test('read value', function () {

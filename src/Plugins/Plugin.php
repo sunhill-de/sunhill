@@ -2,7 +2,7 @@
 
 namespace Sunhill\Plugins;
 
-use Sunhill\Framework\Plugins\Exceptions\WrongInstallersFormatException;
+use Sunhill\Plugins\Exceptions\WrongInstallersFormatException;
 
 class Plugin 
 {

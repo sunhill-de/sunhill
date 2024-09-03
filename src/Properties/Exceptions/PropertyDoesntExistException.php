@@ -11,7 +11,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties\Exceptions;
+namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, __get or __set is called with an unknown element

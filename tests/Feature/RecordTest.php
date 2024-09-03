@@ -1,8 +1,8 @@
 <?php
 
-use Sunhill\Properties\Tests\Feature\Properties\SampleCallbackProperty;
+use Sunhill\Tests\Feature\Properties\SampleCallbackProperty;
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 test('initialize a record with a callback storage and read it', function()
 {

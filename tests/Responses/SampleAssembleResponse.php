@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Responses;
+namespace Sunhill\Tests\Responses;
 
-use Sunhill\Framework\Response\AssembleResponse;
+use Sunhill\Response\AssembleResponse;
 
 class SampleAssembleResponse extends AssembleResponse
 {

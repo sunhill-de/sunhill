@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Tests\TestSupport\Storages;
+namespace Sunhill\Tests\TestSupport\Storages;
 
-use Sunhill\Properties\Storage\SimpleStorage;
+use Sunhill\Storage\SimpleStorage;
 
 class DummySimpleStorage extends SimpleStorage
 {

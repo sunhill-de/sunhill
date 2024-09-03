@@ -12,11 +12,11 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Properties\Storage;
+namespace Sunhill\Storage;
 
-use Sunhill\Properties\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 use Illuminate\Support\Facades\Cache;
-use Sunhill\Properties\Storage\Exceptions\CacheIDNotSetException;
+use Sunhill\Storage\Exceptions\CacheIDNotSetException;
 
 abstract class GroupCacheStorage extends SimpleStorage
 {

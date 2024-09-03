@@ -1,7 +1,7 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 test('set owner', function () {
     $test1 = new NonAbstractProperty();
     $test1->setName('parent');

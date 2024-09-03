@@ -1,12 +1,12 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\Unit\Tracer\AbstractTestTracerBackend::class);
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Tests\TestSupport\Markets\GetMarket;
-use Sunhill\Properties\Tracer\Tracer;
-use Sunhill\Properties\Tracer\Exceptions\PathNotTraceableException;
-use Sunhill\Properties\Tracer\Backends\FileTracerBackend;
-use Sunhill\Properties\InfoMarket\Market;
+uses(\Sunhill\Tests\Unit\Tracer\AbstractTestTracerBackend::class);
+use Sunhill\Tests\TestCase;
+use Sunhill\Tests\TestSupport\Markets\GetMarket;
+use Sunhill\Tracer\Tracer;
+use Sunhill\Tracer\Exceptions\PathNotTraceableException;
+use Sunhill\Tracer\Backends\FileTracerBackend;
+use Sunhill\InfoMarket\Market;
 
 
 function getBackend()

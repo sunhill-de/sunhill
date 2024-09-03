@@ -1,12 +1,12 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Feature\Properties;
+namespace Sunhill\Tests\Feature\Properties;
 
-use Sunhill\Properties\Types\TypeVarchar;
-use Sunhill\Properties\Types\TypeInteger;
-use Sunhill\Properties\Tests\Feature\Storages\SampleCallbackStorage;
-use Sunhill\Properties\Properties\ArrayProperty;
-use Sunhill\Properties\InfoMarket\Marketeer;
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Tests\Feature\Storages\SampleCallbackStorage;
+use Sunhill\Properties\ArrayProperty;
+use Sunhill\InfoMarket\Marketeer;
 
 class SampleCallbackProperty extends Marketeer
 {

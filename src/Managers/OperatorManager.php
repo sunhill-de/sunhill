@@ -12,9 +12,9 @@
  * Coverage: unknown
  * PSR-State: complete
  */
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\ORMException;
+use Sunhill\ORMException;
 use Sunhill\Basic\Utils\Descriptor;
 
 /**

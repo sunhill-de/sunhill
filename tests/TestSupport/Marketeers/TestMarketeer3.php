@@ -1,11 +1,11 @@
 <?php
 
-namespace Sunhill\Properties\Tests\TestSupport\Marketeers;
+namespace Sunhill\Tests\TestSupport\Marketeers;
 
-use Sunhill\Properties\InfoMarket\Marketeer;
-use Sunhill\Properties\Storage\SimpleStorage;
-use Sunhill\Properties\Storage\SimpleWriteableStorage;
-use Sunhill\Properties\Tests\TestSupport\Storages\TestStorage3;
+use Sunhill\InfoMarket\Marketeer;
+use Sunhill\Storage\SimpleStorage;
+use Sunhill\Storage\SimpleWriteableStorage;
+use Sunhill\Tests\TestSupport\Storages\TestStorage3;
 
 class TestMarketeer3 extends Marketeer
 {

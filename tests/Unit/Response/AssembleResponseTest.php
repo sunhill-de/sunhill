@@ -1,9 +1,9 @@
 <?php
 
-use Sunhill\Framework\Tests\Responses\SampleAssembleResponse;
-use Sunhill\Framework\Plugins\Exceptions\FileNotFoundException;
+use Sunhill\Tests\Responses\SampleAssembleResponse;
+use Sunhill\Plugins\Exceptions\FileNotFoundException;
 
-uses(\Sunhill\Framework\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 test('Response assembles two files', function() 
 {

@@ -1,10 +1,10 @@
 <?php
 
-use Sunhill\Framework\Traits\Owner;
-use Sunhill\Framework\Traits\Children;
-use Sunhill\Framework\Exceptions\ChildNotFoundException;
+use Sunhill\Traits\Owner;
+use Sunhill\Traits\Children;
+use Sunhill\Exceptions\ChildNotFoundException;
 
-uses(\Sunhill\Framework\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 class DummyChildrenObject {
     

@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Objects\Mysql;
+namespace Sunhill\Objects\Mysql;
 
-use Sunhill\Properties\Objects\AbstractStorageAtom;
+use Sunhill\Objects\AbstractStorageAtom;
 use Illuminate\Support\Facades\DB;
 
 class MysqlStorageAtom extends AbstractStorageAtom

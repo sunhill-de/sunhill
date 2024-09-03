@@ -1,16 +1,16 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Semantic\Name;
-use Sunhill\Properties\Properties\Property;
-use Sunhill\Properties\Properties\Exceptions\PropertyException;
-use Sunhill\Properties\Units\None;
-use Sunhill\Properties\Objects\ORMObject;
-use Sunhill\Properties\Properties\Exceptions\InvalidNameException;
-use Sunhill\Properties\Properties\AbstractProperty;
-use Sunhill\Properties\Properties\ValidatorBase;
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
-use Sunhill\Properties\Facades\Properties;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Semantic\Name;
+use Sunhill\Properties\Property;
+use Sunhill\Properties\Exceptions\PropertyException;
+use Sunhill\Units\None;
+use Sunhill\Objects\ORMObject;
+use Sunhill\Properties\Exceptions\InvalidNameException;
+use Sunhill\Properties\AbstractProperty;
+use Sunhill\Properties\ValidatorBase;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Facades\Properties;
 function getUnits()
 {
     return include(dirname(__FILE__).'/../../../src/Units.php');

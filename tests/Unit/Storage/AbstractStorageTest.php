@@ -1,7 +1,7 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Tests\TestSupport\Storages\TestAbstractStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\TestSupport\Storages\TestAbstractStorage;
 use Illuminate\Support\Facades\Cache;
 
 

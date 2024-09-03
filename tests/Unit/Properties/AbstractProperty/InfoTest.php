@@ -1,9 +1,9 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Properties\Exceptions\PropertyException;
-use Sunhill\Properties\Properties\Exceptions\PropertyKeyDoesntExistException;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractProperty;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Properties\Exceptions\PropertyException;
+use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 test('unknown method', function () {
     $this->expectException(PropertyException::class);
 

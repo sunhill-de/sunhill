@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Responses;
+namespace Sunhill\Tests\Responses;
 
-use Sunhill\Framework\Response\AbstractResponse;
+use Sunhill\Response\AbstractResponse;
 
 class SampleAbstractResponse extends AbstractResponse
 {

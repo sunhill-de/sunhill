@@ -11,10 +11,10 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Types;
+namespace Sunhill\Types;
 
-use Sunhill\Properties\Properties\AbstractSimpleProperty;
-use Sunhill\Properties\Properties\Exceptions\NoCallbackSetException;
+use Sunhill\Properties\AbstractSimpleProperty;
+use Sunhill\Properties\Exceptions\NoCallbackSetException;
 
 class TypeCalculated extends AbstractSimpleProperty
 {

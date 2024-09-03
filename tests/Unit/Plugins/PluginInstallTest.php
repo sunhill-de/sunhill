@@ -1,11 +1,11 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Unit\Plugins;
+namespace Sunhill\Tests\Unit\Plugins;
 
-use Sunhill\Framework\Tests\TestCase;
-use Sunhill\Framework\Tests\Unit\Plugins\Testplugins\TestPluginA;
-use Sunhill\Framework\Plugins\PluginInstaller;
-use Sunhill\Framework\Plugins\Exceptions\WrongInstallersFormatException;
+use Sunhill\Tests\TestCase;
+use Sunhill\Tests\Unit\Plugins\Testplugins\TestPluginA;
+use Sunhill\Plugins\PluginInstaller;
+use Sunhill\Plugins\Exceptions\WrongInstallersFormatException;
 
 uses(TestCase::class);
 

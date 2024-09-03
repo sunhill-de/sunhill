@@ -1,13 +1,13 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Tracer;
+namespace Sunhill\Tests\Unit\Tracer;
 
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Tests\TestSupport\Markets\GetMarket;
-use Sunhill\Properties\Tracer\Tracer;
-use Sunhill\Properties\Tracer\Exceptions\PathNotTraceableException;
-use Sunhill\Properties\Tracer\Backends\FileTracerBackend;
-use Sunhill\Properties\Facades\InfoMarket;
+use Sunhill\Tests\TestCase;
+use Sunhill\Tests\TestSupport\Markets\GetMarket;
+use Sunhill\Tracer\Tracer;
+use Sunhill\Tracer\Exceptions\PathNotTraceableException;
+use Sunhill\Tracer\Backends\FileTracerBackend;
+use Sunhill\Facades\InfoMarket;
 
 abstract class AbstractTestTracerBackend extends TestCase
 {

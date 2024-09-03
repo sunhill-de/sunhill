@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Traits;
+namespace Sunhill\Traits;
 
-use Sunhill\Framework\Exceptions\ChildNotFoundException;
+use Sunhill\Exceptions\ChildNotFoundException;
 
 /**
  * This trait is used whenever an object uses a child management
@@ -24,7 +24,7 @@ trait Children
      * 
      * @param unknown $child
      * @param string $name
-     * @return \Sunhill\Framework\Traits\Children
+     * @return \Sunhill\Traits\Children
      */
     public function addChild($child, string $name = '')
     {

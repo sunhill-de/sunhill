@@ -1,11 +1,11 @@
 <?php
 
-use Sunhill\Framework\Tests\TestCase;
-use Sunhill\Framework\Facades\Site;
-use Sunhill\Framework\Modules\FeatureModules\FeatureModule;
-use Sunhill\Framework\Tests\Responses\SampleViewResponse;
-use Sunhill\Framework\Tests\Responses\SampleIndividualIndexResponse;
-use Sunhill\Framework\Tests\Responses\SampleParameterResponse;
+use Sunhill\Tests\TestCase;
+use Sunhill\Facades\Site;
+use Sunhill\Modules\FeatureModules\FeatureModule;
+use Sunhill\Tests\Responses\SampleViewResponse;
+use Sunhill\Tests\Responses\SampleIndividualIndexResponse;
+use Sunhill\Tests\Responses\SampleParameterResponse;
 
 uses(TestCase::class);
 

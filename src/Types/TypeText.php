@@ -11,9 +11,9 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Types;
+namespace Sunhill\Types;
 
-use Sunhill\Properties\Properties\AbstractSimpleProperty;
+use Sunhill\Properties\AbstractSimpleProperty;
 
 class TypeText extends AbstractSimpleProperty
 {

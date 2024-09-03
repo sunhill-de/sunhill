@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
 class ObjectDataGenerator
 {

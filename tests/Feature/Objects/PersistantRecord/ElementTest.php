@@ -1,11 +1,11 @@
 <?php
 
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples\ParentRecord;
-use Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples\ChildRecord;
-use Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples\EmptyChildRecord;
-use Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples\GrandChildRecord;
-use Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples\EmptyGrandChildRecord;
+use Sunhill\Tests\TestCase;
+use Sunhill\Tests\Feature\Objects\PersistantRecord\Samples\ParentRecord;
+use Sunhill\Tests\Feature\Objects\PersistantRecord\Samples\ChildRecord;
+use Sunhill\Tests\Feature\Objects\PersistantRecord\Samples\EmptyChildRecord;
+use Sunhill\Tests\Feature\Objects\PersistantRecord\Samples\GrandChildRecord;
+use Sunhill\Tests\Feature\Objects\PersistantRecord\Samples\EmptyGrandChildRecord;
 
 uses(TestCase::class);
 

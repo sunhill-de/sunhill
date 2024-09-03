@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Responses;
+namespace Sunhill\Tests\Responses;
 
-use Sunhill\Framework\Response\ViewResponses\ViewResponse;
+use Sunhill\Response\ViewResponses\ViewResponse;
 
 class SampleViewResponse extends ViewResponse
 {

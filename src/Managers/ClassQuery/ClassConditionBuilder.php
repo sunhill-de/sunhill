@@ -1,11 +1,11 @@
 <?php
 
-namespace Sunhill\ORM\Managers\ClassQuery;
+namespace Sunhill\Managers\ClassQuery;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Sunhill\ORM\Query\ConditionBuilder;
-use Sunhill\ORM\Facades\Classes;
+use Sunhill\Query\ConditionBuilder;
+use Sunhill\Facades\Classes;
 
 class ClassConditionBuilder extends ConditionBuilder
 {

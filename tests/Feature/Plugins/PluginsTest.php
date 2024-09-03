@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Config;
-use Sunhill\Framework\Facades\Plugins;
+use Sunhill\Facades\Plugins;
 use Sunhill\Tests\TestCase;
 
 uses(TestCase::class);

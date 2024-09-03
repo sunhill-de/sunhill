@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Unit\Objects\PersistantStorage\Samples;
+namespace Sunhill\Tests\Unit\Objects\PersistantStorage\Samples;
 
-use Sunhill\Properties\Objects\AbstractPersistantStorage;
-use Sunhill\Properties\Objects\AbstractStorageAtom;
+use Sunhill\Objects\AbstractPersistantStorage;
+use Sunhill\Objects\AbstractStorageAtom;
 
 class DummyPersistantStorage extends AbstractPersistantStorage
 {

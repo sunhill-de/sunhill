@@ -1,9 +1,9 @@
 <?php
 
-use Sunhill\Properties\Tests\TestCase;
-use Sunhill\Properties\Objects\Exceptions\InvalidPrefixCalledException;
-use Sunhill\Properties\Objects\Exceptions\InvalidPostfixCalledException;
-use Sunhill\Properties\Tests\Unit\Objects\PersistantStorage\Samples\DummyStorageAtom;
+use Sunhill\Tests\TestCase;
+use Sunhill\Objects\Exceptions\InvalidPrefixCalledException;
+use Sunhill\Objects\Exceptions\InvalidPostfixCalledException;
+use Sunhill\Tests\Unit\Objects\PersistantStorage\Samples\DummyStorageAtom;
 
 uses(TestCase::class);
 

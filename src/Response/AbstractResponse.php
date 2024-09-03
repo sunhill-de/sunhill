@@ -11,10 +11,10 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\Framework\Response;
+namespace Sunhill\Response;
 
-use Sunhill\Framework\Traits\NameAndDescription;
-use Sunhill\Framework\Traits\Owner;
+use Sunhill\Traits\NameAndDescription;
+use Sunhill\Traits\Owner;
 use Illuminate\Support\Facades\Route;
 
 /**

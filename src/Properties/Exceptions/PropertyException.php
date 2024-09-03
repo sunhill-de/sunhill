@@ -11,7 +11,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Exceptions;
+namespace Sunhill\Exceptions;
 
 use Sunhill\Exceptions\PropertiesException;
 

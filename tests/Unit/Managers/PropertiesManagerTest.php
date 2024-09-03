@@ -1,19 +1,19 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Managers\PropertiesManager;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Managers\PropertiesManager;
 
-use Sunhill\Properties\Managers\Exceptions\PropertyClassDoesntExistException;
-use Sunhill\Properties\Managers\Exceptions\GivenClassNotAPropertyException;
-use Sunhill\Properties\Managers\Exceptions\PropertyNotRegisteredException;
-use Sunhill\Properties\Managers\Exceptions\PropertyNameAlreadyRegisteredException;
-use Sunhill\Properties\Managers\Exceptions\UnitNameAlreadyRegisteredException;
-use Sunhill\Properties\Managers\Exceptions\UnitNotRegisteredException;
-use Sunhill\Properties\Tests\TestSupport\Properties\NonAbstractProperty;
-use Sunhill\Properties\Tests\Unit\Managers\Samples\First;
-use Sunhill\Properties\Tests\Unit\Managers\Samples\Second;
-use Sunhill\Properties\Tests\Unit\Managers\Samples\Third;
-use Sunhill\Properties\Storage\AbstractStorage;
+use Sunhill\Managers\Exceptions\PropertyClassDoesntExistException;
+use Sunhill\Managers\Exceptions\GivenClassNotAPropertyException;
+use Sunhill\Managers\Exceptions\PropertyNotRegisteredException;
+use Sunhill\Managers\Exceptions\PropertyNameAlreadyRegisteredException;
+use Sunhill\Managers\Exceptions\UnitNameAlreadyRegisteredException;
+use Sunhill\Managers\Exceptions\UnitNotRegisteredException;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
+use Sunhill\Tests\Unit\Managers\Samples\First;
+use Sunhill\Tests\Unit\Managers\Samples\Second;
+use Sunhill\Tests\Unit\Managers\Samples\Third;
+use Sunhill\Storage\AbstractStorage;
 
 test('register property', function () {
     $test = new PropertiesManager();

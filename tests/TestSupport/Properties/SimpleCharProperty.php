@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Tests\TestSupport\Properties;
+namespace Sunhill\Tests\TestSupport\Properties;
 
-use Sunhill\Properties\Properties\AbstractSimpleProperty;
+use Sunhill\Properties\AbstractSimpleProperty;
 
 class SimpleCharProperty extends AbstractSimpleProperty
 {

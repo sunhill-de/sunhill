@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Feature\Storages;
+namespace Sunhill\Tests\Feature\Storages;
 
-use Sunhill\Properties\Storage\CallbackStorage;
+use Sunhill\Storage\CallbackStorage;
 
 class SampleCallbackStorage extends CallbackStorage
 {

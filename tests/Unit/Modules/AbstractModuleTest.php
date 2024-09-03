@@ -1,7 +1,7 @@
 <?php
 
-use Sunhill\Framework\Modules\AbstractModule;
-use Sunhill\Framework\Tests\TestCase;
+use Sunhill\Modules\AbstractModule;
+use Sunhill\Tests\TestCase;
 
 uses(TestCase::class);
 

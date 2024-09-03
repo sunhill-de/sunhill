@@ -1,10 +1,10 @@
 <?php
 
-use Sunhill\Properties\Tests\Feature\Properties\SampleCallbackProperty;
-use Sunhill\Properties\Tests\Feature\Marketeers\StaticMarketeer;
-use Sunhill\Properties\Facades\InfoMarket;
+use Sunhill\Tests\Feature\Properties\SampleCallbackProperty;
+use Sunhill\Tests\Feature\Marketeers\StaticMarketeer;
+use Sunhill\Facades\InfoMarket;
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 test('Access static marketeer via market', function() {
    InfoMarket::registerMarketeer(StaticMarketeer::class);

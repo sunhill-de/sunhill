@@ -2,11 +2,11 @@
 
 namespace Sunhill\Managers;
 
-use Sunhill\Framework\Modules\SkinModule;
-use Sunhill\Framework\Modules\AdminModule;
+use Sunhill\Modules\SkinModule;
+use Sunhill\Modules\AdminModule;
 use Illuminate\Support\Facades\Route;
-use Sunhill\Framework\Modules\FeatureModules\FeatureModule;
-use Sunhill\Framework\Modules\Exceptions\CantProcessModuleException;
+use Sunhill\Modules\FeatureModules\FeatureModule;
+use Sunhill\Modules\Exceptions\CantProcessModuleException;
 
 class SiteManager 
 {

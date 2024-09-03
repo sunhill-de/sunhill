@@ -14,7 +14,7 @@
  * PSR-Status: complete
  */
 
-namespace Sunhill\ORM\Checks;
+namespace Sunhill\Checks;
 
 use Illuminate\Support\Facades\DB;
 

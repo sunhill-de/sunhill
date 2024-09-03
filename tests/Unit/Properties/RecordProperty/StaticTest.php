@@ -1,11 +1,11 @@
 <?php
 
-use Sunhill\Properties\Properties\RecordProperty;
-use Sunhill\Properties\Storage\StaticStorage;
-use Sunhill\Properties\Types\TypeVarchar;
-use Sunhill\Properties\Types\TypeInteger;
+use Sunhill\Properties\RecordProperty;
+use Sunhill\Storage\StaticStorage;
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Types\TypeInteger;
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 test('static() creates a static storage', function () {
     $test = new RecordProperty();

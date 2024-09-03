@@ -10,12 +10,12 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Properties;
+namespace Sunhill\Properties;
 
-use Sunhill\Properties\Properties\Exceptions\InvalidParameterException;
+use Sunhill\Properties\Exceptions\InvalidParameterException;
 use Mockery\Matcher\Type;
-use Sunhill\Properties\Facades\Properties;
-use Sunhill\Properties\Properties\Exceptions\InvalidValueException;
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\InvalidValueException;
 
 class ArrayProperty extends AbstractArrayProperty 
 {

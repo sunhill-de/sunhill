@@ -1,7 +1,7 @@
 <?php
 
-namespace Sunhill\Framework\Managers\Exceptions;
+namespace Sunhill\Managers\Exceptions;
 
-use Sunhill\Framework\FrameworkException;
+use Sunhill\FrameworkException;
 
 class UnmatchedPluginDependencyException extends FrameworkException {}

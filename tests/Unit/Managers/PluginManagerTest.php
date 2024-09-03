@@ -2,13 +2,13 @@
 
 namespace Sunhill\Framwork\Tests\Units\Managers;
 
-use Sunhill\Framework\Tests\TestCase;
-use Sunhill\Framework\Managers\PluginManager;
-use Sunhill\Framework\Plugins\Plugin;
-use Sunhill\Framework\Managers\Exceptions\InvalidPlugInException;
-use Sunhill\Framework\Plugins\PluginQuery;
-use Sunhill\Framework\Managers\Exceptions\UnmatchedPluginDependencyException;
-use Sunhill\Framework\Managers\Exceptions\PluginNotFoundException;
+use Sunhill\Tests\TestCase;
+use Sunhill\Managers\PluginManager;
+use Sunhill\Plugins\Plugin;
+use Sunhill\Managers\Exceptions\InvalidPlugInException;
+use Sunhill\Plugins\PluginQuery;
+use Sunhill\Managers\Exceptions\UnmatchedPluginDependencyException;
+use Sunhill\Managers\Exceptions\PluginNotFoundException;
 
 uses(TestCase::class);
 

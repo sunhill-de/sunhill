@@ -1,7 +1,7 @@
 <?php
 
-uses(\Sunhill\Properties\Tests\TestCase::class);
-use Sunhill\Properties\Tests\TestSupport\Storages\TestAbstractIDStorage;
+uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\TestSupport\Storages\TestAbstractIDStorage;
 
 
 test('load from storage', function () {

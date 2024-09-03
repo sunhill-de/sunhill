@@ -10,9 +10,9 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Semantics;
+namespace Sunhill\Semantics;
 
-use Sunhill\Properties\Types\TypeFloat;
+use Sunhill\Types\TypeFloat;
 
 class Illuminance extends TypeFloat
 {

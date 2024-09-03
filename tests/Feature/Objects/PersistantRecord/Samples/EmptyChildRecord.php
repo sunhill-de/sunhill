@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Properties\Tests\Feature\Objects\PersistantRecord\Samples;
+namespace Sunhill\Tests\Feature\Objects\PersistantRecord\Samples;
 
 class EmptyChildRecord extends ParentRecord
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Unit\Crud;
+namespace Sunhill\Tests\Unit\Crud;
 
-use Sunhill\Framework\Tests\TestCase;
-use Sunhill\Framework\Crud\AbstractCrudEngine;
+use Sunhill\Tests\TestCase;
+use Sunhill\Crud\AbstractCrudEngine;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
-use Sunhill\Framework\Crud\Exceptions\FieldNotSortableException;
-use Sunhill\Framework\Crud\CrudListResponse;
+use Sunhill\Crud\Exceptions\FieldNotSortableException;
+use Sunhill\Crud\CrudListResponse;
 
 uses(TestCase::class);
 

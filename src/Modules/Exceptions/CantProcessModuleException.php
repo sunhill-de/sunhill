@@ -1,6 +1,6 @@
 <?php
-namespace Sunhill\Framework\Modules\Exceptions;
+namespace Sunhill\Modules\Exceptions;
 
-use Sunhill\Framework\FrameworkException;
+use Sunhill\FrameworkException;
 
 class CantProcessModuleException extends ModuleException {}

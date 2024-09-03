@@ -1,8 +1,8 @@
 <?php
 
-namespace Sunhill\Framework\Tests\Responses;
+namespace Sunhill\Tests\Responses;
 
-use Sunhill\Framework\Response\ViewResponses\TileViewResponse;
+use Sunhill\Response\ViewResponses\TileViewResponse;
 
 class SampleIndividualIndexResponse extends TileViewResponse
 {

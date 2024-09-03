@@ -1,8 +1,8 @@
 <?php
 
-use Sunhill\Framework\Traits\Owner;
+use Sunhill\Traits\Owner;
 
-uses(\Sunhill\Framework\Tests\TestCase::class);
+uses(\Sunhill\Tests\TestCase::class);
 
 class DummyOwnerObject {
     

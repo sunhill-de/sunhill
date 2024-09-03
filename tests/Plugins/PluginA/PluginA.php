@@ -1,6 +1,6 @@
 <?php
 
-use Sunhill\Framework\Plugins\Plugin;
+use Sunhill\Plugins\Plugin;
 
 require(dirname(__FILE__).'/src/ModuleA.php');
 require(dirname(__FILE__).'/src/ModuleB.php');

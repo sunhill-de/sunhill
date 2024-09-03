@@ -1,11 +1,11 @@
 <?php
 
-namespace Sunhill\ORM\Managers;
+namespace Sunhill\Managers;
 
-use Sunhill\ORM\Managers\Exceptions\ClassNotAccessibleException;
-use Sunhill\ORM\Managers\Exceptions\ClassNameForbiddenException;
-use Sunhill\ORM\Objects\PropertiesCollection;
-use Sunhill\ORM\ORMException;
+use Sunhill\Managers\Exceptions\ClassNotAccessibleException;
+use Sunhill\Managers\Exceptions\ClassNameForbiddenException;
+use Sunhill\Objects\PropertiesCollection;
+use Sunhill\ORMException;
 
 abstract class PropertiesCollectionManager extends RegistableManagerBase
 {
@@ -227,7 +227,7 @@ abstract class PropertiesCollectionManager extends RegistableManagerBase
      * Checks if $needle is a name of a registered class
      *
      * @param string $needle
-     * @return \Sunhill\ORM\Managers\string|NULL
+     * @return \Sunhill\Managers\string|NULL
      *
      * Test: testCheckForClassname
      */
@@ -244,7 +244,7 @@ abstract class PropertiesCollectionManager extends RegistableManagerBase
      * Checks if $needle is a string and if yes, if it's a namespace or a classname
      *
      * @param unknown $needle
-     * @return void|boolean|\Sunhill\ORM\Managers\string|NULL
+     * @return void|boolean|\Sunhill\Managers\string|NULL
      *
      * Test: testCheckForString
      */

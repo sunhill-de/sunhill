@@ -10,9 +10,9 @@
  * Coverage: unknown
  */
 
-namespace Sunhill\Properties\Semantics;
+namespace Sunhill\Semantics;
 
-use Sunhill\Properties\Types\TypeInteger;
+use Sunhill\Types\TypeInteger;
 
 class Capacity extends TypeInteger
 {

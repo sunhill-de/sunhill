@@ -12,11 +12,11 @@
  * Tests: tests/Unit/Managers/CollectionManagerTest.php
  * Coverage: 
  */
-namespace Sunhill\ORM\Managers\CollectionQuery;
+namespace Sunhill\Managers\CollectionQuery;
 
-use Sunhill\ORM\Facades\Classes;
-use Sunhill\ORM\Query\ArrayQuery;
-use Sunhill\ORM\Facades\Collections;
+use Sunhill\Facades\Classes;
+use Sunhill\Query\ArrayQuery;
+use Sunhill\Facades\Collections;
 
 class CollectionQuery extends ArrayQuery
 {
