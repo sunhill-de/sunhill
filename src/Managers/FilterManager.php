@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Filter;
+namespace Sunhill\Managers;
 
 /**
  * The FilterManager manages the filters. A filter is an operation on a filter container that
