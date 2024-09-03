@@ -2,9 +2,9 @@
 
 namespace Sunhill\Crud\Exceptions;
 
-use Sunhill\FrameworkUserException;
+use Sunhill\Exceptions\SunhillUserException;
 
-class FieldNotSortableException extends FrameworkUserException
+class FieldNotSortableException extends SunhillUserException
 {
     
 }
