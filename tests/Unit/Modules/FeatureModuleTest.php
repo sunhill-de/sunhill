@@ -80,11 +80,11 @@ it('fails when wrong items are passed to addResponse', function($param)
        $param = $param();
    }
    $parent->addResponse($param);
-})->throws(CantProcessResponseException::class)->with(
+})->with(
   [
       'nonexisting',
       function() { return new \StdClass(); }
-  ]);
+      ])->throws(CantProcessResponseException::class);
 
 test('addIndex works', function() 
 {
