@@ -1,6 +1,6 @@
 <?php
 namespace Sunhill\Modules\Exceptions;
 
-use Sunhill\FrameworkException;
+use Sunhill\Exceptions\SunhillException;
 
-class ModuleException extends FrameworkException {}
+class ModuleException extends SunhillException {}
