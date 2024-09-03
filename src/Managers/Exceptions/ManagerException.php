@@ -14,4 +14,6 @@
  */
 namespace Sunhill\Managers\Exceptions;
 
-class ManagerException extends ORMManagerException {}
+use Sunhill\Exceptions\SunhillException;
+
+class ManagerException extends SunhillException {}

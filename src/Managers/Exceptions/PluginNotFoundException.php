@@ -2,6 +2,6 @@
 
 namespace Sunhill\Managers\Exceptions;
 
-use Sunhill\FrameworkException;
+use Sunhill\Exceptions\SunhillException;
 
-class PluginNotFoundException extends FrameworkException {}
+class PluginNotFoundException extends SunhillException {}

@@ -14,6 +14,4 @@
  */
 namespace Sunhill\Managers\Exceptions;
 
-use Sunhill\Basic\SunhillException;
-
-class PropertiesManagerException extends SunhillException {}
+class PropertiesManagerException extends ManagerException {}
