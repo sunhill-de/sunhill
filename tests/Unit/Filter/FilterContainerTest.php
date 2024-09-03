@@ -1,7 +1,7 @@
 <?php
 
-use Sunhill\Filter\FilterContainer;
 use Sunhill\Tests\TestCase;
+use Sunhill\Filter\FilterContainer;
 
 uses(TestCase::class);
 

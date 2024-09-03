@@ -1,10 +1,10 @@
 <?php
 
 use Sunhill\Filter\Filter;
-use Sunhill\Filter\FilterManager;
 use Sunhill\Filter\FilterException;
 use Sunhill\Filter\FilterContainer;
 use Sunhill\Tests\TestCase;
+use Sunhill\Managers\FilterManager;
 
 uses(TestCase::class);
 

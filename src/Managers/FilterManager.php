@@ -2,6 +2,9 @@
 
 namespace Sunhill\Managers;
 
+use Sunhill\Filter\FilterContainer;
+use Sunhill\Filter\FilterException;
+
 /**
  * The FilterManager manages the filters. A filter is an operation on a filter container that
  * is executed of certain filter conditions match. The result of the execution must be 
