@@ -5,67 +5,65 @@ namespace Sunhill\Query;
 use Illuminate\Support\Collection;
 use Sunhill\Basic\Query\Exceptions\InvalidOrderException;
 use Sunhill\Basic\Query\Exceptions\NoUnaryConditionException;
+use Doctrine\DBAL\Driver\Middleware\AbstractConnectionMiddleware;
+use Sunhill\Query\Exceptions\NoResultException;
 
 abstract class BasicQuery
 {
 
-    protected $offset;
-    
-    protected $limit;
-    
-    protected $order_key = 'none';
-    
-    protected $order_direction = 'asc';
-    
-    protected $conditions = [];
-    
-    protected $condition_builder;
-    
-    protected $target;
     
     public function __construct()
     {
-        $this->condition_builder = new ConditionBuilder($this);    
     }
 
-    public function propertyExists($entry, $key)
-    {
-        return property_exists($entry, $key);
-    }
+    /**
+     * Assembles the query according to the given conditions and returns @author lokal
+     * pseudo query that is further processed by a finalizing call.
+     */
+    abstract protected function assmebleQuery();
     
-    public function getKey($entry, $key)
-    {
-        return $entry->$key;    
-    }
+    abstract protected function doGetCount($assambled_query): int;
     
-    protected function targetCount()
-    {
-        $this->target = 'count';
-    }
-    
+    /** 
+     * Fininalizing call that returns the number of records that match the 
+     * given criteria
+     * 
+     * @return int
+     */
     public function count(): int
     {
-        $this->targetCount();
-        return $this->execute();
     }
     
-    protected function targetFirst()
+    /**
+     * Returns the first record that matches the given criteria. It raises an 
+     * exception, if no element exists.
+     * 
+     * @param string|array of strings $fields either a single field or a list of
+     * fields that should be returned be first. If none if given, all fields are
+     * returned. 
+     * 
+     * @throws NoResultException::class
+     */
+    public function first($fields = null)
     {
-        $this->target = 'first';
+        if ($result = $this->firstIfExists($fields)) {
+            return $result;
+        }
+        throw new NoResultException("The query has no results and first() was called.");
     }
     
-    public function first()
+    /**
+     * Returns the first record that mathes the given criteria or null if no record
+     * exists. 
+     * 
+     * @param unknown $fields
+     */
+    public function firstIfExists($fields = null)
     {
-        $this->targetFirst();
-        return $this->execute();
+        
     }
     
-    protected function targetGet()
-    {
-        $this->target = 'get';
-    }
-    
-    public function get(): Collection
+    public function get($fields = null): Collection
     {
         $this->targetGet();
         return $this->execute();
