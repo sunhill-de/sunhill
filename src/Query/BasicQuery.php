@@ -3,14 +3,20 @@
 namespace Sunhill\Query;
 
 use Illuminate\Support\Collection;
-use Sunhill\Basic\Query\Exceptions\InvalidOrderException;
-use Sunhill\Basic\Query\Exceptions\NoUnaryConditionException;
-use Doctrine\DBAL\Driver\Middleware\AbstractConnectionMiddleware;
+use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Query\Exceptions\NoResultException;
+use Sunhill\Query\Exceptions\UnknownFieldException;
 
 abstract class BasicQuery
 {
 
+    protected int $offset = 0;
+    
+    protected int $limit = 0;
+    
+    protected string $order_key = '';
+    
+    protected string $order_direction = '';
     
     public function __construct()
     {
@@ -22,7 +28,48 @@ abstract class BasicQuery
      */
     abstract protected function assmebleQuery();
     
+    /**
+     * Returns the count of record that the previously assembled query returns
+     * 
+     * @param unknown $assambled_query
+     * @return int
+     */
     abstract protected function doGetCount($assambled_query): int;
+    
+    /**
+     * Returns a Collection object of all records that match the given query conditions.
+     * 
+     * @param unknown $assembled_query
+     */
+    abstract protected function doGet($assembled_query): Collection;
+    
+    /**
+     * Returns if the field exists or a pseudo field of that name exists
+     * 
+     * @param string $field
+     * @return bool
+     */
+    abstract protected function fieldExists(string $field): bool;
+    
+    /**
+     * Returns if the field can be uses as a sorting key
+     * 
+     * @param string $field
+     * @return bool
+     */
+    abstract protected function fieldOrderable(string $field): bool;
+    
+    /**
+     * This method does not have to necessarily be overwritten. By default it just return $record. 
+     * In some cases it is necessary to return another type (e.g. Object).
+     * 
+     * @param unknown $record
+     * @return unknown
+     */
+    protected function getRecord($key, $record)
+    {
+        return $record;
+    }
     
     /** 
      * Fininalizing call that returns the number of records that match the 
@@ -32,6 +79,7 @@ abstract class BasicQuery
      */
     public function count(): int
     {
+        return $this->doGetCount($this->assmebleQuery());
     }
     
     /**
@@ -46,7 +94,7 @@ abstract class BasicQuery
      */
     public function first($fields = null)
     {
-        if ($result = $this->firstIfExists($fields)) {
+        if (!is_null($result = $this->firstIfExists($fields))) {
             return $result;
         }
         throw new NoResultException("The query has no results and first() was called.");
@@ -60,13 +108,66 @@ abstract class BasicQuery
      */
     public function firstIfExists($fields = null)
     {
-        
+         $result = $this->get($fields);
+         
+         if (empty($result)) {
+             return null;
+         } else {
+            return $result->first();
+         }
     }
     
+    /**
+     * Returns only a Collection of this single field
+     * 
+     * @param Collection $result
+     * @param string $field
+     * @return Collection
+     */
+    protected function mapField(Collection $result, string $field): Collection
+    {
+        return $result->map(function($item, $key) use($field) {
+            return $item->$field;
+        });
+    }
+    
+    /**
+     * Returns only a Collection of StdClasses of thie given fields
+     * 
+     * @param Collection $result
+     * @param array $fields
+     * @return Collection
+     */
+    protected function mapFields(Collection $result, array $fields): Collection
+    {
+        return $result->map(function($item, $key) use($fields) {
+            $result = new \StdClass();
+            foreach($fields as $field) {
+                $result->$field = $item->$field;
+            }
+            return $result;
+        });            
+    }
+    
+    /**
+     * Returns all records that matches the given criteria
+     * @param unknown $fields
+     * @return Collection
+     */
     public function get($fields = null): Collection
     {
-        $this->targetGet();
-        return $this->execute();
+        $result = $this->doGet($this->assmebleQuery(),$fields);
+        
+        if (is_string($fields)) {
+            return $this->mapField($result,$fields);
+        } else if (is_array($fields)) {
+            return $this->mapFields($result,$fields);
+        } else {
+            return $result->map(function($item, $key) {
+                return $this->getRecord($key, $item);
+            });
+        }
+        return $result;
     }
     
     public function offset(int $offset): BasicQuery
@@ -83,25 +184,21 @@ abstract class BasicQuery
     
     public function where($key, $relation = null, $value = null): BasicQuery
     {
-        $this->condition_builder->where($key, $relation, $value);
         return $this;        
     }
     
     public function orWhere($key, $relation = null, $value = null): BasicQuery
     {
-        $this->condition_builder->orWhere($key, $relation, $value);
         return $this;
     }
     
     public function whereNot($key, $relation = null, $value = null): BasicQuery
     {
-        $this->condition_builder->whereNot($key, $relation, $value);
         return $this;        
     }
     
     public function orWhereNot($key, $relation = null, $value = null): BasicQuery
     {
-        $this->condition_builder->orWhereNot($key, $relation, $value);
         return $this;
     }
     
@@ -111,30 +208,15 @@ abstract class BasicQuery
         if (!in_array($direction,['asc','desc'])) {
             throw new InvalidOrderException("'$direction' is not a valid order direction.");
         }
+        if (!$this->fieldExists($key)) {
+            throw new UnknownFieldException("'$key' is not a valid field or pseudo field.");
+        }
+        if (!$this->fieldOrderable($key)) {
+            throw new InvalidOrderException("'$key' is usable as a sorting key.");
+        }
         $this->order_key = $key;
         $this->order_direction = $direction;
         return $this;
     }
     
-    abstract protected function execute();    
-    
-    protected function unaryCondition($key)
-    {
-        throw new NoUnaryConditionException("This query doesn't define a unary condition");    
-    }
-        
-    protected function binaryCondition($combine, $key, $relation, $value)
-    {
-        $entry = new \StdClass();
-        $entry->combine = $combine;
-        $entry->key = $key;
-        $entry->relation = $relation;
-        $entry->value = $value;
-        $this->conditions[] = $entry;
-    }
-    
-    protected function arrayToCollection(array $input): Collection
-    {
-        return collect($input);
-    }
 }
