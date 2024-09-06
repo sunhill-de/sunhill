@@ -16,7 +16,7 @@
 
 namespace Sunhill\Checks;
 
-use Sunhill\Basic\Checker\Checker;
+use Sunhill\Checker\Checker;
 use Illuminate\Support\Facades\DB;
 
 /**
