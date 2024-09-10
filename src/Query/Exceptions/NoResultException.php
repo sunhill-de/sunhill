@@ -2,4 +2,4 @@
 
 namespace Sunhill\Query\Exceptions;
 
-class NoResultException extends QueryException {}
+class NoResultException extends UnexpectedResultCountException {}

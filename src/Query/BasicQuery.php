@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Query\Exceptions\NoResultException;
 use Sunhill\Query\Exceptions\UnknownFieldException;
+use Sunhill\Query\Exceptions\TooManyResultsException;
 
 abstract class BasicQuery
 {
@@ -151,6 +152,7 @@ abstract class BasicQuery
     
     /**
      * Returns all records that matches the given criteria
+     * 
      * @param unknown $fields
      * @return Collection
      */
@@ -169,6 +171,34 @@ abstract class BasicQuery
         }
         return $result;
     }
+
+    /**
+     * Expect excactly one result and returns is or throws an exception.
+     * 
+     * @param unknown $fields
+     */
+    public function only($fields = null)
+    {
+        $query = $this->assembleQuery();
+        $count = $query->count();
+        if ($count < 1) {
+            throw new NoResultException("Excactly one result expected, none was returned.");
+        }
+        if ($count > 1) {
+            throw new TooManyResultsException("Excactly one result expected, '$count' where returned.");
+        }
+        return $query->first();
+    }
+    
+    public function delete()
+    {
+        
+    }
+    
+    public function update(array $fields)
+    {
+        
+    }
     
     public function offset(int $offset): BasicQuery
     {
@@ -184,22 +214,31 @@ abstract class BasicQuery
     
     public function where($key, $relation = null, $value = null): BasicQuery
     {
+        $this->addCondition('and', $key, $relation, $value);
         return $this;        
     }
     
     public function orWhere($key, $relation = null, $value = null): BasicQuery
     {
+        $this->addCondition('or', $key, $relation, $value);
         return $this;
     }
     
     public function whereNot($key, $relation = null, $value = null): BasicQuery
     {
+        $this->addCondition('andnot', $key, $relation, $value);
         return $this;        
     }
     
     public function orWhereNot($key, $relation = null, $value = null): BasicQuery
     {
+        $this->addCondition('ornot', $key, $relation, $value);
         return $this;
+    }
+    
+    protected function addCondition(string $connection, $key, $relation, $value)
+    {
+            
     }
     
     public function orderBy($key, $direction = 'asc'): BasicQuery
