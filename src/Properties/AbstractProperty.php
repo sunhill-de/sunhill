@@ -28,6 +28,8 @@ use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyException;
 use Sunhill\Properties\Exceptions\InvalidTypeOrSemanticException;
 use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Facades\Properties;
+use Sunhill\Query\Exceptions\NotAllowedRelationException;
+use Sunhill\Query\Exceptions\WrongTypeException;
 
 abstract class AbstractProperty
 {
@@ -1198,6 +1200,94 @@ abstract class AbstractProperty
     protected static function translate(string $info): string
     {
         return __($info);
+    }
+    
+    const EQUALITY = ['=','==','<>','!=','in','notin'];
+    const SIZE = ['<','<=','>','>=','between'];
+    const WITHNULL = ['isnull','isnotnull'];
+    /**
+     * A static array that lists all allowed relations for this property
+     * @var array
+     */
+    protected static $allowed_relations = [];
+    
+    /**
+     * Returns the static variable $allowed_relations
+     * 
+     * @return array
+     */
+    public static function getAllowedRelations(): array
+    {
+        return static::$allowed_relations;
+    }
+    
+    /**
+     * Tests if the given relation is in the $allowed_relations array
+     * 
+     * @param string $relation
+     * @return bool
+     */
+    public static function isAllowedRelation(string $relation): bool
+    {
+        return in_array($relation, static::getAllowedRelations());
+    }
+    
+    private function hasParents() 
+    {
+        return (bool)class_parents($this);
+    }
+    
+    public function testRelation(string $relation, $compare): bool
+    {
+        if (!static::isAllowedRelation($relation)) {
+            throw new NotAllowedRelationException("The relation '$relation' is not allowed for this property.");
+        }
+       return $this->doTestRelation($relation, $compare);
+    }
+    
+    private function testIn($values): bool
+    {
+        if (is_scalar($values)) {
+            $values = [$values];
+        }
+        if (!is_array($values)) {
+            throw new WrongTypeException("The given type is not expected.");
+        }
+        $own_value = $this->getValue();
+        foreach ($values as $value) {
+            if ($value == $own_value) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected function doTestRelation(string $relation, $compare): ?bool
+    {
+        switch ($relation) {
+            case '=':
+            case '==':
+                return $this->getValue() == $compare;
+            case '!=':
+            case '<>':
+                return $this->getValue() != $compare;
+            case 'in':
+                return $this->testIn($compare);
+            case 'notin':
+                return !$this->testIn($compare);
+            case '<':
+                return $this->getValue() < $compare;
+            case '<=':
+                return $this->getValue() <= $compare;
+            case '>':
+                return $this->getValue() > $compare;
+            case '>=':
+                return $this->getValue() >= $compare;
+            case 'isnull':
+                return is_null($this->getValue());
+            case 'isnotnull':
+                return !is_null($this->getValue());
+        }
     }
     
 }
