@@ -19,6 +19,11 @@ class NonAbstractProperty extends AbstractProperty
         return 'integer';
     }
     
+    public static function setAllowedRelations(array $allowed_relations)
+    {
+        static::$allowed_relations = $allowed_relations;    
+    }
+    
     protected function formatForHuman($input)
     {
         return "A".$input;

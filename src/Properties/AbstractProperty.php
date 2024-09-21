@@ -1208,6 +1208,8 @@ abstract class AbstractProperty
     /**
      * A static array that lists all allowed relations for this property
      * @var array
+     * 
+     * @wiki Writing_own_properties#Relations
      */
     protected static $allowed_relations = [];
     
@@ -1215,6 +1217,8 @@ abstract class AbstractProperty
      * Returns the static variable $allowed_relations
      * 
      * @return array
+     * 
+     * @wiki Writing_own_properties#Relations
      */
     public static function getAllowedRelations(): array
     {
@@ -1226,17 +1230,28 @@ abstract class AbstractProperty
      * 
      * @param string $relation
      * @return bool
+     * 
+     * @wiki Writing_own_properties#Relations
      */
     public static function isAllowedRelation(string $relation): bool
     {
         return in_array($relation, static::getAllowedRelations());
     }
-    
+
     private function hasParents() 
     {
         return (bool)class_parents($this);
     }
-    
+
+    /**
+     * Tests if the relation is allowed. If yes it test if the relation is true
+     * 
+     * @param string $relation
+     * @param unknown $compare
+     * @return bool
+     * 
+     * @wiki Writing_own_properties#Relations
+     */
     public function testRelation(string $relation, $compare): bool
     {
         if (!static::isAllowedRelation($relation)) {
