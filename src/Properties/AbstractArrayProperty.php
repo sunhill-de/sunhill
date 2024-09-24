@@ -10,7 +10,7 @@
  * Coverage: unknown
  */
 
-namespace Sunhill;
+namespace Sunhill\Properties;
 
 use Sunhill\Exceptions\InvalidParameterException;
 use Mockery\Matcher\Type;

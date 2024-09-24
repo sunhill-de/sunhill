@@ -2,16 +2,15 @@
 
 namespace Sunhill\ORM\Tests\Unit\Managers;
 
-use Sunhill\ORM\Tests\DatabaseTestCase;
 use Sunhill\ORM\Tests\Testobjects\Dummy;
 use Sunhill\ORM\Facades\Attributes;
 use Sunhill\ORM\Managers\Exceptions\InvalidAttributeIDException;
-use Illuminate\Support\Facades\DB;
 use Sunhill\ORM\Properties\Exceptions\InvalidNameException;
 use Sunhill\ORM\Managers\Exceptions\InvalidTypeException;
 use Sunhill\ORM\Managers\Exceptions\NotAnORMClassException;
+use Sunhill\Tests\SunhillDatabaseTestCase;
 
-class AttributeManagerTest extends DatabaseTestCase
+class AttributeManagerTest extends SunhillDatabaseTestCase
 {
 
     public function testGetAvaiableAttributesForClass()

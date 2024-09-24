@@ -3,6 +3,7 @@
 namespace Sunhill\Tests\Unit\Query;
 
 use Sunhill\Query\ArrayQuery;
+use Illuminate\Support\Collection;
 
 class TestArrayQuery extends ArrayQuery
 {
@@ -26,5 +27,34 @@ class TestArrayQuery extends ArrayQuery
             $this->entry('GHI',345,'YYY')
         ];
     }
+
+    protected function assmebleQuery()
+    {
+        
+    }
+    
+    protected function doGetCount($assambled_query): int
+    {
+        
+    }
+    
+    
+    protected function doGet($assembled_query): Collection
+    {
+        
+    }
+    
+    
+    protected function fieldExists(string $field): bool
+    {
+        
+    }
+    
+    
+    protected function fieldOrderable(string $field): bool
+    {
+        
+    }
+    
     
 }

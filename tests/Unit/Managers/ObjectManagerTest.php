@@ -3,13 +3,9 @@
 namespace Sunhill\ORM\Tests\Unit\Managers;
 
 use Illuminate\Support\Facades\DB;
-use Sunhill\ORM\Tests\DatabaseTestCase;
-use Sunhill\ORM\Tests\TestCase;
-use Sunhill\ORM\Tests\Testobjects\Dummy;
-use Sunhill\ORM\Managers\ObjectManager;
-use Sunhill\ORM\Facades\Objects;
+use Sunhill\Tests\SunhillDatabaseTestCase;
 
-class ObjectManagerTest extends DatabaseTestCase
+class ObjectManagerTest extends SunhillDatabaseTestCase
 {
  
     public function testCountObjectsViaClass() {

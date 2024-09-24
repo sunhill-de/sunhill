@@ -2,7 +2,7 @@
 
 namespace Sunhill\ORM\Tests\Unit\Managers;
 
-use Sunhill\ORM\Tests\TestCase;
+use Sunhill\Tests\TestCase;
 use Sunhill\ORM\Managers\ClassManager;
 use Sunhill\ORM\Facades\Classes;
 use Sunhill\ORM\ORMException;

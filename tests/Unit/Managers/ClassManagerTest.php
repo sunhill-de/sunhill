@@ -2,7 +2,6 @@
 
 namespace Sunhill\ORM\Tests\Unit\Managers;
 
-use Sunhill\ORM\Tests\TestCase;
 use Sunhill\ORM\Managers\ClassManager;
 use Sunhill\ORM\Facades\Classes;
 use Sunhill\ORM\ORMException;
@@ -25,7 +24,9 @@ use Sunhill\ORM\Properties\PropertyDate;
 use Sunhill\ORM\Properties\PropertyObject;
 use Sunhill\ORM\Properties\PropertyArray;
 use Sunhill\ORM\Managers\Exceptions\DuplicateEntryException;
+use Sunhill\Tests\TestCase;
 
+/*
 class BadClass1 extends ORMObject
 {
     
@@ -43,7 +44,7 @@ class BadClass2 extends ORMObject
         static::addInfo('name', 'attr_');
     }
 }
-
+*/
 class ClassManagerTest extends TestCase
 {
  
