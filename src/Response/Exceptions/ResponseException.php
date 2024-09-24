@@ -2,6 +2,6 @@
 
 namespace Sunhill\Response\Exceptions;
 
-use Sunhill\FrameworkException;
+use Sunhill\Exceptions\SunhillException;
 
-class ResponseException extends FrameworkException {}
+class ResponseException extends SunhillException {}
