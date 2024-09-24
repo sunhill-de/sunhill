@@ -3,6 +3,7 @@
 namespace Sunhill\Plugins;
 
 use Sunhill\Query\ArrayQuery;
+use Illuminate\Support\Collection;
 
 class PluginQuery extends ArrayQuery
 {
@@ -40,5 +41,28 @@ class PluginQuery extends ArrayQuery
         return in_array($key, ['name','author','version','state']);
     }
     
+    protected function assmebleQuery()
+    {
+        
+    }
+    
+    protected function doGetCount($assambled_query): int
+    {
+        
+    }
+    
+    protected function doGet($assembled_query): Collection
+    {
+        
+    }
+    
+    protected function fieldExists(string $field): bool
+    {
+    }
+    
+    protected function fieldOrderable(string $field): bool
+    {
+        
+    }
     
 }

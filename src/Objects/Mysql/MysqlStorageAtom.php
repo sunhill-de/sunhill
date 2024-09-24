@@ -31,4 +31,28 @@ class MysqlStorageAtom extends AbstractStorageAtom
         return $this->readItemsAsRecord($id);
     }
     
+    protected function handleRecord(string $storage_id, array $descriptor, $additional1 = null, $additional2 = null)
+    {
+        
+    }
+    
+    protected function handleDirectory(string $storage_id, $additional = null)
+    {
+        
+    }
+    
+    
+    protected function handleTags($additional = null)
+    {
+        
+    }
+    
+    
+    protected function handleAttributes($additional = null)
+    {
+        
+    }
+    
+    
+    
 }
