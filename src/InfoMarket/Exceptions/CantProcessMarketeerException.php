@@ -10,7 +10,7 @@ use Sunhill\Exceptions\PropertiesException;
  * @author klaus
  *
  */
-class CantProcessMarketeerException extends PropertiesException
+class CantProcessMarketeerException extends InfoMarketException
 {
     
 }

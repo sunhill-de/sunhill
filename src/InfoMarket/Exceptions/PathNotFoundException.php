@@ -4,7 +4,7 @@ namespace Sunhill\InfoMarket\Exceptions;
 
 use Sunhill\Exceptions\PropertiesException;
 
-class PathNotFoundException extends PropertiesException
+class PathNotFoundException extends InfoMarketException
 {
     
 }

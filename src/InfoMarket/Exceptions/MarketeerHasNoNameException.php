@@ -10,7 +10,7 @@ use Sunhill\Exceptions\PropertiesException;
  * @author klaus
  *
  */
-class MarketeerHasNoNameException extends PropertiesException
+class MarketeerHasNoNameException extends InfoMarketException
 {
     
 }

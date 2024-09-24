@@ -10,7 +10,7 @@ use Sunhill\Exceptions\PropertiesException;
  * @author klaus
  *
  */
-class UnknownFormatException extends PropertiesException
+class UnknownFormatException extends InfoMarketException
 {
     
 }

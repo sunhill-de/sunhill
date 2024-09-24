@@ -4,4 +4,4 @@ namespace Sunhill\Storage\Exceptions;
 
 use Sunhill\PropertiesException;
 
-class IDNotSetException extends PropertiesException {}
+class IDNotSetException extends StorageException {}
