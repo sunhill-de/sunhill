@@ -8,6 +8,7 @@ namespace Sunhill\ORM\Tests\Unit\Checks;
 use Illuminate\Support\Facades\DB;
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Checks\TagChecks;
+use Sunhill\Tests\SunhillDatabaseTestCase;
 
 require_once('CheckUtils.php');
 
@@ -32,7 +33,7 @@ function getMatrix()
     return [1=>$tag1,2=>$tag2,3=>$tag3,4=>$tag4];
 }
 
-uses(SunhillTestCase::class);
+uses(SunhillDatabaseTestCase::class);
 
     
 test('Build Tag Matrix', function()

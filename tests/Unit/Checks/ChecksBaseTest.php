@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Sunhill\Checks\ChecksBase;
 use Sunhill\Facades\Checks;
 use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillDatabaseTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillDatabaseTestCase::class);
 
 test('check for danging pointers', function()
 {
