@@ -89,7 +89,7 @@ test('RepairableProblems', function($check, $destroy_callback)
         $destroy_callback();
         expect(runCheck($checker, $check, false))->toBe('failed');
         expect(runCheck($checker, $check, true))->toBe('repaired');
-        exeect(runCheck($checker, $check, false))->toBe('passed');
+        expect(runCheck($checker, $check, false))->toBe('passed');
     })->with([
             ['check_TagsWithNotExistingParents',function() {DB::table('tags')->where('id',7)->delete();} ],            
             ['check_TagCacheWithNotExistingTags',function() {DB::table('tags')->where('id',7)->delete();} ],            
