@@ -8,10 +8,34 @@ use Illuminate\Support\Collection;
 class DummyQuery extends BasicQuery
 {
    
+    private function getWhereStatement(array $conditions)
+    {
+        $result = '[';
+        $first = true;
+        foreach ($conditions as $condition) {
+            if ($first) {
+                $first = false;
+            } else {
+                $result .= ',';
+            }
+            $result .= '('.$condition->connection.':';
+            if (is_a($condition->key,DummyQuery::class)) {
+                $result .= $this->getWhereStatement($condition->key->getConditions()).')';   
+            } else {
+                $result .= $condition->key.$condition->relation.$condition->value.')';
+            }
+        }
+        $result .= ']';
+        return $result;
+    }
+    
     protected function getInfo()
     {
         $result = '';
         
+        if (!empty($this->conditions)) {
+            $result .= 'where:'.$this->getWhereStatement($this->conditions);
+        }
         if ($this->offset) {
             $result .= "offset:".$this->offset;
         }

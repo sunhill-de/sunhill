@@ -160,7 +160,7 @@ test('Query', function($callback, $expectation, $method = null)
           function($query)
           {
               return $query->where('id','=',1)->Where(function($query) { $query->where('payload','=','abc')->orWhere('payload','=','def'); });
-          },'0:where:[(and:id=1),(and:[(and:payload=abc),(or:payload=def])]'
+          },'0:where:[(and:id=1),(and:[(and:payload=abc),(or:payload=def)])]'
       ],
       'whereIn with array'=>[
           function($query)

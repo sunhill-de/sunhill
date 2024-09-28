@@ -19,6 +19,8 @@ abstract class BasicQuery
     
     protected string $order_direction = '';
     
+    protected array $conditions = [];
+    
     public function __construct()
     {
     }
@@ -236,9 +238,42 @@ abstract class BasicQuery
         return $this;
     }
     
+    protected function handleNestedCondition(callable $key)
+    {
+        $nested = new static();
+        $key($nested);
+        return $nested;
+    }
+    
+    protected function checkAndAdjustCondition($key, $relation ,$value)
+    {
+        if (is_null($value)) {
+            $value = $relation;
+            $relation = '=';
+        }
+        return [$key, $relation, $value];
+    }
+    
     protected function addCondition(string $connection, $key, $relation, $value)
     {
+        $entry = new \StdClass();
+        $entry->connection  = $connection;
+        
+        if (is_callable($key)) {
+            $entry->key = $this->handleNestedCondition($key);
+        } else {
+            list($key,$relation,$value) = $this->checkAndAdjustCondition($key, $relation, $value);
             
+            $entry->key         = $key;
+            $entry->relation    = $relation;
+            $entry->value       = $value;            
+        }
+        $this->conditions[] = $entry;
+    }
+    
+    public function getConditions(): array
+    {
+        return $this->conditions;    
     }
     
     public function orderBy($key, $direction = 'asc'): BasicQuery
