@@ -10,6 +10,7 @@ use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Properties\Exceptions\InvalidIndexException;
 use Sunhill\Properties\Exceptions\InvalidIndexTypeException;
+use Sunhill\Properties\MapProperty;
 
 test('set allowed type', function ($types, $pass) {
     Properties::shouldReceive('isPropertyRegistered')->andReturn($pass);
@@ -71,13 +72,14 @@ test('write array element', function ($allowed, $value) {
     [[TypeInteger::class, TypeVarchar::class], 'ABC'],
 ]);
 
-test('Traversing an array element', function() {
+test('Traversing an array element with integer indices', function() {
        $test = new ArrayProperty();
        $test->setName('test');
     
        $storage = Mockery::mock(AbstractStorage::class);
        $storage->shouldReceive('getIsInitialized')->with('test')->andReturn(true);
        $storage->shouldReceive('getElementCount')->with('test')->andReturn(2);
+       $storage->shouldReceive('getIndices')->once()->with('test')->andReturn([0,1]);
        $storage->shouldReceive('getIndexedValue')->with('test',0)->once()->andReturn('ArrayElement');
        $storage->shouldReceive('getIndexedValue')->with('test',1)->once()->andReturn('ArrayElement');
        $test->setStorage($storage);
@@ -89,6 +91,25 @@ test('Traversing an array element', function() {
        }
 });
 
+test('Traversing an array element with string indices', function() {
+        $test = new ArrayProperty();
+        $test->setName('test');
+        
+        $storage = Mockery::mock(AbstractStorage::class);
+        $storage->shouldReceive('getIsInitialized')->with('test')->andReturn(true);
+        $storage->shouldReceive('getElementCount')->with('test')->andReturn(2);
+        $storage->shouldReceive('getIndices')->once()->with('test')->andReturn(['A','B']);
+        $storage->shouldReceive('getIndexedValue')->with('test','A')->once()->andReturn('ArrayElement');
+        $storage->shouldReceive('getIndexedValue')->with('test','B')->once()->andReturn('ArrayElement');
+        $test->setStorage($storage);
+        
+        $i = 'A';
+        foreach($test as $key => $element) {
+            expect($key)->toBe($i++);
+            expect($element)->toBe('ArrayElement');
+        }
+});
+        
 test('Unset an array element', function()
 {
     $test = new ArrayProperty();
@@ -158,6 +179,7 @@ test('Assign another array property to an array property', function()
     $source_storage->shouldReceive('getIndexedValue')->once()->with('othertest',2)->andReturn(3);
     $source_storage->shouldReceive('getIsInitialized')->atLeast(1)->with('othertest')->andReturn(true);
     $source_storage->shouldReceive('getElementCount')->with('othertest')->andReturn(3);
+    $source_storage->shouldReceive('getIndices')->once()->with('othertest')->andReturn([0,1,2]);
     
     $test->setStorage($storage);
     
@@ -166,6 +188,12 @@ test('Assign another array property to an array property', function()
     $source->setStorage($source_storage);
     
     $test->setValue($source);
+});
+
+test('MapProperty sets index type to string', function()
+{
+    $test = new MapProperty();
+    expect($test->getIndexType())->toBe('string');
 });
 
 test('setIndexType() and getIndexType()', function()

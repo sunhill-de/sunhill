@@ -32,8 +32,9 @@ use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Facades\Properties;
 use Sunhill\Query\Exceptions\NotAllowedRelationException;
 use Sunhill\Query\Exceptions\WrongTypeException;
+use Sunhill\Basic\Base;
 
-abstract class AbstractProperty
+abstract class AbstractProperty extends Base
 {
 
     /**

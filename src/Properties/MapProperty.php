@@ -17,46 +17,12 @@ use Mockery\Matcher\Type;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\InvalidValueException;
 
-class MapProperty extends AbstractArrayProperty 
+class MapProperty extends ArrayProperty 
 {
 
-    protected $current = 0;
-    
-    protected $keys;
-   
-    public function current(): mixed
+    public function __construct()
     {
-        if (!$this->getStorage()->getIsInitialized($this->getName())) {
-            $this->handleUninitialized();
-        }        
-        if (is_null($this->keys)) {
-            $this->keys = $this->getStorage()->getKeys();
-        }
-        return $this->getStorage()->getIndexedValue($this->getName(), $this->keys[$this->current]);
+        parent::__construct();
+        $this->setIndexType('string');
     }
-    
-    
-    public function key(): mixed
-    {
-        if (!$this->getStorage()->getIsInitialized($this->getName())) {
-            $this->handleUninitialized();
-        }
-        return $this->keys[$this->current];        
-    }
-    
-    public function next(): void
-    {
-        $this->current++;        
-    }
-    
-    public function rewind(): void
-    {
-        $this->current = 0;        
-    }
-    
-    public function valid(): bool
-    {
-        return (($this->current >= 0) && ($this->current < $this->count()));
-    }
-    
 }
