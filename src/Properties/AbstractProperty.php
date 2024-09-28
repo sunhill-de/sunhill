@@ -8,6 +8,8 @@
  * Documentation: complete
  * Tests: Unit/Properties/AbstractPropertyTest.php
  * Coverage: 87.82 (2024-03-08)
+ * 
+ * Wiki: /Properties
  */
 
 namespace Sunhill\Properties;
@@ -30,7 +32,6 @@ use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Facades\Properties;
 use Sunhill\Query\Exceptions\NotAllowedRelationException;
 use Sunhill\Query\Exceptions\WrongTypeException;
-use phpDocumentor\Reflection\Types\Mixed_;
 
 abstract class AbstractProperty
 {
@@ -535,7 +536,15 @@ abstract class AbstractProperty
 
     protected $default;
     
-    public function setDefault(mixed $default): static
+    /**
+     * Sets a default value for this storage
+     * 
+     * @param mixed $default
+     * @return static
+     * 
+     * @wiki /Properties#Default_value
+     */
+    public function setDefault(mixed $default): Self
     {
         if (is_null($default)) {
             $this->default = new DefaultNull();
@@ -545,7 +554,27 @@ abstract class AbstractProperty
         }
         return $this;
     }
+
+    /**
+     * Sets a default value for this storage (alias for setDefault()) 
+     *
+     * @param mixed $default
+     * @return static
+     *
+     * @wiki /Properties#Default_value
+     */    
+    public function default(mixed $default): self
+    {
+        return $this->setDefault($default);    
+    }
     
+    /**
+     * Returns the current set default value
+     * 
+     * @return mixed
+     *
+     * @wiki /Properties#Default_value
+     */
     public function getDefault(): mixed
     {
         if (is_a($this->default,DefaultNull::class)) {
@@ -553,12 +582,26 @@ abstract class AbstractProperty
         }
         return $this->default;
     }
-    
+
+    /**
+     * Returns if the default value for this property is null
+     * 
+     * @return bool
+     *
+     * @wiki /Properties#Default_value
+     */
     public function defaultsNull(): bool
     {
         return is_a($this->default,DefaultNull::class);
     }
-    
+
+    /**
+     * Returns if this property has a default value
+     * 
+     * @return bool
+     *
+     * @wiki /Properties#Default_value
+     */
     public function hasDefault(): bool
     {
         return !is_null($this->default);
@@ -695,7 +738,7 @@ abstract class AbstractProperty
      * 
      * @wiki /Properties#Capabilities
      */
-    public function setModifyCapability(string $capability): static
+    public function setModifyCapability(string $capability): self
     {
         $this->modify_capability = $capability;
         return $this;
@@ -883,7 +926,7 @@ abstract class AbstractProperty
      *
      * Test: Unit/Properties/PropertyTest::testDefault
      */
-    public function nullable(bool $value = true): static
+    public function nullable(bool $value = true): self
     {
         $this->nullable = $value;
         if (!is_a($this->default,DefaultNull::class)) {
@@ -900,7 +943,7 @@ abstract class AbstractProperty
      *
      * Test: Unit/Properties/PropertyTest::testDefault
      */
-    public function setNullable(bool $value = true): static
+    public function setNullable(bool $value = true): self
     {
         return $this->nullable($value);
     }
@@ -912,7 +955,7 @@ abstract class AbstractProperty
      *
      * Test: Unit/Properties/PropertyTest::testDefault
      */
-    public function notNullable(): static
+    public function notNullable(): self
     {
         return $this->nullable(false);
     }
