@@ -230,3 +230,75 @@ test('validate input', function () {
 
     $test->setValue(123);
 })->throws(InvalidValueException::class);
+
+test('set null as a value default behavior', function()
+{
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->expects('getIsInitialized')->once()->andReturn(false);
+    
+    $test = new NonAbstractProperty();
+    $test->setStorage($storage);
+    
+    expect($test->getNullable())->toBe(false);
+    $test->setValue(null);
+})->throws(InvalidValueException::class);
+
+test('setNullable() and getNullable()', function()
+{
+    $test = new NonAbstractProperty();
+    $test->setNullable(true);
+    expect($test->getNullable())->toBe(true);
+});
+
+test('getDefault() with no default', function()
+{
+    $test = new NonAbstractProperty();
+    expect($test->getDefault())->toBe(null);
+    expect($test->hasDefault())->toBe(false);
+    expect($test->defaultsNull())->toBe(false);
+});
+
+test('setDefault() with a value', function()
+{
+    $test = new NonAbstractProperty();
+    $test->setDefault(5);
+    expect($test->getDefault())->toBe(5);
+    expect($test->hasDefault())->toBe(true);
+    expect($test->defaultsNull())->toBe(false);    
+});
+
+test('setDefault() with null', function()
+{
+    $test = new NonAbstractProperty();
+    $test->setDefault(null);
+    expect($test->getDefault())->toBe(null);
+    expect($test->hasDefault())->toBe(true);
+    expect($test->defaultsNull())->toBe(true);
+    expect($test->getNullable())->toBe(true);
+});
+
+test('setNullable() works', function()
+{
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->expects('getIsInitialized')->twice()->andReturn(false);
+    $storage->expects('setValue')->with('test_int',null)->once()->andReturn(true);
+    
+    $test = new NonAbstractProperty();
+    $test->setStorage($storage);
+    $test->setNullable(true);
+    
+    $test->setValue(null);
+    expect($test->getValue())->toEqual(null);    
+});
+
+test('setNullable() set null as default', function()
+{
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->expects('getIsInitialized')->once()->andReturn(false);
+    
+    $test = new NonAbstractProperty();
+    $test->setStorage($storage);
+    $test->setNullable(true);
+    
+    expect($test->getValue())->toEqual(null);
+});

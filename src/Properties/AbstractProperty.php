@@ -30,6 +30,7 @@ use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Facades\Properties;
 use Sunhill\Query\Exceptions\NotAllowedRelationException;
 use Sunhill\Query\Exceptions\WrongTypeException;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 abstract class AbstractProperty
 {
@@ -447,6 +448,9 @@ abstract class AbstractProperty
     
     protected function handleUninitialized()
     {
+        if ($this->hasDefault()) {
+            return $this->getDefault();
+        }
         throw new UninitializedValueException("Reading access to uninitialized property: ".$this->getName());    
     }
     
@@ -529,6 +533,37 @@ abstract class AbstractProperty
         return $this->formatForHuman($this->doGetValue());
     }
 
+    protected $default;
+    
+    public function setDefault(mixed $default): static
+    {
+        if (is_null($default)) {
+            $this->default = new DefaultNull();
+            $this->nullable = true;
+        } else {
+            $this->default = $default;
+        }
+        return $this;
+    }
+    
+    public function getDefault(): mixed
+    {
+        if (is_a($this->default,DefaultNull::class)) {
+            return null;
+        }
+        return $this->default;
+    }
+    
+    public function defaultsNull(): bool
+    {
+        return is_a($this->default,DefaultNull::class);
+    }
+    
+    public function hasDefault(): bool
+    {
+        return !is_null($this->default);
+    }
+    
     protected string $write_capability = '';
     
     /**
@@ -800,7 +835,11 @@ abstract class AbstractProperty
      */
     protected function doSetValue($value)
     {
-        $this->getStorage()->setValue($this->getName(), $this->formatForStorage($this->formatFromInput($value)));
+        if (is_null($value)) {
+            $this->getStorage()->setValue($this->getName(), null);            
+        } else {
+            $this->getStorage()->setValue($this->getName(), $this->formatForStorage($this->formatFromInput($value)));
+        }
     }
     
     /**
@@ -832,7 +871,64 @@ abstract class AbstractProperty
             }
         }
     }
+   
+    protected $nullable = false;
     
+    /**
+     * Marks this property as nullable (null may be assigned as value). If there is
+     * not already a default value, set null as default too
+     *
+     * @param bool $value
+     * @return PropertyOld
+     *
+     * Test: Unit/Properties/PropertyTest::testDefault
+     */
+    public function nullable(bool $value = true): static
+    {
+        $this->nullable = $value;
+        if (!is_a($this->default,DefaultNull::class)) {
+            $this->default = new DefaultNull();
+        }
+        return $this;
+    }
+    
+    /**
+     * Alias for nullable()
+     *
+     * @param bool $value
+     * @return PropertyOld
+     *
+     * Test: Unit/Properties/PropertyTest::testDefault
+     */
+    public function setNullable(bool $value = true): static
+    {
+        return $this->nullable($value);
+    }
+    
+    /**
+     * Alias for nullable(false)
+     *
+     * @return PropertyOld
+     *
+     * Test: Unit/Properties/PropertyTest::testDefault
+     */
+    public function notNullable(): static
+    {
+        return $this->nullable(false);
+    }
+    
+    /**
+     * Getter for nullable
+     *
+     * @return bool
+     *
+     * Test: Unit/Properties/PropertyTest::testDefault
+     */
+    public function getNullable(): bool
+    {
+        return $this->nullable;
+    }
+        
     /**
      * Checks the writing restrictions and if passed performs the writing
      *
@@ -842,7 +938,6 @@ abstract class AbstractProperty
      */
     public function setValue($value)
     {
-        $this->checkForStorage('write');
         if ($this->isInitialized()) {
             $this->checkForModify();
         } else {
@@ -853,6 +948,7 @@ abstract class AbstractProperty
         } else {
             $this->validateInput($value);
         }
+        $this->checkForStorage('write');
         return $this->doSetValue($value);
     }
  
@@ -863,7 +959,9 @@ abstract class AbstractProperty
      */
     protected function handleNullValue()
     {
-        throw new InvalidValueException("Null is not allowed as a value");
+        if (!$this->nullable) {
+            throw new InvalidValueException("Null is not allowed as a value");            
+        }
     }
     
     /**
