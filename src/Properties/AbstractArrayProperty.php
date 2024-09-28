@@ -8,14 +8,17 @@
  * Documentation: complete
  * Tests: Unit/PropertyTest.php, Unit/PropertyValidateTest.php
  * Coverage: unknown
+ * 
+ * Wiki: /Array_properties
  */
 
 namespace Sunhill\Properties;
 
-use Sunhill\Exceptions\InvalidParameterException;
-use Mockery\Matcher\Type;
+use Sunhill\Properties\Exceptions\InvalidParameterException;
 use Sunhill\Facades\Properties;
-use Sunhill\Exceptions\InvalidValueException;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Properties\Exceptions\InvalidIndexTypeException;
+use Sunhill\Properties\Exceptions\InvalidIndexException;
 
 abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,\Iterator
 {
@@ -66,11 +69,14 @@ abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayA
     
     /**
      * Sets the allowed element type for this array
+     * 
      * @param unknown $type_or_types
      * when $type_or_types is an array each element is an allowed property type for this array
      * when $type_or_types is a string and the full qualified name of a property class then this is the allowed data Type
      * when $type_or_types is a string and the name of a property then this is the allowed data_type 
      * @return self
+     * 
+     * wiki: /Array_properties#Allowed_element_types
      */
     public function setAllowedElementTypes($type_or_types): self
     {
@@ -80,6 +86,13 @@ abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayA
         return $this;
     }
  
+    /**
+     * Returns an array of the current set allowed element types
+     * 
+     * @return array
+     * 
+     * wiki: /Array_properties#Allowed_element_types
+     */
     public function getAllowedElementTypes(): array
     {
         return $this->allowed_element_types;    
@@ -99,7 +112,7 @@ abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayA
         return $tester->isValid($value);
     }
     
-    protected function checkElement($value)
+    protected function checkElement($value): bool
     {
         if (empty($this->allowed_element_types)) {
             return true; // everything is allowed
@@ -112,8 +125,79 @@ abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayA
         return false;
     }
     
+    protected $index_type = 'integer';
+    
+    /**
+     * Sets the index type for this array
+     * 
+     * @param string $index_type
+     * @return static
+     * 
+     * @wiki /Array_properties#Indextypes_and_indices
+     */
+    public function setIndexType(string $index_type): static
+    {
+        $index_type = strtolower($index_type);
+        if (!in_array($index_type,['integer','string'])) {
+            throw new InvalidIndexTypeException("The index type '$index_type' is not allowed");
+        }
+        $this->index_type = $index_type;
+        return $this;
+    }
+    
+    /**
+     * Returns the index type of this array
+     * 
+     * @return string
+     * 
+     * @wiki /Array_properties#Indextypes_and_indices
+     */
+    public function getIndexType(): string
+    {
+        return $this->index_type;
+    }
+    
+    /**
+     * returns if the given index exists
+     * 
+     * @param unknown $index
+     * @return bool
+     * 
+     * @wiki /Array_properties#Indextypes_and_indices
+     */
+    public function indexExists($index): bool
+    {
+        $this->checkOffset($index);
+    }
+    
+    private function isValidOffset(mixed $offset): bool
+    {
+        switch ($this->index_type) {
+            case 'integer':
+                if (is_int($offset) || is_null($offset)) {
+                    return true;
+                }
+                break;
+            case 'string':
+                if (is_string($offset)) {
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+    
+    protected function checkOffset(mixed $offset)
+    {
+        if ($this->isValidOffset($offset)) {
+            return;
+        }
+        throw new InvalidIndexException("The given index is invalid");
+    }
+    
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        $this->checkOffset($offset);
         if (!$this->checkElement($value)) {
             if (is_scalar($value)) {
                 throw new InvalidValueException("The passed value '$value' is not an allowed element type for this array.");
@@ -132,8 +216,14 @@ abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayA
         return $this->formatFromStorage($this->getStorage()->getIndexedValue($this->getName(),$offset));
     }
     
+    public function unset(mixed $index)
+    {
+        return $this->offsetUnset($index);
+    }
+    
     public function offsetGet(mixed $offset): mixed
     {
+        $this->checkOffset($offset);
         return $this->doOffsetget($offset);
     }
     
@@ -145,27 +235,64 @@ abstract class AbstractArrayProperty extends AbstractProperty implements \ArrayA
         return $this->getStorage()->getElementCount($this->getName());
     }
     
+    /**
+     * Returns, if the given offset exists. Passes the request to the storage
+     * {@inheritDoc}
+     * @see ArrayAccess::offsetExists()
+     */
     public function offsetExists(mixed $offset): bool
     {
-        if (!$this->getStorage()->getIsInitialized($this->getName())) {
-            $this->handleUninitialized();
-        } 
-        return $this->getStorage()->getOffsetExists($this->getName());
+        $this->checkForStorage('offsetExists');
+        $this->checkOffset($offset);
+        return $this->getStorage()->getOffsetExists($this->getName(),$offset);
     }
     
     public function offsetUnset(mixed $offset): void
     {
-        if (!$this->getStorage()->getIsInitialized($this->getName())) {
-            $this->handleUninitialized();
-        }        
-        $this->getStorage()->doOffsetUnset($this->getName());
+        $this->checkForStorage('offsetExists');
+        $this->checkOffset($offset);
+        $this->getStorage()->unsetOffset($this->getName(), $offset);
     }
     
-   public function isValid($test): bool
+    public function isValid($test): bool
     {
-        return false;
+        if (is_null($test)) {
+            return parent::isValid($test);
+        }
+        if (!is_array($test) && !($test instanceof \Traversable)) {
+            return false;
+        }
+        foreach ($test as $key => $element) {
+            if (!$this->isValidOffset($key)) {
+                return false;
+            }
+            if (!$this->checkElement($element)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
         
+    /**
+     * Overwritten function to test, if an array like structure is assigned
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Properties\AbstractProperty::setValue()
+     */
+    public function setValue($value)
+    {
+        if (is_array($value) || ($value instanceof \Traversable)) {
+            $result = [];
+            foreach ($value as $key => $element) {
+                $result[$key] = $element;   
+            }
+            parent::setValue($result);
+        } else {
+            parent::setValue($value);
+        }
+    }
+    
     public function getAccessType(): string
     {
         return 'array';
