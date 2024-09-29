@@ -39,6 +39,24 @@ abstract class AbstractRecordProperty extends AbstractProperty implements \Itera
         return false;
     }
     
+    public function __construct(?callable $callback = null)
+    {
+        parent::__construct();
+        
+        $builder = new ElementBuilder($this);
+        if (!is_null($callback)) {
+            $callback($builder);
+        }
+        $this->initializeRecord($builder);
+    }
+    
+    protected $elements = [];
+    
+    protected function initializeRecord(ElementBuilder $builder)
+    {
+        
+    }
+    
 // ****************************** Iterator **************************************
     protected $current = 0;
     
