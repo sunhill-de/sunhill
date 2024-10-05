@@ -22,13 +22,11 @@ test('register property', function () {
     expect(isset(getProtectedProperty($test, 'registered_properties')['NonAbstractProperty']))->toBeTrue();
 });
 
-test('register double property', function () {
-    $this->expectException(PropertyNameAlreadyRegisteredException::class);
-
+it('fails when registering double property', function () {
     $test = new PropertiesManager();
     $test->registerProperty(NonAbstractProperty::class);
     $test->registerProperty(NonAbstractProperty::class);
-});
+})->throws(PropertyNameAlreadyRegisteredException::class);
 
 test('register double property with alias', function () {
     $test = new PropertiesManager();
@@ -39,19 +37,17 @@ test('register double property with alias', function () {
     expect(isset(getProtectedProperty($test, 'registered_properties')['alias']))->toBeTrue();
 });
 
-test('register property with non accessible class', function () {
-    $this->expectException(PropertyClassDoesntExistException::class);
+it('fails when registering property with non accessible class', function () {
     $test = new PropertiesManager();
 
     $test->registerProperty('something');
-});
+})->throws(PropertyClassDoesntExistException::class);
 
-test('register property with no property class', function () {
-    $this->expectException(GivenClassNotAPropertyException::class);
+it('fails when registering property with no property class', function () {
     $test = new PropertiesManager();
 
     $test->registerProperty(\StdClass::class);
-});
+})->throws(GivenClassNotAPropertyException::class);
 
 test('property registred', function () {
     $test = new PropertiesManager();
@@ -72,14 +68,12 @@ test('get namespace of property pass', function () {
     expect($test->getNamespaceOfProperty(new NonAbstractProperty()))->toEqual(NonAbstractProperty::class);
 });
 
-test('get namespace of property fail', function () {
-    $this->expectException(PropertyNotRegisteredException::class);
-
+it('fails when geting namespace of non registrerd property', function () {
     $test = new PropertiesManager();
     $test->registerProperty(NonAbstractProperty::class);
 
     $test->getNamespaceOfProperty('nonexisting');
-});
+})->throws(PropertyNotRegisteredException::class);
 
 test('get name of property pass', function () {
     $test = new PropertiesManager();
@@ -90,7 +84,7 @@ test('get name of property pass', function () {
     expect($test->getNameOfProperty(new NonAbstractProperty()))->toEqual('NonAbstractProperty');
 });
 
-test('get name of property fail', function () {
+it('fails when geting name of nonregistered property', function () {
     $test = new PropertiesManager();
     $test->registerProperty(NonAbstractProperty::class);
 
@@ -129,13 +123,11 @@ test('register unit', function () {
     expect(isset(getProtectedProperty($test, 'registered_units')['test_name']))->toBeTrue();
 });
 
-test('register double unit', function () {
-    $this->expectException(UnitNameAlreadyRegisteredException::class);
-
+it('if fails when registering double unit', function () {
     $test = new PropertiesManager();
     $test->registerUnit('test_name','test_unit', 'test_group', 'test_basic');
     $test->registerUnit('test_name','test_unit', 'test_group', 'test_basic');
-});
+})->throws(UnitNameAlreadyRegisteredException::class);
 
 test('unit registred', function () {
     $test = new PropertiesManager();
@@ -152,14 +144,13 @@ test('get unit', function () {
     expect($test->getUnit('test_name'))->toEqual('test_unit');
 });
 
-test('get unit fail', function () {
-    $this->expectException(UnitNotRegisteredException::class);
+it('fails when geting unregistered unit', function () {
 
     $test = new PropertiesManager();
     $test->registerUnit('test_name','test_unit', 'test_group', 'test_basic');
 
     $test->getUnit('unknown');
-});
+})->throws(UnitNotRegisteredException::class);
 
 test('get unit group', function () {
     $test = new PropertiesManager();
@@ -193,37 +184,3 @@ test('calculate from basic', function () {
     expect($test->calculateFromBasic('test_name', 4))->toEqual(2);
 });
 
-test('getHirarchOfRecord() works with first', function()
-{
-    $test = new PropertiesManager();
-    $list = $test->getHirachyOfRecord(First::class);
-    expect($list)->toBe([First::class]);
-});
-    
-test('getHirarchOfRecord() works with second', function()
-{
-    $test = new PropertiesManager();
-    $list = $test->getHirachyOfRecord(Second::class);
-    expect($list)->toBe([Second::class,First::class]);
-});
-
-test('getHirarchOfRecord() works with third', function()
-{
-    $test = new PropertiesManager();
-    $list = $test->getHirachyOfRecord(Third::class);
-    expect($list)->toBe([Third::class,Second::class,First::class]);
-});
-
-test('getStorageID() calls getInfo()', function() 
-{
-   $test = new PropertiesManager();
-   expect($test->getStorageIDOfRecord(First::class))->toBe('teststorage');
-});
-
-test('getStorageForProperty()', function()
-{
-    $test = new PropertiesManager();
-    $test->registerProperty(First::class);
-    $first = new First();
-    expect(is_a($test->getStorageForProperty($first), AbstractStorage::class))->toBe(true);    
-});

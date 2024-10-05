@@ -11,16 +11,14 @@
  */
 namespace Sunhill\Checker;
 
-use Sunhill\Basic\Loggable;
-use Sunhill\Checker\CheckException;
-use Sunhill\Checker\Checker;
+use Sunhill\Basic\Base;
 
 /**
  The class for the check performer. This class is called via the Checks facade which is normally called via an command line. 
  The checks itself are performed by a checker class. This checker class has to be installed via the InstallChecker method 
  first. The checks are performed by calling the Checks method 
  */
-class Checks extends Loggable 
+class Checks extends Base 
 {
     
     /**

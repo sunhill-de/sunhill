@@ -3,9 +3,10 @@
  * @file base.php
  * Provides a common basic class for all sunhill project classes
  * Lang en
- * Reviewstatus: 2023-03-14
+ * Reviewstatus: 2024-10-05
  * Localization: incomplete
  * Documentation: complete
+ * 
  * Tests: Unit/Basic/BasicTest.php
  * Coverage: 100% (2023-03-14)
  */
@@ -13,10 +14,13 @@
 namespace Sunhill\Basic;
 
 
+use Sunhill\Exceptions\SunhillException;
+
 /**
  * Basic common class for all classes of the sunhill project 
  * @author klaus
  *
+ * @wiki /Utility_classes
  */
 class Base 
 {

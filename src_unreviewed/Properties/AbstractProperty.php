@@ -545,7 +545,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Default_value
      */
-    public function setDefault(mixed $default): Self
+    public function setDefault(mixed $default): static
     {
         if (is_null($default)) {
             $this->default = new DefaultNull();
@@ -564,7 +564,7 @@ abstract class AbstractProperty extends Base
      *
      * @wiki /Properties#Default_value
      */    
-    public function default(mixed $default): self
+    public function default(mixed $default): static
     {
         return $this->setDefault($default);    
     }
@@ -739,7 +739,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Capabilities
      */
-    public function setModifyCapability(string $capability): self
+    public function setModifyCapability(string $capability): static
     {
         $this->modify_capability = $capability;
         return $this;

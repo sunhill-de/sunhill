@@ -14,10 +14,9 @@
 
 namespace Sunhill\Checker;
 
-use Sunhill\Basic\Loggable;
-use Sunhill\Basic\Utils\Descriptor;
+use Sunhill\Basic\Base;
 
-class Checker extends Loggable 
+class Checker extends Base
 {
     
     /** 
