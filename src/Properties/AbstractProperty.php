@@ -3,13 +3,14 @@
  * @file AbstractProperty.php
  * Defines an abstract property as base for all other properties
  * Lang de,en
- * Reviewstatus: 2024-02-04
+ * Reviewstatus: 2024-10-07
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Properties/AbstractPropertyTest.php
  * Coverage: 87.82 (2024-03-08)
  * 
  * Wiki: /Properties
+ * tests /tests/Unit/Properties/AbstractProperties/*
  */
 
 namespace Sunhill\Properties;
