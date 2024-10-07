@@ -1,5 +1,8 @@
 <?php
 
+/*
+ * Tests filters subsystem
+ */
 
 use Sunhill\Facades\Filters;
 use Sunhill\Tests\Feature\Filter\Filters\GroupAFilter;
