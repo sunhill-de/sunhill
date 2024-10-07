@@ -1,7 +1,24 @@
 <?php
+/**
+ * @file Filter.php
+ * The basic class of the filter subsystem
+ * Lang en
+ * Reviewstatus: 2024-10-05
+ * Localization: incomplete
+ * Documentation: complete
+ *
+ * Tests: Unit/Filter/
+ * @wiki /Filters
+ */
 
 namespace Sunhill\Filter;
 
+/**
+ * The basic filter class
+ * 
+ * @author klaus
+ *
+ */
 class Filter
 {
 
@@ -113,6 +130,12 @@ class Filter
         return false;
     }
     
+    /**
+     * Returns if this filter matches the given criteria
+     * 
+     * @param FilterContainer $container
+     * @return bool
+     */
     public function matches(?FilterContainer $container = null): bool
     {
         if ($container) {
@@ -130,6 +153,9 @@ class Filter
         return true;            
     }
     
+    /** 
+     * executes the filter
+     */ 
    public function execute(): string
     {
         

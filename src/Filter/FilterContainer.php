@@ -1,4 +1,15 @@
 <?php
+/**
+ * @file FilterContainer.php
+ * The central object that all filters work on
+ * Lang en
+ * Reviewstatus: 2024-10-05
+ * Localization: incomplete
+ * Documentation: complete
+ *
+ * Tests: Unit/Filter/
+ * @wiki /Filters
+ */
 
 namespace Sunhill\Filter;
 

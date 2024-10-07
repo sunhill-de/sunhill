@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * Tests src/Filters/FilterContainer.php
+ */
+
 use Sunhill\Tests\TestCase;
 use Sunhill\Filter\FilterContainer;
 
