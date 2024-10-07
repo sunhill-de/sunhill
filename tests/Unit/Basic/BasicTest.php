@@ -2,9 +2,8 @@
 
 namespace Sunhill\Tests\Unit\Basic;
 
-use Sunhill\Basic\SunhillException;
 use Sunhill\Basic\Base;
-use Sunhill\Basic\Tests\SunhillOrchestraTestCase;
+use Sunhill\Exceptions\SunhillException;
 
 class extension extends Base {
 
