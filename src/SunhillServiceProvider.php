@@ -1,4 +1,12 @@
 <?php
+/**
+ * @file SunhillServiceprovider.php
+ * The service provider for the sunhill framework
+ * Lang en
+ * Reviewstatus: 2024-10-05
+ * Localization: incomplete
+ * Documentation: complete
+ */
 
 namespace Sunhill;
 
@@ -208,9 +216,9 @@ class SunhillServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang','framework');
         Blade::component('optional_link', OptionalLink::class);
-        Site::setupRoutes();
+/*        Site::setupRoutes();
         $this->registerTypes();
         $this->registerSemantics();
-        $this->registerUnits();
+        $this->registerUnits(); */
     }
 }
