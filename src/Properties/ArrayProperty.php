@@ -3,7 +3,7 @@
  * @file ArrayProperty.php
  * Defines an abstract property as base for all array like properties
  * Lang de,en
- * Reviewstatus: 2024-02-04
+ * Reviewstatus: 2024-10-07
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/PropertyTest.php, Unit/PropertyValidateTest.php
