@@ -1,4 +1,14 @@
 <?php
+/**
+ * @file BasicQuery.php
+ * A base class for other queries
+ * Lang en
+ * Reviewstatus: 2024-10-08
+ * Localization: complete
+ * Documentation: complete
+ * Tests: Unit/Query/BasicQueryTest.php
+ * Coverage: unknown
+ */
 
 namespace Sunhill\Query;
 
@@ -7,18 +17,61 @@ use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Query\Exceptions\NoResultException;
 use Sunhill\Query\Exceptions\UnknownFieldException;
 use Sunhill\Query\Exceptions\TooManyResultsException;
+use Sunhill\Query\Exceptions\QueryNotWriteableException;
 
+/**
+ * The common ancestor for other queries. Defines the interface and some fundamental functions
+ * for writing queries. Normally you will use one of the other basic query classes (like DatabaseQuery 
+ * or ArrayQuery) 
+ * 
+ * @author klaus
+ *
+ */
 abstract class BasicQuery
 {
 
+    /**
+     * Defines if the query is writeable at all (if the findalizing methods delete(), update() and insert() 
+     * work at all)
+     * 
+     * @var boolean
+     */
+    protected static $writeable = true;
+    
+    /**
+     * When calling the offset() method, it writes the offset to this variable
+     * 
+     * @var integer
+     */
     protected int $offset = 0;
     
+    /**
+     * When calling the limit() method, it writes the offset to this variable
+     * 
+     * @var integer
+     */
     protected int $limit = 0;
     
+    /**
+     * When calling the order() method, it writes the order key to this variable
+     * 
+     * @var string
+     */
     protected string $order_key = '';
     
+    /**
+     * When calling the order() method and pass a direction statement it is written to
+     * this variable
+     * 
+     * @var string
+     */
     protected string $order_direction = '';
     
+    /**
+     * The conditions are put in this array
+     * 
+     * @var array
+     */
     protected array $conditions = [];
     
     public function __construct()
@@ -61,6 +114,47 @@ abstract class BasicQuery
      * @return bool
      */
     abstract protected function fieldOrderable(string $field): bool;
+    
+    /**
+     * Deletes the records that match the condition
+     * Note: A check if the pool is writeable at all has already been performed. Read-only
+     * queries can ignore this method
+     * 
+     * @param unknown $assembled_query
+     * @return int
+     */
+    protected function doDelete($assembled_query): int
+    {
+        return 0;    
+    }
+    
+    /**
+     * Updates the records that match the condition
+     * Note: A check if the pool is writeable at all has already been performed. Read-only
+     * queries can ignore this method
+     * 
+     * @param unknown $assembled_query
+     * @param array $fields
+     * @return int
+     */
+    protected function doUpdate($assembled_query, array $fields): int
+    {
+        return 0;    
+    }
+    
+    /**
+     * Inserts one or more new records into the pool of records
+     * Note: A check if the pool is writeable at all has already been performed. Read-only
+     * queries can ignore this method
+     *
+     * @param unknown $assembled_query
+     * @param array $fields
+     * @return int
+     */
+    protected function doInsert($assembled_query, array $fields)
+    {
+        return null;
+    }
     
     /**
      * This method does not have to necessarily be overwritten. By default it just return $record. 
@@ -192,14 +286,32 @@ abstract class BasicQuery
         return $query->first();
     }
     
+    /**
+     * The records matching the given condition are deleted (if query is writeable at all)
+     */
     public function delete()
     {
-        
+        $this->checkWriteable();
     }
     
+    /**
+     * The record matching the given condition are updated with the given parameters
+     * 
+     * @param array $fields
+     */
     public function update(array $fields)
     {
-        
+        $this->checkWriteable();        
+    }
+    
+    /**
+     * A new record is inserted into the pool.
+     * 
+     * @param array $fields
+     */
+    public function insert(array $fields)
+    {
+        $this->checkWriteable();        
     }
     
     public function offset(int $offset): BasicQuery
@@ -293,4 +405,10 @@ abstract class BasicQuery
         return $this;
     }
     
+    protected function checkWriteable()
+    {
+        if (!static::$writeable) {
+            throw new QueryNotWriteableException("The query is not writeable.");
+        }
+    }
 }

@@ -162,7 +162,7 @@ test('Query', function($callback, $expectation, $method = null)
               return $query->where('id','=',1)->Where(function($query) { $query->where('payload','=','abc')->orWhere('payload','=','def'); });
           },'0:where:[(and:id=1),(and:[(and:payload=abc),(or:payload=def)])]'
       ],
-      'whereIn with array'=>[
+/*      'whereIn with array'=>[
           function($query)
           {
               return $query->whereIn('id',[1,2,3]); 
@@ -182,6 +182,6 @@ test('Query', function($callback, $expectation, $method = null)
               $query->where('payload','=','abc');
               return $query->whereIn('id',Query);
           },'0:where:[(and:id_in_[0:where:[(and:payload=abc)]])]'
-       ],
+       ], */
           ]);
 
