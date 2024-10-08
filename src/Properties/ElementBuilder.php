@@ -15,6 +15,7 @@ namespace Sunhill\Properties;
 use Sunhill\Properties\Exceptions\PropertyNotSetException;
 use Sunhill\Properties\Exceptions\PropertyDoesntExistException;
 use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\NotAPropertyException;
 
 class ElementBuilder
 {
@@ -31,6 +32,9 @@ class ElementBuilder
         if (is_null($this->owner)) {
             throw new PropertyNotSetException("No property was set");
         }
+        $property = $this->lookupProperty($property_name);
+        $this->owner->appendElement($property_name, $name);
+        return $property;
     }
     
     public function lookUpProperty(string|AbstractProperty $property_name): AbstractProperty
@@ -44,8 +48,11 @@ class ElementBuilder
         if (!is_string($property_name)) {
             throw new PropertyDoesntExistException("The given property does not exist.");
         }
-        $namespace = Properties::getNamespaceOfClass($property_name);
+        if (is_null($namespace = Properties::getNamespaceOfClass($property_name))) {
+            throw new NotAPropertyException("The given paraneter is not a valid property");
+        }
         return new $namespace();
+            
     }
     
     public function array(string $name): ArrayProperty

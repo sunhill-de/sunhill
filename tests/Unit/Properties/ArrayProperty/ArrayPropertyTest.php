@@ -1,6 +1,11 @@
 <?php
 
+/*
+ * Tests src/Properties/ArrayProperty.php
+ */
+
 uses(\Sunhill\Tests\TestCase::class);
+
 use Sunhill\Properties\Exceptions\InvalidParameterException;
 use Sunhill\Types\TypeInteger;
 use Sunhill\Types\TypeVarchar;
