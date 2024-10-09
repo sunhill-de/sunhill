@@ -1,1 +1,0 @@
-@if(!empty($entry->link))<a href="{{ $entry->link }}">@endif{{ __( $entry->title ) }}@if(!empty($entry->link))</a>@endif
