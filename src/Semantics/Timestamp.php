@@ -1,20 +1,20 @@
 <?php
 /**
- * @file FirstName.php
- * Defines a derived name that represents a first name of a person or aninmal
- * Lang de,en
- * Reviewstatus: 2024-03-01
+ * @file Timestamp.php
+ * A semantic class for a timestamp 
+ * Lang en
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests: Unit/Semantic/SemanticTest.php
  * Coverage: unknown
  */
 
 namespace Sunhill\Semantics;
 
-use Sunhill\Types\TypeVarchar;
+use Sunhill\Types\TypeDateTime;
 
-class FirstName extends Name
+class Timestamp extends TypeDateTime
 {
     
     /**
@@ -24,17 +24,27 @@ class FirstName extends Name
      */
     public function getSemantic(): string
     {
-        return 'first_name';
+        return 'timestamp';
     }
     
+    /**
+     * Returns some keywords to the current semantic
+     *
+     * @return array
+     */
+    public function getSemanticKeywords(): array
+    {
+        return ['time'];
+    }
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'firstname');
-        static::addInfo('description', 'The first name of a person or animal.', true);
+        static::addInfo('name', 'timestamp');
+        static::addInfo('description', 'A timestamp.', true);
         static::addInfo('type', 'semantic');
     }
     

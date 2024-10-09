@@ -1,9 +1,9 @@
 <?php
 /**
- * @file URL.php
- * A semantic class for an url 
+ * @file IPv4Address.php
+ * A semantic class for a string that is the ipv4 address of a network device 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,7 @@
 
 namespace Sunhill\Semantics;
 
-class URL extends IDString
+class IPv4Address extends NetworkAddress
 {
     
     /**
@@ -22,38 +22,29 @@ class URL extends IDString
      */
     public function getSemantic(): string
     {
-        return 'url';
+        return 'ipv4_address';
     }
     
+    
     /**
-     * Returns some keywords to the current semantic
-     *
-     * @return array
-     */
-    public function getSemanticKeywords(): array
-    {
-        return ['id','computer'];
-    }
-  
-    /**
-     * Checks if the given string is a valid email address
+     * First check if the given value is an ingteger at all all. afterwards check the boundaries
      *
      * {@inheritDoc}
      * @see Sunhill\\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
-        return filter_var($input, FILTER_VALIDATE_URL);
+        return filter_var($input, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
     }
-    
+ 
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'url');
-        static::addInfo('description', 'A internet url.', true);
+        static::addInfo('name', 'ipv4address');
+        static::addInfo('description', 'The IPv4 address of a network device.', true);
         static::addInfo('type', 'semantic');
     }
     

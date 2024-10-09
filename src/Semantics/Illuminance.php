@@ -1,9 +1,9 @@
 <?php
 /**
- * @file Temperature.php
- * Defines a float that represents the temperature of something 
+ * @file Illuminance.php
+ * Defines a float that represents the pressure of something
  * Lang de,en
- * Reviewstatus: 2024-03-01
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: 
@@ -14,7 +14,7 @@ namespace Sunhill\Semantics;
 
 use Sunhill\Types\TypeFloat;
 
-class Airtemperature extends Temperature
+class Illuminance extends TypeFloat
 {
     
     /**
@@ -24,7 +24,7 @@ class Airtemperature extends Temperature
      */
     public function getSemantic(): string
     {
-        return 'airtemperature';
+        return 'illuminance';
     }
     
     /**
@@ -34,17 +34,27 @@ class Airtemperature extends Temperature
      */
     public function getSemanticKeywords(): array
     {
-        return ['temperature','weather'];
+        return ['illuminance'];
     }
- 
+    
+    /**
+     * Returns the unique id string for the unit of this property
+     *
+     * @return string
+     */
+    public function getUnit(): string
+    {
+        return 'lux';
+    }
+    
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'airtemperature');
-        static::addInfo('description', 'The air temperature (weather).', true);
+        static::addInfo('name', 'illuminance');
+        static::addInfo('description', 'The illuminance of light.', true);
         static::addInfo('type', 'semantic');
     }
     

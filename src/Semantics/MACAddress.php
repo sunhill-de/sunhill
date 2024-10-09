@@ -1,9 +1,9 @@
 <?php
 /**
- * @file UUID4.php
- * A semantic class for an uuid version 4 
+ * @file MACAddress.php
+ * A semantic class for a string that is the mac address of a network device 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,7 @@
 
 namespace Sunhill\Semantics;
 
-class UUID4 extends IDString
+class MACAddress extends NetworkAddress
 {
     
     /**
@@ -22,19 +22,9 @@ class UUID4 extends IDString
      */
     public function getSemantic(): string
     {
-        return 'uuid4';
+        return 'ipv6_address';
     }
     
-    /**
-     * Returns some keywords to the current semantic
-     *
-     * @return array
-     */
-    public function getSemanticKeywords(): array
-    {
-        return ['id','computer'];
-    }
-  
     /**
      * The storage stores a mac address in lower case
      *
@@ -47,18 +37,14 @@ class UUID4 extends IDString
     }
     
     /**
-     * Checks if the given string is a valid email address
+     * First check if the given value is an ingteger at all all. afterwards check the boundaries
      *
      * {@inheritDoc}
      * @see Sunhill\\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
-        if (!is_string($input) || (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', $input) !== 1)) {
-            return false;
-        }
-        
-        return true;
+        return filter_var($input, FILTER_VALIDATE_MAC);
     }
     
     /**
@@ -67,8 +53,8 @@ class UUID4 extends IDString
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'uuid');
-        static::addInfo('description', 'An uuid of something.', true);
+        static::addInfo('name', 'macaddress');
+        static::addInfo('description', 'The mac address of an network device.', true);
         static::addInfo('type', 'semantic');
     }
     

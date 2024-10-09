@@ -1,20 +1,20 @@
 <?php
 /**
- * @file IDString.php
- * A semantic class for a string that is a id of something 
- * Lang en
- * Reviewstatus: 2023-05-03
+ * @file Airpressure.php
+ * Defines a float that represents the air pressure (derrived of pressure) 
+ * Lang de,en
+ * Reviewstatus: 2024-10-08
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Semantic/SemanticTest.php
+ * Tests: 
  * Coverage: unknown
  */
 
 namespace Sunhill\Semantics;
 
-use Sunhill\Types\TypeVarchar;
+use Sunhill\Types\TypeFloat;
 
-class IDString extends TypeVarchar
+class Airpressure extends Pressure
 {
     
     /**
@@ -24,7 +24,7 @@ class IDString extends TypeVarchar
      */
     public function getSemantic(): string
     {
-        return 'idstring';
+        return 'airpressure';
     }
     
     /**
@@ -34,7 +34,17 @@ class IDString extends TypeVarchar
      */
     public function getSemanticKeywords(): array
     {
-        return ['id'];
+        return ['pressure','weather'];
+    }
+ 
+    /**
+     * Returns the unique id string for the unit of this property
+     *
+     * @return string
+     */
+    public function getUnit(): string
+    {
+        return 'hectopascal';
     }
     
     /**
@@ -43,8 +53,8 @@ class IDString extends TypeVarchar
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'idstring');
-        static::addInfo('description', 'An id string of a thing.', true);
+        static::addInfo('name', 'airpressure');
+        static::addInfo('description', 'The airpressure.', true);
         static::addInfo('type', 'semantic');
     }
     

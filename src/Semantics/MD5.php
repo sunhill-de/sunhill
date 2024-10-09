@@ -1,9 +1,9 @@
 <?php
 /**
- * @file IPv6Address.php
- * A semantic class for a string that is the ipv6 address of a network device 
+ * @file MD5.php
+ * A semantic class for an md5 string 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,7 @@
 
 namespace Sunhill\Semantics;
 
-class IPv6Address extends NetworkAddress
+class MD5 extends IDString
 {
     
     /**
@@ -22,11 +22,21 @@ class IPv6Address extends NetworkAddress
      */
     public function getSemantic(): string
     {
-        return 'ipv6_address';
+        return 'md5';
     }
     
     /**
-     * The storage stores a ipv6 address in lower case
+     * Returns some keywords to the current semantic
+     *
+     * @return array
+     */
+    public function getSemanticKeywords(): array
+    {
+        return ['id','computer'];
+    }
+  
+    /**
+     * The storage stores a mac address in lower case
      *
      * @param unknown $input
      * @return unknown, by dafult just return the value
@@ -37,24 +47,24 @@ class IPv6Address extends NetworkAddress
     }
     
     /**
-     * First check if the given value is an ingteger at all all. afterwards check the boundaries
+     * Checks if the given string is a valid email address
      *
      * {@inheritDoc}
      * @see Sunhill\\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
-        return filter_var($input, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        return preg_match('/^[a-f0-9]{32}$/', $input);
     }
-  
+    
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'ipv6address');
-        static::addInfo('description', 'The IPv6 address of a network device.', true);
+        static::addInfo('name', 'md5');
+        static::addInfo('description', 'The MD5 hash of someting.', true);
         static::addInfo('type', 'semantic');
     }
     

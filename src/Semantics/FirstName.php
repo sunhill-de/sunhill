@@ -1,9 +1,9 @@
 <?php
 /**
- * @file LastName.php
- * Defines a derived name that represents a last name of a person or aninmal
+ * @file FirstName.php
+ * Defines a derived name that represents a first name of a person or aninmal
  * Lang de,en
- * Reviewstatus: 2024-03-01
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: 
@@ -14,7 +14,7 @@ namespace Sunhill\Semantics;
 
 use Sunhill\Types\TypeVarchar;
 
-class LastName extends Name
+class FirstName extends Name
 {
     
     /**
@@ -24,7 +24,7 @@ class LastName extends Name
      */
     public function getSemantic(): string
     {
-        return 'last_name';
+        return 'first_name';
     }
     
     /**
@@ -33,8 +33,8 @@ class LastName extends Name
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'lastname');
-        static::addInfo('description', 'The last name of a person.', true);
+        static::addInfo('name', 'firstname');
+        static::addInfo('description', 'The first name of a person or animal.', true);
         static::addInfo('type', 'semantic');
     }
     

@@ -1,9 +1,9 @@
 <?php
 /**
- * @file Speed.php
- * Defines a float that represents the speed
+ * @file Temperature.php
+ * Defines a float that represents the temperature of something 
  * Lang de,en
- * Reviewstatus: 2024-03-01
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: 
@@ -14,7 +14,7 @@ namespace Sunhill\Semantics;
 
 use Sunhill\Types\TypeFloat;
 
-class Speed extends TypeFloat
+class Temperature extends TypeFloat
 {
     
     /**
@@ -24,7 +24,7 @@ class Speed extends TypeFloat
      */
     public function getSemantic(): string
     {
-        return 'speed';
+        return 'temperature';
     }
     
     /**
@@ -34,9 +34,9 @@ class Speed extends TypeFloat
      */
     public function getSemanticKeywords(): array
     {
-        return ['speed'];
+        return ['temperature'];
     }
-    
+ 
     /**
      * Returns the unique id string for the unit of this property
      *
@@ -44,16 +44,17 @@ class Speed extends TypeFloat
      */
     public function getUnit(): string
     {
-        return 'meterpersecond';
+        return 'degreecelsius';
     }
+    
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'speed');
-        static::addInfo('description', 'The speed of something.', true);
+        static::addInfo('name', 'temperature');
+        static::addInfo('description', 'The temperature of something.', true);
         static::addInfo('type', 'semantic');
     }
     

@@ -3,7 +3,7 @@
  * @file NetworkAddress.php
  * A semantic class for a string that is the address of a network device 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php

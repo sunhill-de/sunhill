@@ -1,9 +1,9 @@
 <?php
 /**
- * @file SHA1.php
- * A semantic class for an sha1 string 
+ * @file UUID4.php
+ * A semantic class for an uuid version 4 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,7 @@
 
 namespace Sunhill\Semantics;
 
-class SHA1 extends IDString
+class UUID4 extends IDString
 {
     
     /**
@@ -22,7 +22,7 @@ class SHA1 extends IDString
      */
     public function getSemantic(): string
     {
-        return 'md5';
+        return 'uuid4';
     }
     
     /**
@@ -47,14 +47,18 @@ class SHA1 extends IDString
     }
     
     /**
-     * Checks if the given string is a valid sha1 string
+     * Checks if the given string is a valid email address
      *
      * {@inheritDoc}
      * @see Sunhill\\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
-        return preg_match('/^[a-f0-9]{40}$/', $input);
+        if (!is_string($input) || (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', $input) !== 1)) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
@@ -63,8 +67,8 @@ class SHA1 extends IDString
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'sha1');
-        static::addInfo('description', 'The SHA1 hash of something.', true);
+        static::addInfo('name', 'uuid');
+        static::addInfo('description', 'An uuid of something.', true);
         static::addInfo('type', 'semantic');
     }
     

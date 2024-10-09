@@ -1,9 +1,9 @@
 <?php
 /**
- * @file MD5.php
- * A semantic class for an md5 string 
+ * @file IPv6Address.php
+ * A semantic class for a string that is the ipv6 address of a network device 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,7 @@
 
 namespace Sunhill\Semantics;
 
-class MD5 extends IDString
+class IPv6Address extends NetworkAddress
 {
     
     /**
@@ -22,21 +22,11 @@ class MD5 extends IDString
      */
     public function getSemantic(): string
     {
-        return 'md5';
+        return 'ipv6_address';
     }
     
     /**
-     * Returns some keywords to the current semantic
-     *
-     * @return array
-     */
-    public function getSemanticKeywords(): array
-    {
-        return ['id','computer'];
-    }
-  
-    /**
-     * The storage stores a mac address in lower case
+     * The storage stores a ipv6 address in lower case
      *
      * @param unknown $input
      * @return unknown, by dafult just return the value
@@ -47,24 +37,24 @@ class MD5 extends IDString
     }
     
     /**
-     * Checks if the given string is a valid email address
+     * First check if the given value is an ingteger at all all. afterwards check the boundaries
      *
      * {@inheritDoc}
      * @see Sunhill\\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
-        return preg_match('/^[a-f0-9]{32}$/', $input);
+        return filter_var($input, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
     }
-    
+  
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'md5');
-        static::addInfo('description', 'The MD5 hash of someting.', true);
+        static::addInfo('name', 'ipv6address');
+        static::addInfo('description', 'The IPv6 address of a network device.', true);
         static::addInfo('type', 'semantic');
     }
     

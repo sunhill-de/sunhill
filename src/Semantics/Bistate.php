@@ -3,7 +3,7 @@
  * @file Bistate.php
  * Defines an abstract for values that can handle two values (like "on" and "off") 
  * Lang de,en
- * Reviewstatus: 2024-03-01
+ * Reviewstatus: 2024-10-08
  * Localization: complete
  * Documentation: complete
  * Tests: 

@@ -1,20 +1,18 @@
 <?php
 /**
- * @file Illuminance.php
- * Defines a float that represents the pressure of something
- * Lang de,en
- * Reviewstatus: 2024-03-01
+ * @file URL.php
+ * A semantic class for an url 
+ * Lang en
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests: Unit/Semantic/SemanticTest.php
  * Coverage: unknown
  */
 
 namespace Sunhill\Semantics;
 
-use Sunhill\Types\TypeFloat;
-
-class Illuminance extends TypeFloat
+class URL extends IDString
 {
     
     /**
@@ -24,7 +22,7 @@ class Illuminance extends TypeFloat
      */
     public function getSemantic(): string
     {
-        return 'illuminance';
+        return 'url';
     }
     
     /**
@@ -34,17 +32,18 @@ class Illuminance extends TypeFloat
      */
     public function getSemanticKeywords(): array
     {
-        return ['illuminance'];
+        return ['id','computer'];
     }
-    
+  
     /**
-     * Returns the unique id string for the unit of this property
+     * Checks if the given string is a valid email address
      *
-     * @return string
+     * {@inheritDoc}
+     * @see Sunhill\\\ValidatorBase::isValid()
      */
-    public function getUnit(): string
+    public function isValid($input): bool
     {
-        return 'lux';
+        return filter_var($input, FILTER_VALIDATE_URL);
     }
     
     /**
@@ -53,8 +52,8 @@ class Illuminance extends TypeFloat
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'illuminance');
-        static::addInfo('description', 'The illuminance of light.', true);
+        static::addInfo('name', 'url');
+        static::addInfo('description', 'A internet url.', true);
         static::addInfo('type', 'semantic');
     }
     

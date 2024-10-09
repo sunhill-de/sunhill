@@ -1,26 +1,21 @@
 <?php
 /**
- * @file Count.php
- * A semantic class that represents the count of something
- * Lang en
- * Reviewstatus: 2023-05-03
+ * @file Speed.php
+ * Defines a float that represents the speed
+ * Lang de,en
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Semantic/SemanticTest.php
+ * Tests: 
  * Coverage: unknown
  */
 
 namespace Sunhill\Semantics;
 
-use Sunhill\Types\TypeInteger;
+use Sunhill\Types\TypeFloat;
 
-class Count extends TypeInteger
+class Speed extends TypeFloat
 {
- 
-    public function __construct()
-    {
-        $this->setMinimum(0);
-    }
     
     /**
      * Returns the unique id string for the semantic of this property
@@ -29,7 +24,7 @@ class Count extends TypeInteger
      */
     public function getSemantic(): string
     {
-        return 'count';
+        return 'speed';
     }
     
     /**
@@ -39,17 +34,26 @@ class Count extends TypeInteger
      */
     public function getSemanticKeywords(): array
     {
-        return ['count'];
+        return ['speed'];
     }
-     
+    
+    /**
+     * Returns the unique id string for the unit of this property
+     *
+     * @return string
+     */
+    public function getUnit(): string
+    {
+        return 'meterpersecond';
+    }
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'count');
-        static::addInfo('description', 'The count of items.', true);
+        static::addInfo('name', 'speed');
+        static::addInfo('description', 'The speed of something.', true);
         static::addInfo('type', 'semantic');
     }
     

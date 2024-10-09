@@ -3,7 +3,7 @@
  * @file Creditcardnumber.php
  * A semantic class for a credit card number 
  * Lang en
- * Reviewstatus: 2024-03-07
+ * Reviewstatus: 2024-10-07
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php

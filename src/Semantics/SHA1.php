@@ -1,9 +1,9 @@
 <?php
 /**
- * @file MACAddress.php
- * A semantic class for a string that is the mac address of a network device 
+ * @file SHA1.php
+ * A semantic class for an sha1 string 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,7 @@
 
 namespace Sunhill\Semantics;
 
-class MACAddress extends NetworkAddress
+class SHA1 extends IDString
 {
     
     /**
@@ -22,9 +22,19 @@ class MACAddress extends NetworkAddress
      */
     public function getSemantic(): string
     {
-        return 'ipv6_address';
+        return 'md5';
     }
     
+    /**
+     * Returns some keywords to the current semantic
+     *
+     * @return array
+     */
+    public function getSemanticKeywords(): array
+    {
+        return ['id','computer'];
+    }
+  
     /**
      * The storage stores a mac address in lower case
      *
@@ -37,14 +47,14 @@ class MACAddress extends NetworkAddress
     }
     
     /**
-     * First check if the given value is an ingteger at all all. afterwards check the boundaries
+     * Checks if the given string is a valid sha1 string
      *
      * {@inheritDoc}
      * @see Sunhill\\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
-        return filter_var($input, FILTER_VALIDATE_MAC);
+        return preg_match('/^[a-f0-9]{40}$/', $input);
     }
     
     /**
@@ -53,8 +63,8 @@ class MACAddress extends NetworkAddress
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'macaddress');
-        static::addInfo('description', 'The mac address of an network device.', true);
+        static::addInfo('name', 'sha1');
+        static::addInfo('description', 'The SHA1 hash of something.', true);
         static::addInfo('type', 'semantic');
     }
     

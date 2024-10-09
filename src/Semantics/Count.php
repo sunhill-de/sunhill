@@ -1,21 +1,26 @@
 <?php
 /**
- * @file Temperature.php
- * Defines a float that represents the temperature of something 
- * Lang de,en
- * Reviewstatus: 2024-03-01
+ * @file Count.php
+ * A semantic class that represents the count of something
+ * Lang en
+ * Reviewstatus: 2024-10-08
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests: Unit/Semantic/SemanticTest.php
  * Coverage: unknown
  */
 
 namespace Sunhill\Semantics;
 
-use Sunhill\Types\TypeFloat;
+use Sunhill\Types\TypeInteger;
 
-class Temperature extends TypeFloat
+class Count extends TypeInteger
 {
+ 
+    public function __construct()
+    {
+        $this->setMinimum(0);
+    }
     
     /**
      * Returns the unique id string for the semantic of this property
@@ -24,7 +29,7 @@ class Temperature extends TypeFloat
      */
     public function getSemantic(): string
     {
-        return 'temperature';
+        return 'count';
     }
     
     /**
@@ -34,27 +39,17 @@ class Temperature extends TypeFloat
      */
     public function getSemanticKeywords(): array
     {
-        return ['temperature'];
+        return ['count'];
     }
- 
-    /**
-     * Returns the unique id string for the unit of this property
-     *
-     * @return string
-     */
-    public function getUnit(): string
-    {
-        return 'degreecelsius';
-    }
-    
+     
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'temperature');
-        static::addInfo('description', 'The temperature of something.', true);
+        static::addInfo('name', 'count');
+        static::addInfo('description', 'The count of items.', true);
         static::addInfo('type', 'semantic');
     }
     

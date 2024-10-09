@@ -1,9 +1,9 @@
 <?php
 /**
- * @file EMail.php
- * A semantic class for an email address 
+ * @file PointInTime.php
+ * A semantic class for a point in time 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,9 @@
 
 namespace Sunhill\Semantics;
 
-class EMail extends IDString
+use Sunhill\Types\TypeDate;
+
+class PointInTime extends TypeDate
 {
     
     /**
@@ -22,7 +24,7 @@ class EMail extends IDString
      */
     public function getSemantic(): string
     {
-        return 'email';
+        return 'pointintime';
     }
     
     /**
@@ -32,18 +34,7 @@ class EMail extends IDString
      */
     public function getSemanticKeywords(): array
     {
-        return ['id','computer'];
-    }
-  
-    /**
-     * Checks if the given string is a valid email address
-     *
-     * {@inheritDoc}
-     * @see Sunhill\\\ValidatorBase::isValid()
-     */
-    public function isValid($input): bool
-    {
-        return filter_var($input, FILTER_VALIDATE_EMAIL);
+        return ['time'];
     }
     
     /**
@@ -52,8 +43,8 @@ class EMail extends IDString
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'email');
-        static::addInfo('description', 'An email address.', true);
+        static::addInfo('name', 'pointintime');
+        static::addInfo('description', 'A point in time.', true);
         static::addInfo('type', 'semantic');
     }
     

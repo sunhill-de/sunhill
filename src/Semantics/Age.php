@@ -3,7 +3,7 @@
  * @file Age.php
  * A semantic class for describing the age of a person or thing
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-08
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php

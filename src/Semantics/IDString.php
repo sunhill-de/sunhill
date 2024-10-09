@@ -1,9 +1,9 @@
 <?php
 /**
- * @file IPv4Address.php
- * A semantic class for a string that is the ipv4 address of a network device 
+ * @file IDString.php
+ * A semantic class for a string that is a id of something 
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
@@ -12,7 +12,9 @@
 
 namespace Sunhill\Semantics;
 
-class IPv4Address extends NetworkAddress
+use Sunhill\Types\TypeVarchar;
+
+class IDString extends TypeVarchar
 {
     
     /**
@@ -22,29 +24,27 @@ class IPv4Address extends NetworkAddress
      */
     public function getSemantic(): string
     {
-        return 'ipv4_address';
+        return 'idstring';
     }
-    
     
     /**
-     * First check if the given value is an ingteger at all all. afterwards check the boundaries
+     * Returns some keywords to the current semantic
      *
-     * {@inheritDoc}
-     * @see Sunhill\\\ValidatorBase::isValid()
+     * @return array
      */
-    public function isValid($input): bool
+    public function getSemanticKeywords(): array
     {
-        return filter_var($input, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        return ['id'];
     }
- 
+    
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function setupInfos()
     {
-        static::addInfo('name', 'ipv4address');
-        static::addInfo('description', 'The IPv4 address of a network device.', true);
+        static::addInfo('name', 'idstring');
+        static::addInfo('description', 'An id string of a thing.', true);
         static::addInfo('type', 'semantic');
     }
     

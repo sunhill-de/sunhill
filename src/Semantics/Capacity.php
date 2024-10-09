@@ -1,9 +1,9 @@
 <?php
 /**
- * @file Count.php
- * A semantic class that represents the count of something
+ * @file Capacity.php
+ * A semantic class that represents the capacity of a digital item (like harddisk)
  * Lang en
- * Reviewstatus: 2023-05-03
+ * Reviewstatus: 2024-10-08
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
