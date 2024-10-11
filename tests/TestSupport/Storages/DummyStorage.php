@@ -6,14 +6,13 @@ use Sunhill\Storage\AbstractStorage;
 
 class DummyStorage extends AbstractStorage
 {
-    
-    public static $preloaded_values = ['keyA'=>A,'keyB'=>3.56,'KeyC'=>[1,2,3]];
+    public static $preloaded_values = ['keyA'=>'A','keyB'=>3.56,'keyC'=>[1,2,3]];
     
     protected $values = [];
     
     protected $shadow = [];
     
-    protected function checkInitialize()
+    protected function prepareGetValue(string $name)
     {
         if (empty($this->values)) {
             $this->values = static::$preloaded_values;
@@ -22,7 +21,6 @@ class DummyStorage extends AbstractStorage
     
     protected function doGetIsInitialized(string $name): bool
     {
-        $this->checkInitialize();
         return isset($this->values[$name]);
     }
     
@@ -49,7 +47,7 @@ class DummyStorage extends AbstractStorage
     {
         if (isset($this->values[$name]) && is_array($this->values[$name])) {
             return isset($this->values[$name][$index]);
-        }        
+        }
     }
     
     protected function doSetValue(string $name,$value)
@@ -87,6 +85,5 @@ class DummyStorage extends AbstractStorage
     public function isDirty(): bool
     {
         return !is_empty($this->shadow);
-    }
-    
+    }    
 }
