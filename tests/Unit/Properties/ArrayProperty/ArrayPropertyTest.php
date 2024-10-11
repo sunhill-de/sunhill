@@ -59,10 +59,21 @@ test('read array element', function() {
     $storage = Mockery::mock(AbstractStorage::class);
     $storage->shouldReceive('getIsInitialized')->with('test')->once()->andReturn(true);
     $storage->shouldReceive('getIndexedValue')->with('test',1)->once()->andReturn(5);
+    $storage->shouldReceive('getOffsetExists')->with('test',1)->once()->andReturn(true);
     $test->setStorage($storage);
     expect($test[1], 5);
 });
 
+it('failes when reading an inavlid array element index', function() {
+        $test = new ArrayProperty();
+        $test->setName('test');
+        $storage = Mockery::mock(AbstractStorage::class);
+        $storage->shouldReceive('getIsInitialized')->with('test')->once()->andReturn(true);
+        $storage->shouldReceive('getOffsetExists')->with('test',1)->once()->andReturn(false);
+        $test->setStorage($storage);
+        $dummy = $test[1];    
+})->throws(InvalidIndexException::class);
+        
 test('write array element', function ($allowed, $value) {
     $test = new ArrayProperty();
     $storage = Mockery::mock(AbstractStorage::class);
@@ -225,6 +236,7 @@ test('string index type acceps keys', function()
     $storage->shouldReceive('getIsInitialized')->with('test')->once()->andReturn(true);
     $storage->shouldReceive('getIndexedValue')->with('test','abc')->once()->andReturn(5);
     $storage->shouldReceive('setIndexedValue')->once()->with('test','abc',10);
+    $storage->shouldReceive('getOffsetExists')->with('test','abc')->once()->andReturn(true);
     $test->setStorage($storage);
     expect($test['abc'], 5);
     $test['abc'] = 10;
