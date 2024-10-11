@@ -212,7 +212,10 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
     {
         if (!$this->getStorage()->getIsInitialized($this->getName())) {
             $this->handleUninitialized();
-        }        
+        }
+        if (!$this->offsetExists($offset)) {
+            throw new InvalidIndexException("The given index '$offset' is not defined.");
+        }
         return $this->formatFromStorage($this->getStorage()->getIndexedValue($this->getName(),$offset));
     }
     
