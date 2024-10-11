@@ -92,16 +92,6 @@ abstract class SimpleStorage extends AbstractStorage
         // Should not be called
     }
     
-    /**
-     * Returns if this storage was modified
-     *
-     * @return bool
-     */
-    public function isDirty(): bool
-    {
-        return false; // Cant be dirty
-    }
-
     protected function doGetIsInitialized(string $name): bool
     {
         return true;
