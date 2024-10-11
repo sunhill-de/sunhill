@@ -283,31 +283,21 @@ abstract class AbstractStorage
      *
      * @return bool
      */
-    abstract public function isDirty(): bool;
+    public function isDirty(): bool
+    {
+        return false; // By default never dirty
+    }
 
-    /**
-     * Is called when a storage is dirty at all and performs the commit
-     */
-    abstract protected function doCommit();
     
     /**
      * For cached storages performs the flush of the cache. Has to be called by property.
      */
     public function commit()
     {
-        if ($this->isDirty()) {
-            $this->doCommit();
-        }        
+        // does nothing by default
     }
     
-    /**
-     * Is called when a storage is dirty at all and performs the rollback
-     */
-    abstract protected function doRollback();
-    
-    /**
         
-    }
     
     /**
      * For cached storages performs the reollback of the cache. Has to be called
@@ -316,9 +306,7 @@ abstract class AbstractStorage
      */
     public function rollback()
     {
-        if ($this->isDirty()) {
-            $this->doRollback();
-        }
+        // does nothing by default
     }
 
     abstract protected function doGetIsInitialized(string $name): bool;
