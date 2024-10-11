@@ -5,7 +5,7 @@
  * a storage is responsible for accessing and storing data.
  * @author Klaus Dimde
  * Lang en
- * Reviewstatus: 2024-02-11
+ * Reviewstatus: 2024-10-09
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
@@ -304,6 +304,10 @@ abstract class AbstractStorage
      * Is called when a storage is dirty at all and performs the rollback
      */
     abstract protected function doRollback();
+    
+    /**
+        
+    }
     
     /**
      * For cached storages performs the reollback of the cache. Has to be called
