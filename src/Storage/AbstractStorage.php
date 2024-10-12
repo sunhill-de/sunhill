@@ -280,10 +280,11 @@ abstract class AbstractStorage
     
     /**
      * Returns if this storage was modified
-     *
+     * @param $name, default '' the name of the value that is checked to be dirty
+     * if empty returns if the storage is dirty at all.
      * @return bool
      */
-    public function isDirty(): bool
+    public function isDirty(string $name = ''): bool
     {
         return false; // By default never dirty
     }
