@@ -70,20 +70,24 @@ class DummyStorage extends AbstractStorage
         }
     }
     
-    protected function doRollback()
+    public function rollback()
     {
         foreach ($this->shadow as $key => $value) {
             $this->values[$key] = $value;
         }
     }
     
-    protected function doCommit()
+    public function commit()
     {
         static::$preloaded_values = $this->values;
     }
     
-    public function isDirty(): bool
+    public function isDirty(string $name = ''): bool
     {
-        return !is_empty($this->shadow);
+        if (empty($name)) {
+            return empty($this->shadow);
+        } else {
+            return isset($this->shadow[$name]);
+        }
     }    
 }

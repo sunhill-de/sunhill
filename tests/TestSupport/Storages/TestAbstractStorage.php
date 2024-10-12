@@ -76,10 +76,5 @@ class TestAbstractStorage extends AbstractStorage
         }
     }
     
-    public function isDirty(): bool
-    {
-        return false;
-    }
-    
 }
 
