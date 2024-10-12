@@ -16,8 +16,9 @@
 namespace Sunhill\Storage;
 
 use Illuminate\Support\Facades\Cache;
+use Sunhill\Basic\Base;
 
-abstract class AbstractStorage
+abstract class AbstractStorage extends Base
 {
     
     /**
