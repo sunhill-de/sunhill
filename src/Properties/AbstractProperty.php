@@ -1031,6 +1031,11 @@ abstract class AbstractProperty extends Base
         $this->getStorage()->rollback();
     }
     
+    public function isDirty()
+    {
+        $this->checkForStorage('rollback');
+        return $this->getStorage()->isDirty($this->getName());        
+    }
 // *************************************** Metadata **********************************************
 
     /**
