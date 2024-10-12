@@ -1,14 +1,14 @@
 <?php
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\TestSupport\Storages\DummyStorage;
 use Sunhill\Types\TypeFloat;
 use Sunhill\Properties\Exceptions\UninitializedValueException;
 use Sunhill\Properties\ArrayProperty;
-use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Properties\Exceptions\InvalidIndexException;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Tests\SimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SimpleTestCase::class);
 
 test('read initialized value', function()
 {
@@ -61,5 +61,23 @@ it('fails when reading an uninitialized array index', function()
     $test = new ArrayProperty();
     $test->setName('keyC')->setStorage($storage);
     
-    expect($test->offsetGet(999))->toBe(2);    
+    $test->offsetGet(999);    
 })->throws(InvalidIndexException::class);
+
+test('Writing a new value', function() {
+    $storage = new DummyStorage();
+    $test = new TypeFloat();
+    $test->setName('keyC')->setStorage($storage);
+    
+    $test->setValue(1.34);
+    expect($test->getValue())->toBe(1.34);    
+});
+
+it('Fails when writing a value with wrong type', function() {
+        $storage = new DummyStorage();
+        $test = new TypeFloat();
+        $test->setName('keyC')->setStorage($storage);
+        
+        $test->setValue('ABC');
+})->throws(InvalidValueException::class);
+        
