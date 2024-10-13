@@ -34,9 +34,23 @@ class DummyPersistentStorage extends PersistentStorage
         return is_int($id);    
     }
     
-    protected function doCommit()
+    protected function doCommitLoaded()
     {
-        
+        $modified = $this->getModifiedValues();
+        foreach ($modified as $key => $value) {
+            static::$persistent_data[$this->getID()][$key] = $value->new;
+        }            
+    }
+    
+    protected function doCommitNew()
+    {
+        $id = count(static::$persistent_data);
+        $data = [];
+        foreach ($this->values as $key => $value) {
+            $data[$key] = $value;
+        }
+        static::$persistent_data[] = $data;
+        return $id;
     }
     
     protected function doMigrate()

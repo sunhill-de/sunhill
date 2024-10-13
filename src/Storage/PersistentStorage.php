@@ -119,12 +119,70 @@ abstract class PersistentStorage extends CommonStorage
     }
     
     /**
-     * Performs the commit meaning transfering the data to the persistent medium. 
+     * Returns the values that where modified in an already loaded storage
      * 
-     * @param array $structure Defines the structure of the owning property. 
+     * @return array
+     */
+    protected function getModifiedValues(): array
+    {
+       $result = [];
+       foreach ($this->shadow as $key => $value) {
+           $entry = new \stdClass();
+           if (!is_a($value,IsDirty::class)) {
+               $entry->old = $value;
+           } else {
+               $entry->old = null;
+           }
+           $entry->new = $this->values[$key];
+           $result[$key] = $entry;
+       }
+       return $result;
+    }
+    
+    /**
+     * Performs the commit of a existing entry, meaning transfering the data to the 
+     * persistent medium and overwriting the previously stored. 
+     * 
      * @wiki /PersistentStorage
      */
-    abstract protected function doCommit();
+    abstract protected function doCommitLoaded();
+    
+    /**
+     * Performs the commit of a new entry, meaning creating a new entry on the persistent
+     * medium and setting the id.
+     * 
+     *  @wiki /PersistentStorage
+     */
+    abstract protected function doCommitNew();
+    
+    public function commit()
+    {
+        if (!$this->isDirty()) { // When not dirty then there is nothing to do
+            return;
+        }
+        if ($this->isLoaded()) {
+            $this->doCommitLoaded();
+        } else {
+            $this->setID($this->doCommitNew());
+        }
+    }
+    
+    /**
+     * Writes any modified value (except the newly created ones) back to the original value
+     * stored in $shadow.
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractStorage::rollback()
+     */
+    public function rollback()
+    {
+        foreach ($this->shadow as $key => $value) {
+            if (!is_a($value,IsDirty::class)) {
+                $this->values[$key] = $value;
+            }
+        }
+        $this->shadow = [];
+    }
     
     protected function doMigrate()
     {
