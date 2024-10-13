@@ -18,6 +18,7 @@ namespace Sunhill\Storage;
 use Sunhill\Storage\Exceptions\InvalidIDException;
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Storage\Exceptions\StructureNeededException;
 
 abstract class PersistentStorage extends CommonStorage
 {
@@ -119,6 +120,18 @@ abstract class PersistentStorage extends CommonStorage
     }
     
     /**
+     * Checks if the $structures field was set. If not it raises an exception. This functions
+     * should be called by doCommitXXXX() or doMigrate() when the structure is needed to perform
+     * this step.
+     */
+    protected function stuctureNeeded()
+    {
+        if (isNull($this->structure)) {
+            throw new StructureNeededException("The structure of the owning property is needed but not provided");
+        }
+    }
+    
+    /**
      * Returns the values that where modified in an already loaded storage
      * 
      * @return array
@@ -184,9 +197,51 @@ abstract class PersistentStorage extends CommonStorage
         $this->shadow = [];
     }
     
-    protected function doMigrate()
+    /**
+     * This method should prepare the persistent storage to store 
+     * values to it (like creating database tables, files, etc.)
+     */
+    protected function doMigrateNew()
     {
         // Does nothing by default
+    }
+
+    /**
+     * This method should update the persistent storage so that it 
+     * fits to the current structure (like modifying database tables, files, etc.)
+     */
+    protected function doMigrateUpdate()
+    {
+        // Does nothing by default
+    }
+    
+    /**
+     * Checks if the persistent storage medium was alread prepared for storage 
+     * @return boolean
+     */
+    protected function isAlreadyMigrated(): bool
+    {
+        return true;
+    }
+    
+    /**
+     * Checks if the persistent storage medium is on its current state
+     * @return boolean
+     */
+    protected function isMigrationUptodate(): bool
+    {
+        return true;    
+    }
+    
+    public function migrate()
+    {
+        if (!$this->isAlreadyMigrated()) {
+            $this->doMigrateNew();
+            return;
+        }
+        if (!$this->isMigrationUptodate()) {
+            $this->doMigrateUpdate();
+        }
     }
     
     /**
