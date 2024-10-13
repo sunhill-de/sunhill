@@ -53,9 +53,27 @@ class DummyPersistentStorage extends PersistentStorage
         return $id;
     }
     
-    protected function doMigrate()
+    protected function doMigrateNew()
     {
-        // Does nothing by default
+        $this->stuctureNeeded();
+        static::$persistent_data = 'migrated new';
+    }
+    
+    protected function doMigrateUpdate()
+    {
+        $this->stuctureNeeded();
+        static::$persistent_data = 'migration changed';
+    }
+    
+    protected function isAlreadyMigrated(): bool
+    {
+        return is_array(static::$persistent_data);
+    }
+    
+    protected function isMigrationUptodate(): bool
+    {
+        $this->stuctureNeeded();
+        return isset(static::$persistent_data[1]['str_field']);
     }
     
 }

@@ -126,7 +126,7 @@ abstract class PersistentStorage extends CommonStorage
      */
     protected function stuctureNeeded()
     {
-        if (isNull($this->structure)) {
+        if (is_null($this->structure)) {
             throw new StructureNeededException("The structure of the owning property is needed but not provided");
         }
     }
