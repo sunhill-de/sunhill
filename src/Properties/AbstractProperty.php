@@ -1452,5 +1452,14 @@ abstract class AbstractProperty extends Base
                 return !is_null($this->getValue());
         }
     }
+   
+    public function getStructure()
+    {
+        $result = new \stdClass();
+        $result->name = $this->getName();
+        $result->type = $this->getAccessType();
+        
+        return $result;
+    }
     
 }

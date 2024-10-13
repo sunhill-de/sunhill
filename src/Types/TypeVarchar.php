@@ -125,4 +125,14 @@ class TypeVarchar extends AbstractSimpleProperty
         static::addInfo('type', 'basic');
     }
     
+    public function getStructure()
+    {
+        $result = new \stdClass();
+        $result->name = $this->getName();
+        $result->type = $this->getAccessType();
+        $result->max_length = $this->getMaxLen();
+        
+        return $result;
+    }
+    
 }

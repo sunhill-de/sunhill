@@ -44,5 +44,5 @@ class TypeBlob extends AbstractSimpleProperty
         static::addInfo('description', 'The basic type blob.', true);
         static::addInfo('type', 'basic');
     }
-    
+        
 }

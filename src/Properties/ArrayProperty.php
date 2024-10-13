@@ -336,4 +336,14 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         return (($this->current >= 0) && ($this->current < $this->count()));
     }
     
+    public function getStructure()
+    {
+        $result = new \stdClass();
+        $result->name = $this->getName();
+        $result->type = $this->getAccessType();
+        $result->element_type = $this->getAllowedElementTypes();
+        
+        return $result;
+    }
+    
 }
