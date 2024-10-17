@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Query/BasicQueryTest.php
- * Coverage: unknown
+ * Coverage: 77.782% (2024-10-17)
  */
 
 namespace Sunhill\Query;

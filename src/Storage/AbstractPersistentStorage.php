@@ -12,7 +12,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage: unknown
+ * Coverage: 83.02% (2024-10-17)
  * PSR-State: completed
  */
 
