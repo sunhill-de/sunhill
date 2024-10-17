@@ -15,6 +15,9 @@
 
 namespace Sunhill\Storage\PoolMysqlStorage;
 
+use Illuminate\Support\Facades\Schema;
+use Sunhill\Storage\Exceptions\StorageTableMissingException;
+
 class PoolMysqlUtility
 {
     protected $structure;
@@ -53,5 +56,12 @@ class PoolMysqlUtility
     protected function assembleArrayTableName(\stdClass $info): string
     {
         return $info->storage_subid.'_'.$info->name;
+    }
+    
+    protected function tableNeeded(string $name)
+    {
+        if (!Schema::hasTable($name)) {
+            throw new StorageTableMissingException("The table '$name' is expected but missing.");
+        }
     }
 }

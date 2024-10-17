@@ -23,11 +23,13 @@ class PoolMysqlLoader extends PoolMysqlUtility
         
     private function loadObject(int $id)
     {
+        $this->tableNeeded('objects');
         return DB::table('objects')->where('id',$id)->first();
     }
     
     private function loadTable(string $name, int $id)
     {
+        $this->tableNeeded($name);
         return DB::table($name)->where('id', $id)->first();    
     }
     
@@ -36,7 +38,7 @@ class PoolMysqlLoader extends PoolMysqlUtility
         $result = [];
         foreach ($this->getArrays() as $array) {
             $table = $this->assembleArrayTableName($array);
-            $table_result = DB::table($table)->get();
+            $this->tableNeeded($table);
             $table_result = DB::table($table)->where('container_id',$id)->get();
             $subresult = [];
             foreach ($table_result as $entry) {

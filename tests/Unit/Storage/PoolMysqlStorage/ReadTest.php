@@ -11,6 +11,8 @@ use Sunhill\Tests\Database\Seeds\ParentObjectsSeeder;
 use Sunhill\Tests\Database\Seeds\ChildObjectsSeeder;
 use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
 use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
+use Sunhill\Storage\Exceptions\StorageTableMissingException;
+use Illuminate\Support\Facades\Schema;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -165,3 +167,11 @@ test('Read a childobject with both arrays empty', function()
     expect($test->getValue('child_string'))->toBe('EFG');
     expect($test->getElementCount('child_sarray'))->toBe(0);
 });
+
+it('fails when a table is missing', function()
+{
+    $test = new PoolMysqlStorage();
+    $test->setStructure(prepareStorage($this, 'childobject'));
+    Schema::drop('parentobjects_parent_sarray');
+    $test->load(12);
+})->throws(StorageTableMissingException::class);
