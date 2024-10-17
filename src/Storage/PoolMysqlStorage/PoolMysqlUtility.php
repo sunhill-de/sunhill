@@ -39,4 +39,19 @@ class PoolMysqlUtility
         return $result;
     }
     
+    protected function getArrays(): array
+    {
+        $result = [];
+        foreach ($this->structure as $entry) {
+            if ($entry->type == 'array') {
+                $result[] = $entry;
+            }
+        }
+        return $result;
+    }
+    
+    protected function assembleArrayTableName(\stdClass $info): string
+    {
+        return $info->storage_subid.'_'.$info->name;
+    }
 }

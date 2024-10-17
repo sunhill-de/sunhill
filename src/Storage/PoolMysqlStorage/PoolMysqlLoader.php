@@ -16,6 +16,7 @@
 namespace Sunhill\Storage\PoolMysqlStorage;
 
 use Illuminate\Support\Facades\DB;
+use Sunhill\Tags\Tag;
 
 class PoolMysqlLoader extends PoolMysqlUtility
 {
@@ -32,12 +33,29 @@ class PoolMysqlLoader extends PoolMysqlUtility
     
     private function loadArrays(int $id)
     {
-        return [];        
+        $result = [];
+        foreach ($this->getArrays() as $array) {
+            $table = $this->assembleArrayTableName($array);
+            $table_result = DB::table($table)->get();
+            $table_result = DB::table($table)->where('container_id',$id)->get();
+            $subresult = [];
+            foreach ($table_result as $entry) {
+                $subresult[$entry->index] = $entry->element;
+            }
+            $result[$array->name] = $subresult;
+        }
+
+        return $result;        
     }
     
     private function loadTags(int $id)
     {
-        return [];        
+        $tags = DB::table('tagobjectassigns')->where('container_id', $id)->get();
+        $result = [];
+        foreach ($tags as $tag) {
+            $result[] = new Tag($tag->tag_id);
+        }
+        return ['tags'=>$result];        
     }
     
     private function loadAttributes(int $id)

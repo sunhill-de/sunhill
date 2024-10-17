@@ -71,6 +71,66 @@ class ObjectsSeeder extends Seeder
                 '_created_at'=>'2024-10-17 13:55:00',
                 '_updated_at'=>'2024-10-17 13:55:00',
             ],
+            [
+                'id'=>7, // A parent object with array
+                '_classname'=>'ParentObject',
+                '_uuid'=>'73f4bebe-bb01-4812-abb0-69b9b3b132ea',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>8,// A parent object with empty array
+                '_classname'=>'ParentObject',
+                '_uuid'=>'8819d610-1b64-4db0-8aaf-dee7992f5cef',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>9, // A child object with both arrays
+                '_classname'=>'ChildObject',
+                '_uuid'=>'428d7089-1f7c-434d-b940-9976d5afbc04',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>10, // A child object with only parent array
+                '_classname'=>'ParentObject',
+                '_uuid'=>'4382f710-286c-4577-baf5-b5ecb08cd99c',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>11,// A child object with only child array
+                '_classname'=>'ParentObject',
+                '_uuid'=>'b92f34f4-5f0a-4941-b359-b4fc21c3ddb6',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>12,// A child object with empty arrays
+                '_classname'=>'ParentObject',
+                '_uuid'=>'3ae0ebe5-7165-4512-aa38-8ad5da515e04',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
         ]);    
     }
     
