@@ -2,10 +2,10 @@
 
 namespace Sunhill\Tests\TestSupport\Storages;
 
-use Sunhill\Storage\PersistentStorage;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Storage\PersistentPoolStorage;
 
-class DummyPersistentStorage extends PersistentStorage
+class DummyPersistentPoolStorage extends PersistentPoolStorage
 {
     
     static public $persistent_data = [];

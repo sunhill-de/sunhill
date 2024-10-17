@@ -1,13 +1,13 @@
 <?php
 
 use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Tests\TestSupport\Storages\DummyPersistentStorage;
+use Sunhill\Tests\TestSupport\Storages\DummyPersistentPoolStorage;
 
 uses(SimpleTestCase::class);
 
 test('Committing a modified existing storage entry', function()
 {
-    $test = new DummyPersistentStorage();
+    $test = new DummyPersistentPoolStorage();
     $test->load(1);
     $test->setValue('str_field','TEST');
     $test->commit();
@@ -17,7 +17,7 @@ test('Committing a modified existing storage entry', function()
 
 test('Committing a new storage entry', function()
 {
-    $test = new DummyPersistentStorage();
+    $test = new DummyPersistentPoolStorage();
     $test->setValue('str_field','TEST');
     $test->setValue('int_field',123);
     $test->setValue('float_field',1.23);
@@ -33,7 +33,7 @@ test('Committing a new storage entry', function()
 
 test('Rolling back a modified existing storage entry', function()
 {
-    $test = new DummyPersistentStorage();
+    $test = new DummyPersistentPoolStorage();
     $test->load(1);
     $test->setValue('str_field','TEST');
     $test->rollback();

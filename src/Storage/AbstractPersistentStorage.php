@@ -1,8 +1,11 @@
 <?php
 /**
- * @file PersistentStorage.php
- * The class for storages that could be saved and loaded to or from a persistent media like a
- * database or a file
+ * @file AbstractPersistentStorage.php
+ * A common ancestor for PersistentStorage and PesistantPoolStorage. The main difference between
+ * these two is:
+ * - PersistentStorage is a single property that is accessed via this storage (like a single file ebntry)
+ * - PersistentPoolStorage is a pool of properties identified by any kind of id
+ * 
  * @author Klaus Dimde
  * Lang en
  * Reviewstatus: 2024-10-12
@@ -20,7 +23,7 @@ use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 use Sunhill\Storage\Exceptions\StructureNeededException;
 
-abstract class PersistentStorage extends CommonStorage
+abstract class AbstractPersistentStorage extends CommonStorage
 {
     
     protected $shadow = [];
@@ -151,34 +154,26 @@ abstract class PersistentStorage extends CommonStorage
        }
        return $result;
     }
+ 
+    /**
+     * This method has to be overwritten to perform the commit itself
+     */
+    abstract protected function doCommit();
     
     /**
-     * Performs the commit of a existing entry, meaning transfering the data to the 
-     * persistent medium and overwriting the previously stored. 
+     * Performs a commit only if something changed
      * 
-     * @wiki /PersistentStorage
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractStorage::commit()
      */
-    abstract protected function doCommitLoaded();
-    
-    /**
-     * Performs the commit of a new entry, meaning creating a new entry on the persistent
-     * medium and setting the id.
-     * 
-     *  @wiki /PersistentStorage
-     */
-    abstract protected function doCommitNew();
-    
     public function commit()
     {
         if (!$this->isDirty()) { // When not dirty then there is nothing to do
             return;
         }
-        if ($this->isLoaded()) {
-            $this->doCommitLoaded();
-        } else {
-            $this->setID($this->doCommitNew());
-        }
+        $this->doCommit();
     }
+    
     
     /**
      * Writes any modified value (except the newly created ones) back to the original value
@@ -198,16 +193,29 @@ abstract class PersistentStorage extends CommonStorage
     }
     
     /**
-     * This method should prepare the persistent storage to store 
+     * Due the fact that id could be null we need a way to determine if the storage was
+     * already loaded.
+     *
+     * @var boolean
+     */
+    protected $loaded = false;
+    
+    public function isLoaded(): bool
+    {
+        return $this->loaded;
+    }
+    
+    /**
+     * This method should prepare the persistent storage to store
      * values to it (like creating database tables, files, etc.)
      */
     protected function doMigrateNew()
     {
         // Does nothing by default
     }
-
+    
     /**
-     * This method should update the persistent storage so that it 
+     * This method should update the persistent storage so that it
      * fits to the current structure (like modifying database tables, files, etc.)
      */
     protected function doMigrateUpdate()
@@ -216,7 +224,7 @@ abstract class PersistentStorage extends CommonStorage
     }
     
     /**
-     * Checks if the persistent storage medium was alread prepared for storage 
+     * Checks if the persistent storage medium was alread prepared for storage
      * @return boolean
      */
     protected function isAlreadyMigrated(): bool
@@ -230,10 +238,10 @@ abstract class PersistentStorage extends CommonStorage
      */
     protected function isMigrationUptodate(): bool
     {
-        return true;    
+        return true;
     }
     
-    public function migrate()
+    final public function migrate()
     {
         if (!$this->isAlreadyMigrated()) {
             $this->doMigrateNew();
@@ -244,82 +252,5 @@ abstract class PersistentStorage extends CommonStorage
         }
     }
     
-    /**
-     * Stores the current id
-     * @var unknown
-     */
-    protected $id;
     
-    /**
-     * Due the fact that id could be null we need a way to determine if the storage was
-     * already loaded.
-     * 
-     * @var boolean
-     */
-    protected $loaded = false;
-    
-    /**
-     * Sets the current id
-     * @param mixed $id
-     */
-    protected function setID(mixed $id)
-    {
-        $this->id = $id;
-    }
-    
-    /**
-     * Returns the current id
-     * @return mixed
-     */
-    public function getID(): mixed
-    {
-        return $this->id;
-    }
-    
-    public function isLoaded(): bool
-    {
-        return $this->loaded;
-    }
-    
-    /**
-     * Loads the data for the entry identified by $id from the persistent storage
-     * 
-     * @param mixed $id, could be null if only one persistent entry exists
-     */
-    public function load(mixed $id = null)
-    {
-        if (!$this->isValidID($id)) {
-            throw new InvalidIDException("The given id is not valid for this storage");
-        }
-        if ($this->isLoaded()) {
-            throw new StorageAlreadyLoadedException("The storage was already loaded");
-        }
-        $this->setID($id);
-        $this->doLoad($id);
-        $this->loaded = true;
-    }
-    
-    /**
-     * Checks if the given id is a valid one
-     * 
-     * @param mixed $id
-     * @return bool
-     */
-    abstract protected function isValidID(mixed $id): bool;
-    
-    /**
-     * Performs the load of data from the persitent 
-     * @param mixed $id
-     */
-    abstract protected function doLoad(mixed $id);
-    
-    /**
-     * Loading a storage when already loaded with data is forbidden. This resets 
-     */
-    public function reset()
-    {
-        $this->values = [];
-        $this->loaded = false;
-        $this->setID(null);
-    }
 }
