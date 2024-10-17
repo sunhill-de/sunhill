@@ -13,6 +13,7 @@ use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
 use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
+use Sunhill\Storage\Exceptions\IDNotFoundException;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -175,3 +176,11 @@ it('fails when a table is missing', function()
     Schema::drop('parentobjects_parent_sarray');
     $test->load(12);
 })->throws(StorageTableMissingException::class);
+
+it('fails when reading an unknown id', function()
+{
+    $test = new PoolMysqlStorage();
+    $test->setStructure(prepareStorage($this, 'childobject'));
+    Schema::drop('parentobjects_parent_sarray');
+    $test->load(999);
+})->throws(IDNotFoundException::class);
