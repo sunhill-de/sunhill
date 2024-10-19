@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Properties/AbstractPropertyTest.php
- * Coverage: 92.65 (2024-10-19)
+ * Coverage: 98.32 (2024-10-19)
  * 
  * Wiki: /Properties
  * tests /tests/Unit/Properties/AbstractProperties/*
@@ -1210,29 +1210,7 @@ abstract class AbstractProperty extends Base
         }
         throw new PropertyException(static::class.": Unknown method '$method' called");
     }
-    
-    
-    /**
-     * Returns a blank property with the given name or type
-     * 
-     * @param string $name
-     * @param string $type_or_semantic
-     * @return AbstractProperty
-     */
-    protected function createProperty(string $type_or_semantic = 'string', string $name = ''): AbstractProperty
-    {
-        if (!Properties::isPropertyRegistered($type_or_semantic)) {
-            throw new InvalidTypeOrSemanticException("The given '$type_or_semantic' is not registered");          
-       }
-       $namespace = Properties::getNamespaceOfProperty($type_or_semantic);
-       $property = new $namespace();
-       if (!empty($name)) {
-            $property->setName($name);
-       }
-       
-       return $property;
-    }
-    
+        
     // ================================== Infos ===============================================
     /**
      * Stores the collection infos
