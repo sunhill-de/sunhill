@@ -1,0 +1,3 @@
+#!/bin/bash
+./vendor/bin/pest $1 $2 --coverage --coverage-html=doc/coverage
+
