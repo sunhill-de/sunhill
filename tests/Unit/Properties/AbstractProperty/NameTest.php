@@ -31,20 +31,35 @@ dataset('NamesProvider', function () {
         ['', true]
     ];
 });
+
 test('set name', function () {
     $test = new NonAbstractProperty();
     expect($test->getName())->toEqual('test_int');
     $test->setName('another');
+    
     expect($test->getName())->toEqual('another');
 });
-test('force name', function () {
+
+test('set name alias', function () 
+{
+    $test = new NonAbstractProperty();
+
+    $test->name('another');
+    
+    expect($test->getName())->toEqual('another');
+});
+        
+test('force name', function () 
+{
     $test = new NonAbstractProperty();
 
     $test->forceName('_test');
 
     expect($test->getName())->toEqual('_test');
 });
-test('additional getter', function ($item, $value) {
+
+test('additional getter', function ($item, $value) 
+{
     $test = new NonAbstractProperty();
     $method = 'set_'.$item;
     $test->$method($value);

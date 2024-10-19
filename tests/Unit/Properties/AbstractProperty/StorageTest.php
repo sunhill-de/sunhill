@@ -38,8 +38,12 @@ test('get capabilities', function () {
     expect($test->readCapability())->toEqual('read');
     expect($test->writeCapability())->toEqual('write');
     expect($test->modifyCapability())->toEqual('modify');
+    expect($test->getReadCapability())->toEqual('read');
+    expect($test->getWriteCapability())->toEqual('write');
+    expect($test->getModifyCapability())->toEqual('modify');
 });
 
+        
 test('getReadable() works', function() 
 {
     
@@ -203,7 +207,8 @@ test('property no writeable while modify', function () {
     $test = new NonAbstractProperty();
     $test->setWriteable(false);
     $test->setStorage($storage);
-
+    expect($test->getWriteable())->toBe(false);
+    expect($test->isWriteable())->toBe(false);
     $test->setValue(1234);
 })->throws(PropertyNotWriteableException::class);
 
@@ -250,6 +255,13 @@ test('setNullable() and getNullable()', function()
     expect($test->getNullable())->toBe(true);
 });
 
+test('notNullable()', function()
+{
+    $test = new NonAbstractProperty();
+    $test->notNullable();
+    expect($test->getNullable())->toBe(false);
+});
+
 test('getDefault() with no default', function()
 {
     $test = new NonAbstractProperty();
@@ -265,6 +277,15 @@ test('setDefault() with a value', function()
     expect($test->getDefault())->toBe(5);
     expect($test->hasDefault())->toBe(true);
     expect($test->defaultsNull())->toBe(false);    
+});
+
+test('default() with a value', function()
+{
+    $test = new NonAbstractProperty();
+    $test->default(5);
+    expect($test->getDefault())->toBe(5);
+    expect($test->hasDefault())->toBe(true);
+    expect($test->defaultsNull())->toBe(false);
 });
 
 test('setDefault() with null', function()

@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Properties/AbstractPropertyTest.php
- * Coverage: 88.57 (2024-10-17)
+ * Coverage: 92.65 (2024-10-19)
  * 
  * Wiki: /Properties
  * tests /tests/Unit/Properties/AbstractProperties/*

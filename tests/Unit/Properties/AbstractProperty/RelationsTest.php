@@ -7,6 +7,7 @@ use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Query\Exceptions\WrongTypeException;
+use Sunhill\Query\Exceptions\NotAllowedRelationException;
 
 test('::getAllowedRelations() works', function()
 {
@@ -20,6 +21,13 @@ test('::isAllowedRelation() works', function()
     expect(NonAbstractProperty::isAllowedRelation('A'))->toBe(true);
     expect(NonAbstractProperty::isAllowedRelation('Z'))->toBe(false);    
 });
+
+it('fails if calling not allowed relation', function()
+{
+    NonAbstractProperty::setAllowedRelations(['A']);
+    $test = new NonAbstractProperty();
+    $test->testRelation('X',10);
+})->throws(NotAllowedRelationException::class);
 
 test('testRelation() works', function($relation, $value, $expect, $property_value = 10)
 {
