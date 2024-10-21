@@ -12,7 +12,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage: 83.02% (2024-10-17)
+ * Coverage: 92.59% (2024-10-21)
  * PSR-State: completed
  */
 
@@ -127,7 +127,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
      * should be called by doCommitXXXX() or doMigrate() when the structure is needed to perform
      * this step.
      */
-    protected function stuctureNeeded()
+    protected function structureNeeded()
     {
         if (is_null($this->structure)) {
             throw new StructureNeededException("The structure of the owning property is needed but not provided");
@@ -172,6 +172,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
             return;
         }
         $this->doCommit();
+        $this->shadow = [];
     }
     
     

@@ -55,13 +55,13 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
     
     protected function doMigrateNew()
     {
-        $this->stuctureNeeded();
+        $this->structureNeeded();
         static::$persistent_data = 'migrated new';
     }
     
     protected function doMigrateUpdate()
     {
-        $this->stuctureNeeded();
+        $this->structureNeeded();
         static::$persistent_data = 'migration changed';
     }
     
@@ -72,7 +72,7 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
     
     protected function isMigrationUptodate(): bool
     {
-        $this->stuctureNeeded();
+        $this->structureNeeded();
         return isset(static::$persistent_data[1]['str_field']);
     }
     
