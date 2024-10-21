@@ -9,7 +9,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage: 72.92% (2024-10-17)
+ * Coverage: 100% (2024-10-21)
  * PSR-State: completed
  */
 
@@ -276,7 +276,10 @@ abstract class AbstractStorage extends Base
      */
     public function setIndexedValue(string $name, $index, $value)
     {
-        $this->doSetIndexedValue($name, $index, $value);    
+        $this->doSetIndexedValue($name, $index, $value);
+        if ($this->isCachable()) {
+            Cache::put($this->getCacheID().'.'.$name.'.'.$index, $value, $this->cache_time);            
+        }
     }
     
     /**
