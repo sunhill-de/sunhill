@@ -18,6 +18,7 @@
 namespace Sunhill\Storage;
 
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
+use Sunhill\Storage\Exceptions\InvalidIDException;
 
 abstract class PersistentPoolStorage extends AbstractPersistentStorage
 {
@@ -55,6 +56,9 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
     {
         if ($this->isLoaded()) {
             throw new StorageAlreadyLoadedException("The storage was already loaded");
+        }
+        if (!$this->isValidID($id)) {
+            throw new InvalidIDException("The given id is not valid for this storage");
         }
         $this->setId($id);
         $this->doLoad($id);

@@ -49,7 +49,7 @@ it('fails when load() is called with a invalid id', function()
 {
     $test = new DummyPersistentPoolStorage();
     $test->load('ABC');    
-})->throws(IDNotFoundException::class);
+})->throws(InvalidIDException::class);
 
 it('fails when load() is called with a non existing id', function()
 {
