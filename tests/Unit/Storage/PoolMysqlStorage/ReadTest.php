@@ -14,6 +14,7 @@ use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Storage\Exceptions\InvalidIDException;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -72,6 +73,12 @@ function prepareStorage($test, string $type)
             ];
     }
 }
+
+test('fails when using a wrong id type', function()
+{
+    $test = new PoolMysqlStorage();
+    $test->load('A');     
+})->throws(InvalidIDException::class);
 
 test('Read a dummy', function()
 {
@@ -181,6 +188,5 @@ it('fails when reading an unknown id', function()
 {
     $test = new PoolMysqlStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
-    Schema::drop('parentobjects_parent_sarray');
     $test->load(999);
 })->throws(IDNotFoundException::class);
