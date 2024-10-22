@@ -8,11 +8,11 @@
  * @author Klaus Dimde
  * ----------------------------------------------------------------------
  * Lang en
- * Reviewstatus: 2024-03-04
+ * Reviewstatus: 2024-19-22
  * Localization: unknown
  * Documentation: all public
  * Tests: Unit/Managers/ManagerPropertiesTest.php
- * Coverage: unknown
+ * Coverage: 68.35% (2024-10-22)
  * PSR-State: complete
  */
 namespace Sunhill\Managers;
@@ -29,6 +29,7 @@ use Sunhill\Storage\AbstractStorage;
 use Sunhill\Objects\Mysql\MysqlStorage;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\CallbackStorage;
 
 /**
  * The PropertiesManager is accessed via the Properties facade. It's a singelton class
@@ -176,10 +177,32 @@ class PropertiesManager
      * @param unknown $property
      * @return unknown
      */
-    public function createProperty($property)
+    public function createProperty($property, ?string $name = null, mixed $storage = null)
     {
-        $namespace = $this->getNamespaceOfProperty($property);
-        return new $namespace();
+        if (!is_a($property, AbstractProperty::class)) {
+            $namespace = $this->getNamespaceOfProperty($property);
+            $property = new $namespace();
+        }
+        if (!is_null($name)) {
+            $property->setName($name);
+        }
+        if (is_null($storage)) {
+            return $property;
+        }
+        if (is_callable($storage)) {
+            $storage_obj = new CallbackStorage();
+            $storage_obj->setCallback($storage);
+            $property->setStorage($storage_obj);
+            return $property;
+        }
+        if (is_string($storage) && class_exists($storage)) {
+            $storage = new $storage();
+        }
+        if (is_a($storage, AbstractStorage::class)) {
+            $property->setStorage($storage);
+            return $property;
+        }
+        return false;
     }
     
     /**
