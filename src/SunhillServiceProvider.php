@@ -58,6 +58,7 @@ use Sunhill\Semantics\Timestamp;
 use Sunhill\Semantics\URL;
 use Sunhill\Semantics\UUID4;
 use Sunhill\Managers\FilterManager;
+use Sunhill\Properties\ArrayProperty;
 
 class SunhillServiceProvider extends ServiceProvider
 {
@@ -172,6 +173,9 @@ class SunhillServiceProvider extends ServiceProvider
         Properties::registerProperty(TypeTime::class);
         Properties::registerProperty(TypeVarchar::class);
         Properties::registerProperty(TypeVarchar::class,'string');
+
+        Properties::registerProperty(ArrayProperty::class);
+        
     }
     
     protected function registerSemantics()

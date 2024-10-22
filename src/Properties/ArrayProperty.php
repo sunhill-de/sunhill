@@ -345,5 +345,11 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         
         return $result;
     }
+
+    protected static function setupInfos()
+    {
+        static::addInfo('name', 'array');
+        static::addInfo('description', 'A class for arrays.', true);
+    }
     
 }
