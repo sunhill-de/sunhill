@@ -93,7 +93,12 @@ abstract class AbstractProperty extends Base
      * 
      * @var unknown
      */
-    protected $storage;
+    private $storage;
+    
+    protected function createStorage(): ?AbstractStorage
+    {
+        return null;    
+    }
     
     /**
      * Setter for $storage
@@ -120,8 +125,9 @@ abstract class AbstractProperty extends Base
      * 
      * @test AbstractPropertyTest::testSetStorage()
      */
-    public function getStorage(): AbstractStorage
+    public function getStorage(): ?AbstractStorage
     {
+        $this->checkForStorage();
         return $this->storage;
     }
     
@@ -133,11 +139,16 @@ abstract class AbstractProperty extends Base
      * 
      * @test AbstractPropertyTest::testNoStorage()
      */
-    protected function checkForStorage(string $action)
+    protected function checkForStorage()
     {
-        if (empty($this->storage)) {
-            throw new NoStorageSetException("There is no storage set: $action");
+        if (!empty($this->storage)) {
+            return;
         }
+        $this->storage = $this->createStorage();
+        if (!empty($this->storage)) {
+            return;
+        }
+        throw new NoStorageSetException("There is no storage set: $action");
     }
     
 // ====================================== Name =====================================================    

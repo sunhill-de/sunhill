@@ -15,12 +15,23 @@ use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Tests\TestSupport\Storages\TestAbstractIDStorage;
 use Sunhill\Storage\AbstractStorage;
 
-test('set storage', function () {
+test('set storage', function () 
+{
     $storage = \Mockery::mock(AbstractStorage::class);
     
     $test = new NonAbstractProperty();
     $test->setStorage($storage);
 
+    expect($test->getStorage())->toEqual($storage);
+});
+
+test('use createStorage()', function ()
+{
+    $storage = \Mockery::mock(AbstractStorage::class);
+    
+    $test = new NonAbstractProperty();
+    $test->public_storage = $storage;
+    
     expect($test->getStorage())->toEqual($storage);
 });
 

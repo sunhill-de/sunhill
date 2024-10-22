@@ -3,11 +3,14 @@
 namespace Sunhill\Tests\TestSupport\Properties;
 
 use Sunhill\Properties\AbstractProperty;
+use Sunhill\Storage\AbstractStorage;
 
 class NonAbstractProperty extends AbstractProperty
 {
     
     public $is_valid = true;
+    
+    public $public_storage;
     
     public function __construct()
     {
@@ -22,6 +25,11 @@ class NonAbstractProperty extends AbstractProperty
     public static function setAllowedRelations(array $allowed_relations)
     {
         static::$allowed_relations = $allowed_relations;    
+    }
+    
+    protected function createStorage(): ?AbstractStorage
+    {
+        return $this->public_storage;
     }
     
     protected function formatForHuman($input)
