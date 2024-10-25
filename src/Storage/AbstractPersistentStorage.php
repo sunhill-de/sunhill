@@ -88,7 +88,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
      */
     abstract protected function handleUnloaded();
     
-    private function checkAccess()
+    protected function checkAccess()
     {
         if (!$this->isLoaded()) {
             $this->handleUnloaded();

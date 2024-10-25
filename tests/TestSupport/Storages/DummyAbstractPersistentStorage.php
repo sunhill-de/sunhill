@@ -29,4 +29,9 @@ class DummyAbstractPersistentStorage extends AbstractPersistentStorage
     {
         return $this->getModifiedValues();
     }
+    
+    protected function handleUnloaded(): void
+    {
+        
+    }
 }

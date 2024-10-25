@@ -82,7 +82,7 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
         if (!is_null($this->getID())) {
             return $this->load($this->getID()); // unlikely event
         }
-        throw 
+  //      throw 
     }
     
     /**
