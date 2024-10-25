@@ -36,6 +36,16 @@ class RecordProperty extends AbstractProperty
     }
     
     /**
+     * For storages it is sometimes necessary to know the storage id for this 
+     * property (for example several database tables). This method returns a id
+     * @return string
+     */
+    public function getStorageID(): string
+    {
+        return ''; // Per default nothing
+    }
+    
+    /**
      * Storages the elements of this record as an associative array
      * @var array
      */
@@ -116,12 +126,26 @@ class RecordProperty extends AbstractProperty
     
     /**
      * Adds the structure of the property to the structures list
-     * @todo Is this really necessary? Could construct the array on the fly
      * @param AbstractProperty $property
      */
-    private function appendToStructures(AbstractProperty $property)
+    private function appendToStructures(AbstractProperty $property, string $inclusion)
     {
-        $this->elements_structure[$property->getName()] = $property->getStructure();
+        $structure = $property->getStructure();
+        if (is_a($property,RecordProperty::class)) {
+            switch ($inclusion) {
+                case 'include':
+                    $structure->storage_subid = $this->getStorageID();
+                    break;
+                case 'embed':
+                    break;
+                case 'refer':
+                    break;
+                default:                    
+            }
+        } else {
+            
+        }
+        $this->elements_structure[$property->getName()] = $structure;
     }
     
     public function appendElement(mixed $element, ?string $name = null, string $inclusion = 'include', $storage = null)
@@ -131,7 +155,7 @@ class RecordProperty extends AbstractProperty
         $this->checkForDuplicateName($element);
         $this->checkForDuplicateProperty($element);
         $this->appendToElements($element);
-        $this->appendToStructures($element);
+        $this->appendToStructures($element, $inclusion);
         return $element;
     }
 }
