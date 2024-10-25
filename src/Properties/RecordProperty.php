@@ -1,28 +1,32 @@
 <?php
 /**
- * @file AbstractProperty.php
- * Defines an abstract property as base for all other properties
- * Lang de,en
- * Reviewstatus: 2024-10-07
+ * @file RecordProperty.php
+ * Defines a property as a base for all record like properties
+ * Lang en
+ * Reviewstatus: 2024-10-24
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Properties/AbstractPropertyTest.php
- * Coverage: 98.32 (2024-10-19)
+ * Tests: 
+ * Coverage: 
  *
- * Wiki: /Properties
- * tests /tests/Unit/Properties/AbstractProperties/*
+ * Wiki: /RecordProperties
+ * tests /tests/Unit/Properties/RecordProperties/*
  */
 
 namespace Sunhill\Properties;
 
 use Sunhill\Properties\AbstractProperty;
+use Sunhill\Properties\PooledRecordProperty;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\NotAPropertyException;
 use Sunhill\Properties\Exceptions\PropertyNameAlreadyGivenException;
 use Sunhill\Properties\Exceptions\PropertyAlreadyInListException;
 use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
+use Sunhill\Properties\Exceptions\InvalidInclusionException;
+use Sunhill\Properties\Exceptions\NotAllowedInclusionException;
+use phpDocumentor\Reflection\Types\Mixed_;
 
-class RecordProperty extends AbstractProperty
+class RecordProperty extends AbstractProperty implements \Countable,\Iterator
 {
     
     public function getAccessType(): string
@@ -115,47 +119,139 @@ class RecordProperty extends AbstractProperty
         }
     }
     
-    /**
-     * Just adds the property to the elements list
-     * @param AbstractProperty $property
-     */
-    private function appendToElements(AbstractProperty $property)
+    private function appendMemebers(RecordProperty $property, string $inclusion)
     {
-        $this->elements[$property->getName()] = $property;
+        foreach ($property as $name => $element) {
+            $this->checkForDuplicateName($element);
+            $this->checkForDuplicateProperty($element);
+            $this->elements[$name] = $element;
+            $structure = $element->getStructure();
+            if ($inclusion == 'include') {
+                $structure->storage_subid = $this->getStorageID();
+            } else {
+                $structure->storage_subid = $property->getStorageID();                
+            }
+        }
     }
     
     /**
+     * This is the default inclusion. And it's the only possible for non RecordProperty types. 
+     * For those this method just adds the property to the list and to the structure list.
+     *  
+     * @param AbstractProperty $property
+     */
+    private function checkInclude(AbstractProperty $property)
+    {
+        if (!is_a($property,RecordProperty::class)) {
+            $this->elements[$property->getName()] = $property;
+            $this->elements_structure[$property->getName()] = $property->getStructure();
+            return;            
+        }
+        $this->appendMemebers($property, 'include');
+    }
+    
+    /**
+     * This inclusion is only possible for record properties that are related to each other. 
+     * To be more precicely: The property to embed has to an ancestor of the embedding one.
+     *
+     * @param AbstractProperty $property
+     */
+    private function checkEmbed(AbstractProperty $property)
+    {
+        if (!is_a($this,$property::class) || ($this::class == $property::class)) {
+            throw new NotAllowedInclusionException("The inclusion 'embed' is only allowed for ancestors.");
+        }
+        $this->appendMemebers($property, 'embed');
+    }
+    
+    private function checkRefer(AbstractProperty $property)
+    {
+        if (!is_a($property, PooledRecordProperty::class)) {
+            throw new NotAllowedInclusionException("The inclusion 'embed' is only allowed for ancestors.");
+        }
+    }
+    
+/**
      * Adds the structure of the property to the structures list
      * @param AbstractProperty $property
      */
-    private function appendToStructures(AbstractProperty $property, string $inclusion)
+    private function appendToElementsAndStructures(AbstractProperty $property, string $inclusion)
     {
-        $structure = $property->getStructure();
-        if (is_a($property,RecordProperty::class)) {
-            switch ($inclusion) {
-                case 'include':
-                    $structure->storage_subid = $this->getStorageID();
-                    break;
-                case 'embed':
-                    break;
-                case 'refer':
-                    break;
-                default:                    
-            }
-        } else {
-            
+        switch ($inclusion) {
+            case 'include':
+                $this->checkInclude($property);
+                break;
+            case 'embed':
+                $this->checkEmbed($property);
+                break;
+            case 'refer':
+                $this->checkRefer($property);
+                break;
+            default:
+                throw new InvalidInclusionException("The inclusion '$inclusion' is not defined");
+                
         }
-        $this->elements_structure[$property->getName()] = $structure;
     }
     
     public function appendElement(mixed $element, ?string $name = null, string $inclusion = 'include', $storage = null)
     {
         $element = $this->getElementProperty($element);
-        $this->writeName($element, $name);        
+        if (($inclusion == 'include') && (!is_a($element, RecordProperty::class))) {
+            $this->writeName($element, $name);
+        }
         $this->checkForDuplicateName($element);
         $this->checkForDuplicateProperty($element);
-        $this->appendToElements($element);
-        $this->appendToStructures($element, $inclusion);
+        $this->appendToElementsAndStructures($element, $inclusion);
         return $element;
+    }
+    
+    /**
+     * Checks if a property element with the given name exists.
+     * 
+     * @param string $name
+     * @return bool
+     */
+    public function hasElement(string $name): bool
+    {
+        return array_key_exists($name, $this->elements);
+    }
+    
+    public function elementCount(): int
+    {
+        return count($this->elements);    
+    }
+    
+    // Interface countable
+    public function count(): int
+    {
+        return $this->elementCount();
+    }
+    
+    private $ptr = 0;
+    
+    //  Interface iterator
+    public function current(): mixed
+    {
+        return $this->elements[array_keys($this->elements)[$this->ptr]];
+    }
+    
+    public function key(): mixed
+    {
+        return array_keys($this->elements)[$this->ptr];        
+    }
+    
+    public function next(): void
+    {
+        $this->ptr++;        
+    }
+    
+    public function rewind(): void
+    {
+        $this->ptr = 0;        
+    }
+    
+    public function valid(): bool
+    {
+        return ($this->ptr >= 0) && ($this->ptr < $this->count());        
     }
 }
