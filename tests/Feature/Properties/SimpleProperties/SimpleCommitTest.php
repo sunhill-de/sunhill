@@ -1,34 +1,30 @@
 <?php
 
-use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Tests\TestSupport\Storages\DummyStorage;
 use Sunhill\Types\TypeVarchar;
+use Sunhill\Tests\TestSupport\Storages\DummyPersistentSingleStorage;
+use Sunhill\Facades\Properties;
+use Sunhill\Tests\SunhillTestCase;
 
-uses(SimpleTestCase::class);
+uses(SunhillTestCase::class);
 
 test('getIsInitialized() works with initialized', function()
 {
-    $storage = new DummyStorage();
-    $test = new TypeVarchar();
-    $test->setName('keyA')->setStorage($storage);
+    $test = Properties::createProperty('varchar','str_field',DummyPersistentSingleStorage::class);
+    $test->load();
     
     expect($test->isInitialized())->toBe(true);
 });
 
 test('getIsInitialized() works with uninitialized', function()
 {
-    $storage = new DummyStorage();
-    $test = new TypeVarchar();
-    $test->setName('unknown')->setStorage($storage);
+    $test = Properties::createProperty('varchar','unknown',DummyPersistentSingleStorage::class);
     
     expect($test->isInitialized())->toBe(false);
 });
 
 test('isDirty() works', function()
 {
-    $storage = new DummyStorage();
-    $test = new TypeVarchar();
-    $test->setName('keyA')->setStorage($storage);
+    $test = Properties::createProperty('varchar','str_field',DummyPersistentSingleStorage::class);
     
     expect($test->isDirty())->toBe(false);
     $test->setValue('DEF');

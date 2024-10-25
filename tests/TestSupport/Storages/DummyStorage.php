@@ -52,17 +52,11 @@ class DummyStorage extends AbstractStorage
     
     protected function doSetValue(string $name,$value)
     {
-        if (isset($this->values[$name]) && !isset($this->shadow[$name])) {
-            $this->shadow[$name] = $this->values[$name];
-        }
         $this->values[$name] = $value;
     }
     
     protected function doSetIndexedValue($name, $index, $value)
     {
-        if (isset($this->values[$name]) && !isset($this->shadow[$name])) {
-            $this->shadow[$name] = $this->values[$name];
-        }
         if (!isset($this->values[$name])) {
             $this->values[$name] = [$index=>$value];
         } else {
@@ -70,24 +64,4 @@ class DummyStorage extends AbstractStorage
         }
     }
     
-    public function rollback()
-    {
-        foreach ($this->shadow as $key => $value) {
-            $this->values[$key] = $value;
-        }
-    }
-    
-    public function commit()
-    {
-        static::$preloaded_values = $this->values;
-    }
-    
-    public function isDirty(string $name = ''): bool
-    {
-        if (empty($name)) {
-            return empty($this->shadow);
-        } else {
-            return isset($this->shadow[$name]);
-        }
-    }    
 }

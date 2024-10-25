@@ -8,6 +8,6 @@ class DummySimpleStorage extends SimpleStorage
 {
     protected function readValues(): array
     {
-        return ['keyA'=>'ValueA','keyB'=>'ValueB','keyC'=>['ABC','DEF']];
+        return ['keyA'=>'ValueA','keyB'=>'ValueB','keyC'=>['ABC','DEF'],'keyD'=>3.56,'keyE'=>[1,2,3]];
     }
 }

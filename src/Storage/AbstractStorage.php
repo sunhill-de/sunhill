@@ -126,6 +126,7 @@ abstract class AbstractStorage extends Base
      */
     public function getValue(string $name)
     {
+        $this->checkAccess();
         if ($value = $this->searchCache($name)) {
             return $value;
         }
@@ -169,6 +170,7 @@ abstract class AbstractStorage extends Base
      */
     public function getIndexedValue(string $name, mixed $index)
     {
+        $this->checkAccess();
         if ($value = $this->searchCache($name.'.'.$index)) {
             return $value;
         }
@@ -253,6 +255,15 @@ abstract class AbstractStorage extends Base
     }
     
     /**
+     * This method is called before any reading or writing access. Per default it does
+     * nothing (so it is not abstract) but could be used to check if a storage is loaded.
+     */
+    protected function checkAccess()
+    {
+        // Do nothing by default
+    }
+    
+    /**
      * Sets the given value
      * 
      * @param string $name
@@ -260,6 +271,7 @@ abstract class AbstractStorage extends Base
      */
     public function setValue(string $name, $value)
     {        
+        $this->checkAccess();
         $this->doSetValue($name, $value);
         if ($this->isCachable()) {
             Cache::put($this->getCacheID().'.'.$name, $value, $this->cache_time);
@@ -276,6 +288,7 @@ abstract class AbstractStorage extends Base
      */
     public function setIndexedValue(string $name, $index, $value)
     {
+        $this->checkAccess();
         $this->doSetIndexedValue($name, $index, $value);
         if ($this->isCachable()) {
             Cache::put($this->getCacheID().'.'.$name.'.'.$index, $value, $this->cache_time);            

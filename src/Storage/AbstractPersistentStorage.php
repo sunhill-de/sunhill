@@ -84,6 +84,18 @@ abstract class AbstractPersistentStorage extends CommonStorage
     }
     
     /**
+     * This method is called when a read or write attemt on an unloaded storage takes place
+     */
+    abstract protected function handleUnloaded();
+    
+    private function checkAccess()
+    {
+        if (!$this->isLoaded()) {
+            $this->handleUnloaded();
+        }
+    }
+    
+    /**
      * Performs the setting of the value
      *
      * @param string $name

@@ -45,6 +45,17 @@ abstract class PersistentSingleStorage extends AbstractPersistentStorage
     abstract protected function doLoad();
     
     /**
+     * Persistent single storages can initiated a load because there is only one entry
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractPersistentStorage::handleUnloaded()
+     */
+    protected function handleUnloaded()
+    {
+        $this->load();
+    }
+    
+    /**
      * Loading a storage when already loaded with data is forbidden. This resets 
      */
     public function reset()

@@ -72,6 +72,20 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
     abstract protected function doLoad(mixed $id);
     
     /**
+     * Persistent pool storages can't initiated a load because we don't know the id for sure
+     *
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractPersistentStorage::handleUnloaded()
+     */
+    protected function handleUnloaded()
+    {
+        if (!is_null($this->getID())) {
+            return $this->load($this->getID()); // unlikely event
+        }
+        throw 
+    }
+    
+    /**
      * Loading a storage when already loaded with data is forbidden. This resets
      */
     public function reset()
