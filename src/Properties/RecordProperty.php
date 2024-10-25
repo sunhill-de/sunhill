@@ -17,6 +17,10 @@ namespace Sunhill\Properties;
 
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\NotAPropertyException;
+use Sunhill\Properties\Exceptions\PropertyNameAlreadyGivenException;
+use Sunhill\Properties\Exceptions\PropertyAlreadyInListException;
+use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
 
 class RecordProperty extends AbstractProperty
 {
@@ -43,6 +47,11 @@ class RecordProperty extends AbstractProperty
      */
     protected array $elements_structure = [];
     
+    /**
+     * Tries to "translate" $element into a property
+     * @param unknown $element
+     * @return AbstractProperty
+     */
     private function getElementProperty($element): AbstractProperty
     {
         if (is_string($element)) {
@@ -59,10 +68,70 @@ class RecordProperty extends AbstractProperty
         throw new NotAPropertyException("The given object is not a property");
     }
     
+    /**
+     * Checks if $name is set, if yes set it to the element
+     * @param AbstractProperty $propery
+     * @param string $name
+     */
+    private function writeName(AbstractProperty $property, ?string $name)
+    {
+        if (!empty($name)) {
+            $property->setName($name);
+        }
+        if (empty($property->getName())) {
+            throw new PropertyHasNoNameException("The property has no name");
+        }
+    }
+    
+    /**
+     * Checks if the name is alread given
+     * @param AbstractProperty $property
+     */
+    private function checkForDuplicateName(AbstractProperty $property)
+    {
+        if (array_key_exists($property->getName(), $this->elements)) {
+            throw new PropertyNameAlreadyGivenException("The name '".$property->getName()."' is already in use");
+        }
+    }
+    
+    /**
+     * Checks if the propeery was already appended
+     * @param AbstractProperty $property
+     */
+    private function checkForDuplicateProperty(AbstractProperty $property)
+    {
+        if (in_array($property, array_values($this->elements))) {
+            throw new PropertyAlreadyInListException("The property '".$property->getName()."' is already in this record");
+        }
+    }
+    
+    /**
+     * Just adds the property to the elements list
+     * @param AbstractProperty $property
+     */
+    private function appendToElements(AbstractProperty $property)
+    {
+        $this->elements[$property->getName()] = $property;
+    }
+    
+    /**
+     * Adds the structure of the property to the structures list
+     * @todo Is this really necessary? Could construct the array on the fly
+     * @param AbstractProperty $property
+     */
+    private function appendToStructures(AbstractProperty $property)
+    {
+        $this->elements_structure[$property->getName()] = $property->getStructure();
+    }
+    
     public function appendElement(mixed $element, ?string $name = null, string $inclusion = 'include', $storage = null)
     {
         $element = $this->getElementProperty($element);
-        
+        $this->writeName($element, $name);        
+        $this->checkForDuplicateName($element);
+        $this->checkForDuplicateProperty($element);
+        $this->appendToElements($element);
+        $this->appendToStructures($element);
         return $element;
     }
 }
