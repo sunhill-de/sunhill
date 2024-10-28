@@ -217,7 +217,7 @@ test('Reading a property', function()
     $container->appendElement($element1,'test1')->getName();
     $container->appendElement($element2,'test2')->getName();
     
-    expect($container->element1)->toBe(2);
+    expect($container->test1)->toBe(2);
 });
 
 it('Fails when reading unknown property', function()
@@ -242,7 +242,7 @@ test('Reading an array property', function()
     $container->appendElement($element1,'test1')->getName();
     $container->appendElement($element2,'test2')->getName();
     
-    expect($container->element1[1])->toBe(2);
+    expect($container->test1[1])->toBe(2);
 });
 
 it('Fails when reading unknown array property', function()
@@ -267,7 +267,7 @@ test('Writing a property', function()
     $container->appendElement($element1,'test1')->getName();
     $container->appendElement($element2,'test2')->getName();
     
-    $container->element1 = 2;
+    $container->test1 = 2;
 });
 
 it('Fails when writing unknown property', function()
@@ -292,7 +292,7 @@ test('Writing an array property', function()
     $container->appendElement($element1,'test1')->getName();
     $container->appendElement($element2,'test2')->getName();
     
-    $container->element1[1] = 2;
+    $container->test1[1] = 2;
 });
 
 it('Fails when writing unknown array property', function()
@@ -317,7 +317,7 @@ test('Appending an array property', function()
     $container->appendElement($element1,'test1')->getName();
     $container->appendElement($element2,'test2')->getName();
     
-    $container->element1[] = 2;
+    $container->test1[] = 2;
 });
 
 it('Fails when appending unknown array property', function()

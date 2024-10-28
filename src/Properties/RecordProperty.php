@@ -24,7 +24,7 @@ use Sunhill\Properties\Exceptions\PropertyAlreadyInListException;
 use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
 use Sunhill\Properties\Exceptions\InvalidInclusionException;
 use Sunhill\Properties\Exceptions\NotAllowedInclusionException;
-use phpDocumentor\Reflection\Types\Mixed_;
+use Sunhill\Properties\Exceptions\PropertyNotFoundException;
 
 class RecordProperty extends AbstractProperty implements \Countable,\Iterator
 {
@@ -254,4 +254,26 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     {
         return ($this->ptr >= 0) && ($this->ptr < $this->count());        
     }
+    
+    // Element Access
+    public function __get($varname): mixed
+    {
+        if (!$this->hasElement($varname)) {
+            throw new PropertyNotFoundException("The property '$varname' does not exist.");
+        }
+        $property = $this->elements[$varname];
+        if (in_array($property::class,[ArrayProperty::class])) {
+            return $property;
+        } else {
+            return $property->getValue();
+        }
+    }
+    
+    public function __set($varname, $value)
+    {
+        if (!$this->hasElement($varname)) {
+            throw new PropertyNotFoundException("The property '$varname' does not exist.");
+        }        
+    }
+    
 }
