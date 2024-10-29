@@ -15,8 +15,6 @@
 
 namespace Sunhill\Properties;
 
-use Sunhill\Properties\AbstractProperty;
-use Sunhill\Properties\PooledRecordProperty;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\NotAPropertyException;
 use Sunhill\Properties\Exceptions\PropertyNameAlreadyGivenException;
@@ -25,6 +23,7 @@ use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
 use Sunhill\Properties\Exceptions\InvalidInclusionException;
 use Sunhill\Properties\Exceptions\NotAllowedInclusionException;
 use Sunhill\Properties\Exceptions\PropertyNotFoundException;
+use Sunhill\Storage\AbstractStorage;
 
 class RecordProperty extends AbstractProperty implements \Countable,\Iterator
 {
@@ -37,6 +36,22 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     public function isValid($input): bool
     {
         
+    }
+    
+    /**
+     * Overwrites the inherited setStorage method to pass the new storage
+     * to all of the elements.
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Properties\AbstractProperty::setStorage()
+     */
+    public function setStorage(AbstractStorage $storage): static
+    {
+        parent::setStorage($storage);
+        foreach ($this->elements as $key => $element) {
+            $element->setStorage($storage);        
+        }
+        return $this;
     }
     
     /**
@@ -171,7 +186,15 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
     }
     
-/**
+    private function linkElement(AbstractProperty $property)
+    {
+        $property->setOwner($this);
+        if (!empty($this->getStorage())) {
+            $property->setStorage($this->getStorage());
+        }
+    }
+    
+    /**
      * Adds the structure of the property to the structures list
      * @param AbstractProperty $property
      */
@@ -201,6 +224,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
         $this->checkForDuplicateName($element);
         $this->checkForDuplicateProperty($element);
+        $this->linkElement($element);
         $this->appendToElementsAndStructures($element, $inclusion);
         return $element;
     }
@@ -274,6 +298,12 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         if (!$this->hasElement($varname)) {
             throw new PropertyNotFoundException("The property '$varname' does not exist.");
         }        
+        $property = $this->elements[$varname];
+        if (in_array($property::class,[ArrayProperty::class])) {
+            return $property;
+        } else {
+            return $property->setValue($value);
+        }
     }
     
 }
