@@ -4,16 +4,15 @@ uses(\Sunhill\Tests\TestCase::class);
 
 use Sunhill\Properties\Exceptions\NoStorageSetException;
 use Sunhill\Properties\Exceptions\PropertyNotReadableException;
-use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
 use Sunhill\Tests\TestSupport\TestUserManager;
-use Sunhill\Properties\Exceptions\NoUserManagerInstalledException;
 use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
 use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
-use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyingException;
 use Sunhill\Properties\Exceptions\InvalidValueException;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
-use Sunhill\Tests\TestSupport\Storages\TestAbstractIDStorage;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Properties\Exceptions\NoUserManagerSetException;
 
 test('set storage', function () 
 {
@@ -83,7 +82,7 @@ test('no user manager installed', function () {
     $test->setUserManager('');
 
     $test->getValue();
-})->throws(NoUserManagerInstalledException::class);
+})->throws(NoUserManagerSetException::class);
 
 test('TestUserManager works as expected', function()
 {
@@ -145,7 +144,7 @@ test('no user manager installed while writing', function () {
     $test->setUserManager('');
     
     $test->setValue(123);
-})->throws(NoUserManagerInstalledException::class);
+})->throws(NoUserManagerSetException::class);
 
 test('user not authorized for writing', function () {
     $storage = \Mockery::mock(AbstractStorage::class);
@@ -183,7 +182,7 @@ test('user not authorized for modify', function () {
     $test->setUserManager(TestUserManager::class);
 
     $test->setValue(123);
-})->throws(UserNotAuthorizedForModifyException::class);
+})->throws(UserNotAuthorizedForModifyingException::class);
 
 test('no usermanager while modify', function () {
     $storage = \Mockery::mock(AbstractStorage::class);
@@ -195,7 +194,7 @@ test('no usermanager while modify', function () {
     $test->setUserManager('');
 
     $test->setValue(123);
-})->throws(NoUserManagerInstalledException::class);
+})->throws(NoUserManagerSetException::class);
 
 test('user authorized for modify', function () {
     $storage = \Mockery::mock(AbstractStorage::class);

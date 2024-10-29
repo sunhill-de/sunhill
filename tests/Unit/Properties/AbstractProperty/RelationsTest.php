@@ -7,7 +7,7 @@ use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Query\Exceptions\WrongTypeException;
-use Sunhill\Query\Exceptions\NotAllowedRelationException;
+use Sunhill\Properties\Exceptions\NotAllowedRelationException;
 
 test('::getAllowedRelations() works', function()
 {

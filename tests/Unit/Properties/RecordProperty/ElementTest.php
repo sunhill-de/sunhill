@@ -15,6 +15,7 @@ use Sunhill\Tests\TestSupport\Properties\ParentRecordProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\PropertyNotFoundException;
 use Sunhill\Properties\ArrayProperty;
+use Sunhill\Types\TypeInteger;
 
 uses(SunhillTestCase::class);
 
@@ -210,6 +211,7 @@ test('Reading a property', function()
 {
     $storage = \Mockery::mock(AbstractStorage::class);
     $storage->shouldReceive('getValue')->once()->with('test1')->andReturn(2);
+    $storage->shouldReceive('getIsInitialized')->once()->with('test1')->andReturn(true);
     $container = new RecordProperty();
     $container->setStorage($storage);
     $element1 = new NonAbstractProperty();
@@ -235,6 +237,8 @@ test('Reading an array property', function()
 {
     $storage = \Mockery::mock(AbstractStorage::class);
     $storage->shouldReceive('getIndexedValue')->once()->with('test1',1)->andReturn(2);
+    $storage->shouldReceive('getIsInitialized')->once()->with('test1')->andReturn(true);
+    $storage->shouldReceive('getOffsetExists')->once()->with('test1',1)->andReturn(true);
     $container = new RecordProperty();
     $container->setStorage($storage);
     $element1 = new ArrayProperty();
@@ -260,10 +264,11 @@ test('Writing a property', function()
 {
     $storage = \Mockery::mock(AbstractStorage::class);
     $storage->shouldReceive('setValue')->once()->with('test1',2);
+    $storage->shouldReceive('getIsInitialized')->once()->with('test1')->andReturn(true);
     $container = new RecordProperty();
     $container->setStorage($storage);
-    $element1 = new NonAbstractProperty();
-    $element2 = new NonAbstractProperty();
+    $element1 = new TypeInteger();
+    $element2 = new TypeInteger();
     $container->appendElement($element1,'test1')->getName();
     $container->appendElement($element2,'test2')->getName();
     
