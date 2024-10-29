@@ -306,4 +306,19 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
     }
     
+    /**
+     * Modifies the inhertied function to include the elements
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Properties\AbstractProperty::getStructure()
+     */
+    public function getStructure()
+    {
+        $return = parent::getStructure();
+        $return->elements = [];
+        foreach ($this->elements as $name => $element) {
+            $return->elements[$name] = $element->getStructure();
+        }
+        return $return;
+    }
 }

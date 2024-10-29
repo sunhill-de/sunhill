@@ -16,6 +16,7 @@ use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\PropertyNotFoundException;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Types\TypeInteger;
+use Sunhill\Properties\AbstractProperty;
 
 uses(SunhillTestCase::class);
 
@@ -335,3 +336,15 @@ it('Fails when appending unknown array property', function()
     
     $container->nonexisting[] = 2;
 })->throws(PropertyNotFoundException::class);
+
+test('getStructure returns an array of things', function()
+{
+    $container = new RecordProperty();
+    $element1 = new NonAbstractProperty();
+    $element2 = new NonAbstractProperty();
+    
+    $container->appendElement($element1,'test1');
+    $container->appendElement($element2,'test2');
+       
+    expect(array_keys($container->getStructure()->elements))->toBe(['test1','test2']);
+});
