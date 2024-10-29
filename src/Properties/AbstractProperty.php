@@ -16,24 +16,22 @@
 namespace Sunhill\Properties;
 
 use Sunhill\Properties\Exceptions\InvalidNameException;
-use Sunhill\Properties\Exceptions\UninitializedValueException;
-use Sunhill\Properties\Exceptions\PropertyNotReadableException;
-use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
-use Sunhill\Properties\Exceptions\NoUserManagerInstalledException;
-use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
-use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
-use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\NoStorageSetException;
+use Sunhill\Properties\Exceptions\UninitializedValueException;
+use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\PropertyException;
-use Sunhill\Properties\Exceptions\InvalidValueException;
-use Illuminate\Support\Facades\Log;
-use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyException;
-use Sunhill\Properties\Exceptions\InvalidTypeOrSemanticException;
 use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Facades\Properties;
-use Sunhill\Query\Exceptions\NotAllowedRelationException;
 use Sunhill\Query\Exceptions\WrongTypeException;
 use Sunhill\Basic\Base;
+use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Properties\Exceptions\NotAllowedRelationException;
+use Sunhill\Properties\Exceptions\NoUserManagerSetException;
+use Sunhill\Properties\Exceptions\PropertyNotReadableException;
+use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyingException;
 
 abstract class AbstractProperty extends Base
 {
@@ -127,7 +125,7 @@ abstract class AbstractProperty extends Base
      */
     public function getStorage(): ?AbstractStorage
     {
-        $this->checkForStorage();
+        $this->checkForStorage(false);
         return $this->storage;
     }
     
@@ -139,7 +137,7 @@ abstract class AbstractProperty extends Base
      * 
      * @test AbstractPropertyTest::testNoStorage()
      */
-    protected function checkForStorage()
+    protected function checkForStorage(bool $throw = true)
     {
         if (!empty($this->storage)) {
             return;
@@ -148,7 +146,10 @@ abstract class AbstractProperty extends Base
         if (!empty($this->storage)) {
             return;
         }
-        throw new NoStorageSetException("There is no storage set: $action");
+        if (!$throw) {
+            return;
+        }
+        throw new NoStorageSetException("There is no storage set.");
     }
     
 // ====================================== Name =====================================================    
@@ -392,7 +393,7 @@ abstract class AbstractProperty extends Base
      * to read this property
      * 
      * @param string $capability
-     * @throws NoUserManagerInstalledException::class When no user manager is installed
+     * @throws NoUserManagerSetException::class When no user manager is installed
      * @throws UserNotAuthorizedForReadingException::class When the current user is not authorized to read
      * 
      *  @test AbstractPropertyTest::testNoUserManagerInstalled()
@@ -402,7 +403,7 @@ abstract class AbstractProperty extends Base
     private function doCheckReadCapability(string $capability)
     {
         if (empty(static::$current_usermanager_fascade)) {
-            throw new NoUserManagerInstalledException("Property has a read restriction but no user manager is installed.");
+            throw new NoUserManagerSetException("Property has a read restriction but no user manager is installed.");
         }
         if (!static::$current_usermanager_fascade::hasCapability($capability)) {
             throw new UserNotAuthorizedForReadingException("The current user is not authorized to read '".$this->_name."'");
@@ -783,7 +784,7 @@ abstract class AbstractProperty extends Base
     private function doCheckWriteCapability(string $capability)
     {
         if (empty(static::$current_usermanager_fascade)) {
-            throw new NoUserManagerInstalledException("Property has a read restriction but no user manager is installed.");
+            throw new NoUserManagerSetException("Property has a read restriction but no user manager is installed.");
         }
         if (!static::$current_usermanager_fascade::hasCapability($capability)) {
             throw new UserNotAuthorizedForWritingException("The current user is not authorized to write '".$this->_name."'");
@@ -834,10 +835,10 @@ abstract class AbstractProperty extends Base
     private function doCheckModifyCapability(string $capability)
     {
         if (empty(static::$current_usermanager_fascade)) {
-            throw new NoUserManagerInstalledException("Property has a read restriction but no user manager is installed.");
+            throw new NoUserManagerSetException("Property has a modify restriction but no user manager is installed.");
         }
         if (!static::$current_usermanager_fascade::hasCapability($capability)) {
-            throw new UserNotAuthorizedForModifyException("The current user is not authorized to modify '".$this->_name."'");
+            throw new UserNotAuthorizedForModifyingException("The current user is not authorized to modify '".$this->_name."'");
         }
     }
     
