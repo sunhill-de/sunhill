@@ -12,6 +12,8 @@ class NonAbstractProperty extends AbstractProperty
     
     public $public_storage;
     
+    public $expected_storage = AbstractStorage::class;
+    
     public function __construct()
     {
         $this->setName('test_int');
@@ -25,6 +27,11 @@ class NonAbstractProperty extends AbstractProperty
     public static function setAllowedRelations(array $allowed_relations)
     {
         static::$allowed_relations = $allowed_relations;    
+    }
+    
+    protected function isValidStorage(AbstractStorage $storage): bool
+    {
+        return is_a($storage, $this->expected_storage);    
     }
     
     protected function createStorage(): ?AbstractStorage

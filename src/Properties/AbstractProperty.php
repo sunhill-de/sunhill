@@ -32,6 +32,7 @@ use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
 use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
 use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
 use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyingException;
+use Sunhill\Properties\Exceptions\WrongStorageSetException;
 
 abstract class AbstractProperty extends Base
 {
@@ -129,6 +130,11 @@ abstract class AbstractProperty extends Base
         return $this->storage;
     }
     
+    protected function isValidStorage(AbstractStorage $storage): bool
+    {
+        return true;
+    }
+    
     /**
      * Checks if a storage is set. If not raises an exception
      * 
@@ -140,10 +146,16 @@ abstract class AbstractProperty extends Base
     protected function checkForStorage(bool $throw = true)
     {
         if (!empty($this->storage)) {
+            if (!$this->isValidStorage($this->storage)) {
+                throw new WrongStorageSetException("A storage of a different type was expected.");
+            }
             return;
         }
         $this->storage = $this->createStorage();
         if (!empty($this->storage)) {
+            if (!$this->isValidStorage($this->storage)) {
+                throw new WrongStorageSetException("A storage of a different type was expected.");
+            }
             return;
         }
         if (!$throw) {

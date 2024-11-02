@@ -13,6 +13,7 @@ use Sunhill\Properties\Exceptions\InvalidValueException;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\NoUserManagerSetException;
+use Sunhill\Properties\Exceptions\WrongStorageSetException;
 
 test('set storage', function () 
 {
@@ -33,6 +34,16 @@ test('use createStorage()', function ()
     
     expect($test->getStorage())->toEqual($storage);
 });
+
+it('fails when unexpected storage is returned', function()
+{
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $test = new NonAbstractProperty();
+    $test->expected_storage = DummyRecordProperty::class;
+    $test->public_storage = $storage;
+    
+    $test->getStorage();    
+})->throws(WrongStorageSetException::class);
 
 test('no storage', function () {
     $test = new NonAbstractProperty();

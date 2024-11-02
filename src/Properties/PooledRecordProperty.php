@@ -17,6 +17,7 @@ namespace Sunhill\Properties;
 
 use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
+use Sunhill\Storage\AbstractStorage;
 
 class PooledRecordProperty extends RecordProperty
 {
@@ -30,9 +31,6 @@ class PooledRecordProperty extends RecordProperty
     {
         $this->checkForStorage();
         $storage = $this->getStorage();
-        if (!is_a($storage, PersistentPoolStorage::class)) {
-            throw new WrongStorageSetException("PersistentPoolStorage expected but not set.");
-        }
         $storage->load($id);
     }
     
@@ -45,13 +43,15 @@ class PooledRecordProperty extends RecordProperty
         
     }
     
+    protected function isValidStorage(AbstractStorage $storage): bool
+    {
+        return is_a($storage, PersistentPoolStorage::class);
+    }
+    
     public function getID(): ?int
     {
         $this->checkForStorage();
         $storage = $this->getStorage();
-        if (!is_a($storage, PersistentPoolStorage::class)) {
-            throw new WrongStorageSetException("PersistentPoolStorage expected but not set.");
-        }
         return $storage->getID();
     }
 }
