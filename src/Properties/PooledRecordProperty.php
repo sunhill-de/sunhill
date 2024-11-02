@@ -15,7 +15,43 @@
 
 namespace Sunhill\Properties;
 
+use Sunhill\Storage\PersistentPoolStorage;
+use Sunhill\Properties\Exceptions\WrongStorageSetException;
+
 class PooledRecordProperty extends RecordProperty
 {
     
+    /**
+     * Loads the record with the given id out of the pool
+     * 
+     * @param unknown $id
+     */
+    public function load($id)
+    {
+        $this->checkForStorage();
+        $storage = $this->getStorage();
+        if (!is_a($storage, PersistentPoolStorage::class)) {
+            throw new WrongStorageSetException("PersistentPoolStorage expected but not set.");
+        }
+        $storage->load($id);
+    }
+    
+    /**
+     * Creates a empty record, prefills the storage with the default values
+     * 
+     */
+    public function create()
+    {
+        
+    }
+    
+    public function getID(): ?int
+    {
+        $this->checkForStorage();
+        $storage = $this->getStorage();
+        if (!is_a($storage, PersistentPoolStorage::class)) {
+            throw new WrongStorageSetException("PersistentPoolStorage expected but not set.");
+        }
+        return $storage->getID();
+    }
 }
