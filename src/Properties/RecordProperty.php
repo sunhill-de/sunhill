@@ -67,9 +67,19 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         
     }
     
+    private function initializeChild(string $class)
+    {
+        $builder = new ElementBuilder($this);
+        $class::initializeRecord($builder);
+    }
+    
     private function initializeInheritance()
     {
-        
+        $pointer = $this::class;
+        while ($pointer !== RecordProperty::class) {
+            $this->initializeChild($pointer);
+            $pointer = get_parent_class($pointer);
+        }
     }
     
     
