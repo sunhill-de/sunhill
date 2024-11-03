@@ -19,7 +19,7 @@ use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
 use Sunhill\Storage\AbstractStorage;
 
-class PooledRecordProperty extends RecordProperty
+class PooledRecordProperty extends PersistentRecordProperty
 {
     
     /**
@@ -34,21 +34,12 @@ class PooledRecordProperty extends RecordProperty
         $storage->load($id);
     }
     
-    /**
-     * Creates a empty record, prefills the storage with the default values
-     * 
-     */
-    public function create()
-    {
-        
-    }
-    
     protected function isValidStorage(AbstractStorage $storage): bool
     {
         return is_a($storage, PersistentPoolStorage::class);
     }
     
-    public function getID(): ?int
+    public function getID(): mixed
     {
         $this->checkForStorage();
         $storage = $this->getStorage();

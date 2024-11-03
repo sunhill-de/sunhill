@@ -27,6 +27,51 @@ use Sunhill\Storage\AbstractStorage;
 
 class RecordProperty extends AbstractProperty implements \Countable,\Iterator
 {
+   
+    /**
+     * Stores how this record should treat inherited elements
+     * 
+     * @var string
+     */
+    protected static $inherted_inclusion = 'include';
+        
+    public function __construct($elements = null)
+    {
+        parent::__construct();
+        $this->initializeInheritance();
+        
+        if (is_callable($elements)) {
+            $this->setupRecord($elements);
+        }
+    }
+    
+    /**
+     * Is called by
+     *  a) the constructor when a callable $elements parameter is passed
+     *  b) by initializeInheritance() for every ancestor
+     *  c) directly by the initializing structure
+     * @param callable $elements
+     * @param RecordProperty $target
+     */
+    public function setupRecord(callable $elements,?RecordProperty $target = null): static
+    {
+        if (is_null($target)) {
+            $target = $this;
+        }
+        
+        return $this;
+    }
+    
+    protected static function initializeRecord(ElementBuilder $builder)
+    {
+        
+    }
+    
+    private function initializeInheritance()
+    {
+        
+    }
+    
     
     public function getAccessType(): string
     {

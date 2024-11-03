@@ -130,6 +130,13 @@ abstract class AbstractProperty extends Base
         return $this->storage;
     }
     
+    /**
+     * Checks if the given storage is a valid storage for this property. By default returns
+     * true.
+     * 
+     * @param AbstractStorage $storage
+     * @return bool
+     */
     protected function isValidStorage(AbstractStorage $storage): bool
     {
         return true;
