@@ -13,59 +13,53 @@ use Sunhill\Properties\Exceptions\NotAPropertyException;
 
 uses(\Sunhill\Tests\TestCase::class);
 
-test('Property is called from ElementBuilder', function()
+test('addProperty() and getElememts() work', function()
 {
-   $property = Mockery::mock(RecordProperty::class);
-   $property->shouldReceive('appendElement')->once();
-   
-   $test = new ElementBuilder($property);
+   $test = new ElementBuilder();
    $test->addProperty(NonAbstractProperty::class, 'name');
+   
+   $elements = $test->getElements();
+   expect(count($elements))->toBe(1);
+   expect(is_a($elements['name'], NonAbstractProperty::class))->toBe(true);
 });
 
 test('LookupProperty with property works', function()
 {
-   $property = Mockery::mock(RecordProperty::class);
    $child_property = new NonAbstractProperty();
    
-   $builder = new ElementBuilder($property);
+   $builder = new ElementBuilder();
    $test = $builder->lookUpProperty($child_property);
    expect($test)->toBe($child_property);
 });
 
 test('LookupProperty with namespaced class', function()
 {
-    $property = Mockery::mock(RecordProperty::class);
-    
-    $builder = new ElementBuilder($property);
+    $builder = new ElementBuilder();
     $test = $builder->lookUpProperty(NonAbstractProperty::class);
     expect($test::class)->toBe(NonAbstractProperty::class);
 });
 
 test('LookupProperty with named class', function()
 {
-    $property = Mockery::mock(RecordProperty::class);
-    Properties::shouldReceive('getNamespaceOfClass')->with('test')->andReturn(NonAbstractProperty::class);
+    Properties::shouldReceive('getNamespaceOfProperty')->with('test')->andReturn(NonAbstractProperty::class);
 
-    $builder = new ElementBuilder($property);
+    $builder = new ElementBuilder();
     $test = $builder->lookUpProperty('test');
     expect($test::class)->toBe(NonAbstractProperty::class);
 });
 
 it('fails when LookupProperty is called with a non-property object', function()
 {
-    $property = Mockery::mock(RecordProperty::class);
-    
-    $builder = new ElementBuilder($property);
+    $builder = new ElementBuilder();
     $subproperty = new \stdClass();
     $builder->lookUpProperty($subproperty);
 })->throws(TypeError::class);
 
 it('fails when LookupProperty is called with an unknown property name', function()
 {
-    $property = Mockery::mock(RecordProperty::class);
-    Properties::shouldReceive('getNamespaceOfClass')->with(5)->andReturn(null);
+    Properties::shouldReceive('getNamespaceOfProperty')->with('unknown')->andReturn(null);
     
-    $builder = new ElementBuilder($property);
-    $builder->lookUpProperty(5);
+    $builder = new ElementBuilder();
+    $builder->lookUpProperty('unknown');
 })->throws(NotAPropertyException::class);
 
