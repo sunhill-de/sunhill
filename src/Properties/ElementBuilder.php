@@ -13,6 +13,7 @@
 namespace Sunhill\Properties;
 
 use Sunhill\Properties\Exceptions\PropertyDoesntExistException;
+use Sunhill\Properties\Exceptions\InvalidInclusionException;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\NotAPropertyException;
 
@@ -88,9 +89,17 @@ class ElementBuilder
         
     }
     
-    public function includeRecord(string|RecordProperty $record, string $name): RecordProperty
+    public function includeRecord(string|RecordProperty $record): RecordProperty
     {
-        
+        $record = $this->lookUpProperty($record);
+        if (!is_a($record, RecordProperty::class)) {
+            throw new InvalidInclusionException("The given included property is not a record");
+        }
+        $this->includes[] = $record::class;
+        foreach ($record as $name => $property) {
+            $this->addProperty($property, $name);
+        }
+        return $record;
     }
     
     public function referRecord(string|PooledRecordProperty $record, string $name): ReferenceProperty
