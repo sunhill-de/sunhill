@@ -31,9 +31,26 @@ class ElementBuilder
      * 
      * @return array
      */
-    public function getElements()
+    public function getElements(): array
     {
         return $this->elements;    
+    }
+    
+    /**
+     * Stores included record properties
+     * 
+     * @var array
+     */
+    protected $includes = [];
+    
+    /**
+     * Returens the included record properties
+     * 
+     * @return array
+     */
+    public function getIncludes(): array
+    {
+        return $this->includes;
     }
     
     public function addProperty(string|AbstractProperty $property_name, string $name): AbstractProperty
@@ -61,24 +78,28 @@ class ElementBuilder
             
     }
     
-    public function array(string $name): ArrayProperty
+    public function array(string|ArrayProperty $property, string $name): ArrayProperty
     {
         
     }
     
-    public function embedRecord(string $record): RecordProperty
+    public function arrayOfReferences(string|PooledRecordProperty $property, string $name): ArrayProperty
     {
         
     }
     
-    public function includeRecord(string $record): RecordProperty
+    public function includeRecord(string|RecordProperty $record, string $name): RecordProperty
     {
         
     }
     
-    public function referRecord(string $record): RecordProperty
+    public function referRecord(string|PooledRecordProperty $record, string $name): ReferenceProperty
     {
         
     }
     
+    public function __call(string $method,array $params)
+    {
+        
+    }
 }
