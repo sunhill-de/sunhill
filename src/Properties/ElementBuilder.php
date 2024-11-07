@@ -88,8 +88,14 @@ class ElementBuilder
     {
         
     }
-    
-    public function includeRecord(string|RecordProperty $record): RecordProperty
+ 
+    /**
+     * This method includes the element of the passed record into the ElementBuilder. It appears to the calling
+     * record property that these elements are its own.
+     * 
+     * @param string|RecordProperty $record
+     */
+    public function includeRecord(string|RecordProperty $record)
     {
         $record = $this->lookUpProperty($record);
         if (!is_a($record, RecordProperty::class)) {
@@ -99,7 +105,6 @@ class ElementBuilder
         foreach ($record as $name => $property) {
             $this->addProperty($property, $name);
         }
-        return $record;
     }
     
     public function referRecord(string|PooledRecordProperty $record, string $name): ReferenceProperty
