@@ -16,6 +16,7 @@ use Sunhill\Properties\Exceptions\PropertyDoesntExistException;
 use Sunhill\Properties\Exceptions\InvalidInclusionException;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\NotAPropertyException;
+use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
 
 class ElementBuilder
 {
@@ -79,14 +80,30 @@ class ElementBuilder
             
     }
     
-    public function array(string|ArrayProperty $property, string $name): ArrayProperty
+    /**
+     * Creates an array property and returns it
+     * 
+     * @param string $name
+     * @return ArrayProperty
+     */
+    public function array(string $name): ArrayProperty
     {
-        
+        $property = new ArrayProperty();
+        $this->elements[$name] = $property;
+        return $property;
     }
     
-    public function arrayOfReferences(string|PooledRecordProperty $property, string $name): ArrayProperty
+    /**
+     * Creates an array of references and returns it
+     * 
+     * @param string $name
+     * @return ReferenceArrayProperty
+     */
+    public function arrayOfReferences(string $name): ReferenceArrayProperty
     {
-        
+        $property = new ReferenceArrayProperty();
+        $this->elements[$name] = $property;
+        return $property;        
     }
  
     /**
@@ -114,6 +131,12 @@ class ElementBuilder
     
     public function __call(string $method,array $params)
     {
-        
+        if (is_null($namespace = Properties::getNamespaceOfProperty($method))) {
+            throw new NotAPropertyException("The given pseudo method is not a valid property");
+        }
+        if (!isset($params[0])) {
+            throw new PropertyHasNoNameException("The property '$method' has no name");
+        }
+        return $this->addProperty($namespace, $params[0]);        
     }
 }

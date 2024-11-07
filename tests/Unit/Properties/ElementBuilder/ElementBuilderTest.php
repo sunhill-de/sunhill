@@ -10,6 +10,7 @@ use Sunhill\Properties\AbstractProperty;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\NotAPropertyException;
+use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
 
 uses(\Sunhill\Tests\TestCase::class);
 
@@ -63,3 +64,20 @@ it('fails when LookupProperty is called with an unknown property name', function
     $builder->lookUpProperty('unknown');
 })->throws(NotAPropertyException::class);
 
+test('Lookup with pseudo method', function()
+{
+    Properties::shouldReceive('getNamespaceOfProperty')->with('test')->andReturn(NonAbstractProperty::class);
+    $builder = new ElementBuilder();
+    
+    $builder->test('test_param');
+    
+    expect(is_a($builder->getElements()['test_param'],NonAbstractProperty::class))->toBe(true);
+});
+
+it('Fails when name is missing with pseudo method', function()
+{
+    Properties::shouldReceive('getNamespaceOfProperty')->with('test')->andReturn(NonAbstractProperty::class);
+    $builder = new ElementBuilder();
+    
+    $builder->test();    
+})->throws(PropertyHasNoNameException::class);
