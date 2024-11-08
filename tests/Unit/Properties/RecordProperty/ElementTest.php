@@ -27,26 +27,6 @@ test('appendElement() with only an element object', function()
     expect($test->appendElement($element))->toBe($element);
 });
 
-test('appendElement() with only a fully qualified class name', function()
-{
-    $test = new RecordProperty();
-    expect(is_a($test->appendElement(NonAbstractProperty::class),NonAbstractProperty::class))->toBe(true);
-});
-
-test('appendElement() with only a property name', function()
-{
-    Properties::shouldReceive('getNamespaceOfProperty')->once()->with('test')->andReturn(NonAbstractProperty::class);
-    $test = new RecordProperty();
-    expect(is_a($test->appendElement('test'),NonAbstractProperty::class))->toBe(true);
-});
-
-it('fails when passing a non property', function()
-{
-    $test = new RecordProperty();
-    $element = new stdClass();
-    $test->appendElement($element);    
-})->throws(NotAPropertyException::class);
-
 test('Passing a name works', function() 
 {
     $test = new RecordProperty();
@@ -80,13 +60,6 @@ it('Fails when property has no name', function()
     setProtectedProperty($element1, '_name', null);
     $test->appendElement($element1);
 })->throws(PropertyHasNoNameException::class);
-
-it('Fails when calling with invalid inclusion', function()
-{
-    $test = new RecordProperty();
-    $element1 = new NonAbstractProperty();
-    $test->appendElement($element1,'test','something');
-})->throws(InvalidInclusionException::class);
 
 // **************** Exploring members **********************
 test('hasElement()', function()
@@ -130,83 +103,12 @@ test('traversing elements', function()
 });
 
 // *************** Back to appendElement() ****************************
-test('including a record included the elements', function()
+it('fails adding a record', function()
 {
     $container = new RecordProperty();
-    $element1 = new NonAbstractProperty();
-    $element2 = new NonAbstractProperty();
-    $container->appendElement($element1,'test1')->getName();
-    $container->appendElement($element2,'test2')->getName();
-    
-    $subrecord = new RecordProperty();
-    $element3 = new NonAbstractProperty();
-    $element4 = new NonAbstractProperty();
-    $subrecord->appendElement($element3,'test3')->getName();
-    $subrecord->appendElement($element4,'test4')->getName();
-
-    $container->appendElement($subrecord,'','include');
-    $result = '';
-    foreach ($container as $key => $value) {
-        $result .= $key;
-    }
-    expect($result)->toBe('test1test2test3test4');    
-});
-
-test('embedding a record included the elements', function()
-{
-    $container = new ChildRecordProperty();
-    $element1 = new NonAbstractProperty();
-    $element2 = new NonAbstractProperty();
-    $container->appendElement($element1,'test1')->getName();
-    $container->appendElement($element2,'test2')->getName();
-    
-    $subrecord = new ParentRecordProperty();
-    $element3 = new NonAbstractProperty();
-    $element4 = new NonAbstractProperty();
-    $subrecord->appendElement($element3,'test3')->getName();
-    $subrecord->appendElement($element4,'test4')->getName();
-    
-    $container->appendElement($subrecord,'','embed');
-    $result = '';
-    foreach ($container as $key => $value) {
-        $result .= $key;
-    }
-    expect($result)->toBe('test1test2test3test4');
-});
-
-it('fails embedding a record when not an ancestor', function()
-{
-    $container = new RecordProperty();
-    $element1 = new NonAbstractProperty();
-    $element2 = new NonAbstractProperty();
-    $container->appendElement($element1,'test1')->getName();
-    $container->appendElement($element2,'test2')->getName();
-    
-    $subrecord = new RecordProperty();
-    $element3 = new NonAbstractProperty();
-    $element4 = new NonAbstractProperty();
-    $subrecord->appendElement($element3,'test3')->getName();
-    $subrecord->appendElement($element4,'test4')->getName();
-    
-    $container->appendElement($subrecord,'','embed');
+    $element = new RecordProperty();
+    $container->appendElement($element,'test1')->getName();    
 })->throws(NotAllowedInclusionException::class);
-
-it('fails including a record when same element names', function()
-{
-    $container = new RecordProperty();
-    $element1 = new NonAbstractProperty();
-    $element2 = new NonAbstractProperty();
-    $container->appendElement($element1,'test1')->getName();
-    $container->appendElement($element2,'test2')->getName();
-    
-    $subrecord = new RecordProperty();
-    $element3 = new NonAbstractProperty();
-    $element4 = new NonAbstractProperty();
-    $subrecord->appendElement($element3,'test1')->getName();
-    $subrecord->appendElement($element4,'test4')->getName();
-    
-    $container->appendElement($subrecord,'','include');
-})->throws(PropertyNameAlreadyGivenException::class);
 
 test('Reading a property', function()
 {

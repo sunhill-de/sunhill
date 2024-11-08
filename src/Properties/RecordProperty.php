@@ -132,27 +132,6 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     protected array $elements_structure = [];
     
     /**
-     * Tries to "translate" $element into a property
-     * @param unknown $element
-     * @return AbstractProperty
-     */
-    private function getElementProperty($element): AbstractProperty
-    {
-        if (is_string($element)) {
-            if (class_exists($element)) {
-                $element = new $element();                
-            } else {
-                $namespace = Properties::getNamespaceOfProperty($element);
-                $element = new $namespace();
-            }
-        }
-        if (is_a($element, AbstractProperty::class)) {
-            return $element;
-        }
-        throw new NotAPropertyException("The given object is not a property");
-    }
-    
-    /**
      * Checks if $name is set, if yes set it to the element
      * @param AbstractProperty $propery
      * @param string $name
@@ -213,8 +192,6 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     private function checkInclude(AbstractProperty $property)
     {
         if (!is_a($property,RecordProperty::class)) {
-            $this->elements[$property->getName()] = $property;
-            $this->elements_structure[$property->getName()] = $property->getStructure();
             return;            
         }
         $this->appendMemebers($property, 'include');
@@ -253,34 +230,29 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * Adds the structure of the property to the structures list
      * @param AbstractProperty $property
      */
-    private function appendToElementsAndStructures(AbstractProperty $property, string $inclusion)
+    private function appendToElementsAndStructures(AbstractProperty $property)
     {
-        switch ($inclusion) {
-            case 'include':
-                $this->checkInclude($property);
-                break;
-            case 'embed':
-                $this->checkEmbed($property);
-                break;
-            case 'refer':
-                $this->checkRefer($property);
-                break;
-            default:
-                throw new InvalidInclusionException("The inclusion '$inclusion' is not defined");
-                
+        $this->elements[$property->getName()] = $property;
+        $this->elements_structure[$property->getName()] = $property->getStructure();
+    }
+    
+    private function checkElement(AbstractProperty $element)
+    {
+        if (is_a($element, RecordProperty::class)) {
+            throw new NotAllowedInclusionException("Record must't be added by appendElement()");
         }
     }
     
-    public function appendElement(mixed $element, ?string $name = null, string $inclusion = 'include', $storage = null)
+    public function appendElement(AbstractProperty $element, ?string $name = null, $storage = null)
     {
-        $element = $this->getElementProperty($element);
-        if (($inclusion == 'include') && (!is_a($element, RecordProperty::class))) {
-            $this->writeName($element, $name);
-        }
+        $this->checkElement($element);
+        
+        $this->writeName($element, $name);
         $this->checkForDuplicateName($element);
         $this->checkForDuplicateProperty($element);
+        
         $this->linkElement($element);
-        $this->appendToElementsAndStructures($element, $inclusion);
+        $this->appendToElementsAndStructures($element);
         return $element;
     }
     
