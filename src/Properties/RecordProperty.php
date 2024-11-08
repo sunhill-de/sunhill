@@ -230,10 +230,12 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * Adds the structure of the property to the structures list
      * @param AbstractProperty $property
      */
-    private function appendToElementsAndStructures(AbstractProperty $property)
+    private function appendToElementsAndStructures(AbstractProperty $property, mixed $storage_id)
     {
         $this->elements[$property->getName()] = $property;
-        $this->elements_structure[$property->getName()] = $property->getStructure();
+        $structure = $property->getStructure();
+        $structure->$storage_id??$this->getStorageID();
+        $this->elements_structure[$property->getName()] = $structure;
     }
     
     private function checkElement(AbstractProperty $element)
@@ -243,16 +245,16 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
     }
     
-    public function appendElement(AbstractProperty $element, ?string $name = null, $storage = null)
+    public function appendElement(AbstractProperty $element, ?string $name = null, $storage_id = null)
     {
         $this->checkElement($element);
         
         $this->writeName($element, $name);
         $this->checkForDuplicateName($element);
         $this->checkForDuplicateProperty($element);
-        
+
         $this->linkElement($element);
-        $this->appendToElementsAndStructures($element);
+        $this->appendToElementsAndStructures($element, $storage_id);
         return $element;
     }
     
