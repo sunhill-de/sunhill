@@ -45,6 +45,19 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
     }
     
+    private function addMemebers(ElementBuilder $builder, ?string $storage_id)
+    {
+        $members = $builder->getElements();
+        foreach ($members as $name => $property) {
+            $this->appendElement($property, $name, (static::$inherted_inclusion == 'embed')?$storage_id:static::getStorageID());
+        }
+    }
+    
+    private function addIncludes(ElementBuilder $builder)
+    {
+        
+    }
+    
     /**
      * Is called by
      *  a) the constructor when a callable $elements parameter is passed
@@ -53,12 +66,12 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * @param callable $elements
      * @param RecordProperty $target
      */
-    public function setupRecord(callable $elements,?RecordProperty $target = null): static
+    public function setupRecord(callable $elements, ?string $storage_id = null): static
     {
-        if (is_null($target)) {
-            $target = $this;
-        }
-        
+        $element_builder = new ElementBuilder();
+        $elements($element_builder);
+        $this->addMemebers($element_builder, $storage_id);
+        $this->addIncludes($element_builder);
         return $this;
     }
     
@@ -69,8 +82,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     
     private function initializeChild(string $class)
     {
-        $builder = new ElementBuilder($this);
-        $class::initializeRecord($builder);
+        $this->setupRecord([$class,'initializeRecord'], $class);
     }
     
     private function initializeInheritance()
@@ -114,7 +126,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * property (for example several database tables). This method returns a id
      * @return string
      */
-    public function getStorageID(): string
+    public static function getStorageID(): string
     {
         return ''; // Per default nothing
     }
@@ -168,56 +180,6 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
     }
     
-    private function appendMemebers(RecordProperty $property, string $inclusion)
-    {
-        foreach ($property as $name => $element) {
-            $this->checkForDuplicateName($element);
-            $this->checkForDuplicateProperty($element);
-            $this->elements[$name] = $element;
-            $structure = $element->getStructure();
-            if ($inclusion == 'include') {
-                $structure->storage_subid = $this->getStorageID();
-            } else {
-                $structure->storage_subid = $property->getStorageID();                
-            }
-        }
-    }
-    
-    /**
-     * This is the default inclusion. And it's the only possible for non RecordProperty types. 
-     * For those this method just adds the property to the list and to the structure list.
-     *  
-     * @param AbstractProperty $property
-     */
-    private function checkInclude(AbstractProperty $property)
-    {
-        if (!is_a($property,RecordProperty::class)) {
-            return;            
-        }
-        $this->appendMemebers($property, 'include');
-    }
-    
-    /**
-     * This inclusion is only possible for record properties that are related to each other. 
-     * To be more precicely: The property to embed has to an ancestor of the embedding one.
-     *
-     * @param AbstractProperty $property
-     */
-    private function checkEmbed(AbstractProperty $property)
-    {
-        if (!is_a($this,$property::class) || ($this::class == $property::class)) {
-            throw new NotAllowedInclusionException("The inclusion 'embed' is only allowed for ancestors.");
-        }
-        $this->appendMemebers($property, 'embed');
-    }
-    
-    private function checkRefer(AbstractProperty $property)
-    {
-        if (!is_a($property, PooledRecordProperty::class)) {
-            throw new NotAllowedInclusionException("The inclusion 'embed' is only allowed for ancestors.");
-        }
-    }
-    
     private function linkElement(AbstractProperty $property)
     {
         $property->setOwner($this);
@@ -234,7 +196,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     {
         $this->elements[$property->getName()] = $property;
         $structure = $property->getStructure();
-        $structure->$storage_id??$this->getStorageID();
+        $structure->$storage_id??static::getStorageID();
         $this->elements_structure[$property->getName()] = $structure;
     }
     
