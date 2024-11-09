@@ -94,4 +94,15 @@ class ReferenceProperty extends AbstractProperty
         }
         return $this;
     }
+    
+    protected function handleUninitialized()
+    {
+        if (count($this->allowed_properties) == 1) {
+            $result = new $this->allowed_properties[0]();
+            $this->getStorage()->setValue($this->getName(), $result);
+            return $result;
+        }
+        return parent::handleUninitialized();
+    }
+    
 }

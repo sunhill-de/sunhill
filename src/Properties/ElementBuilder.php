@@ -124,9 +124,12 @@ class ElementBuilder
         }
     }
     
-    public function referRecord(string|PooledRecordProperty $record, string $name): ReferenceProperty
+    public function referRecord(mixed $record, string $name): ReferenceProperty
     {
-        
+        $result = new ReferenceProperty();
+        $this->addProperty($result, $name);
+        $result->setAllowedProperty($record);
+        return $result;
     }
     
     public function __call(string $method,array $params)

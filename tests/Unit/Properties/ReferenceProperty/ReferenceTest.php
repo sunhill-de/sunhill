@@ -56,3 +56,19 @@ it('fails when test for allowed property fails', function()
     
     $test->setValue($property);
 })->throws(InvalidValueException::class);
+
+test('Autocreate a reference', function()
+{
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->shouldReceive('setValue')->once();
+//    $storage->shouldReceive('getValue')->once();
+    $storage->shouldReceive('getIsInitialized')->with('container')->andReturn(false);
+    
+    $test = new ReferenceProperty();
+    $test->setAllowedProperty(DummyRecordProperty::class);
+    $test->setName('container');
+    $test->setStorage($storage);
+    
+    $test->getValue();
+});
+
