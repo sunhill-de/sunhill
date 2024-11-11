@@ -43,6 +43,10 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         if (is_callable($elements)) {
             $this->setupRecord($elements);
         }
+        
+        if (!is_null($storage = $this->getStorage())) {
+            $storage->setStructure($this->getStructure()->elements);
+        }
     }
     
     private function addMemebers(ElementBuilder $builder, ?string $storage_id)

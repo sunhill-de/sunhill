@@ -34,7 +34,7 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         $this->structureNeeded();
         $this->values = [];
         foreach($this->structure as $property => $descriptor) {
-            $this->values[$property] = static::$persistent_data[$descriptor->storage_id][$property];
+            $this->values[$property] = static::$persistent_data[$descriptor->storage_id][$id][$property];
         }
     }
     
