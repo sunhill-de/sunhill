@@ -82,7 +82,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     
     private function initializeChild(string $class)
     {
-        $this->setupRecord([$class,'initializeRecord'], $class);
+        $this->setupRecord([$class,'initializeRecord'], $class::getStorageID());
     }
     
     private function initializeInheritance()
@@ -196,7 +196,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     {
         $this->elements[$property->getName()] = $property;
         $structure = $property->getStructure();
-        $structure->$storage_id??static::getStorageID();
+        $structure->storage_id = $storage_id??static::getStorageID();
         $this->elements_structure[$property->getName()] = $structure;
     }
     
@@ -306,10 +306,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     public function getStructure()
     {
         $return = parent::getStructure();
-        $return->elements = [];
-        foreach ($this->elements as $name => $element) {
-            $return->elements[$name] = $element->getStructure();
-        }
+        $return->elements = $this->elements_structure;        
         return $return;
     }
 }

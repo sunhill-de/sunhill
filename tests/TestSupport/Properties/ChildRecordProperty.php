@@ -14,5 +14,10 @@ class ChildRecordProperty extends ParentRecordProperty
         $builder->addProperty(TypeInteger::class,'child_int');
         $builder->addProperty(TypeVarchar::class,'child_string');
     }
-        
+     
+    public static function getStorageID(): string
+    {
+        return 'child';
+    }
+    
 }
