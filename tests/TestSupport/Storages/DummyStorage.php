@@ -57,7 +57,9 @@ class DummyStorage extends AbstractStorage
     
     protected function doSetIndexedValue($name, $index, $value)
     {
-        if (!isset($this->values[$name])) {
+        if (is_null($index)) {
+            $this->values[$name][] = $value;
+        } else if (!isset($this->values[$name])) {
             $this->values[$name] = [$index=>$value];
         } else {
             $this->values[$name][$index] = $value;

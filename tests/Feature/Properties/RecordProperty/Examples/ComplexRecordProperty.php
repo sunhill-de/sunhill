@@ -6,6 +6,7 @@ use Sunhill\Properties\RecordProperty;
 use Sunhill\Properties\ElementBuilder;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Tests\TestSupport\Storages\DummyStorage;
+use Sunhill\Types\TypeInteger;
 
 class ComplexRecordProperty extends RecordProperty
 {
@@ -16,6 +17,7 @@ class ComplexRecordProperty extends RecordProperty
         $builder->string('complex_str');
         $builder->includeRecord(SimpleRecordProperty::class);
         $builder->referRecord(SimpleRecordProperty::class, 'reference_record');
+        $builder->array('complex_array_of_int')->setAllowedElementTypes(TypeInteger::class);
     }
     
     protected function createStorage(): ?AbstractStorage
