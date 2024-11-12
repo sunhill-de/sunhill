@@ -121,31 +121,6 @@ abstract class AbstractPersistentStorage extends CommonStorage
         }
     }
             
-    protected $structure;
-    
-    /**
-     * Sets the structure of the owning property
-     * 
-     * @param array $structure
-     * @wiki /PersistentStorage#Structure
-     */
-    public function setStructure(array $structure)
-    {
-        $this->structure = $structure;    
-    }
-    
-    /**
-     * Checks if the $structures field was set. If not it raises an exception. This functions
-     * should be called by doCommitXXXX() or doMigrate() when the structure is needed to perform
-     * this step.
-     */
-    protected function structureNeeded()
-    {
-        if (is_null($this->structure)) {
-            throw new StructureNeededException("The structure of the owning property is needed but not provided");
-        }
-    }
-    
     /**
      * Returns the values that where modified in an already loaded storage
      * 

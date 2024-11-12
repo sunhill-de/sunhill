@@ -17,6 +17,7 @@ namespace Sunhill\Storage;
 
 use Illuminate\Support\Facades\Cache;
 use Sunhill\Basic\Base;
+use Sunhill\Storage\Exceptions\StructureNeededException;
 
 abstract class AbstractStorage extends Base
 {
@@ -339,5 +340,31 @@ abstract class AbstractStorage extends Base
         $this->prepareGetValue($name);
         return $this->doGetIsInitialized($name);
     }
+    
+    protected $structure;
+    
+    /**
+     * Sets the structure of the owning property
+     *
+     * @param array $structure
+     * @wiki /PersistentStorage#Structure
+     */
+    public function setStructure(array $structure)
+    {
+        $this->structure = $structure;
+    }
+    
+    /**
+     * Checks if the $structures field was set. If not it raises an exception. This functions
+     * should be called by doCommitXXXX() or doMigrate() when the structure is needed to perform
+     * this step.
+     */
+    protected function structureNeeded()
+    {
+        if (is_null($this->structure)) {
+            throw new StructureNeededException("The structure of the owning property is needed but not provided");
+        }
+    }
+    
     
 }
