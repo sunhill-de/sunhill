@@ -45,4 +45,11 @@ class PooledRecordProperty extends PersistentRecordProperty
         $storage = $this->getStorage();
         return $storage->getID();
     }
+    
+    public function delete($id)
+    {
+        $this->checkForStorage();
+        $storage = $this->getStorage();
+        $storage->delete($id);        
+    }
 }
