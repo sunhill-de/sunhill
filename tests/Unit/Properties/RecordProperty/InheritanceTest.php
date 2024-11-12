@@ -40,7 +40,7 @@ test('inherited included properties', function()
 
 test('inhertited included structure', function()
 {
-    ChildRecordProperty::setInclusion('embed');
+    ChildRecordProperty::setInclusion('include');
     
     $test = new ChildRecordProperty();
     $structure = $test->getStructure();

@@ -33,7 +33,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * 
      * @var string
      */
-    protected static $inherted_inclusion = 'include';
+    protected static $inherited_inclusion = 'include';
         
     public function __construct($elements = null)
     {
@@ -53,7 +53,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     {
         $members = $builder->getElements();
         foreach ($members as $name => $property) {
-            $this->appendElement($property, $name, (static::$inherted_inclusion == 'embed')?$storage_id:static::getStorageID());
+            $this->appendElement($property, $name, (static::$inherited_inclusion == 'embed')?$storage_id:static::getStorageID());
         }
     }
     
@@ -86,7 +86,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     
     private function initializeChild(string $class)
     {
-        $this->setupRecord([$class,'initializeRecord'], (static::$inherted_inclusion == 'include')?static::getStorageID():$class::getStorageID());
+        $this->setupRecord([$class,'initializeRecord'], (static::$inherited_inclusion == 'include')?static::getStorageID():$class::getStorageID());
     }
     
     private function initializeInheritance()

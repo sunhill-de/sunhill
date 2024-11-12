@@ -16,12 +16,12 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         static::$persistent_data  = 
             [
                 'poolA'=>[
-                    ['parent_str'=>'AAA','parent_int'=>111,'child_str'=>'ABC'],
-                    ['parent_str'=>'BBB','parent_int'=>222,'child_str'=>'BCE'],
+                    ['parent_str'=>'AAA','parent_int'=>111],
+                    ['parent_str'=>'BBB','parent_int'=>222],
                 ],
                 'poolB'=>[
-                    ['child_str'=>'ABA'],
-                    ['child_str'=>'BCB'],
+                    ['parent_str'=>'ABC','parent_int'=>123,'child_str'=>'ABA'],
+                    ['parent_str'=>'BCE','parent_int'=>234,'child_str'=>'BCB'],
                 ]                
             ];
     }

@@ -21,8 +21,8 @@ test('load included child', function()
     $test = new IncludeChildProperty();
     $test->load(1);
     
-    expect($test->parent_str)->toBe('BBB');
-    expect($test->child_str)->toBe('BCE');
+    expect($test->parent_str)->toBe('BCE');
+    expect($test->child_str)->toBe('BCB');
 });
 
 test('load embedded parent', function()

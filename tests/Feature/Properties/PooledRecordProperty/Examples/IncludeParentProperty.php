@@ -9,7 +9,7 @@ use Sunhill\Storage\AbstractStorage;
 class IncludeParentProperty extends PooledRecordProperty
 {
   
-    protected static $inherted_inclusion = 'include';
+    protected static $inherited_inclusion = 'include';
     
     public static function getStorageID(): string
     {

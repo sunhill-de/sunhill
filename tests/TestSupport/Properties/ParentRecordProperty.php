@@ -18,7 +18,7 @@ class ParentRecordProperty extends RecordProperty
   
     public static function setInclusion(string $inclusion)
     {
-        static::$inherted_inclusion = $inclusion;
+        static::$inherited_inclusion = $inclusion;
     }
     
     public static function getStorageID(): string
