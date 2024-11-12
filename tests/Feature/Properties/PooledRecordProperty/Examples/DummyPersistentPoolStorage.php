@@ -55,7 +55,11 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
     {
         $id = count(static::$persistent_data['poolA']);
         foreach ($this->values as $key => $value) {
-            static::$persistent_data[$this->structure[$key]->storage_id][] = $value;
+            if (isset(static::$persistent_data[$this->structure[$key]->storage_id][$id])) {
+                static::$persistent_data[$this->structure[$key]->storage_id][$id][$key] = $value;
+            } else {
+                static::$persistent_data[$this->structure[$key]->storage_id][$id] = [$key => $value];
+            }
         }
         return $id;
     }
