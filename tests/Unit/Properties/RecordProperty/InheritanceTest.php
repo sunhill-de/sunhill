@@ -24,6 +24,9 @@ test('inhertited embedded structure', function()
     expect($structure->elements['parent_int']->name)->toBe('parent_int');
     expect($structure->elements['parent_int']->type)->toBe('integer');
     expect($structure->elements['parent_int']->storage_id)->toBe('parent');
+    expect($structure->elements['child_int']->name)->toBe('child_int');
+    expect($structure->elements['child_int']->type)->toBe('integer');
+    expect($structure->elements['child_int']->storage_id)->toBe('child');
 });
 
 test('inherited included properties', function()
@@ -34,3 +37,19 @@ test('inherited included properties', function()
     expect($test->hasElement('child_int'))->toBe(true);
     expect($test->hasElement('parent_int'))->toBe(true);    
 });
+
+test('inhertited included structure', function()
+{
+    ChildRecordProperty::setInclusion('embed');
+    
+    $test = new ChildRecordProperty();
+    $structure = $test->getStructure();
+    expect(is_array($structure->elements))->toBe(true);
+    expect($structure->elements['parent_int']->name)->toBe('parent_int');
+    expect($structure->elements['parent_int']->type)->toBe('integer');
+    expect($structure->elements['parent_int']->storage_id)->toBe('child');
+    expect($structure->elements['child_int']->name)->toBe('child_int');
+    expect($structure->elements['child_int']->type)->toBe('integer');
+    expect($structure->elements['child_int']->storage_id)->toBe('child');
+});
+
