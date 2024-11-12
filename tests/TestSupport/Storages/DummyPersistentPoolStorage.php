@@ -29,6 +29,10 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         $this->values = static::$persistent_data[$id];
     }
     
+    protected function doDelete(mixed $id)
+    {
+    }
+    
     protected function isValidID(mixed $id): bool
     {
         return is_int($id);    

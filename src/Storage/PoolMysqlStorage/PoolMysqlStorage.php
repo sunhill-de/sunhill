@@ -28,6 +28,10 @@ class PoolMysqlStorage extends PersistentPoolStorage
         }
     }
     
+    protected function doDelete(mixed $id)
+    {
+    }
+    
     protected function isValidID(mixed $id): bool
     {
         return is_int($id);

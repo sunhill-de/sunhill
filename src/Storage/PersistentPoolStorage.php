@@ -71,6 +71,21 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
      */
     abstract protected function doLoad(mixed $id);
     
+    public function delete(mixed $id = null)
+    {
+        if (!$this->isValidID($id)) {
+            throw new InvalidIDException("The given id is not valid for this storage");
+        }
+        if ($this->isLoaded() and is_null($id)) {
+            $id = $this->getID();
+        }
+        $this->doDelete($id);
+        $this->setID(null);
+        $this->loaded = false;
+    }
+    
+    abstract protected function doDelete(mixed $id);
+    
     /**
      * Persistent pool storages can't initiated a load because we don't know the id for sure
      *

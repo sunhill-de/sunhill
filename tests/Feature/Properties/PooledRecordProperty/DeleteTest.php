@@ -15,6 +15,7 @@ test('modify included parent', function()
    $test->delete(1);
    
    expect(count(DummyPersistentPoolStorage::$persistent_data['poolA']))->toBe(1);
+   expect(count(DummyPersistentPoolStorage::$persistent_data['poolB']))->toBe(2);
 });
 
 test('modify included child', function()
@@ -22,7 +23,8 @@ test('modify included child', function()
     $test = new IncludeChildProperty();
     $test->delete(1);
 
-    expect(count(DummyPersistentPoolStorage::$persistent_data['poolA']))->toBe(1);
+    expect(count(DummyPersistentPoolStorage::$persistent_data['poolA']))->toBe(2);
+    expect(count(DummyPersistentPoolStorage::$persistent_data['poolB']))->toBe(1);
 });
 
 test('modify embedded parent', function()
@@ -31,6 +33,7 @@ test('modify embedded parent', function()
     $test->delete(1);
     
     expect(count(DummyPersistentPoolStorage::$persistent_data['poolA']))->toBe(1);
+    expect(count(DummyPersistentPoolStorage::$persistent_data['poolB']))->toBe(2);
 });
 
 test('modify embedded child', function()

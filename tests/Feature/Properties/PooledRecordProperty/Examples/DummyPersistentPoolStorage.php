@@ -38,6 +38,23 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         }
     }
     
+    protected function doDelete(mixed $id)
+    {
+        if (($id < 0) || ($id > 1)) {
+            throw new IDNotFoundException("The id was not found.");
+        }
+        $this->structureNeeded();
+        $storage_ids = [];
+        foreach ($this->structure as $property => $descriptor) {
+            if (!in_array($descriptor->storage_id,$storage_ids)) {
+                $storage_ids[] = $descriptor->storage_id;
+            }
+        }
+        foreach ($storage_ids as $storage_id) {
+            unset(static::$persistent_data[$storage_id][$id]);
+        }
+    }
+    
     protected function isValidID(mixed $id): bool
     {
         return is_int($id);    
