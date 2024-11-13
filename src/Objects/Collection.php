@@ -24,5 +24,13 @@ class Collection extends ORMObject
 {
    
     protected static $inherited_inclusion = 'include';
+
+    protected static function setupInfos()
+    {
+        static::addInfo('name', 'Collection');
+        static::addInfo('description', 'The basic class for collections.', true);
+        static::addInfo('storage_id', 'objects'); // doesn't matter, the root is always objects
+        static::addInfo('initiable', false);
+    }
     
 }
