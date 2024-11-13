@@ -7,16 +7,13 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage: 
+ * Coverage: 67.86% (2024-11-13)
  *
  * Wiki: 
  * tests 
  */
 
 namespace Sunhill\Properties;
-
-use Sunhill\Facades\Properties;
-use Sunhill\Properties\Exceptions\PropertyNotFoundException;
 
 class ReferenceProperty extends AbstractProperty 
 {

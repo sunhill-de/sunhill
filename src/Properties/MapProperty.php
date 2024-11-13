@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Properties/AbstractArrayPropertyTest.php 
- * Coverage: 100% (2024-10-17)
+ * Coverage: 100% (2024-11-13)
  */
 
 namespace Sunhill\Properties;

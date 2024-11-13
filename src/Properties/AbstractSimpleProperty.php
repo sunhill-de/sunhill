@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/PropertyTest.php, Unit/PropertyValidateTest.php
- * Coverage: 41.67 % (2024-10-17)
+ * Coverage: 41.67 % (2024-11-13)
  */
 
 namespace Sunhill\Properties;

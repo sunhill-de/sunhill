@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage: 
+ * Coverage: 100 % (2024-11-13)
  *
  * Wiki: /PooledRecordProperties
  * tests /tests/Unit/Properties/PooledRecordProperties/*
