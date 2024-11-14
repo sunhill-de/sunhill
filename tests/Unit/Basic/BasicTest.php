@@ -5,7 +5,8 @@ namespace Sunhill\Tests\Unit\Basic;
 use Sunhill\Basic\Base;
 use Sunhill\Exceptions\SunhillException;
 
-class extension extends Base {
+class extension extends Base 
+{
 
     private $test=0;
     
@@ -16,6 +17,36 @@ class extension extends Base {
     public function getTest() {
         return $this->test;
     }
+    
+    protected function ownMethod()
+    {
+        
+    }
+    
+    protected static function ownStaticMethod()
+    {
+        
+    }
+    
+}
+
+class extension2 extends extension 
+{
+    
+    protected function ownMethod()
+    {
+        
+    }
+    
+    protected static function ownStaticMethod()
+    {
+        
+    }
+}
+
+class extension3 extends extension 
+{
+    
 }
 
 test("GetterSetter works", function() 
@@ -36,4 +67,16 @@ test("Excpetion is raised when reading non existing", function()
     $test = new extension();
     $a = $test->notexisting;
 })->throws(SunhillException::class);
+
+test('definesOwnMethod() works', function() 
+{
+    expect(extension2::definesOwnMethod('ownMethod'))->toBe(true);    
+    expect(extension3::definesOwnMethod('ownMethod'))->toBe(false);
+});
+
+test('definesOwnStaticMethod() works', function()
+{
+    expect(extension2::definesOwnMethod('ownStaticMethod'))->toBe(true);
+    expect(extension3::definesOwnMethod('ownStaticMethod'))->toBe(false);
+});
 

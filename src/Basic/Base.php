@@ -66,4 +66,16 @@ class Base
 		}
 	}
 	
+	/**
+	 * Returns true, if the given class defines a method with the name '$method_name' and doesn't just inherited it
+	 * 
+	 * @param string $method_name
+	 * @return bool
+	 */
+	public static function definesOwnMethod(string $method_name): bool
+	{
+	    $method = new \ReflectionMethod(new static(), $method_name);
+	    return $method->getDeclaringClass()->name == static::class;
+	}
+		
 }
