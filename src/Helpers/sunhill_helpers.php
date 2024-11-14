@@ -31,3 +31,8 @@ function makeStdclass(array $values): \StdClass
     }
     return $result;
 }
+
+function getScalarMessage(string $message, mixed $variable,string $replace = ""): string
+{
+    return str_replace(':variable',(is_scalar($variable))?"'$variable'":$replace,$message);
+}

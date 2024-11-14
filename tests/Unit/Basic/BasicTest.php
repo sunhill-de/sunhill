@@ -80,3 +80,4 @@ test('definesOwnStaticMethod() works', function()
     expect(extension3::definesOwnMethod('ownStaticMethod'))->toBe(false);
 });
 
+
