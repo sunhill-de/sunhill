@@ -30,6 +30,10 @@ class PoolMysqlStorage extends PersistentPoolStorage
     
     protected function doDelete(mixed $id)
     {
+        $deleter = new PoolMysqlDeleter($this->structure);
+        if (!$deleter->delete($id)) {
+            throw new IDNotFoundException("The id '$id' was not found.");            
+        }
     }
     
     protected function isValidID(mixed $id): bool

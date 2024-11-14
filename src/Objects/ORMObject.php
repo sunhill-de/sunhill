@@ -35,6 +35,12 @@ class ORMObject extends PooledRecordProperty
         return $storage;
     }
     
+    /**
+     * Gets the object name. If the object doesn't define an own setupInfos method (not nice) the method
+     * calculated the name out of the class name.
+     * 
+     * @return string
+     */
     public static function getObjectName(): string
     {
         if (static::definesOwnMethod('setupInfos')) {
@@ -60,7 +66,7 @@ class ORMObject extends PooledRecordProperty
     }
     
     /**
-     * Each object and collection has to define at least the following informations:
+     * Each object and collection has to (or better should) define at least the following informations:
      * * name = an unique name that identifies this object
      * * description = a description of what the purpose of this object/collection is
      * * storage_id = the id of the storage (in this case normally the database table)
