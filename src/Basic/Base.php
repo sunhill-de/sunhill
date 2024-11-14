@@ -74,7 +74,7 @@ class Base
 	 */
 	public static function definesOwnMethod(string $method_name): bool
 	{
-	    $method = new \ReflectionMethod(new static(), $method_name);
+	    $method = new \ReflectionMethod(static::class, $method_name);
 	    return $method->getDeclaringClass()->name == static::class;
 	}
 		

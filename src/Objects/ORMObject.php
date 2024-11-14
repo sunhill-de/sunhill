@@ -35,6 +35,16 @@ class ORMObject extends PooledRecordProperty
         return $storage;
     }
     
+    public static function getObjectName(): string
+    {
+        if (static::definesOwnMethod('setupInfos')) {
+            return static::getInfo('name');
+        } else {
+            $reflect = new \ReflectionClass(static::class);
+            return ucfirst(strtolower($reflect->getShortName()));
+        }        
+    }
+    
     /**
      * Just returns the obligate storage_id defined in the info block
      * 
@@ -42,7 +52,11 @@ class ORMObject extends PooledRecordProperty
      */
     public static function getStorageID(): string
     {
-        return static::getInfo('storage_id');
+        if (static::definesOwnMethod('setupInfos')) {
+            return static::getInfo('storage_id');
+        } else {
+            return strtolower(static::getObjectName()).'s';
+        }
     }
     
     /**
