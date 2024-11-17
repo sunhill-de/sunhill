@@ -47,6 +47,11 @@ class PoolMysqlStorage extends PersistentPoolStorage
     
     protected function doCommitNew()
     {
+        $creator = new PoolMysqlCreator($this->structure);
+        if (!($id = $creator->create($this->values))) {
+            
+        }
+        return $id;
     }
     
     protected function doMigrateNew()

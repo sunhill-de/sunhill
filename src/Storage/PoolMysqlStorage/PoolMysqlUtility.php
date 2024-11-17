@@ -64,4 +64,17 @@ class PoolMysqlUtility
             throw new StorageTableMissingException("The table '$name' is expected but missing.");
         }
     }
+    
+    protected function getObjectFields(array $values,array $modified = [])
+    {
+        $object_fields = ['_classname','_uuid','_read_cap','_modify_cap','_delete_cap','_created_at','_modified_at'];
+        $result = [];    
+
+        foreach ($object_fields as $field) {
+            if (empty($modified) || in_array($field, $modified)) {
+                $result[$field] = $values[$field];
+            }
+        }
+        return $result;
+    }
 }
