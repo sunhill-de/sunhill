@@ -21,43 +21,39 @@ use Sunhill\Tags\Tag;
 class PoolMysqlCreator extends PoolMysqlUtility
 {
         
-    private function createObject(int $id, array $values)
+    private function createObject(array $values): int
     {
         $this->tableNeeded('objects');
-        return DB::table('objects')->where('id',$id)->first();
+        $id = DB::table('objects')->insertGetId($this->getObjectFields($values));
+        return $id;
     }
     
     private function createTable(string $name, int $id, array $values)
     {
         $this->tableNeeded($name);
-        return DB::table($name)->where('id', $id)->first();    
+        DB::table($name)->insert($this->getTableFields($id, $values));    
     }
     
     private function createArrays(int $id, array $values)
     {
-        $result = [];
         foreach ($this->getArrays() as $array) {
             $table = $this->assembleArrayTableName($array);
             $this->tableNeeded($table);
-            $table_result = DB::table($table)->where('container_id',$id)->get();
-            $subresult = [];
-            foreach ($table_result as $entry) {
-                $subresult[$entry->index] = $entry->element;
+            $dataset = [];
+            foreach ($values[$array] as $index => $value) {
+                $dataset[] = ['container_id'=>$id,'index'=>$index,'value'=>$value];
             }
-            $result[$array->name] = $subresult;
+            DB::table($table)->insert($dataset);
         }
-
-        return $result;        
     }
     
     private function createTags(int $id, array $values)
     {
-        $tags = DB::table('tagobjectassigns')->where('container_id', $id)->get();
-        $result = [];
-        foreach ($tags as $tag) {
-            $result[] = new Tag($tag->tag_id);
+        $dataset = [];
+        foreach ($values['tags'] as $tag) {
+            $dataset[] = ['container_id'=>$id,'tag_id'=>$tag->getID()];
         }
-        return ['tags'=>$result];        
+        DB::table('tagobjectassigns')->insert($dataset);
     }
     
     private function createAttributes(int $id, array $values)
@@ -70,7 +66,7 @@ class PoolMysqlCreator extends PoolMysqlUtility
         $id = $this->createObject($values);
         foreach ($this->getStorageSubids() as $subid) {
             if ($subid !== 'objects') {
-                $this->createTable($subid, $id,$values);
+                $this->createTable($subid, $id, $values);
             }
         }
         $this->createArrays($id, $values);
