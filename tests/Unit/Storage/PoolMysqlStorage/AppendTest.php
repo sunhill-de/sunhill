@@ -14,6 +14,10 @@ function fillObjectsDataset(PoolMysqlStorage $test)
 {
     $test->setValue('_classname','Dummy');
     $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
     $test->setValue('_created_at', '2024-11-14 20:00:00');
     $test->setValue('_updated_at', '2024-11-14 20:00:00');    
 }

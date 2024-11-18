@@ -40,7 +40,7 @@ class PoolMysqlCreator extends PoolMysqlUtility
             $table = $this->assembleArrayTableName($array);
             $this->tableNeeded($table);
             $dataset = [];
-            foreach ($values[$array] as $index => $value) {
+            foreach ($values[$array->name] as $index => $value) {
                 $dataset[] = ['container_id'=>$id,'index'=>$index,'value'=>$value];
             }
             DB::table($table)->insert($dataset);

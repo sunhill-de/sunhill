@@ -67,7 +67,7 @@ class PoolMysqlUtility
     
     protected function getObjectFields(array $values,array $modified = [])
     {
-        $object_fields = ['_classname','_uuid','_read_cap','_modify_cap','_delete_cap','_created_at','_modified_at'];
+        $object_fields = ['_classname','_uuid','_read_cap','_modify_cap','_delete_cap','_created_at','_updated_at'];
         $result = [];    
 
         foreach ($object_fields as $field) {
@@ -76,5 +76,18 @@ class PoolMysqlUtility
             }
         }
         return $result;
+    }
+    
+    protected function getTableFields(string $table, array $values, array $modified = [])
+    {
+        $fields = [];
+        foreach ($this->structure as $name => $structure) {
+            if ($structure->storage_subid == $table) {
+               if (empty($modified) || in_array($name, $modified)) {
+                   $fields[$name] = $values[$name];
+               }
+            }
+        }
+        return $fields;
     }
 }
