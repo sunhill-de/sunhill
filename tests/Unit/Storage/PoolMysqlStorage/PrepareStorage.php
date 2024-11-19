@@ -9,6 +9,7 @@ use Sunhill\Tests\Database\Seeds\ParentObjectsSeeder;
 use Sunhill\Tests\Database\Seeds\ChildObjectsSeeder;
 use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
 use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
+use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 
 function prepareStorage($test, string $type)
 {
@@ -65,4 +66,19 @@ function prepareStorage($test, string $type)
             ];
     }
 }
+
+function fillObjectsDataset(PoolMysqlStorage $test, string $classname = 'Dummy')
+{
+    $test->setValue('_classname',$classname);
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+}
+
 
