@@ -20,6 +20,8 @@ function fillObjectsDataset(PoolMysqlStorage $test)
     $test->setValue('_delete_cap', null);
     $test->setValue('_created_at', '2024-11-14 20:00:00');
     $test->setValue('_updated_at', '2024-11-14 20:00:00');    
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
 }
 
 test('Append a dummy', function()
@@ -59,9 +61,9 @@ test('Append a parentobject with array', function()
     $test->commit();
     
     $this->assertDatabaseHas('parentobjects',['id'=>13,'parent_int'=>1509,'parent_string'=>'ACDC']);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>0,'value'=>919]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>1,'value'=>929]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>2,'value'=>939]);    
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>0,'element'=>919]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>1,'element'=>929]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>2,'element'=>939]);    
 });
 
 test('Append a parentobject with empty array', function()
@@ -71,7 +73,8 @@ test('Append a parentobject with empty array', function()
 
     $test->setValue('parent_int',1509);
     $test->setValue('parent_string','ACDC');
-
+    $test->setValue('parent_sarray',[]);
+    
     fillObjectsDataset($test);
     
     $test->commit();
@@ -98,8 +101,8 @@ test('Append a childobject with both arrays', function()
  
     $this->assertDatabaseHas('parentobjects',['id'=>13,'parent_int'=>1509,'parent_string'=>'ACDC']);
     $this->assertDatabaseHas('childobjects',['id'=>13,'child_int'=>5678,'child_string'=>'ACAC']);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>1,'value'=>34]);
-    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>13,'index'=>1,'value'=>90]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>1,'element'=>34]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>13,'index'=>1,'element'=>90]);
     
 });
 
@@ -113,12 +116,13 @@ test('Append a childobject with parent array', function()
     $test->setValue('parent_sarray',[12,34,56]);
     $test->setValue('child_int',5678);
     $test->setValue('child_string','ACAC');
+    $test->setValue('child_sarray',[]);
     
     fillObjectsDataset($test);
     
     $test->commit();
     
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>1,'value'=>34]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>13,'index'=>1,'element'=>34]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>13]);
 });
 
@@ -129,6 +133,7 @@ test('Append a childobject with child array', function()
     
     $test->setValue('parent_int',1509);
     $test->setValue('parent_string','ACDC');
+    $test->setValue('parent_sarray',[]);
     $test->setValue('child_int',5678);
     $test->setValue('child_string','ACAC');
     $test->setValue('child_sarray',[78,90,12]);
@@ -138,7 +143,7 @@ test('Append a childobject with child array', function()
     $test->commit();
     
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>13]);
-    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>13,'index'=>1,'value'=>90]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>13,'index'=>1,'element'=>90]);
 });
 
 test('Read a childobject with both arrays empty', function()
@@ -148,8 +153,10 @@ test('Read a childobject with both arrays empty', function()
     
     $test->setValue('parent_int',1509);
     $test->setValue('parent_string','ACDC');
+    $test->setValue('parent_sarray',[]);
     $test->setValue('child_int',5678);
     $test->setValue('child_string','ACAC');
+    $test->setValue('child_sarray',[]);
     
     fillObjectsDataset($test);
     

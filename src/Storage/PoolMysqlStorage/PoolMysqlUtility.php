@@ -82,7 +82,7 @@ class PoolMysqlUtility
     {
         $fields = [];
         foreach ($this->structure as $name => $structure) {
-            if ($structure->storage_subid == $table) {
+            if (($structure->storage_subid == $table) && ($structure->type !== 'array')) {
                if (empty($modified) || in_array($name, $modified)) {
                    $fields[$name] = $values[$name];
                }

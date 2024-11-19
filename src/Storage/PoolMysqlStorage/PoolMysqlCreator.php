@@ -31,7 +31,9 @@ class PoolMysqlCreator extends PoolMysqlUtility
     private function createTable(string $name, int $id, array $values)
     {
         $this->tableNeeded($name);
-        DB::table($name)->insert($this->getTableFields($id, $values));    
+        $fields = $this->getTableFields($name, $values);
+        $fields['id'] = $id;
+        DB::table($name)->insert($fields);    
     }
     
     private function createArrays(int $id, array $values)
@@ -41,7 +43,7 @@ class PoolMysqlCreator extends PoolMysqlUtility
             $this->tableNeeded($table);
             $dataset = [];
             foreach ($values[$array->name] as $index => $value) {
-                $dataset[] = ['container_id'=>$id,'index'=>$index,'value'=>$value];
+                $dataset[] = ['container_id'=>$id,'index'=>$index,'element'=>$value];
             }
             DB::table($table)->insert($dataset);
         }
@@ -50,7 +52,7 @@ class PoolMysqlCreator extends PoolMysqlUtility
     private function createTags(int $id, array $values)
     {
         $dataset = [];
-        foreach ($values['tags'] as $tag) {
+        foreach ($values['tags']??[] as $tag) {
             $dataset[] = ['container_id'=>$id,'tag_id'=>$tag->getID()];
         }
         DB::table('tagobjectassigns')->insert($dataset);
@@ -71,7 +73,7 @@ class PoolMysqlCreator extends PoolMysqlUtility
         }
         $this->createArrays($id, $values);
         $this->createTags($id, $values);
-        $this->createAttributed($id, $values);
+        $this->createAttributes($id, $values);
         return true;
     }
 }
