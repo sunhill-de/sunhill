@@ -101,7 +101,7 @@ test('Update a parentobject with modified array (added a entry) and unmodified s
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>0,'element'=>10]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>1,'element'=>11]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>2,'element'=>12]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>2,'element'=>99]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>3,'element'=>99]);
 });
 
 test('Update a parentobject with modified array (deleted a entry) and unmodified simple fields', function()
@@ -125,7 +125,7 @@ test('Update a parentobject with modified array (deleted a entry) and unmodified
     $this->assertDatabaseHas('parentobjects',['id'=>7,'parent_int'=>111,'parent_string'=>'AAA']);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>0,'element'=>10]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>7,'index'=>1,'element'=>11]);
-    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>7,'index'=>2,'element'=>12]);
+    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>7,'index'=>2]);
 });
 
 test('Update a parentobject with modified array (deleted all entries) and unmodified simple fields', function()
@@ -140,7 +140,7 @@ test('Update a parentobject with modified array (deleted all entries) and unmodi
     $test->setValue('parent_string','AAA');
     $test->setValue('parent_sarray',[10,11,12]);
     
-    $test->setValue('parent_sarray',[10,11]);
+    $test->setValue('parent_sarray',[]);
     
     fillObjectsDataset($test);
     
