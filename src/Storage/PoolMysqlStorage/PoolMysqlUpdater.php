@@ -43,6 +43,9 @@ class PoolMysqlUpdater extends PoolMysqlUtility
             $table = $this->assembleArrayTableName($array);
             $this->tableNeeded($table);
             $dataset = [];
+            if (!isset($values[$array->name])) {
+                break;
+            }
             DB::table($table)->where('container_id', $id)->delete();
             foreach ($values[$array->name]->new as $index => $value) {
                 $dataset[] = ['container_id'=>$id,'index'=>$index,'element'=>$value];
