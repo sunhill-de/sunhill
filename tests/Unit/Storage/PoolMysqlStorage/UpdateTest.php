@@ -248,13 +248,13 @@ test('Update a childobject with modified array (all entries) and modified simple
     $test->commit();
     
     $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>3331,'parent_string'=>'CCCA']);
-    $this->assertDatabaseHas('childobjects',['id'=>9,'parent_int'=>2121,'parent_string'=>'BCDA']);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>2121,'child_string'=>'BCDA']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>301]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>311]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>321]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
 });
 
 test('Update a childobject with modified both array (all entries) and unmodified simple fields', function()
@@ -280,13 +280,13 @@ test('Update a childobject with modified both array (all entries) and unmodified
     $test->commit();
     
     $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
-    $this->assertDatabaseHas('childobjects',['id'=>9,'parent_int'=>212,'parent_string'=>'BCD']);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>301]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>311]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>321]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
 });
 
 test('Update a childobject with modified both array (added entries) and unmodified simple fields', function()
@@ -312,15 +312,15 @@ test('Update a childobject with modified both array (added entries) and unmodifi
     $test->commit();
     
     $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
-    $this->assertDatabaseHas('childobjects',['id'=>9,'parent_int'=>212,'parent_string'=>'BCD']);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>3,'element'=>666]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>3,'element'=>6666]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>3,'element'=>6666]);
 });
 
 test('Update a childobject with modified both array (removed entries) and unmodified simple fields', function()
@@ -350,9 +350,9 @@ test('Update a childobject with modified both array (removed entries) and unmodi
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9,'index'=>2]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
-    $this->assertDatabaseMissing('childobjects_parent_sarray',['container_id'=>9,'index'=>2]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9,'index'=>2]);
 });
 
 test('Update a childobject with modified both array (cleared arrays) and unmodified simple fields', function()
@@ -380,7 +380,7 @@ test('Update a childobject with modified both array (cleared arrays) and unmodif
     $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
     $this->assertDatabaseHas('childobjects',['id'=>9,'parent_int'=>212,'parent_string'=>'BCD']);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9]);
-    $this->assertDatabaseMissing('childobjects_parent_sarray',['container_id'=>9]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9]);
 });
 
 test('Update a childobject with modified parent array (all entries) and unmodified simple fields', function()
@@ -409,9 +409,9 @@ test('Update a childobject with modified parent array (all entries) and unmodifi
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
 });
 
 test('Update a childobject with modified parent array (added entries) and unmodified simple fields', function()
@@ -441,9 +441,9 @@ test('Update a childobject with modified parent array (added entries) and unmodi
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>3,'element'=>666]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
 });
 
 test('Update a childobject with modified parent array (removed entries) and unmodified simple fields', function()
@@ -472,9 +472,9 @@ test('Update a childobject with modified parent array (removed entries) and unmo
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9,'index'=>2]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
 });
 
 test('Update a childobject with modified parent array (cleared arrays) and unmodified simple fields', function()
@@ -501,7 +501,7 @@ test('Update a childobject with modified parent array (cleared arrays) and unmod
     $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
     $this->assertDatabaseHas('childobjects',['id'=>9,'parent_int'=>212,'parent_string'=>'BCD']);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9]);
 });
 
 // **********************************************************************
@@ -531,9 +531,9 @@ test('Update a childobject with modified child array (all entries) and unmodifie
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
 });
 
 test('Update a childobject with modified child array (added entries) and unmodified simple fields', function()
@@ -562,10 +562,10 @@ test('Update a childobject with modified child array (added entries) and unmodif
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>3,'element'=>6666]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>3,'element'=>6666]);
 });
 
 test('Update a childobject with modified child array (removed entries) and unmodified simple fields', function()
@@ -594,9 +594,9 @@ test('Update a childobject with modified child array (removed entries) and unmod
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
-    $this->assertDatabaseHas('childobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
-    $this->assertDatabaseMissing('childobjects_parent_sarray',['container_id'=>9,'index'=>2]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9,'index'=>2]);
 });
 
 test('Update a childobject with modified child array (cleared arrays) and unmodified simple fields', function()
@@ -623,7 +623,7 @@ test('Update a childobject with modified child array (cleared arrays) and unmodi
     $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
     $this->assertDatabaseHas('childobjects',['id'=>9,'parent_int'=>212,'parent_string'=>'BCD']);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9]);
-    $this->assertDatabaseMissing('childobjects_parent_sarray',['container_id'=>9]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9]);
 });
 
 it('update fails when a table is missing', function()
