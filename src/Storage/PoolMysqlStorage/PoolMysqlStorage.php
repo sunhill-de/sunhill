@@ -43,13 +43,15 @@ class PoolMysqlStorage extends PersistentPoolStorage
     
     protected function doCommitLoaded()
     {
+       $updater = new PoolMysqlUpdater($this->structure);
+       $updater->update($this->getID(),$this->getModifiedValues());
     }
     
     protected function doCommitNew()
     {
         $creator = new PoolMysqlCreator($this->structure);
         if (!($id = $creator->create($this->values))) {
-            
+            throw new IDNotFoundException("The id '$id' was not found.");            
         }
         return $id;
     }

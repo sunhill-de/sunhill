@@ -17,6 +17,7 @@ namespace Sunhill\Storage\PoolMysqlStorage;
 
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
+use function PHPUnit\Framework\arrayHasKey;
 
 class PoolMysqlUtility
 {
@@ -65,26 +66,34 @@ class PoolMysqlUtility
         }
     }
     
-    protected function getObjectFields(array $values,array $modified = [])
+    private function getField($field)
+    {
+        if (is_a($field, \stdClass::class)) {
+            return $field->new;
+        }
+        return $field;
+    }
+    
+    protected function getObjectFields(array $values)
     {
         $object_fields = ['_classname','_uuid','_read_cap','_modify_cap','_delete_cap','_created_at','_updated_at'];
         $result = [];    
 
         foreach ($object_fields as $field) {
-            if (empty($modified) || in_array($field, $modified)) {
-                $result[$field] = $values[$field];
+            if (array_key_exists($field, $values)) {
+                $result[$field] = $this->getField($values[$field]);
             }
         }
         return $result;
     }
     
-    protected function getTableFields(string $table, array $values, array $modified = [])
+    protected function getTableFields(string $table, array $values)
     {
         $fields = [];
         foreach ($this->structure as $name => $structure) {
             if (($structure->storage_subid == $table) && ($structure->type !== 'array')) {
-               if (empty($modified) || in_array($name, $modified)) {
-                   $fields[$name] = $values[$name];
+               if (array_key_exists($name, $values)) {
+                   $fields[$name] = $this->getField($values[$name]);
                }
             }
         }
