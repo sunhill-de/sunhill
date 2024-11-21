@@ -58,6 +58,8 @@ class PoolMysqlStorage extends PersistentPoolStorage
     
     protected function doMigrateNew()
     {
+        $migrator = new PoolMysqlFreshMigrator($this->structure);
+        $migrator->migrate();
     }
     
     protected function doMigrateUpdate()

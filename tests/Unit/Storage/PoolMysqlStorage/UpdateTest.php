@@ -10,6 +10,9 @@ require_once('PrepareStorage.php');
 
 uses(SunhillDatabaseTestCase::class);
 
+/**
+ * @todo Why is autoloading necessary?
+ */
 test('Update a dummy with dummyint modified', function()
 {
     $test = new PoolMysqlStorage();
@@ -18,7 +21,6 @@ test('Update a dummy with dummyint modified', function()
     $test->setValue('dummyint',123);
     $test->setValue('dummyint',1509);
     fillObjectsDataset($test, 'Dummy');
-        
     $test->commit();
 
     $this->assertDatabaseHas('objects',
