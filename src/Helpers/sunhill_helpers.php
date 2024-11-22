@@ -1,4 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
 /**
  * @file sunhill_helpers.php
  * A collection of gobally avaiable functions that are useful in the sunhill framework
@@ -35,4 +38,28 @@ function makeStdclass(array $values): \StdClass
 function getScalarMessage(string $message, mixed $variable,string $replace = ""): string
 {
     return str_replace(':variable',(is_scalar($variable))?"'$variable'":$replace,$message);
+}
+
+function DBTableExists(string $table_name): bool
+{
+    return Schema::hasTable($table_name);
+}
+
+function DBTableHasColumn(string $table_name, string $column_name): bool
+{
+    return Schema::hasColumn($table_name, $column_name);
+}
+
+function DBTableColumnType(string $table_name, string $column_name): string
+{
+    return DB::getSchemaBuilder()->getColumnType($table_name, $column_name);
+}
+
+function DBTableColumnAdditional(string $table_name, string $column_name): \stdClass
+{
+    $column = DB::connection()->getDoctrineColumn($table_name, $column_name);
+    $result = new \stdClass();
+    $result->length = $column->getLength();
+    
+    return $result;
 }
