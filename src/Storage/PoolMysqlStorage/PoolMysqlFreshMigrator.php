@@ -23,6 +23,9 @@ class PoolMysqlFreshMigrator extends PoolMysqlUtility
         
     private function migrateTable(string $name)
     {
+        if (!DBTableExists($name)) {
+            
+        }
     }
     
     private function migrateArrays()
