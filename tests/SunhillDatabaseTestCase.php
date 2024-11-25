@@ -38,7 +38,7 @@ class SunhillDatabaseTestCase extends TestCase
      */
     public function assertDatabaseHasTable(string $table)
     {
-        $this->assertTrue(Schema::hasTable($table));    
+        $this->assertTrue(DBTableExists($table));    
     }
     
     /**
@@ -48,7 +48,7 @@ class SunhillDatabaseTestCase extends TestCase
      */
     public function assertDatabaseHasNotTable(string $table)
     {
-        $this->assertFalse(Schema::hasTable($table));
+        $this->assertFalse(DBTableExists($table));
     }
     
     /**
@@ -59,19 +59,16 @@ class SunhillDatabaseTestCase extends TestCase
      */
     public function assertDatabaseTableHasColumn($table, $column)
     {
-        $table_fields = Schema::getColumnListing($table);
-        $this->assertTrue(in_array($column, $table_fields));
+        $this->assertTrue(DBTableHasColumn($table, $column));
     }
     
     public function assertDatabaseTableHasNotColumn($table, $column)
     {
-        $table_fields = Schema::getColumnListing($table);
-        $this->assertFalse(in_array($column, $table_fields));
+        $this->assertFalse(DBTableHasColumn($table, $column));
     }
     
     public function assertDatabaseTableColumnIsType($table, $column, $type)
     {
-        $detected_type = DB::connection()->getDoctrineColumn($table, $column)->getType()->getName();
-        $this->assertEquals($type, $detected_type);
+        $this->assertEquals($type, DBTableColumnType($table, $column));
     }
 }

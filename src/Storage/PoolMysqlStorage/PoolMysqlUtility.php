@@ -43,6 +43,17 @@ class PoolMysqlUtility
         return $result;
     }
     
+    protected function getFieldsOf(string $name)
+    {
+        $result = [];
+        foreach ($this->structure as $entry) {
+            if ($entry->storage_subid == $name) {
+                $result[] = $entry;
+            }
+        }
+        return $result;
+    }
+    
     protected function getArrays(): array
     {
         $result = [];

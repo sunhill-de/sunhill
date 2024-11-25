@@ -342,7 +342,7 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         $result->name = $this->getName();
         $result->type = $this->getAccessType();
         $result->element_type = $this->getAllowedElementTypes();
-        
+        $result->index_type = $this->getIndexType();        
         return $result;
     }
 

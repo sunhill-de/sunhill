@@ -20,6 +20,13 @@ use Sunhill\Storage\Exceptions\IDNotFoundException;
 
 class PoolMysqlStorage extends PersistentPoolStorage
 {
+
+    /**
+     * Loads the record with id '$id' from database
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\PersistentPoolStorage::doLoad()
+     */
     protected function doLoad(mixed $id)
     {
         $loader = new PoolMysqlLoader($this->structure);
@@ -28,6 +35,12 @@ class PoolMysqlStorage extends PersistentPoolStorage
         }
     }
     
+    /**
+     * Deleted the record with id '$id'
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\PersistentPoolStorage::doDelete()
+     */
     protected function doDelete(mixed $id)
     {
         $deleter = new PoolMysqlDeleter($this->structure);
@@ -36,17 +49,35 @@ class PoolMysqlStorage extends PersistentPoolStorage
         }
     }
     
+    /**
+     * Mysql database table expect integer as id
+     * 
+     * @param mixed $id
+     * @return bool
+     */
     protected function isValidID(mixed $id): bool
     {
         return is_int($id);
     }
     
+    /**
+     * Updates the already stored record into the database
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\PersistentPoolStorage::doCommitLoaded()
+     */
     protected function doCommitLoaded()
     {
        $updater = new PoolMysqlUpdater($this->structure);
        $updater->update($this->getID(),$this->getModifiedValues());
     }
     
+    /**
+     * Writes a new record into the database and returns its id
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\PersistentPoolStorage::doCommitNew()
+     */
     protected function doCommitNew()
     {
         $creator = new PoolMysqlCreator($this->structure);
@@ -56,6 +87,12 @@ class PoolMysqlStorage extends PersistentPoolStorage
         return $id;
     }
     
+    /**
+     * Creates all table that belong to the given structure
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractPersistentStorage::doMigrateNew()
+     */
     protected function doMigrateNew()
     {
         $migrator = new PoolMysqlFreshMigrator($this->structure);
@@ -66,8 +103,26 @@ class PoolMysqlStorage extends PersistentPoolStorage
     {
     }
     
+    protected function getStorageSubids(): array
+    {
+        $result = [];
+        foreach ($this->structure as $entry) {
+            if (!in_array($entry->storage_subid,$result)) {
+                $result[] = $entry->storage_subid;
+            }
+        }
+        return $result;
+    }
+        
     protected function isAlreadyMigrated(): bool
     {
+        $subids = $this->getStorageSubids();
+        foreach ($subids as $subid) {
+            if (!DBTableExists($subid)) {
+                return false;
+            }
+        }
+        return true;
     }
     
     protected function isMigrationUptodate(): bool
