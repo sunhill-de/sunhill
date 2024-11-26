@@ -98,9 +98,12 @@ class PoolMysqlStorage extends PersistentPoolStorage
         $migrator = new PoolMysqlFreshMigrator($this->structure);
         $migrator->migrate();
     }
+
+    protected $migrator;
     
     protected function doMigrateUpdate($info)
     {
+        $this->migrator->migrate($info);
     }
     
     protected function getStorageSubids(): array
@@ -127,6 +130,8 @@ class PoolMysqlStorage extends PersistentPoolStorage
     
     protected function migrationDirty()
     {
+        $this->migrator = new PoolMysqlUpdateMigrator($this->structure);
+        return $this->migrator->migrationDirty();
     }
     
 }
