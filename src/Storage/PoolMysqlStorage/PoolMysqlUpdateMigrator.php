@@ -106,14 +106,27 @@ class PoolMysqlUpdateMigrator extends PoolMysqlUtility
         }
     }
     
+    /**
+     * Deletes the given columns in table $table
+     * 
+     * @param string $table
+     * @param array $drop_columns
+     */
     private function dropColumns(string $table, array $drop_columns)
     {
         Schema::dropColumns($table, $drop_columns);
     }
     
+    /**
+     * Is executed when there is something to do
+     * 
+     * @param unknown $changes
+     * @return bool
+     */
     public function migrate($changes): bool
     {
         foreach ($changes as $table => $migration_steps) {
+            // Any dropped columns ?
             if (isset($migration_steps['dropped'])) {
                 $this->dropColumns($table, $migration_steps['dropped']);
             }
@@ -121,6 +134,12 @@ class PoolMysqlUpdateMigrator extends PoolMysqlUtility
         return true;
     }
     
+    /**
+     * Gets the columns that are no longe defined (to drop) for table $table
+     * 
+     * @param string $table
+     * @return unknown[] or null (if none)
+     */
     private function getDroppedColumns(string $table)
     {
         $result = [];
@@ -139,9 +158,31 @@ class PoolMysqlUpdateMigrator extends PoolMysqlUtility
         }
     }
     
+    private function addIfNotNull(array &$array, string $key, $test)
+    {
+        if (!empty($test)) {
+            $array[$key] = $test;
+        }
+    }
+    
     private function checkColumns(string $table, array &$result)
     {
+        $new = [];
+        $changed = [];
+        foreach ($this->getFieldsOf($table) as $field) {
+            if ($field->type == 'array') {
+                continue;
+            }
+            // Is this column in the table at all?
+            if (!DBTableHasColumn($table, $field->name)) {
+                $new[] = $field;
+            } else if ($field->type !== DBTableColumnType($table, $field->name)) {
+                $changed[] = $field->name;
+            } // @todo Add structure change test here            
+        }
         
+        $this->addIfNotNull($result, 'new', $new);
+        $this->addIfNotNull($result, 'changed', $changed);
     }
     
     private function checkArrays(string $table, array &$result)
