@@ -34,7 +34,7 @@ class DummyPersistentSingleStorage extends PersistentSingleStorage
         static::$persistent_data = 'migrated new';
     }
     
-    protected function doMigrateUpdate()
+    protected function doMigrateUpdate($info)
     {
         $this->structureNeeded();
         static::$persistent_data = 'migration changed';
@@ -45,10 +45,10 @@ class DummyPersistentSingleStorage extends PersistentSingleStorage
         return is_array(static::$persistent_data);
     }
     
-    protected function isMigrationUptodate(): bool
+    protected function migrationDirty()
     {
         $this->structureNeeded();
-        return isset(static::$persistent_data['str_field']);
+        return !isset(static::$persistent_data['str_field']);
     }
     
 }

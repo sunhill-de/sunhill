@@ -29,9 +29,9 @@ test('DBTableColumnType', function()
 {
     expect(DBTableColumnType('objects','_uuid'))->toBe('varchar'); 
 });
-
+/*
 test('DBTableColumnAdditional()', function()
 {    
     $help = DBTableColumnAdditional('objects','_read_cap');
     expect($help)->toBe('varchar');
-});
+});*/

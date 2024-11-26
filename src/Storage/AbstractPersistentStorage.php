@@ -22,6 +22,7 @@ use Sunhill\Storage\Exceptions\InvalidIDException;
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 use Sunhill\Storage\Exceptions\StructureNeededException;
+use League\CommonMark\Extension\CommonMark\Node\Block\ThematicBreak;
 
 abstract class AbstractPersistentStorage extends CommonStorage
 {
@@ -206,7 +207,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
      * This method should update the persistent storage so that it
      * fits to the current structure (like modifying database tables, files, etc.)
      */
-    protected function doMigrateUpdate()
+    protected function doMigrateUpdate($info)
     {
         // Does nothing by default
     }
@@ -222,11 +223,13 @@ abstract class AbstractPersistentStorage extends CommonStorage
     
     /**
      * Checks if the persistent storage medium is on its current state
-     * @return boolean
+     * 
+     * @return false if nothing to do otherwise this method can return any information to refresh ThematicBreak
+     * migration (to avoid getting twice the same information)=
      */
-    protected function isMigrationUptodate(): bool
+    protected function migrationDirty()
     {
-        return true;
+        return false;
     }
     
     final public function migrate()
@@ -235,8 +238,8 @@ abstract class AbstractPersistentStorage extends CommonStorage
             $this->doMigrateNew();
             return;
         }
-        if (!$this->isMigrationUptodate()) {
-            $this->doMigrateUpdate();
+        if (($info = $this->migrationDirty())) {
+            $this->doMigrateUpdate($info);
         }
     }
     

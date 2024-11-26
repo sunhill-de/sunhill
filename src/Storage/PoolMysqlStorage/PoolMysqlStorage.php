@@ -99,7 +99,7 @@ class PoolMysqlStorage extends PersistentPoolStorage
         $migrator->migrate();
     }
     
-    protected function doMigrateUpdate()
+    protected function doMigrateUpdate($info)
     {
     }
     
@@ -125,7 +125,7 @@ class PoolMysqlStorage extends PersistentPoolStorage
         return true;
     }
     
-    protected function isMigrationUptodate(): bool
+    protected function migrationDirty()
     {
     }
     
