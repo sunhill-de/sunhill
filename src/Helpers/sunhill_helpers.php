@@ -1,6 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\SQLiteConnection;
+use Illuminate\Database\MySqlConnection;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 
 /**
  * @file sunhill_helpers.php
@@ -50,16 +53,38 @@ function DBTableHasColumn(string $table_name, string $column_name): bool
     return Schema::hasColumn($table_name, $column_name);
 }
 
+function DBUnifyType(string $input): string
+{
+    $input = strtolower($input);
+    switch ($input) {hoz 
+        case 'varchar':
+            return 'string';           
+    }
+    return $input;
+}
+
 function DBTableColumnType(string $table_name, string $column_name): string
 {
-    return DB::getSchemaBuilder()->getColumnType($table_name, $column_name);
+    return DBUnifyType(DB::getSchemaBuilder()->getColumnType($table_name, $column_name));
 }
 
 function DBTableColumnAdditional(string $table_name, string $column_name): \stdClass
 {
-    $column = DB::connection()->getDoctrineColumn($table_name, $column_name);
     $result = new \stdClass();
-    $result->length = $column->getLength();
+
+    if (DB::connection() instanceof SQLiteConnection) {
+        $query = DB::select("PRAGMA table_info($table_name)");
+        $i = 0;
+        while (($query[$i]->name !== '$column_name') && ($i++ < count($query))) { }
+        if ($i == count($query)) {
+            throw new FieldNotAvaiableException("The column $column_name does not exist in this table");
+        }
+        $result->name = $column_name;
+        $result->type = DBUnifyType($result);
+    } else if (DB::connection() instanceof MySqlConnection) {
+        $query = DB::select('show full columns from $table_name where Field = "$column_name"');
+        
+    }
     
     return $result;
 }
