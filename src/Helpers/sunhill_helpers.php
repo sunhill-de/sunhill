@@ -56,7 +56,7 @@ function DBTableHasColumn(string $table_name, string $column_name): bool
 function DBUnifyType(string $input): string
 {
     $input = strtolower($input);
-    switch ($input) {hoz 
+    switch ($input) { 
         case 'varchar':
             return 'string';           
     }

@@ -27,7 +27,7 @@ test('DBTableHasColumn() fails', function()
 
 test('DBTableColumnType', function()
 {
-    expect(DBTableColumnType('objects','_uuid'))->toBe('varchar'); 
+    expect(DBTableColumnType('objects','_uuid'))->toBe('string'); 
 });
 
 test('DBTableColumnAdditional()', function()
