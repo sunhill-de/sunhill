@@ -18,6 +18,7 @@ namespace Sunhill\Storage\PoolMysqlStorage;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use function PHPUnit\Framework\arrayHasKey;
+use Sunhill\Storage\Exceptions\InvalidTypeException;
 
 class PoolMysqlUtility
 {
@@ -59,6 +60,17 @@ class PoolMysqlUtility
         $result = [];
         foreach ($this->structure as $entry) {
             if ($entry->type == 'array') {
+                $result[] = $entry;
+            }
+        }
+        return $result;
+    }
+    
+    protected function getArraysOf(string $table): array
+    {
+        $result = [];
+        foreach ($this->structure as $entry) {
+            if (($entry->storage_subid == $table) && ($entry->type == 'array')) {
                 $result[] = $entry;
             }
         }
@@ -109,5 +121,78 @@ class PoolMysqlUtility
             }
         }
         return $fields;
+    }
+    
+    protected function addFieldToSchema($schema, \stdClass $field) 
+    {
+        switch ($field->type) {
+            case 'string':
+                if (isset($field->max_length)) {
+                    $table_field = $schema->string($field->name, $field->max_length);
+                } else {
+                    $table_field = $schema->string($field->name);
+                }
+                break;
+            case 'array':
+                break;
+            case 'record':
+                $table_field = $schema->text($field->name);
+                break;
+            case 'boolean':
+                $table_field = $schema->bool($field->name);
+                break;
+            case 'integer':
+            case 'text':
+            case 'date':
+            case 'time':
+            case 'datetime':
+            case 'float':
+                $type = $field->type;
+                $table_field = $schema->$type($field->name);
+                break;
+            default:
+                throw new InvalidTypeException("The type '".$field->type."' is unknown.");
+        }
+        if (isset($field->default)) {
+            $table_field->default($field->default);
+        }
+        if (isset($field->nullable)) {
+            $table_field->nullable();
+        }        
+    }
+    
+    protected function addArray(string $table, string $index_type, string $element_type)
+    {
+        Schema::create($table, function($creator) use ($index_type, $element_type)
+        {
+            $creator->integer('container_id');
+            if ($index_type == 'integer') {
+                $creator->integer('index');
+            } else {
+                $creator->string('index');
+            }
+            $creator->$element_type('element');
+        });        
+    }
+    
+    public function getStructureMatrix()
+    {
+        $result = [];
+        foreach ($this->structure as $name => $structure) {
+            if ($structure->type == 'array') {
+                $name = $this->assembleArrayTableName($structure);
+                $result[$name] = $structure;
+            } else if (isset($result[$structure->storage_subid])) { 
+                $result[$structure->storage_subid][$name] = $structure;
+            } else {
+                $result[$structure->storage_subid] = [$name => $structure];
+            }
+        }
+        return $result;
+    }
+    
+    public function getDBMatrix()
+    {
+        
     }
 }

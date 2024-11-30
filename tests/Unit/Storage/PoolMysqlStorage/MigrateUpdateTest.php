@@ -84,7 +84,7 @@ test('column was added', function()
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
-    $this->assertDatabaseTableHasColumn('parentobjects','parent_str');
+    $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
 });
 
 test('array column was dropped', function()

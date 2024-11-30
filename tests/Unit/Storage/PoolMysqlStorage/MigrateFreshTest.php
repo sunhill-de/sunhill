@@ -30,7 +30,7 @@ test('Migrate fresh for parentobject', function()
     $test->migrate();
     
     $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_int', 'integer');
-    $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_string', 'varchar');
+    $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_string', 'string');
     $this->assertDatabaseHasTable('parentobjects_parent_sarray');
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','index','integer');
@@ -47,9 +47,9 @@ test('Migrate fresh for childobject', function()
     $test->migrate();
     
     $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_int', 'integer');
-    $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_string', 'varchar');
+    $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_string', 'string');
     $this->assertDatabaseTableColumnIsType('childobjects', 'child_int', 'integer');
-    $this->assertDatabaseTableColumnIsType('childobjects', 'child_string', 'varchar');
+    $this->assertDatabaseTableColumnIsType('childobjects', 'child_string', 'string');
     
     $this->assertDatabaseHasTable('parentobjects_parent_sarray');
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','container_id','integer');

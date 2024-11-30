@@ -44,7 +44,7 @@ function prepareStorage($test, string $type,bool $seed = true)
                 '_modified_at'=>makeStdclass(['name'=>'_modified_at','type'=>'datetime','storage_subid'=>'objects']),
                 'parent_int'=>makeStdclass(['name'=>'parent_int','type'=>'integer','storage_subid'=>'parentobjects']),
                 'parent_string'=>makeStdclass(['name'=>'parent_string','type'=>'string','max_length'=>3,'storage_subid'=>'parentobjects']),
-                'parent_sarray'=>makeStdClass(['name'=>'parent_sarray','type'=>'array','element_type'=>'Integer','storage_subid'=>'parentobjects']),
+                'parent_sarray'=>makeStdClass(['name'=>'parent_sarray','type'=>'array','index_type'=>'integer','element_type'=>'integer','storage_subid'=>'parentobjects']),
             ];
         case 'childobject':
             if ($seed) {
@@ -65,10 +65,10 @@ function prepareStorage($test, string $type,bool $seed = true)
                 '_modified_at'=>makeStdclass(['name'=>'_modified_at','type'=>'datetime','storage_subid'=>'objects']),
                 'parent_int'=>makeStdclass(['name'=>'parent_int','type'=>'integer','storage_subid'=>'parentobjects']),
                 'parent_string'=>makeStdclass(['name'=>'parent_string','type'=>'string','max_length'=>3,'storage_subid'=>'parentobjects']),
-                'parent_sarray'=>makeStdClass(['name'=>'parent_sarray','type'=>'array','element_type'=>'Integer','storage_subid'=>'parentobjects']),
+                'parent_sarray'=>makeStdClass(['name'=>'parent_sarray','type'=>'array','index_type'=>'integer','element_type'=>'Integer','storage_subid'=>'parentobjects']),
                 'child_int'=>makeStdclass(['name'=>'child_int','type'=>'integer','storage_subid'=>'childobjects']),
                 'child_string'=>makeStdclass(['name'=>'child_string','type'=>'string','max_length'=>3,'storage_subid'=>'childobjects']),
-                'child_sarray'=>makeStdClass(['name'=>'child_sarray','type'=>'array','element_type'=>'Integer','storage_subid'=>'childobjects']),
+                'child_sarray'=>makeStdClass(['name'=>'child_sarray','type'=>'array','index_type'=>'integer','element_type'=>'Integer','storage_subid'=>'childobjects']),
             ];
     }
 }
