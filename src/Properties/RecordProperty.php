@@ -200,7 +200,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     {
         $this->elements[$property->getName()] = $property;
         $structure = $property->getStructure();
-        $structure->storage_id = $storage_id??static::getStorageID();
+        $structure->storage_subid = $storage_id??static::getStorageID();
         $this->elements_structure[$property->getName()] = $structure;
     }
     

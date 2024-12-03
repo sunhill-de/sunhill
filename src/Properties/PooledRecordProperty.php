@@ -52,4 +52,11 @@ class PooledRecordProperty extends PersistentRecordProperty
         $storage = $this->getStorage();
         $storage->delete($id);        
     }
+    
+    public static function migrate()
+    {
+        $dummy = new static();
+        $storage = $dummy->getStorage();
+        $storage->migrate();
+    }
 }
