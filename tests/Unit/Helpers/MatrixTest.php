@@ -111,6 +111,32 @@ test('Level 1 diff (changed key)', function()
     expect($diff->changed->keyA)->toBe('newvalueA');
 });
 
+test('Level 1 diff (asterik on original)', function()
+{
+    $test1 = new Matrix();
+    $test1->setItem('keyA','*');
+    $test1->setItem('keyB','valueB');
+    
+    $test2 = new Matrix();
+    $test2->setItem('keyA','valueA');
+    $test2->setItem('keyB','valueB');
+    
+    expect($test1->diff($test2))->toBe(null);
+});
+
+test('Level 1 diff (asterik on compare)', function()
+{
+    $test1 = new Matrix();
+    $test1->setItem('keyA','valueA');
+    $test1->setItem('keyB','valueB');
+    
+    $test2 = new Matrix();
+    $test2->setItem('keyA','*');
+    $test2->setItem('keyB','valueB');
+    
+    expect($test1->diff($test2))->toBe(null);
+});
+
 test('Level 2 diff (no change)', function()
 {
     $test1 = new Matrix();

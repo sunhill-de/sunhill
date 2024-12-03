@@ -116,7 +116,7 @@ class Matrix extends Base
                     if ($change = $this->doDiff($value, $compare->$key)) {
                         $result->$key = $change;
                     }
-                } else if ($value !== $compare->$key) {
+                } else if (($value !== '*') && ($compare->$key !== '*') && ($value !== $compare->$key)) {
                     $result->$key = $original->$key;                    
                 }
             }
