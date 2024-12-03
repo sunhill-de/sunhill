@@ -123,23 +123,23 @@ class PoolMysqlUtility
         return $fields;
     }
     
-    protected function addFieldToSchema($schema, \stdClass $field) 
+    protected function createField($schema, string $name, string $type, $additional = null)
     {
-        switch ($field->type) {
+        switch (strtolower($type)) {
             case 'string':
-                if (isset($field->max_length)) {
-                    $table_field = $schema->string($field->name, $field->max_length);
+                if (!is_null($additional)) {
+                    $table_field = $schema->string($name, $additional);
                 } else {
-                    $table_field = $schema->string($field->name);
+                    $table_field = $schema->string($name);
                 }
                 break;
             case 'array':
                 break;
             case 'record':
-                $table_field = $schema->text($field->name);
+                $table_field = $schema->text($name);
                 break;
             case 'boolean':
-                $table_field = $schema->bool($field->name);
+                $table_field = $schema->bool($name);
                 break;
             case 'integer':
             case 'text':
@@ -147,18 +147,24 @@ class PoolMysqlUtility
             case 'time':
             case 'datetime':
             case 'float':
-                $type = $field->type;
-                $table_field = $schema->$type($field->name);
+                $table_field = $schema->$type($name);
                 break;
             default:
-                throw new InvalidTypeException("The type '".$field->type."' is unknown.");
+                throw new InvalidTypeException("The type '$type' is unknown.");
         }
+        return $table_field;
+    }
+    
+    protected function addFieldToSchema($schema, \stdClass $field) 
+    {
+        $table_field = $this->createField($schema, $field->name, $field->type, isset($field->max_length)?$field->max_length:null);
         if (isset($field->default)) {
             $table_field->default($field->default);
         }
         if (isset($field->nullable)) {
             $table_field->nullable();
         }        
+        return $table_field;
     }
     
     protected function addArray(string $table, string $index_type, string $element_type)

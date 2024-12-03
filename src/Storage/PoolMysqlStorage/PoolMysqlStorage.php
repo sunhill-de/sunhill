@@ -95,8 +95,6 @@ class PoolMysqlStorage extends PersistentPoolStorage
      */
     protected function doMigrateNew()
     {
-        $migrator = new PoolMysqlFreshMigrator($this->structure);
-        $migrator->migrate();
     }
 
     protected $migrator;
@@ -119,18 +117,12 @@ class PoolMysqlStorage extends PersistentPoolStorage
         
     protected function isAlreadyMigrated(): bool
     {
-        $subids = $this->getStorageSubids();
-        foreach ($subids as $subid) {
-            if (!DBTableExists($subid)) {
-                return false;
-            }
-        }
         return true;
     }
     
     protected function migrationDirty()
     {
-        $this->migrator = new PoolMysqlUpdateMigrator($this->structure);
+        $this->migrator = new PoolMysqlMigrator($this->structure);
         return $this->migrator->migrationDirty();
     }
     
