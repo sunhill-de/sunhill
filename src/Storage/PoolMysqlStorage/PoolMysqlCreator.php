@@ -63,7 +63,7 @@ class PoolMysqlCreator extends PoolMysqlUtility
         return [];    
     }
     
-    public function create(array $values): bool
+    public function create(array $values): int
     {
         $id = $this->createObject($values);
         foreach ($this->getStorageSubids() as $subid) {
@@ -74,6 +74,6 @@ class PoolMysqlCreator extends PoolMysqlUtility
         $this->createArrays($id, $values);
         $this->createTags($id, $values);
         $this->createAttributes($id, $values);
-        return true;
+        return $id;
     }
 }
