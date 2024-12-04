@@ -17,6 +17,13 @@ namespace Sunhill\Objects;
 use Sunhill\Properties\PooledRecordProperty;
 use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Sunhill\Storage\AbstractStorage;
+use Illuminate\Support\Str;
+use Sunhill\Semantics\UUID4;
+use Sunhill\Properties\ElementBuilder;
+use Sunhill\Properties\RecordProperty;
+use Sunhill\Semantics\Name;
+use Sunhill\Types\TypeVarchar;
+use Sunhill\Types\TypeDateTime;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -27,6 +34,46 @@ class ORMObject extends PooledRecordProperty
 {
     
     protected static $inherited_inclusion = 'embed';
+
+    public function __construct(?callable $elements = null)
+    {
+        parent::__construct($elements);
+        $this->forceElement(UUID4::class, '_uuid');
+        $this->forceElement(Name::class, '_classname');
+        $this->forceElement(TypeVarchar::class,'_read_cap');
+        $this->forceElement(TypeVarchar::class,'_modify_cap');
+        $this->forceElement(TypeVarchar::class,'_delete_cap');
+        $this->forceElement(TypeDateTime::class,'_created_at');
+        $this->forceElement(TypeDateTime::class,'_updated_at');
+    }
+    
+    private function forceElement(string $class, string $name)
+    {
+        $element = new $class();
+        $element->forceName($name);
+        $this->appendElement($element);
+    }
+    
+    public function create()
+    {
+        parent::create();
+        $this->_uuid = (string)Str::uuid();
+        $this->_classname = static::getInfo('name');
+    }
+    
+    private function updateTimesstamps()
+    {
+        if (!$this->getID()) {
+            $this->_created_at = now();
+        }
+        $this->_updated_at = now();        
+    }
+    
+    public function commit()
+    {
+        $this->updateTimesstamps();
+        parent::commit();
+    }
     
     protected function createStorage(): ?AbstractStorage
     {
