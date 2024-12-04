@@ -57,3 +57,16 @@ test('modify a dummy', function()
 
     $this->assertDatabaseHas('dummies',['id'=>1,'dummyint'=>20]);    
 })->depends('load a dummy');
+
+test('delete a dummy', function()
+{
+    $write = new Dummy();
+    $write->create();
+    $write->dummyint = 10;
+    $write->commit();
+    
+    $write->delete(1);
+    
+    $this->assertDatabaseMissing('dummies',['id'=>1,'dummyint'=>20]);    
+})->depends('load a dummy');
+
