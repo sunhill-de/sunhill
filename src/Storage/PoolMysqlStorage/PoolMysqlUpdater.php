@@ -24,7 +24,11 @@ class PoolMysqlUpdater extends PoolMysqlUtility
     private function updateObject(int $id, array $values)
     {
         $this->tableNeeded('objects');
-        DB::table('objects')->where('id', $id)->update($this->getObjectFields($values));
+        $object_fields = $this->getObjectFields($values);
+        if (empty($object_fields)) {
+            return true;
+        }
+        DB::table('objects')->where('id', $id)->update($object_fields);
         return true;
     }
     
