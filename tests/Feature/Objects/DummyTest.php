@@ -42,3 +42,18 @@ test('load a dummy', function()
     $test->load($id);
     expect($test->dummyint)->toBe(10);
 })->depends('create a dummy');
+
+test('modify a dummy', function()
+{
+    $write = new Dummy();
+    $write->create();
+    $write->dummyint = 10;
+    $write->commit();
+    
+    $test = new Dummy();
+    $test->load($write->getID());
+    $test->dummyint = 20;
+    $test->commit();
+
+    $this->assertDatabaseHas('dummies',['id'=>1,'dummyint'=>20]);    
+})->depends('load a dummy');
