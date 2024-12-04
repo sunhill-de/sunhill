@@ -27,3 +27,18 @@ test('create a dummy', function()
     expect(is_null($query->_created_at))->toBe(false);
     expect(($query->_created_at == $query->_updated_at))->toBe(true);
 })->depends('migrate Dummy');
+
+test('load a dummy', function()
+{
+    $write = new Dummy();
+    $write->create();
+    $write->dummyint = 10;
+    $write->commit();
+    
+    $id = $write->getID();
+    expect($id)->toBe(1);
+    
+    $test = new Dummy();
+    $test->load($id);
+    expect($test->dummyint)->toBe(10);
+})->depends('create a dummy');
