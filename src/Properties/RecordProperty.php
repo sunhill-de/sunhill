@@ -294,11 +294,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
             throw new PropertyNotFoundException("The property '$varname' does not exist.");
         }        
         $property = $this->elements[$varname];
-        if (in_array($property::class,[ArrayProperty::class])) {
-            return $property;
-        } else {
-            return $property->setValue($value);
-        }
+        return $property->setValue($value);
     }
     
     /**
