@@ -13,7 +13,7 @@ class ParentObject extends ORMObject
     {
         $builder->addProperty(TypeInteger::class,'parent_int');
         $builder->addProperty(TypeVarchar::class,'parent_string')->setMaxLen(3);
-        $builder->array('parent_sarray')->getAllowedElementTypes(TypeInteger::class);
+        $builder->array('parent_sarray')->setAllowedElementTypes(TypeInteger::class);
     }
     
     protected static function setupInfos()

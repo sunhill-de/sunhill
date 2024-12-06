@@ -336,12 +336,31 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         return (($this->current >= 0) && ($this->current < $this->count()));
     }
     
+    private function getElementType(): string
+    {
+        if (count($this->getAllowedElementTypes()) == 0) {
+            return 'string'; // Default element type is string
+        }
+        if (count($this->getAllowedElementTypes()) == 1) {
+            return $this->getAllowedElementTypes()[0]::getAccessType();
+        }
+        
+        $matrix = ['boolean'=>1,'integer'=>2,'float'=>3,'date'=>4,'datetime'=>4,'time'=>4,'string'=>4,'text'=>5];
+        $reverse_matrix = ['boolean','integer','float','string','text'];
+
+        $highest = 0;
+        foreach ($this->getAllowedElementTypes() as $type) {
+            $highest = ($matrix[$type::getAccessType()] > $highest)?$matrix[$type::getAccessType()]:$highest;
+        }
+        return $reverse_matrix[$highest];
+    }
+    
     public function getStructure()
     {
         $result = new \stdClass();
-        $result->name = $this->getName();
-        $result->type = $this->getAccessType();
-        $result->element_type = $this->getAllowedElementTypes();
+        $result->name = static::getName();
+        $result->type = static::getAccessType();
+        $result->element_type = $this->getElementType();
         $result->index_type = $this->getIndexType();        
         return $result;
     }
