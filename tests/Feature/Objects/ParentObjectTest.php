@@ -67,7 +67,7 @@ test('modify a ParentObject', function()
     $test->commit();
 
     $this->assertDatabaseHas('parentobjects',['id'=>1,'parent_int'=>20,'parent_String'=>'def']);    
-    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>1,'index'=>4,'element'=>4]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>1,'index'=>3,'element'=>4]);
 })->depends('load a ParentObject');
 
 test('delete a ParentObject', function()
