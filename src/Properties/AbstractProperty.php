@@ -1076,7 +1076,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Metadata
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'none';
     }
@@ -1088,7 +1088,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Metadata
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return [];
     }
@@ -1100,7 +1100,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Metadata
      */
-    public function getUnit(): string
+    public static function getUnit(): string
     {
         return 'none';
     }
@@ -1118,7 +1118,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Metadata
      */
-    public function getUpdate(): string
+    public static function getUpdate(): string
     {
         return 'ASAP';    
     }
@@ -1142,7 +1142,7 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Metadata
      */
-    abstract public function getAccessType(): string;
+    abstract public static function getAccessType(): string;
     
     /**
      * Assembles the metadata of this property and returns them as a associative array
@@ -1151,14 +1151,14 @@ abstract class AbstractProperty extends Base
      * 
      * @wiki /Properties#Metadata
      */
-    public function getMetadata()
+    public static function getMetadata()
     {
         $result = [];
-        $result['semantic'] = $this->getSemantic();
-        $result['semantic_keywords'] = $this->getSemanticKeywords();
-        $result['unit'] = $this->getUnit();
-        $result['type'] = $this->getAccessType();
-        $result['update'] = $this->getUpdate();
+        $result['semantic'] = static::getSemantic();
+        $result['semantic_keywords'] = static::getSemanticKeywords();
+        $result['unit'] = static::getUnit();
+        $result['type'] = static::getAccessType();
+        $result['update'] = static::getUpdate();
         return $result;
     }
     

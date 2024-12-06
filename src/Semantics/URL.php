@@ -20,7 +20,7 @@ class URL extends IDString
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'url';
     }
@@ -30,7 +30,7 @@ class URL extends IDString
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['id','computer'];
     }

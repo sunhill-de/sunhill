@@ -48,7 +48,7 @@ class ReferenceProperty extends AbstractProperty
         return false;
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'record';
     }

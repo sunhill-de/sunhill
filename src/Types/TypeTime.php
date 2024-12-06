@@ -45,7 +45,7 @@ class TypeTime extends TypeDateTime
      * {@inheritDoc}
      * @see Sunhill\\Types\TypeDateTime::getAccessType()
      */
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'time';
     }

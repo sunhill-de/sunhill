@@ -296,7 +296,7 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         }
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'array';
     }

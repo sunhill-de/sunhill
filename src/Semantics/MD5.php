@@ -20,7 +20,7 @@ class MD5 extends IDString
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'md5';
     }
@@ -30,7 +30,7 @@ class MD5 extends IDString
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['id','computer'];
     }

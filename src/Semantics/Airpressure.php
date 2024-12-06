@@ -22,7 +22,7 @@ class Airpressure extends Pressure
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'airpressure';
     }
@@ -32,7 +32,7 @@ class Airpressure extends Pressure
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['pressure','weather'];
     }
@@ -42,7 +42,7 @@ class Airpressure extends Pressure
      *
      * @return string
      */
-    public function getUnit(): string
+    public static function getUnit(): string
     {
         return 'hectopascal';
     }

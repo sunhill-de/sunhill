@@ -22,7 +22,7 @@ class Pressure extends TypeFloat
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'pressure';
     }
@@ -32,7 +32,7 @@ class Pressure extends TypeFloat
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['pressure'];
     }
@@ -42,7 +42,7 @@ class Pressure extends TypeFloat
      *
      * @return string
      */
-    public function getUnit(): string
+    public static function getUnit(): string
     {
         return 'pascal';
     }

@@ -88,7 +88,7 @@ class TypeDateTime extends AbstractSimpleProperty
         return new \DateTime($output);
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'datetime';
     }

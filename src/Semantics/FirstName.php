@@ -22,7 +22,7 @@ class FirstName extends Name
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'first_name';
     }

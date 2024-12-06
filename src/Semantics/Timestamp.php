@@ -22,7 +22,7 @@ class Timestamp extends TypeDateTime
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'timestamp';
     }
@@ -32,7 +32,7 @@ class Timestamp extends TypeDateTime
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['time'];
     }

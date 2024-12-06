@@ -20,7 +20,7 @@ class UUID4 extends IDString
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'uuid4';
     }
@@ -30,7 +30,7 @@ class UUID4 extends IDString
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['id','computer'];
     }

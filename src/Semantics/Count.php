@@ -27,7 +27,7 @@ class Count extends TypeInteger
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'count';
     }
@@ -37,7 +37,7 @@ class Count extends TypeInteger
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['count'];
     }

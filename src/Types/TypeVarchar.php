@@ -109,7 +109,7 @@ class TypeVarchar extends AbstractSimpleProperty
         return substr($input,0,$this->max_length);
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'string';
     }

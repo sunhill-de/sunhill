@@ -19,7 +19,7 @@ class NonAbstractProperty extends AbstractProperty
         $this->setName('test_int');
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'integer';
     }

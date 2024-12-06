@@ -58,7 +58,7 @@ class TypeBoolean extends AbstractSimpleProperty
         }
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'boolean';
     }

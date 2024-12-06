@@ -32,7 +32,7 @@ class TypeDate extends TypeDateTime
         return $input->format('j.n.Y');    
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'date';
     }

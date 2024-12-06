@@ -58,7 +58,7 @@ class TypeEnum extends AbstractSimpleProperty
         return in_array($input, $this->allowed_values);
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'string';
     }

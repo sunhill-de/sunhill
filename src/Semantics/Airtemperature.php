@@ -22,7 +22,7 @@ class Airtemperature extends Temperature
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'airtemperature';
     }
@@ -32,7 +32,7 @@ class Airtemperature extends Temperature
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['temperature','weather'];
     }

@@ -22,7 +22,7 @@ class Name extends TypeVarchar
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'name';
     }
@@ -32,7 +32,7 @@ class Name extends TypeVarchar
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['name'];
     }

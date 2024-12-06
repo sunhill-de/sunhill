@@ -22,7 +22,7 @@ class Temperature extends TypeFloat
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'temperature';
     }
@@ -32,7 +32,7 @@ class Temperature extends TypeFloat
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['temperature'];
     }
@@ -42,7 +42,7 @@ class Temperature extends TypeFloat
      *
      * @return string
      */
-    public function getUnit(): string
+    public static function getUnit(): string
     {
         return 'degreecelsius';
     }

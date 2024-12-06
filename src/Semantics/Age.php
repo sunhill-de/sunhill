@@ -22,7 +22,7 @@ class Age extends TypeInteger
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'age';
     }
@@ -32,7 +32,7 @@ class Age extends TypeInteger
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['time'];
     }
@@ -42,7 +42,7 @@ class Age extends TypeInteger
      *
      * @return string
      */
-    public function getUnit(): string
+    public static function getUnit(): string
     {
         return 'second';
     }

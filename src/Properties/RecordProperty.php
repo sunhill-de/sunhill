@@ -99,7 +99,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     }
     
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'record';
     }

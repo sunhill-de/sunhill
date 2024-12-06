@@ -22,7 +22,7 @@ class NetworkAddress extends TypeVarchar
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'network_address';
     }
@@ -32,7 +32,7 @@ class NetworkAddress extends TypeVarchar
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['network'];
     }

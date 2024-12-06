@@ -101,7 +101,7 @@ class TypeCollection extends AbstractSimpleProperty
         return $input;
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'record';
     }

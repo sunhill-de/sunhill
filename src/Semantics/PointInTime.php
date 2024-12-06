@@ -22,7 +22,7 @@ class PointInTime extends TypeDate
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'pointintime';
     }
@@ -32,7 +32,7 @@ class PointInTime extends TypeDate
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['time'];
     }

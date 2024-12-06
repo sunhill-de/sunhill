@@ -21,7 +21,7 @@ class TypeInteger extends TypeNumeric
         return (ctype_digit($input) || is_int($input));
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'integer';
     }

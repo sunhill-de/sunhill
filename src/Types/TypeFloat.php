@@ -42,7 +42,7 @@ class TypeFloat extends TypeNumeric
         return is_numeric($input);
     }
 
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'float';
     }

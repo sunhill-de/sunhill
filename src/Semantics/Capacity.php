@@ -30,7 +30,7 @@ class Capacity extends TypeInteger
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'capacity';
     }
@@ -40,7 +40,7 @@ class Capacity extends TypeInteger
      *
      * @return array
      */
-    public function getSemanticKeywords(): array
+    public static function getSemanticKeywords(): array
     {
         return ['computer'];
     }
@@ -50,7 +50,7 @@ class Capacity extends TypeInteger
      *
      * @return string
      */
-    public function getUnit(): string
+    public static function getUnit(): string
     {
         return 'byte';
     }

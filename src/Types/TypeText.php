@@ -29,7 +29,7 @@ class TypeText extends AbstractSimpleProperty
         return is_scalar($input);
     }
 
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'text';
     }

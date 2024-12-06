@@ -20,7 +20,7 @@ class IPv4Address extends NetworkAddress
      *
      * @return string
      */
-    public function getSemantic(): string
+    public static function getSemantic(): string
     {
         return 'ipv4_address';
     }

@@ -47,7 +47,7 @@ class TypeCalculated extends AbstractSimpleProperty
         return true;
     }
     
-    public function getAccessType(): string
+    public static function getAccessType(): string
     {
         return 'string';
     }
