@@ -39,6 +39,9 @@ class PoolMysqlCreator extends PoolMysqlUtility
     private function createArrays(int $id, array $values)
     {
         foreach ($this->getArrays() as $array) {
+            if (!isset($values[$array->name])) {
+                continue; // Arrays could be empty
+            }
             $table = $this->assembleArrayTableName($array);
             $this->tableNeeded($table);
             $dataset = [];
