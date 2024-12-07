@@ -24,6 +24,7 @@ use Sunhill\Properties\RecordProperty;
 use Sunhill\Semantics\Name;
 use Sunhill\Types\TypeVarchar;
 use Sunhill\Types\TypeDateTime;
+use Sunhill\Query\BasicQuery;
 
 /**
  * The basic class for default storable records (in this case objects)

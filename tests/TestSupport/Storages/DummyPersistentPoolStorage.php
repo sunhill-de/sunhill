@@ -4,6 +4,7 @@ namespace Sunhill\Tests\TestSupport\Storages;
 
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\PersistentPoolStorage;
+use Sunhill\Query\BasicQuery;
 
 class DummyPersistentPoolStorage extends PersistentPoolStorage
 {
@@ -78,6 +79,11 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
     {
         $this->structureNeeded();
         return !isset(static::$persistent_data[1]['str_field']);
+    }
+    
+    protected function doQuery(): BasicQuery
+    {
+        
     }
     
 }

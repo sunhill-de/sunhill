@@ -18,6 +18,7 @@ namespace Sunhill\Properties;
 use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Query\BasicQuery;
 
 class PooledRecordProperty extends PersistentRecordProperty
 {
@@ -53,10 +54,26 @@ class PooledRecordProperty extends PersistentRecordProperty
         $storage->delete($id);        
     }
     
+    /**
+     * Executes a migration for this kind of pooled record
+     */
     public static function migrate()
     {
         $dummy = new static();
         $storage = $dummy->getStorage();
         $storage->migrate();
     }
+    
+    /**
+     * Executes a query on data of this kind of object
+     *
+     * @return BasicQuery
+     */
+    public static function query(): BasicQuery
+    {
+        $dummy = new static();  // An instance of an object is necessary because the storage system works only on instances
+        $storage = $dummy->getStorage();
+        return $storage->query();
+    }
+        
 }

@@ -17,6 +17,7 @@ namespace Sunhill\Storage\PoolMysqlStorage;
 
 use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Query\BasicQuery;
 
 class PoolMysqlStorage extends PersistentPoolStorage
 {
@@ -126,4 +127,15 @@ class PoolMysqlStorage extends PersistentPoolStorage
         return $this->migrator->migrationDirty();
     }
     
+    protected $target_subid;
+    
+    public function setTargetSubID(string $target_subid)
+    {
+        $this->target_subid = $target_subid;    
+    }
+    
+    protected function doQuery(): BasicQuery
+    {
+        return new PoolMysqlQuery($this->target_subid, $this->structure);
+    }
 }

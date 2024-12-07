@@ -4,6 +4,7 @@ namespace Sunhill\Tests\Feature\Properties\PooledRecordProperty\Examples;
 
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\PersistentPoolStorage;
+use Sunhill\Query\BasicQuery;
 
 class DummyPersistentPoolStorage extends PersistentPoolStorage
 {
@@ -80,5 +81,10 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         }
         return $id;
     }
+    
+    protected function doQuery(): BasicQuery
+    {
         
+    }
+    
 }
