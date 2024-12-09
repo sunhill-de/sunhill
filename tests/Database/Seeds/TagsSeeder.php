@@ -50,14 +50,14 @@ class TagsSeeder extends Seeder
             [
                 'id'=>7,
                 'name'=>'TagF',
-                'options'=>6,
-                'parent_id'=>null,
+                'options'=>0,
+                'parent_id'=>6,
             ],
             [
                 'id'=>8,
                 'name'=>'TagG',
-                'options'=>7,
-                'parent_id'=>null,
+                'options'=>0,
+                'parent_id'=>7,
             ],
         ]);    
     }

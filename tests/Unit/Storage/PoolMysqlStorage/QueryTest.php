@@ -65,4 +65,3 @@ test('Query a dummy', function($callback, $expect, $manipulator = null)
     'count() with where 2'=>[function($query) { return $query->where('dummyint','>',111)->count(); },3],
     'count() with 2xwhere'=>[function($query) { return $query->where('dummyint','>',111)->where('dummyint','<',555)->count(); },2],
     ]);
-
