@@ -75,12 +75,14 @@ function DBTableColumnAdditional(string $table_name, string $column_name): \stdC
     if (DB::connection() instanceof SQLiteConnection) {
         $query = DB::select("PRAGMA table_info($table_name)");
         $i = 0;
-        while (($query[$i]->name !== '$column_name') && ($i++ < count($query))) { }
+        while (($i < count($query)) && ($query[$i]->name !== $column_name)) { $i++; }
         if ($i == count($query)) {
             throw new FieldNotAvaiableException("The column $column_name does not exist in this table");
         }
         $result->name = $column_name;
-        $result->type = DBUnifyType($result);
+        $result->type = DBUnifyType($query[$i]->type);
+        $result->nullable = !$query[$i]->notnull;
+        $result->default = $query[$i]->dflt_value;
     } else if (DB::connection() instanceof MySqlConnection) {
         $query = DB::select('show full columns from $table_name where Field = "$column_name"');
         

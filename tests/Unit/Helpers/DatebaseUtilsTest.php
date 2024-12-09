@@ -33,5 +33,6 @@ test('DBTableColumnType', function()
 test('DBTableColumnAdditional()', function()
 {    
     $help = DBTableColumnAdditional('objects','_read_cap');
-    expect($help)->toBe('string');
+    expect($help->type)->toBe('string');
+    expect($help->nullable)->toBe(true);
 });
