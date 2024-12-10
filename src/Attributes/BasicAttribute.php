@@ -14,42 +14,28 @@
 
 namespace Sunhill\Attributes;
 
-use Sunhill\Storage\PersistentPoolStorage;
-use Sunhill\Query\BasicQuery;
+use Sunhill\Properties\PooledRecordProperty;
+use Sunhill\Properties\ElementBuilder;
+use Sunhill\Properties\AbstractProperty;
 
-class BasicAttribute extends PersistentPoolStorage
+class BasicAttribute extends PooledRecordProperty
 {
   
+    protected static $inherited_inclusion = 'none';
+    
     public static $attribute_name = '';
-    
-    protected function calculateStorageName(): string
-    {
-        return 'attribute_'.strtolower(static::$attribute_name);    
-    }
-    
-    protected function doCommitNew()
-    {
-        
-    }
-    
-    protected function doDelete(mixed $id)
-    {
-        
-    }
-    
-    protected function doCommitLoaded()
-    {
-        
-    }
-    
-    protected function doLoad(mixed $id)
-    {
-        
-    }
-    
-    protected function doQuery(): BasicQuery
-    {
-        
-    }
+  
+    protected static $value_type = AbstractProperty::class;
 
+    protected static function getValueType(): string
+    {
+        return static::$value_type;    
+    }
+    
+    protected static function initializeRecord(ElementBuilder $builder)
+    {
+        $type = static::getValueType();
+        $builder->addProperty(static::getValueType(),'value');
+    }
+        
 }

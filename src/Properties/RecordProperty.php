@@ -94,7 +94,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         $pointer = $this::class;
         while ($pointer !== RecordProperty::class) {
             $this->initializeChild($pointer);
-            $pointer = get_parent_class($pointer);
+            $pointer = (static::$inherited_inclusion == 'none')?RecordProperty::class:get_parent_class($pointer);
         }
     }
     
