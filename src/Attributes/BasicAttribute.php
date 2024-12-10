@@ -17,6 +17,8 @@ namespace Sunhill\Attributes;
 use Sunhill\Properties\PooledRecordProperty;
 use Sunhill\Properties\ElementBuilder;
 use Sunhill\Properties\AbstractProperty;
+use Sunhill\Storage\AbstractStorage;
+use Sunhill\Storage\PoolMysqlStorage\MysqlAttributeStorage;
 
 class BasicAttribute extends PooledRecordProperty
 {
@@ -36,6 +38,12 @@ class BasicAttribute extends PooledRecordProperty
     {
         $type = static::getValueType();
         $builder->addProperty(static::getValueType(),'value');
+    }
+     
+    protected function createStorage(): ?AbstractStorage
+    {
+        $storage = new MysqlAttributeStorage();
+        return $storage;
     }
         
 }
