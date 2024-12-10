@@ -88,6 +88,15 @@ class PoolMysqlQuery extends BasicQuery
                 case 'and':
                     $query = $query->where($this->getLetterOfField($condition->key).'.'.$condition->key,$condition->relation,$condition->value);
                     break;
+                case 'or':
+                    $query = $query->orWhere($this->getLetterOfField($condition->key).'.'.$condition->key,$condition->relation,$condition->value);
+                    break;
+                case 'andnot':
+                    $query = $query->whereNot($this->getLetterOfField($condition->key).'.'.$condition->key,$condition->relation,$condition->value);
+                    break;
+                case 'ornot':
+                    $query = $query->orWhereNot($this->getLetterOfField($condition->key).'.'.$condition->key,$condition->relation,$condition->value);
+                    break;
             }
         }
         

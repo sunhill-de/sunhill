@@ -64,4 +64,7 @@ test('Query a dummy', function($callback, $expect, $manipulator = null)
     'count() with where 1'=>[function($query) { return $query->where('dummyint',111)->count(); },2],
     'count() with where 2'=>[function($query) { return $query->where('dummyint','>',111)->count(); },3],
     'count() with 2xwhere'=>[function($query) { return $query->where('dummyint','>',111)->where('dummyint','<',555)->count(); },2],
+    'count() with orWhere'=>[function($query) { return $query->where('dummyint','=',111)->orWhere('dummyint','=',555)->count(); },3],
+    'count() with whereNot'=>[function($query) { return $query->where('dummyint','>',111)->whereNot('dummyint','=',555)->count(); },2],
+    'count() with orWhereNot'=>[function($query) { return $query->where('dummyint','>',444)->orWhereNot('dummyint','<',222)->count(); },3],
     ]);
