@@ -13,7 +13,7 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Storage\PoolMysqlStorage;
+namespace Sunhill\Storage\MysqlStorages;
 
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
