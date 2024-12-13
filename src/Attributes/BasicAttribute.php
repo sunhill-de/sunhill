@@ -18,7 +18,7 @@ use Sunhill\Properties\PooledRecordProperty;
 use Sunhill\Properties\ElementBuilder;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Storage\AbstractStorage;
-use Sunhill\Storage\PoolMysqlStorage\MysqlAttributeStorage;
+use Sunhill\Storage\MysqlStorages\MysqlAttributeStorage;
 
 class BasicAttribute extends PooledRecordProperty
 {
