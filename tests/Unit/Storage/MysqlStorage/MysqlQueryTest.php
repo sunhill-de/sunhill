@@ -19,7 +19,20 @@ test('select query over one table', function()
     expect($list->id)->toBe(4);
 });
 
-test('select query with one join', function()
+test('select query over one table with where', function()
+{
+    $scenario = new DatabaseScenario($this);
+    $scenario->migrate();
+    $scenario->seed();
+    
+    $test = new MysqlQuery('tableA');
+    $test = $test->where('value','>',200)->orderBy('value');
+    $list = $test->first();
+    
+    expect($list->id)->toBe(1);
+});
+
+test('select query with one default join', function()
 {
     $scenario = new DatabaseScenario($this);
     $scenario->migrate();
@@ -30,3 +43,43 @@ test('select query with one join', function()
     
     expect($list->Bvalue)->toBe(123);
 });
+
+test('select query with one individual join', function()
+{
+    $scenario = new DatabaseScenario($this);
+    $scenario->migrate();
+    $scenario->seed();
+    
+    $test = new MysqlQuery('tableA');
+    $list = $test->join('tableB','link_to_tableB')->orderBy('value')->first();
+    
+    expect($list->Bvalue)->toBe(123);
+});
+
+test('select query with one individual join and where', function()
+{
+    $scenario = new DatabaseScenario($this);
+    $scenario->migrate();
+    $scenario->seed();
+    
+    $test = new MysqlQuery('tableA');
+    $list = $test->join('tableB','link_to_tableB')->where('value','>',200)->orderBy('value','desc')->first();
+    
+    expect($list->Bvalue)->toBe(400);
+});
+
+
+test('select query with one individual join with two non default names and where', function()
+{
+    $scenario = new DatabaseScenario($this);
+    $scenario->migrate();
+    $scenario->seed();
+    
+    $test = new MysqlQuery('tableA');
+    $list = $test->join('tableC','link_to_tableB','other_id')->where('value','>',200)->orderBy('value','desc')->first();
+    
+    expect($list->Cvalue)->toBe(123);
+});
+
+
+

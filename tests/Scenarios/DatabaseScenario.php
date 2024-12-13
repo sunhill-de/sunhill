@@ -36,10 +36,10 @@ class DatabaseScenario extends BasicScenario
         Schema::dropIfExists('tableC');
         Schema::create('tableC', function (Blueprint $table)
         {
-            $table->integer('id')->primary();
+            $table->integer('other_id')->primary();
             $table->integer('Cvalue');
             
-            $table->primary('id');
+            $table->primary('other_id');
         });
     }
     
@@ -58,10 +58,10 @@ class DatabaseScenario extends BasicScenario
             ['id'=>4,'BValue'=>123,'str_value'=>null],
         ]);
         DB::table('tableC')->insert([
-            ['id'=>1,'Cvalue'=>123],
-            ['id'=>2,'Cvalue'=>345],
-            ['id'=>3,'Cvalue'=>234],
-            ['id'=>4,'CValue'=>456],
+            ['other_id'=>1,'Cvalue'=>123],
+            ['other_id'=>2,'Cvalue'=>345],
+            ['other_id'=>3,'Cvalue'=>234],
+            ['other_id'=>4,'CValue'=>456],
         ]);
     }
     

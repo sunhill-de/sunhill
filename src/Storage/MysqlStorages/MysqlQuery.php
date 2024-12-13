@@ -53,10 +53,10 @@ class MysqlQuery extends Base
         return $current_letter;
     }
  
-    public function join(string $table, string $join_field = 'id')
+    public function join(string $table, string $main_field = 'id', string $sub_field = 'id')
     {
         $letter = $this->addTable($table, 'inner');
-        $this->current_query->join($table.' as '.$letter,'a.id','=',$letter.'.'.$join_field);
+        $this->current_query->join($table.' as '.$letter,'a.'.$main_field,'=',$letter.'.'.$sub_field);
         return $this;
     }
     
