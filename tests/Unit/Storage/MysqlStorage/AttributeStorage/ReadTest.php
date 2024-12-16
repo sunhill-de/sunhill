@@ -13,7 +13,7 @@ test('read a simple attribute by id', function()
     $scenario->seed();
     
     $test = new MysqlAttributeStorage();
-    $test->loadAttribute('simpleintattributes',3);
+    $test->loadAttribute('simpleintattribute',3);
     expect($test->getValue('value'))->toBe(999);
 });
 

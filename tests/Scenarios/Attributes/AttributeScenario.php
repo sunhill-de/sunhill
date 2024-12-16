@@ -13,16 +13,16 @@ class AttributeScenario extends BasicScenario
     
     public function migrate()
     {
-        Schema::dropIfExists('attr_simpleintattributes');
-        Schema::create('attr_simpleintattributes', function (Blueprint $table) 
+        Schema::dropIfExists('attr_simpleintattribute');
+        Schema::create('attr_simpleintattribute', function (Blueprint $table) 
         {
             $table->integer('id')->primary();
             $table->integer('value');
             
             $table->primary('id');
         });
-        Schema::dropIfExists('attr_simplestringattributes');
-        Schema::create('attr_simplestringattributes', function (Blueprint $table)
+        Schema::dropIfExists('attr_simplestringattribute');
+        Schema::create('attr_simplestringattribute', function (Blueprint $table)
         {
             $table->integer('id')->primary();
             $table->string('value',10);
@@ -33,7 +33,7 @@ class AttributeScenario extends BasicScenario
     
     public function seed()
     {
-        DB::table('attr_simpleintattributes')->insert([
+        DB::table('attr_simpleintattribute')->insert([
             [
                 'id'=>1,
                 'value'=>777,
@@ -55,7 +55,7 @@ class AttributeScenario extends BasicScenario
                 'value'=>111,
             ],
         ]);    
-        DB::table('attr_simplestringattributes')->insert([
+        DB::table('attr_simplestringattribute')->insert([
             [
                 'id'=>1,
                 'value'=>'aBc',
@@ -80,22 +80,22 @@ class AttributeScenario extends BasicScenario
         DB::table('attributeobjectassigns')->insert([
             [
                 'container_id'=>1,
-                'attribute_name'=>'simpleintattributes',
+                'attribute_name'=>'simpleintattribute',
                 'attribute_id'=>2,
             ],
             [
                 'container_id'=>2,
-                'attribute_name'=>'simpleintattributes',
+                'attribute_name'=>'simpleintattribute',
                 'attribute_id'=>4,
             ],
             [
                 'container_id'=>1,
-                'attribute_name'=>'simplestringattributes',
+                'attribute_name'=>'simplestringattribute',
                 'attribute_id'=>4,
             ],
             [
                 'container_id'=>2,
-                'attribute_name'=>'simplestringattributes',
+                'attribute_name'=>'simplestringattribute',
                 'attribute_id'=>1,
             ]
         ]);
