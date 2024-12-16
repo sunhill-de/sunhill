@@ -18,10 +18,40 @@ namespace Sunhill\Storage\MysqlStorages;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\AttributeStorage;
+use Illuminate\Support\Facades\DB;
 
 class MysqlAttributeStorage extends AttributeStorage
 {
 
+    /**
+     * Loads the attribute with id $attribute_id from the table for $attribute_name
+     *  
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AttributeStorage::doLoadAttribute()
+     */
+    protected function doLoadAttribute(string $attribute_name, int $attribute_id)
+    {
+        $table_name = $this->calculateAttributeStorageID($attribute_name);
+        $entry = DB::table($table_name)->where('id', $attribute_id)->first();
+        if (empty($entry)) {
+            throw new IDNotFoundException("The id '$attribute_id' was not found");
+        }
+        $this->setValue('value', $entry->value);
+    }
+    
+    protected function doLoadForObject(int $id)
+    {
+        $entries = DB::table('attributeobjectassigns')->where('container_id', $id)->get();
+        foreach ($entries as $entry) {
+            $table_name = $this->calculateAttributeStorageID($entry->attribute_name);
+            $attribute = DB::table($table_name)->where('id',$entry->attribute_id)->first();
+            if (empty($attribute)) {
+                throw new IDNotFoundException("The id '".$entry->attribute_id."' was not found");
+            }
+            $this->setValue($entry->attribute_name,$attribute->value);
+        }
+    }
+    
     /**
      * Loads the record with id '$id' from database
      * 
@@ -30,6 +60,7 @@ class MysqlAttributeStorage extends AttributeStorage
      */
     protected function doLoad(mixed $id)
     {
+    
     }
     
     /**
