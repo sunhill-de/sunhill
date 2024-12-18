@@ -24,6 +24,8 @@ use Sunhill\Query\BasicQuery;
 abstract class PersistentPoolStorage extends AbstractPersistentStorage
 {
   
+    abstract protected function isValidID(mixed $id): bool;
+    
     /**
      * Performs the commit of a existing entry, meaning transfering the data to the
      * persistent medium and overwriting the previously stored.
@@ -95,7 +97,7 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
      */
     protected function handleUnloaded()
     {
-        if (!is_null($this->getID())) {
+        if (is_null($this->getID())) {
             return $this->load($this->getID()); // unlikely event
         }
   //      throw 
