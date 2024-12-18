@@ -15,12 +15,58 @@
 
 namespace Sunhill\Storage;
 
+use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\Exceptions\AttributeNameNotSetException;
+
 /**
  * @author klaus
  *
  */
 abstract class AttributeStorage extends PersistentPoolStorage
 {
+
+    /**
+     * The storage id of the storage
+     * 
+     * @var string
+     */
+    protected string $attribute_name = '';
+    
+    /**
+     * Setter for attribute_name
+     * 
+     * @param string $attribute_name
+     * @return self
+     */
+    public function setAttributeName(string $attribute_name): self
+    {
+        $this->attribute_name = $attribute_name;
+        return $this;
+    }
+    
+    /**
+     * Getter for attribute_name
+     * 
+     * @return string
+     */
+    public function getAttributeName(): string
+    {
+        return $this->attribute_name;    
+    }
+    
+    /**
+     * Overwrite of the inhertied method to check if a attribute_name is set
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\PersistentPoolStorage::load()
+     */
+    public function load($id)
+    {
+        if (empty($this->attribute_name)) {
+            throw new AttributeNameNotSetException("There is no attribute name set in storage");
+        }
+        return parent::load($id);
+    }
     
     /**
      * Calculates the storage id (e.g. table name) for the given storage by prefixing 'attr_'
@@ -32,22 +78,7 @@ abstract class AttributeStorage extends PersistentPoolStorage
     {
         return 'attr_'.$attribute_name;
     }
-    
-    /**
-     * Loads the attributes belonging to an object identified by $id
-     * 
-     * @param int $id
-     */
-    abstract protected function doLoadForObject(int $id);
-    
-    /**
-     * Loads the attribute names $attribute_name with the id $attribute_id
-     * 
-     * @param string $attribute_name
-     * @param int $attribute_id
-     */
-    abstract protected function doLoadAttribute(string $attribute_name, int $attribute_id);
-    
+        
     /**
      * Loads the attribute names $attribute_name with the id $attribute_id
      * (just calls doLoadAttribute())
@@ -55,18 +86,10 @@ abstract class AttributeStorage extends PersistentPoolStorage
      * @param string $sttribute_name
      * @param int $attribute_id
      */
-    public function loadAttribute(string $sttribute_name,int $attribute_id)
+    public function loadAttribute(string $attribute_name,int $attribute_id)
     {
-        $this->doLoadAttribute($sttribute_name, $attribute_id);
+        $this->setAttributeName($attribute_name);
+        return $this->load($attribute_id);
     }
-    
-    /**
-     * Loads all attributes for the given object $id
-     * 
-     * @param int $id
-     */
-    public function loadForObject(int $id)
-    {
-        $this->doLoadForObject($id);
-    }
+        
 }
