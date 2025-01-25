@@ -13,13 +13,16 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Storage\PoolMysqlStorage;
+namespace Sunhill\Storage\MysqlStorage;
 
 use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\MysqlStorages\ObjectUtils\PoolMysqlLoader;
+use Sunhill\Storage\MysqlStorages\ObjectUtils\PoolMysqlDeleter;
+use Sunhill\Storage\MysqlStorages\ObjectUtils\PoolMysqlUpdater;
 
-class PoolMysqlStorage extends PersistentPoolStorage
+class MysqlObjectStorage extends PersistentPoolStorage
 {
 
     /**

@@ -1,0 +1,22 @@
+<?php
+/**
+ * @file ObjectAttributeAssignsStorage.php
+ * An abstract class that loads the list of attributes that are associated to an object 
+ *
+ * @author Klaus Dimde
+ * Lang en
+ * Reviewstatus: 2024-12-19
+ * Localization: none
+ * Documentation: 
+ * Tests: 
+ * Coverage: 
+ */
+
+namespace Sunhill\Storage\ObjectStorage;
+
+use Sunhill\Storage\PersistentPoolStorage;
+
+abstract class ObjectAttributeAssignsStorage extends PersistentPoolStorage
+{
+    
+}

@@ -71,10 +71,84 @@ class ORMObject extends PooledRecordProperty
         $this->_updated_at = now();        
     }
     
+    private function commitTags()
+    {
+        
+    }
+    
+    private function commitAttributes()
+    {
+        
+    }
+    
     public function commit()
     {
         $this->updateTimesstamps();
         parent::commit();
+        if (static::isTaggable()) {
+            $this->commitTags();
+        }
+        if (static::isAttributable()) {
+            $this->commitAttributes();
+        }
+    }
+    
+    private function loadTags(int $id)
+    {
+        
+    }
+    
+    private function loadAttributes(int $id)
+    {
+        
+    }
+    
+    public function load($id)
+    {
+        parent::load($id);
+        if (static::isTaggable()) {
+            $this->loadTags($id);
+        }
+        if (static::isAttributable()) {
+            $this->loadAttributes($id);
+        }
+    }
+    
+    /**
+     * Deletes all references of tags of this object
+     * 
+     * @param int $id
+     */
+    private function deleteTags(int $id)
+    {
+        
+    }
+    
+    /**
+     * Deletes all references of attributes of this object
+     * 
+     * @param int $id
+     */
+    private function deleteAttributes(int $id)
+    {
+        
+    }
+    
+    /**
+     * Extends the inherited method by deleting tags and attribute references
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Properties\PooledRecordProperty::delete()
+     */
+    public function delete($id)
+    {
+        parent::delete($id);    
+        if (static::isTaggable()) {
+            $this->deleteTags($id);
+        }
+        if (static::isAttributable()) {
+            $this->deleteAttributes($id);
+        }
     }
     
     protected function createStorage(): ?AbstractStorage
@@ -115,11 +189,33 @@ class ORMObject extends PooledRecordProperty
     }
     
     /**
+     * Returns, if this object may be tagged (default false)
+     * 
+     * @return bool
+     */
+    public static function isTaggable(): bool
+    {
+        return static::getInfo('taggable', false);
+    }
+    
+    /**
+     * Returns, if it is allowed to add attributed to this object (default false)
+     * 
+     * @return bool
+     */
+    public static function isAttributable(): bool
+    {
+        return static::getInfo('attributable', false);        
+    }
+    
+    /**
      * Each object and collection has to (or better should) define at least the following informations:
      * * name = an unique name that identifies this object
      * * description = a description of what the purpose of this object/collection is
      * * storage_id = the id of the storage (in this case normally the database table)
-     * * initiable = a boolean that indicates if this object can be initiaten directly (true) or only as an ancestor (false)
+     * * initiable = a boolean that indicates if this object can be initiated directly (true) or only as an ancestor (false)
+     * * taggable = a boolean that indicates if this object can be tagged (true) or not (false)
+     * * taggable = a boolean that indicates if this object can be attributed (true) or not (false)
      */
     protected static function setupInfos()
     {
@@ -127,6 +223,8 @@ class ORMObject extends PooledRecordProperty
         static::addInfo('description', 'The basic class for objects and collections.', true);
         static::addInfo('storage_id', 'objects');
         static::addInfo('initiable', false);
+        static::addInfo('taggable', false);
+        static::addInfo('attributable', false);
     }
         
 }

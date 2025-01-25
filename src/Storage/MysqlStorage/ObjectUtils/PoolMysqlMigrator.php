@@ -13,7 +13,7 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Storage\PoolMysqlStorage;
+namespace Sunhill\Storage\MysqlStorages\ObjectUtils;
 
 use Illuminate\Support\Facades\DB;
 use Sunhill\Tags\Tag;
