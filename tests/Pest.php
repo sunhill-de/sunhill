@@ -13,20 +13,6 @@
 
 // uses(Tests\TestCase::class)->in('Feature');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -185,4 +171,39 @@ expect()->extend('toBeOne', function () {
         return true;
     }
     
-    
+    function checkStdClasses(\stdClass $expect, \stdClass $test, array $ignore = [], bool $two_directions = false)
+    {
+        foreach ($expect as $key => $value) {
+            if (in_array($key, $ignore)) {
+                continue;
+            }
+            if (!isset($test->$key)) {
+                return false;
+            }
+            if (is_a($value, \stdClass::class)) {
+                if (!checkStdClasses($value, $test->$key, $ignore, $two_directions)) {
+                    return false;
+                }
+            } else if ($test->$key !== $value) {
+                return false;
+            }
+        }
+        if ($two_directions) {
+            foreach ($test as $key => $value) {
+                if (in_array($key, $ignore)) {
+                    continue;
+                }
+                if (!isset($expect->$key)) {
+                    return false;
+                }
+                if (is_a($value, \stdClass::class)) {
+                    if (!checkStdClasses($value, $test->$key, $ignore, $two_directions)) {
+                        return false;
+                    }
+                } else if ($expect->$key !== $value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }

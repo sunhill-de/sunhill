@@ -116,3 +116,176 @@ test('checkArrays works', function($first, $second, $expect)
         ['A','B','C'],['A','B'],false
     ],
 ]);
+
+test('checkStdClasses works', function($first, $second, $expect, $except = [], $two_directions = false)
+{
+    $first_class = new \stdClass();
+    $first_class = $first($first_class);
+    
+    $second_class = new \stdClass();
+    $second_class = $second($second_class);
+    
+    expect(checkStdClasses($first_class, $second_class, $except, $two_directions))->toBe($expect);
+})->with([
+    'simple classes pass'=>[
+        function(\stdClass $class) {
+            $class->field1 = 123;
+            return $class;
+        },
+        function(\stdClass $class) {
+            $class->field1 = 123;
+            return $class;
+        }, true
+     ],
+     'simple classes fail due different value'=>[
+         function(\stdClass $class) {
+            $class->field1 = 123; 
+            return $class;
+         },
+         function(\stdClass $class) {
+             $class->field1 = 234;
+             return $class;
+         },false
+     ],
+     'simple classes fail due different keys'=>[
+         function(\stdClass $class) {
+             $class->field1 = 123;
+             return $class;
+         },
+         function(\stdClass $class) {
+             $class->field2 = 123;
+             return $class;
+         },false
+      ],
+      'simple classes pass with second more fields'=>[
+          function(\stdClass $class) {
+              $class->field1 = 123;
+              return $class;
+          },
+          function(\stdClass $class) {
+              $class->field1 = 123;
+              $class->field2 = 234;
+              return $class;
+          },true
+       ],
+       'simple classes fail with first more fields'=>[
+           function(\stdClass $class) {
+               $class->field1 = 123;
+               $class->field2 = 234;
+               return $class;
+           },
+           function(\stdClass $class) {
+               $class->field1 = 123;
+               return $class;
+           },false
+       ],
+       'simple classes pass with array'=>[
+           function(\stdClass $class) {
+               $class->field1 = [1,2,3];
+               return $class;
+           },
+           function(\stdClass $class) {
+               $class->field1 = [1,2,3];
+               return $class;
+           },true
+        ],
+        'simple classes fail with array missing element'=>[
+            function(\stdClass $class) {
+                $class->field1 = [1,2,3];
+                return $class;
+            },
+            function(\stdClass $class) {
+                $class->field1 = [1,2];
+                return $class;
+            },false
+        ],
+        'simple classes fail with array additional element'=>[
+            function(\stdClass $class) {
+                $class->field1 = [1,2,3];
+                return $class;
+            },
+            function(\stdClass $class) {
+                $class->field1 = [1,2,3,4];
+                return $class;
+            },false
+         ],
+         'simple classes pass with nested stdclass'=>[
+             function(\stdClass $class) {
+                 $class->field1 = new \stdClass();
+                 $class->field1->subfield = 'ABC';
+                 return $class;
+             },
+             function(\stdClass $class) {
+                 $class->field1 = new \stdClass();
+                 $class->field1->subfield = 'ABC';
+                 return $class;
+             },true
+          ],
+          'simple classes fail with nested stdclass'=>
+          [
+              function(\stdClass $class) {
+                  $class->field1 = new \stdClass();
+                  $class->field1->subfield = 'ABC';
+                  return $class;
+              },
+              function(\stdClass $class) {
+                  $class->field1 = new \stdClass();
+                  $class->field1->subfield = 'DEF';
+                  return $class;
+              },false
+           ],
+           'simple classes pass with exception'=>
+           [
+               function(\stdClass $class) {
+                   $class->field1 = 'ABC';
+                   $class->field2 = 'DEF';
+                   return $class;
+               },
+               function(\stdClass $class) {
+                   $class->field1 = 'ABC';
+                   $class->field2 = 'GHI';
+                   return $class;
+               },true,['field2']
+           ],
+           'simple classes fail with exception'=>
+           [
+               function(\stdClass $class) {
+                   $class->field1 = 'ABC';
+                   $class->field2 = 'DEF';
+                   return $class;
+               },
+               function(\stdClass $class) {
+                   $class->field1 = 'DEF';
+                   $class->field2 = 'DEF';
+                   return $class;
+               },false,['field2']
+            ],
+            'simple classes pass with two direction'=>
+            [
+                function(\stdClass $class) {
+                    $class->field1 = 'ABC';
+                    $class->field2 = 'DEF';
+                    return $class;
+                },
+                function(\stdClass $class) {
+                    $class->field1 = 'ABC';
+                    $class->field2 = 'DEF';
+                    return $class;
+                },true,[],true
+            ],
+            'simple classes fail with two direction'=>
+            [
+                function(\stdClass $class) {
+                    $class->field1 = 'ABC';
+                    $class->field2 = 'DEF';
+                    return $class;
+                },
+                function(\stdClass $class) {
+                    $class->field1 = 'ABC';
+                    $class->field2 = 'DEF';
+                    $class->field3 = 'GHI';
+                    return $class;
+                },false,[],true
+            ],
+                
+]);
