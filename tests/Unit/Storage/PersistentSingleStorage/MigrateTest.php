@@ -8,11 +8,11 @@ uses(SimpleTestCase::class);
 
 test('Nothing to do', function()
 {
-   $structure = [
+   $structure = makeStdclass(['elements'=>[
        'str_field'=>makeStdclass(['name'=>'str_field','type'=>'string','max_length'=>100]),
        'int_field'=>makeStdClass(['name'=>'int_field','type'=>'integer']),
        'float_field'=>makeStdClass(['name'=>'float_field','type'=>'float']),
-       'array_field'=>makeStdClass(['name'=>'array_field','type'=>'array','element_type'=>TypeInteger::class])];
+       'array_field'=>makeStdClass(['name'=>'array_field','type'=>'array','element_type'=>TypeInteger::class])]]);
    $test = new DummyPersistentSingleStorage();
    $test->setStructure($structure);
    $test->migrate();
@@ -22,11 +22,11 @@ test('Nothing to do', function()
 
 test('Unmigrated', function()
 {
-    $structure = [
+    $structure = makeStdclass(['elements'=>[
         'str_field'=>makeStdclass(['name'=>'str_field','type'=>'string','max_length'=>100]),
         'int_field'=>makeStdClass(['name'=>'int_field','type'=>'integer']),
         'float_field'=>makeStdClass(['name'=>'float_field','type'=>'float']),
-        'array_field'=>makeStdClass(['name'=>'array_field','type'=>'array','element_type'=>TypeInteger::class])];
+        'array_field'=>makeStdClass(['name'=>'array_field','type'=>'array','element_type'=>TypeInteger::class])]]);
     $test = new DummyPersistentSingleStorage();
     $test::$persistent_data = null;
     $test->setStructure($structure);
@@ -37,11 +37,11 @@ test('Unmigrated', function()
 
 test('Structure change', function()
 {
-    $structure = [
+    $structure = makeStdclass(['elements'=>[
         'str_field'=>makeStdclass(['name'=>'str_field','type'=>'string','max_length'=>100]),
         'int_field'=>makeStdClass(['name'=>'int_field','type'=>'integer']),
         'float_field'=>makeStdClass(['name'=>'float_field','type'=>'float']),
-        'array_field'=>makeStdClass(['name'=>'array_field','type'=>'array','element_type'=>TypeInteger::class])];
+        'array_field'=>makeStdClass(['name'=>'array_field','type'=>'array','element_type'=>TypeInteger::class])]]);
     $test = new DummyPersistentSingleStorage();
     unset($test::$persistent_data['str_field']);
     $test->setStructure($structure);

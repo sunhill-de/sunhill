@@ -23,7 +23,7 @@ use Sunhill\Properties\Exceptions\InvalidIndexException;
 class ReferenceArrayProperty extends ArrayProperty
 {
      
-    public function getStructure()
+    public function getStructure(): \stdClass
     {
         $result = new \stdClass();
         $result->name = $this->getName();

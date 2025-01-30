@@ -355,7 +355,7 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         return $reverse_matrix[$highest];
     }
     
-    public function getStructure()
+    public function getStructure(): \stdClass
     {
         $result = new \stdClass();
         $result->name = static::getName();

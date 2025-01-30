@@ -14,7 +14,7 @@ it('fails when structure is needed', function()
 it('passes when structure is needed', function()
 {
     $test = new DummyAbstractPersistentStorage();
-    $test->setStructure([1,2,3]);
+    $test->setStructure(makeStdclass(['elements'=>[1,2,3]]));
     $test->pub_structureNeeded();
     expect(true)->toBe(true);
 });

@@ -1462,11 +1462,11 @@ abstract class AbstractProperty extends Base
         }
     }
    
-    public function getStructure()
+    public function getStructure(): \stdClass
     {
         $result = new \stdClass();
         $result->name = $this->getName();
-        $result->type = $this->getAccessType();
+        $result->type = static::getAccessType();
         
         return $result;
     }

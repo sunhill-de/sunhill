@@ -349,7 +349,7 @@ abstract class AbstractStorage extends Base
      * @param array $structure
      * @wiki /PersistentStorage#Structure
      */
-    public function setStructure(array $structure)
+    public function setStructure(\stdClass $structure)
     {
         $this->structure = $structure;
     }

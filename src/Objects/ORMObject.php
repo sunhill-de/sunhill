@@ -39,11 +39,11 @@ class ORMObject extends PooledRecordProperty
     public function __construct(?callable $elements = null)
     {
         parent::__construct($elements);
-        $this->forceElement(UUID4::class, '_uuid');
-        $this->forceElement(Name::class, '_classname');
-        $this->forceElement(TypeVarchar::class,'_read_cap');
-        $this->forceElement(TypeVarchar::class,'_modify_cap');
-        $this->forceElement(TypeVarchar::class,'_delete_cap');
+        $this->forceElement(UUID4::class, '_uuid')->setMaxLen(40);
+        $this->forceElement(Name::class, '_classname')->setMaxLen(40);
+        $this->forceElement(TypeVarchar::class,'_read_cap')->setMaxLen(20);
+        $this->forceElement(TypeVarchar::class,'_modify_cap')->setMaxLen(20);;
+        $this->forceElement(TypeVarchar::class,'_delete_cap')->setMaxLen(20);;
         $this->forceElement(TypeDateTime::class,'_created_at');
         $this->forceElement(TypeDateTime::class,'_updated_at');
     }
@@ -52,7 +52,8 @@ class ORMObject extends PooledRecordProperty
     {
         $element = new $class();
         $element->forceName($name);
-        $this->appendElement($element);
+        $this->appendElement($element, null, 'objects');
+        return $element;
     }
     
     public function create()
@@ -79,7 +80,7 @@ class ORMObject extends PooledRecordProperty
     protected function createStorage(): ?AbstractStorage
     {
         $storage = new PoolMysqlStorage();
-        $storage->setStructure($this->getStructure()->elements);
+        $storage->setStructure($this->getStructure());
         return $storage;
     }
     

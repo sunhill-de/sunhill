@@ -32,6 +32,7 @@ class PooledRecordProperty extends PersistentRecordProperty
     {
         $this->checkForStorage();
         $storage = $this->getStorage();
+        $storage->setStructure($this->getStructure());
         $storage->load($id);
     }
     

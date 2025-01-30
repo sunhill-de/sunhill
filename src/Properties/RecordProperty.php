@@ -5,7 +5,7 @@
  * Lang en
  * Reviewstatus: 2024-10-24
  * Localization: complete
- * Documentation: complete
+ * Documentation: completeF
  * Tests: 
  * Coverage: 97.3% (2024-11-13)
  *
@@ -45,7 +45,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
         
         if (!is_null($storage = $this->getStorage())) {
-            $storage->setStructure($this->getStructure()->elements);
+            $storage->setStructure($this->getStructure());
         }
     }
     
@@ -199,9 +199,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     private function appendToElementsAndStructures(AbstractProperty $property, mixed $storage_id)
     {
         $this->elements[$property->getName()] = $property;
-        $structure = $property->getStructure();
-        $structure->storage_subid = $storage_id??static::getStorageID();
-        $this->elements_structure[$property->getName()] = $structure;
+        $this->elements_structure[$property->getName()] = $storage_id??static::getStorageID();;
     }
     
     private function checkElement(AbstractProperty $element)
@@ -297,16 +295,27 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         return $property->setValue($value);
     }
     
+    private function getElements(): array
+    {
+        $result = [];
+        foreach ($this->elements as $key => $element) {
+            $result[$key] = $element->getStructure();
+            $result[$key]->storage_subid = $this->elements_structure[$key];
+        }
+        return $result;
+    }
+    
     /**
      * Modifies the inhertied function to include the elements
      * 
      * {@inheritDoc}
      * @see \Sunhill\Properties\AbstractProperty::getStructure()
      */
-    public function getStructure()
+    public function getStructure(): \stdClass
     {
         $return = parent::getStructure();
-        $return->elements = $this->elements_structure;        
+        $return->elements = $this->getElements();
+        $return->options = static::getAllInfos();
         return $return;
     }
 }
