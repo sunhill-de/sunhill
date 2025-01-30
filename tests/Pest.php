@@ -157,16 +157,42 @@
      * @wiki /Test_helpers#checkArrays
      * @tests /tests/Unit/Tests/TestHelpersTest.php
      */
-    function checkArrays(array $expect,array $test) {
+    function checkArrays(array $expect, array $test, array $ignore = [], bool $two_directions = false) {
         foreach ($expect as $key => $value) {
+            if (in_array($key, $ignore)) {
+                continue;
+            }
             if (!array_key_exists($key, $test)) {
+                echo "Key $key missing\n";
                 return false;
             }
             if (is_array($value)) {
-                if (!$this->checkArrays($value,$test[$key])) {
+                if (!checkArrays($value,$test[$key])) {
                     return false;
                 }
+            } else if (is_a($value, \stdClass::class)) {
+                if (!checkStdClasses($value, $test[$key],$ignore, $two_directions)) {
+                    return false;
+                }
+            } else  if ($value !== $test[$key]) {
+                echo "$value is not ".$test[$key]."\n";
+                return false;
             }
+        }
+        if ($two_directions) {
+            foreach ($test as $key => $value) {
+                if (in_array($key, $ignore)) {
+                    continue;
+                }
+                if (!array_key_exists($key, $expect)) {
+                    return false;
+                }
+                if (is_array($value)) {
+                    if (!checkArrays($value,$expect[$key])) {
+                        return false;
+                    }
+                }
+            }            
         }
         return true;
     }
@@ -178,13 +204,24 @@
                 continue;
             }
             if (!isset($test->$key)) {
+                echo "Key '$key' missing";
                 return false;
             }
             if (is_a($value, \stdClass::class)) {
                 if (!checkStdClasses($value, $test->$key, $ignore, $two_directions)) {
+                    echo "Subkey '$key' different";
+                    var_dump($value);
+                    var_dump($test->$key);
+                    return false;
+                }
+            } else if (is_array($value)) {
+                if (!checkArrays($value, $test->$key, $ignore, true)) {
                     return false;
                 }
             } else if ($test->$key !== $value) {
+                echo "Values of $key different";
+                var_dump($test->$key);
+                var_dump($value);
                 return false;
             }
         }
@@ -194,13 +231,19 @@
                     continue;
                 }
                 if (!isset($expect->$key)) {
+                    var_dump($expect);
+                    var_dump($test);
                     return false;
                 }
                 if (is_a($value, \stdClass::class)) {
                     if (!checkStdClasses($value, $test->$key, $ignore, $two_directions)) {
+                        var_dump($expect);
+                        var_dump($test);
                         return false;
                     }
                 } else if ($expect->$key !== $value) {
+                    var_dump($expect);
+                    var_dump($test);
                     return false;
                 }
             }
