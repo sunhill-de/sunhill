@@ -36,7 +36,7 @@ class PoolMysqlUtility
     protected function getStorageSubids(): array
     {
         $result = [];
-        foreach ($this->structure as $entry) {
+        foreach ($this->structure->elements as $entry) {
             if (!in_array($entry->storage_subid,$result)) {
                 $result[] = $entry->storage_subid;
             }
@@ -47,7 +47,7 @@ class PoolMysqlUtility
     protected function getFieldsOf(string $name)
     {
         $result = [];
-        foreach ($this->structure as $entry) {
+        foreach ($this->structure->elements as $entry) {
             if ($entry->storage_subid == $name) {
                 $result[] = $entry;
             }
@@ -58,7 +58,7 @@ class PoolMysqlUtility
     protected function getArrays(): array
     {
         $result = [];
-        foreach ($this->structure as $entry) {
+        foreach ($this->structure->elements as $entry) {
             if ($entry->type == 'array') {
                 $result[] = $entry;
             }
@@ -69,7 +69,7 @@ class PoolMysqlUtility
     protected function getArraysOf(string $table): array
     {
         $result = [];
-        foreach ($this->structure as $entry) {
+        foreach ($this->structure->elements as $entry) {
             if (($entry->storage_subid == $table) && ($entry->type == 'array')) {
                 $result[] = $entry;
             }
@@ -113,7 +113,7 @@ class PoolMysqlUtility
     protected function getTableFields(string $table, array $values)
     {
         $fields = [];
-        foreach ($this->structure as $name => $structure) {
+        foreach ($this->structure->elements as $name => $structure) {
             if (($structure->storage_subid == $table) && ($structure->type !== 'array')) {
                if (array_key_exists($name, $values)) {
                    $fields[$name] = $this->getField($values[$name]);
@@ -184,7 +184,7 @@ class PoolMysqlUtility
     public function getStructureMatrix()
     {
         $result = [];
-        foreach ($this->structure as $name => $structure) {
+        foreach ($this->structure->elements as $name => $structure) {
             if ($structure->type == 'array') {
                 $name = $this->assembleArrayTableName($structure);
                 $result[$name] = $structure;

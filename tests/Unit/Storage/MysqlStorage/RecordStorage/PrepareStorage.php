@@ -13,12 +13,13 @@ use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 
 function prepareStorage($test, string $type,bool $seed = true)
 {
+    $result = new \stdClass();
     switch ($type) {
         case 'dummy':
             if ($seed) {
                 $test->seed([ObjectsSeeder::class,DummiesSeeder::class,TagsSeeder::class,TagCacheSeeder::class,TagObjectAssignsSeeder::class]);
             }
-            return [
+            $result->elements = [
                 '_uuid'=>makeStdclass(['name'=>'_uuid','type'=>'string','max_length'=>40,'storage_subid'=>'objects']),
                 '_read_cap'=>makeStdclass(['name'=>'_read_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
                 '_modify_cap'=>makeStdclass(['name'=>'_modify_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
@@ -27,6 +28,7 @@ function prepareStorage($test, string $type,bool $seed = true)
                 '_modified_at'=>makeStdclass(['name'=>'_modified_at','type'=>'datetime','storage_subid'=>'objects']),
                 'dummyint'=>makeStdclass(['name'=>'dummyint','type'=>'integer','storage_subid'=>'dummies']),
             ];
+            return $result;
         case 'parentobject':
             if ($seed) {
                 $test->seed([
@@ -35,7 +37,7 @@ function prepareStorage($test, string $type,bool $seed = true)
                     ParentObjects_parent_sarraySeeder::class
                 ]);
             }
-            return [
+            $result->elements = [
                 '_uuid'=>makeStdclass(['name'=>'_uuid','type'=>'string','max_length'=>40,'storage_subid'=>'objects']),
                 '_read_cap'=>makeStdclass(['name'=>'_read_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
                 '_modify_cap'=>makeStdclass(['name'=>'_modify_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
@@ -46,6 +48,7 @@ function prepareStorage($test, string $type,bool $seed = true)
                 'parent_string'=>makeStdclass(['name'=>'parent_string','type'=>'string','max_length'=>3,'storage_subid'=>'parentobjects']),
                 'parent_sarray'=>makeStdClass(['name'=>'parent_sarray','type'=>'array','index_type'=>'integer','element_type'=>'integer','storage_subid'=>'parentobjects']),
             ];
+            return $result;
         case 'childobject':
             if ($seed) {
                 $test->seed([
@@ -56,7 +59,7 @@ function prepareStorage($test, string $type,bool $seed = true)
                     ChildObjects_child_sarraySeeder::class
                 ]);
             }
-            return [
+            $result->elements = [
                 '_uuid'=>makeStdclass(['name'=>'_uuid','type'=>'string','max_length'=>40,'storage_subid'=>'objects']),
                 '_read_cap'=>makeStdclass(['name'=>'_read_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
                 '_modify_cap'=>makeStdclass(['name'=>'_modify_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
@@ -70,6 +73,7 @@ function prepareStorage($test, string $type,bool $seed = true)
                 'child_string'=>makeStdclass(['name'=>'child_string','type'=>'string','max_length'=>3,'storage_subid'=>'childobjects']),
                 'child_sarray'=>makeStdClass(['name'=>'child_sarray','type'=>'array','index_type'=>'integer','element_type'=>'Integer','storage_subid'=>'childobjects']),
             ];
+            return $result;
     }
 }
 

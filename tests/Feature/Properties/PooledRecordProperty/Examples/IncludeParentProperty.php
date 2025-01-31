@@ -25,7 +25,7 @@ class IncludeParentProperty extends PooledRecordProperty
     protected function createStorage(): ?AbstractStorage
     {
         $storage = new DummyPersistentPoolStorage();
-        $storage->setStructure($this->getStructure()->elements);
+        $storage->setStructure($this->getStructure());
         return $storage;
     }
     
