@@ -5,6 +5,11 @@ namespace Sunhill\Tests\TestSupport\Objects;
 use Sunhill\Objects\ORMObject;
 use Sunhill\Types\TypeInteger;
 use Sunhill\Properties\ElementBuilder;
+use Sunhill\Tests\Database\Seeds\ObjectsSeeder;
+use Sunhill\Tests\Database\Seeds\DummiesSeeder;
+use Sunhill\Tests\Database\Seeds\TagsSeeder;
+use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
+use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
 
 class Dummy extends ORMObject
 {
@@ -83,6 +88,17 @@ class Dummy extends ORMObject
         ];
         
         return $result;
+    }
+    
+    public static function prepareDatabase($test)
+    {
+        $test->seed([
+            ObjectsSeeder::class,
+            DummiesSeeder::class,
+            TagsSeeder::class,
+            TagCacheSeeder::class,
+            TagObjectAssignsSeeder::class
+        ]);        
     }
 }
 
