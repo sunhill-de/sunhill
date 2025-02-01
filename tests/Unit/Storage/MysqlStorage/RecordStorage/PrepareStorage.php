@@ -10,6 +10,7 @@ use Sunhill\Tests\Database\Seeds\ChildObjectsSeeder;
 use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
 use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
 use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 function prepareStorage($test, string $type,bool $seed = true)
 {
@@ -77,7 +78,7 @@ function prepareStorage($test, string $type,bool $seed = true)
     }
 }
 
-function fillObjectsDataset(PoolMysqlStorage $test, string $classname = 'Dummy')
+function fillObjectsDataset(MysqlObjectStorage $test, string $classname = 'Dummy')
 {
     $test->setValue('_classname',$classname);
     $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');

@@ -13,8 +13,8 @@ uses(SunhillDatabaseTestCase::class);
 test('Append a dummy', function()
 {
     $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure);
-    $test->setStructure(prepareStorage($this, 'dummy'));
+    Dummy::prepareDatabase($this);
+    $test->setStructure(Dummy::getExpectedStructure());
 
     $test->setValue('dummyint',1509);
     fillObjectsDataset($test);

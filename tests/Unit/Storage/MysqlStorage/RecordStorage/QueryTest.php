@@ -1,11 +1,8 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
-use Sunhill\Storage\Exceptions\StorageTableMissingException;
-use Illuminate\Support\Facades\Schema;
-use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 require_once('PrepareStorage.php');
 
@@ -13,7 +10,7 @@ uses(SunhillDatabaseTestCase::class);
 
 test('Query a dummy', function($callback, $expect, $manipulator = null)
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'dummy', false));
 
     DB::table('objects')->insert([

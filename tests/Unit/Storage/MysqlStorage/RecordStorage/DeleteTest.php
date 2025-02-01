@@ -1,11 +1,11 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 require_once('PrepareStorage.php');
 
@@ -13,13 +13,13 @@ uses(SunhillDatabaseTestCase::class);
 
 test('fails when using a wrong id type', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->delete('A');     
 })->throws(InvalidIDException::class);
 
 test('Delete a dummy', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'dummy'));
     $test->delete(1);
     
@@ -31,7 +31,7 @@ test('Delete a parentobject with array', function()
 {
     
     $structure = 
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     $test->delete(7);
     
@@ -41,7 +41,7 @@ test('Delete a parentobject with array', function()
 
 test('Delete a parentobject with empty array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     $test->delete(8);
     
@@ -51,7 +51,7 @@ test('Delete a parentobject with empty array', function()
 
 test('Delete a childobject with both arrays', function()
 {    
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->delete(9);
     
@@ -63,7 +63,7 @@ test('Delete a childobject with both arrays', function()
 
 test('Delete a childobject with parent array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->delete(10);
     
@@ -75,7 +75,7 @@ test('Delete a childobject with parent array', function()
 
 test('Read a childobject with child array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->delete(11);
     
@@ -87,7 +87,7 @@ test('Read a childobject with child array', function()
 
 test('Read a childobject with both arrays empty', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->delete(12);
     
@@ -99,7 +99,7 @@ test('Read a childobject with both arrays empty', function()
 
 it('fails when a table is missing', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     Schema::drop('parentobjects_parent_sarray');
     $test->delete(12);
@@ -107,7 +107,7 @@ it('fails when a table is missing', function()
 
 it('fails when reading an unknown id', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->delete(999);
 })->throws(IDNotFoundException::class);

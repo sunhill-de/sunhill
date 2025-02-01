@@ -1,10 +1,9 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
-use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 require_once('PrepareStorage.php');
 
@@ -15,7 +14,7 @@ uses(SunhillDatabaseTestCase::class);
  */
 test('Update a dummy with dummyint modified', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'dummy'));
     setProtectedProperty($test, 'id', 1);
     $test->setValue('dummyint',123);
@@ -36,7 +35,7 @@ test('Update a dummy with dummyint modified', function()
 
 test('Update a dummy with nothing modified', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'dummy'));
     setProtectedProperty($test, 'id', 1);
     $test->setValue('dummyint',123);
@@ -59,7 +58,7 @@ test('Update a parentobject with modified array (all entries) and modified simpl
 {
     
     $structure = 
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 7);
     
@@ -85,7 +84,7 @@ test('Update a parentobject with modified array (added a entry) and unmodified s
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 7);
     
@@ -110,7 +109,7 @@ test('Update a parentobject with modified array (deleted a entry) and unmodified
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 7);
     
@@ -134,7 +133,7 @@ test('Update a parentobject with modified array (deleted all entries) and unmodi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 7);
     
@@ -156,7 +155,7 @@ test('Update a parentobject with modified array (previously empty array) and unm
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 8);
     
@@ -179,7 +178,7 @@ test('Update a parentobject with unmodified array (empty) and modified simple fi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 8);
     
@@ -202,7 +201,7 @@ test('Update a parentobject with unmodified array (had entries) and modified sim
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     setProtectedProperty($test, 'id', 7);
     
@@ -227,7 +226,7 @@ test('Update a childobject with modified array (all entries) and modified simple
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -263,7 +262,7 @@ test('Update a childobject with modified both array (all entries) and unmodified
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -295,7 +294,7 @@ test('Update a childobject with modified both array (added entries) and unmodifi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -329,7 +328,7 @@ test('Update a childobject with modified both array (removed entries) and unmodi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -361,7 +360,7 @@ test('Update a childobject with modified both array (cleared arrays) and unmodif
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -389,7 +388,7 @@ test('Update a childobject with modified parent array (all entries) and unmodifi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -420,7 +419,7 @@ test('Update a childobject with modified parent array (added entries) and unmodi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -452,7 +451,7 @@ test('Update a childobject with modified parent array (removed entries) and unmo
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -483,7 +482,7 @@ test('Update a childobject with modified parent array (cleared arrays) and unmod
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -511,7 +510,7 @@ test('Update a childobject with modified child array (all entries) and unmodifie
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -542,7 +541,7 @@ test('Update a childobject with modified child array (added entries) and unmodif
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -574,7 +573,7 @@ test('Update a childobject with modified child array (removed entries) and unmod
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -605,7 +604,7 @@ test('Update a childobject with modified child array (cleared arrays) and unmodi
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 9);
     
@@ -632,7 +631,7 @@ test('Update a childobject with modified parent array (previously empty) and unm
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 11);
     
@@ -659,7 +658,7 @@ test('Update a childobject with modified child array (parent previously empty) a
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 11);
     
@@ -686,7 +685,7 @@ test('Update a childobject with modified child array (previously empty) and unmo
 {
     
     $structure =
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     setProtectedProperty($test, 'id', 10);
     
@@ -712,7 +711,7 @@ test('Update a childobject with modified child array (previously empty) and unmo
 
 it('update fails when a table is missing', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     Schema::drop('parentobjects_parent_sarray');
     

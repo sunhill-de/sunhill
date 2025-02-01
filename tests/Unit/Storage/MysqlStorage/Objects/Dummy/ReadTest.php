@@ -1,14 +1,14 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 uses(SunhillDatabaseTestCase::class);
 
 test('Read a dummy from database (dummyint)', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(Dummy::getExpectedStructure());
     Dummy::prepareDatabase($this);
     $test->load(1);
@@ -18,7 +18,7 @@ test('Read a dummy from database (dummyint)', function()
 
 test('Read a dummy from database (_tags)', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(Dummy::getExpectedStructure());
     Dummy::prepareDatabase($this);
     $test->load(1);

@@ -45,7 +45,7 @@ class PoolMysqlQuery extends BasicQuery
         
         $letter = 'b';
         foreach ($this->conditions as $condition) {
-            if (!isset($this->tables[$this->structure[$condition->key]->storage_subid])) {
+            if (!isset($this->tables[$this->structure->elements[$condition->key]->storage_subid])) {
                 $table = new \stdClass();
                 $table->letter = $letter++;
                 $table->join = 'inner';
@@ -78,7 +78,7 @@ class PoolMysqlQuery extends BasicQuery
     
     private function getLetterOfField(string $field): string
     {
-        return $this->tables[$this->structure[$field]->storage_subid]->letter;    
+        return $this->tables[$this->structure->elements[$field]->storage_subid]->letter;    
     }
     
     private function assembleWhere($query)

@@ -1,20 +1,11 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Tests\Database\Seeds\ObjectsSeeder;
-use Sunhill\Tests\Database\Seeds\DummiesSeeder;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
-use Sunhill\Tests\Database\Seeds\TagsSeeder;
-use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
-use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
-use Sunhill\Tests\Database\Seeds\ParentObjectsSeeder;
-use Sunhill\Tests\Database\Seeds\ChildObjectsSeeder;
-use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
-use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 require_once('PrepareStorage.php');
 
@@ -22,13 +13,13 @@ uses(SunhillDatabaseTestCase::class);
 
 test('fails when using a wrong id type', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->load('A');     
 })->throws(InvalidIDException::class);
 
 test('Read a dummy', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'dummy'));
     $test->load(1);
     
@@ -40,7 +31,7 @@ test('Read a parentobject with array', function()
 {
     
     $structure = 
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     $test->load(7);
     
@@ -52,7 +43,7 @@ test('Read a parentobject with array', function()
 
 test('Read a parentobject with empty array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     $test->load(8);
     
@@ -64,7 +55,7 @@ test('Read a parentobject with empty array', function()
 
 test('Read a childobject with both arrays', function()
 {    
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->load(9);
     
@@ -79,7 +70,7 @@ test('Read a childobject with both arrays', function()
 
 test('Read a childobject with parent array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->load(10);
     
@@ -94,7 +85,7 @@ test('Read a childobject with parent array', function()
 
 test('Read a childobject with child array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->load(11);
     
@@ -109,7 +100,7 @@ test('Read a childobject with child array', function()
 
 test('Read a childobject with both arrays empty', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->load(12);
     
@@ -124,7 +115,7 @@ test('Read a childobject with both arrays empty', function()
 
 it('fails when a table is missing', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     Schema::drop('parentobjects_parent_sarray');
     $test->load(12);
@@ -132,7 +123,7 @@ it('fails when a table is missing', function()
 
 it('fails when reading an unknown id', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     $test->load(999);
 })->throws(IDNotFoundException::class);

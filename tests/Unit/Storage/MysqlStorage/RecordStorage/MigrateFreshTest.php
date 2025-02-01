@@ -1,8 +1,8 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Illuminate\Support\Facades\Schema;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -10,7 +10,7 @@ require_once('PrepareStorage.php');
 
 test('Migrate fresh for dummy', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'dummy'));
     Schema::drop('dummies');
     
@@ -23,7 +23,7 @@ test('Migrate fresh for dummy', function()
 
 test('Migrate fresh for parentobject', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     Schema::drop('parentobjects');
     
@@ -39,7 +39,7 @@ test('Migrate fresh for parentobject', function()
 
 test('Migrate fresh for childobject', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     Schema::drop('parentobjects');
     Schema::drop('childobjects');

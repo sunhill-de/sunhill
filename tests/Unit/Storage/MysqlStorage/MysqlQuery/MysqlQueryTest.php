@@ -2,7 +2,7 @@
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Tests\Scenarios\DatabaseScenario;
-use Sunhill\Storage\MysqlStorages\MysqlQuery;
+use Sunhill\Storage\MysqlStorage\MysqlQuery;
 
 uses(SunhillDatabaseTestCase::class);
 

@@ -2,7 +2,7 @@
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Illuminate\Support\Facades\Schema;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -27,7 +27,7 @@ test('column was dropped', function()
         $table->integer('element');
     });
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -55,7 +55,7 @@ test('two columns were dropped', function()
         $table->integer('element');
     });
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -80,7 +80,7 @@ test('column was added', function()
         $table->integer('element');
     });
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -112,7 +112,7 @@ test('array column was dropped', function()
         $table->integer('element');
     });
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -132,7 +132,7 @@ test('array column was added', function()
     });
     Schema::dropIfExists('parentobjects_parent_sarray');
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -157,7 +157,7 @@ test('column type changed', function()
         $table->integer('element');
     });
 
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -182,7 +182,7 @@ test('column array type changed', function()
         $table->integer('element');
     });
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
@@ -208,7 +208,7 @@ test('column array index type changed', function()
         $table->string('element');
     });
     
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
