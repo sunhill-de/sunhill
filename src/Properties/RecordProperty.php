@@ -276,7 +276,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     public function __get($varname): mixed
     {
         if (!$this->hasElement($varname)) {
-            throw new PropertyNotFoundException("The property '$varname' does not exist.");
+            return $this->handleGetUnkownElement($varname);
         }
         $property = $this->elements[$varname];
         if (in_array($property::class,[ArrayProperty::class])) {
@@ -286,13 +286,23 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         }
     }
     
+    protected function handleGetUnkownElement(string $varname)
+    {
+        throw new PropertyNotFoundException("The property '$varname' does not exist.");        
+    }
+    
     public function __set($varname, $value)
     {
         if (!$this->hasElement($varname)) {
-            throw new PropertyNotFoundException("The property '$varname' does not exist.");
+            $this->handleSetUnknownElement($varname, $value);
         }        
         $property = $this->elements[$varname];
         return $property->setValue($value);
+    }
+    
+    protected function handleSetUnknownElement(string $varname, $value)
+    {
+        throw new PropertyNotFoundException("The property '$varname' does not exist.");        
     }
     
     private function getElements(): array
