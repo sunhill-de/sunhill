@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Storage\MysqlStorages;
+namespace Sunhill\Storage\MysqlStorage;
 
 use Sunhill\Basic\Base;
 use Illuminate\Support\Facades\DB;

@@ -13,12 +13,12 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Storage\MysqlStorages;
+namespace Sunhill\Storage\MysqlStorage;
 
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
-use Sunhill\Storage\AttributeStorage;
 use Illuminate\Support\Facades\DB;
+use Sunhill\Storage\ObjectStorage\AttributeStorage;
 
 class MysqlAttributeStorage extends AttributeStorage
 {

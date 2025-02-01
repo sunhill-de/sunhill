@@ -13,10 +13,11 @@
  * Coverage: 
  */
 
-namespace Sunhill\Storage;
+namespace Sunhill\Storage\ObjectStorage;
 
 use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\Exceptions\AttributeNameNotSetException;
+use Sunhill\Storage\PersistentPoolStorage;
 
 /**
  * @author klaus
