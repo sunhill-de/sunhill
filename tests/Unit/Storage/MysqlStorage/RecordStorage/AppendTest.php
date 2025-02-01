@@ -1,10 +1,10 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
-use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
+use Sunhill\Tests\TestSupport\Objects\Dummy;
 
 require_once('PrepareStorage.php');
 
@@ -12,7 +12,8 @@ uses(SunhillDatabaseTestCase::class);
 
 test('Append a dummy', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
+    $test->setStructure(Dummy::getExpectedStructure);
     $test->setStructure(prepareStorage($this, 'dummy'));
 
     $test->setValue('dummyint',1509);
@@ -34,8 +35,7 @@ test('Append a dummy', function()
 test('Append a parentobject with array', function()
 {
     
-    $structure = 
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
 
     $test->setValue('parent_int',1509);
@@ -54,7 +54,7 @@ test('Append a parentobject with array', function()
 
 test('Append a parentobject with empty array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
 
     $test->setValue('parent_int',1509);
@@ -71,7 +71,7 @@ test('Append a parentobject with empty array', function()
 
 test('Append a childobject with both arrays', function()
 {    
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
 
     $test->setValue('parent_int',1509);
@@ -94,7 +94,7 @@ test('Append a childobject with both arrays', function()
 
 test('Append a childobject with parent array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     
     $test->setValue('parent_int',1509);
@@ -114,7 +114,7 @@ test('Append a childobject with parent array', function()
 
 test('Append a childobject with child array', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     
     $test->setValue('parent_int',1509);
@@ -134,7 +134,7 @@ test('Append a childobject with child array', function()
 
 test('Read a childobject with both arrays empty', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     
     $test->setValue('parent_int',1509);
@@ -154,7 +154,7 @@ test('Read a childobject with both arrays empty', function()
 
 it('fails when a table is missing', function()
 {
-    $test = new PoolMysqlStorage();
+    $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'childobject'));
     Schema::drop('parentobjects_parent_sarray');
     

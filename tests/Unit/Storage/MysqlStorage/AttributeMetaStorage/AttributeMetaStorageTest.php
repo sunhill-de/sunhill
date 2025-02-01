@@ -2,7 +2,7 @@
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Tests\Scenarios\Attributes\AttributeScenario;
-use Sunhill\Storage\MysqlStorages\MysqlAttributeMetaStorage;
+use Sunhill\Storage\MysqlStorage\MysqlAttributeMetaStorage;
 
 uses(SunhillDatabaseTestCase::class);
 
