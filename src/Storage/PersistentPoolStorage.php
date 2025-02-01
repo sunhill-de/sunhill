@@ -61,7 +61,7 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
             throw new StorageAlreadyLoadedException("The storage was already loaded");
         }
         if (!$this->isValidID($id)) {
-            throw new InvalidIDException("The given id is not valid for this storage");
+            throw new InvalidIDException(getScalarMessage("The given id :variable is not valid for this storage",$id));
         }
         $this->setId($id);
         $this->doLoad($id);
@@ -97,7 +97,7 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
      */
     protected function handleUnloaded()
     {
-        if (is_null($this->getID())) {
+        if (!is_null($this->getID())) {
             return $this->load($this->getID()); // unlikely event
         }
   //      throw 
