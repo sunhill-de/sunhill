@@ -13,7 +13,7 @@
  * PSR-State: completed
  */
 
-namespace Sunhill\Storage\MysqlStorages\ObjectUtils;
+namespace Sunhill\Storage\MysqlStorage\ObjectUtils;
 
 use Illuminate\Support\Facades\DB;
 use Sunhill\Tags\Tag;
@@ -168,7 +168,7 @@ class PoolMysqlMigrator extends PoolMysqlUtility
     {
         $result = new Matrix();     
         
-        foreach ($this->structure as $name => $descriptor) {
+        foreach ($this->structure->elements as $name => $descriptor) {
             if ($descriptor->storage_subid == 'objects') {
                 continue;
             }

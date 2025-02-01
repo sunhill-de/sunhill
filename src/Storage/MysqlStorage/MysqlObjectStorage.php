@@ -18,9 +18,12 @@ namespace Sunhill\Storage\MysqlStorage;
 use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
-use Sunhill\Storage\MysqlStorages\ObjectUtils\PoolMysqlLoader;
-use Sunhill\Storage\MysqlStorages\ObjectUtils\PoolMysqlDeleter;
-use Sunhill\Storage\MysqlStorages\ObjectUtils\PoolMysqlUpdater;
+use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlLoader;
+use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlDeleter;
+use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlUpdater;
+use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlCreator;
+use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlMigrator;
+use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlQuery;
 
 class MysqlObjectStorage extends PersistentPoolStorage
 {
