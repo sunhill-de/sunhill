@@ -25,6 +25,7 @@ use Sunhill\Semantics\Name;
 use Sunhill\Types\TypeVarchar;
 use Sunhill\Types\TypeDateTime;
 use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -153,7 +154,7 @@ class ORMObject extends PooledRecordProperty
     
     protected function createStorage(): ?AbstractStorage
     {
-        $storage = new PoolMysqlStorage();
+        $storage = new MysqlObjectStorage();
         $storage->setStructure($this->getStructure());
         return $storage;
     }
