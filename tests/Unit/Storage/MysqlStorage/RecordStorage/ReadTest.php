@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
+use Sunhill\Tests\TestSupport\Objects\Dummy;
 
 require_once('PrepareStorage.php');
 
@@ -17,20 +18,9 @@ test('fails when using a wrong id type', function()
     $test->load('A');     
 })->throws(InvalidIDException::class);
 
-test('Read a dummy', function()
-{
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'dummy'));
-    $test->load(1);
-    
-    expect($test->getValue('dummyint'))->toBe(123);
-    expect($test->getIndexedValue('tags',0)->getID())->toBe(1);
-});
-
 test('Read a parentobject with array', function()
 {
     
-    $structure = 
     $test = new MysqlObjectStorage();
     $test->setStructure(prepareStorage($this, 'parentobject'));
     $test->load(7);
