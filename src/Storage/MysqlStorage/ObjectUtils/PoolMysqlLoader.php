@@ -55,9 +55,9 @@ class PoolMysqlLoader extends PoolMysqlUtility
         $tags = DB::table('tagobjectassigns')->where('container_id', $id)->get();
         $result = [];
         foreach ($tags as $tag) {
-            $result[] = new Tag($tag->tag_id);
+            $result[] = $tag->tag_id;
         }
-        return ['tags'=>$result];        
+        return ['_tags'=>$result];        
     }
     
     private function loadAttributes(int $id)
@@ -77,8 +77,15 @@ class PoolMysqlLoader extends PoolMysqlUtility
             }
         }
         $result = array_merge($result, $this->loadArrays($id));        
-        $result = array_merge($result, $this->loadTags($id));
-        $result = array_merge($result, $this->loadAttributes($id));
+        $taggable = isset($this->structure->options['taggable'])?$this->structure->options['taggable']->value:false;
+        $attributable = isset($this->structure->options['attributable'])?$this->structure->options['attributable']->value:false;
+
+        if ($taggable) {
+            $result = array_merge($result, $this->loadTags($id));
+        }
+        if ($attributable) {
+            $result = array_merge($result, $this->loadAttributes($id));
+        }
         return $result;
     }
 }
