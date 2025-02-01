@@ -34,7 +34,7 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         }
         $this->structureNeeded();
         $this->values = [];
-        foreach($this->structure as $property => $descriptor) {
+        foreach($this->structure->elements as $property => $descriptor) {
             $this->values[$property] = static::$persistent_data[$descriptor->storage_subid][$id][$property];
         }
     }
@@ -46,7 +46,7 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
         }
         $this->structureNeeded();
         $storage_ids = [];
-        foreach ($this->structure as $property => $descriptor) {
+        foreach ($this->structure->elements as $property => $descriptor) {
             if (!in_array($descriptor->storage_subid,$storage_ids)) {
                 $storage_ids[] = $descriptor->storage_subid;
             }
@@ -65,7 +65,7 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
     {
         $modified = $this->getModifiedValues();
         foreach ($modified as $key => $value) {
-            static::$persistent_data[$this->structure[$key]->storage_subid][$this->getID()][$key] = $value->new;
+            static::$persistent_data[$this->structure->elements[$key]->storage_subid][$this->getID()][$key] = $value->new;
         }            
     }
     
@@ -73,10 +73,10 @@ class DummyPersistentPoolStorage extends PersistentPoolStorage
     {
         $id = count(static::$persistent_data['poolA']);
         foreach ($this->values as $key => $value) {
-            if (isset(static::$persistent_data[$this->structure[$key]->storage_subid][$id])) {
-                static::$persistent_data[$this->structure[$key]->storage_subid][$id][$key] = $value;
+            if (isset(static::$persistent_data[$this->structure->elements[$key]->storage_subid][$id])) {
+                static::$persistent_data[$this->structure->elements[$key]->storage_subid][$id][$key] = $value;
             } else {
-                static::$persistent_data[$this->structure[$key]->storage_subid][$id] = [$key => $value];
+                static::$persistent_data[$this->structure->elements[$key]->storage_subid][$id] = [$key => $value];
             }
         }
         return $id;
