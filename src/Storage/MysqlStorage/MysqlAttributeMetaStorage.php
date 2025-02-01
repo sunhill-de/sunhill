@@ -29,7 +29,7 @@ class MysqlAttributeMetaStorage extends PersistentPoolStorage
      */
     protected function doLoad(mixed $id)
     {
-        $query = DB::table('attributeobjectassigbs')->where('container_id',$id)->get();
+        $query = DB::table('attributeobjectassigns')->where('container_id',$id)->get();
     }
     
     /**
