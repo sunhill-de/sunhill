@@ -201,6 +201,26 @@ class ObjectsSeeder extends Seeder
                 '_created_at'=>'2024-10-17 13:55:00',
                 '_updated_at'=>'2024-10-17 13:55:00',
             ],
+            [
+                'id'=>20,// A ArrayOnlyChildObject
+                '_classname'=>'ArrayOnlyChildObject',
+                '_uuid'=>'136ca25d-b1e2-44d9-a17a-9824687742e3',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>21,// A ArrayOnlyChildObject
+                '_classname'=>'ArrayOnlyChildObject',
+                '_uuid'=>'eb6caaf5-88b5-4416-bfb1-91906a440dde',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
         ]);    
     }
     

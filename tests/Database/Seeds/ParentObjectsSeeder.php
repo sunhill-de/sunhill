@@ -18,7 +18,11 @@ class ParentObjectsSeeder extends Seeder
             ['id'=>10,'parent_int'=>444,'parent_string'=>'DDD'],
             ['id'=>11,'parent_int'=>555,'parent_string'=>'EEE'],
             ['id'=>12,'parent_int'=>666,'parent_string'=>'FFF'],
-       ]);    
+
+            ['id'=>20,'parent_int'=>5555,'parent_string'=>'ERE'],
+            ['id'=>21,'parent_int'=>6666,'parent_string'=>'FRF'],
+            
+        ]);    
 
     }
     
