@@ -34,50 +34,51 @@ class Dummy extends ORMObject
         $result->type = "record";
         $result->elements = [];
         
-        $result->elements['dummyint'] = new \stdClass();
-        $result->elements['dummyint']->name = 'dummyint';
-        $result->elements['dummyint']->type = 'integer';
-        $result->elements['dummyint']->storage_subid = 'dummies';
-        
-        $result->elements['_uuid'] = new \stdClass();
-        $result->elements['_uuid']->name = '_uuid';
-        $result->elements['_uuid']->type = 'string';
-        $result->elements['_uuid']->max_length = 40;
-        $result->elements['_uuid']->storage_subid = 'objects';
-        
-        $result->elements['_classname'] = new \stdClass();
-        $result->elements['_classname']->name = '_classname';
-        $result->elements['_classname']->type = 'string';
-        $result->elements['_classname']->max_length = 40;
-        $result->elements['_classname']->storage_subid = 'objects';
-        
-        $result->elements['_read_cap'] = new \stdClass();
-        $result->elements['_read_cap']->name = '_read_cap';
-        $result->elements['_read_cap']->type = 'string';
-        $result->elements['_read_cap']->max_length = 20;
-        $result->elements['_read_cap']->storage_subid = 'objects';
-        
-        $result->elements['_modify_cap'] = new \stdClass();
-        $result->elements['_modify_cap']->name = '_modify_cap';
-        $result->elements['_modify_cap']->type = 'string';
-        $result->elements['_modify_cap']->max_length = 20;
-        $result->elements['_modify_cap']->storage_subid = 'objects';
-        
-        $result->elements['_delete_cap'] = new \stdClass();
-        $result->elements['_delete_cap']->name = '_delete_cap';
-        $result->elements['_delete_cap']->type = 'string';
-        $result->elements['_delete_cap']->max_length = 20;
-        $result->elements['_delete_cap']->storage_subid = 'objects';
-        
-        $result->elements['_created_at'] = new \stdClass();
-        $result->elements['_created_at']->name = '_created_at';
-        $result->elements['_created_at']->type = 'datetime';
-        $result->elements['_created_at']->storage_subid = 'objects';
-        
-        $result->elements['_updated_at'] = new \stdClass();
-        $result->elements['_updated_at']->name = '_updated_at';
-        $result->elements['_updated_at']->type = 'datetime';
-        $result->elements['_updated_at']->storage_subid = 'objects';
+        $result->elements['dummyint'] = makeStdClass([
+            'name'=>'dummyint',
+            'type'=>'integer',
+            'storage_subid'=>'dummies'
+        ]);
+        $result->elements['_uuid'] = makeStdClass([
+            'name'=>'_uuid',
+            'type'=>'string',
+            'max_length'=>40,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_classname'] = makeStdClass([
+            'name'=>'_classname',
+            'type'=>'string',
+            'max_length'=>40,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_read_cap'] = makeStdClass([
+            'name'=>'_read_cap',
+            'type'=>'string',
+            'max_length'=>20,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_modify_cap'] = makeStdClass([
+            'name'=>'_modify_cap',
+            'type'=>'string',
+            'max_length'=>20,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_delete_cap'] = makeStdClass([
+            'name'=>'_delete_cap',
+            'type'=>'string',
+            'max_length'=>20,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_created_at'] = makeStdClass([
+            'name'=>'_created_at',
+            'type'=>'datetime',
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_updated_at'] = makeStdClass([
+            'name'=>'_updated_at',
+            'type'=>'datetime',
+            'storage_subid'=>'objects'
+        ]);
         
         $result->options = [
             'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'Dummy']),

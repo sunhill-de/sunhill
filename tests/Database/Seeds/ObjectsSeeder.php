@@ -131,6 +131,46 @@ class ObjectsSeeder extends Seeder
                 '_created_at'=>'2024-10-17 13:55:00',
                 '_updated_at'=>'2024-10-17 13:55:00',
             ],
+            [
+                'id'=>13,// A DummyChild
+                '_classname'=>'DummyChild',
+                '_uuid'=>'ca4dbd25-e054-4650-91f3-c5923b0b86fb',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>14,// A SkippingDummyChild
+                '_classname'=>'SkippingDummyChild',
+                '_uuid'=>'5931b225-5c4a-4a35-8c38-7a09be20512c',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>15,// A DummyGrandChild
+                '_classname'=>'DummyGrandChild',
+                '_uuid'=>'e7f7330a-923b-4e5c-ab45-802e029477cb',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>16,// A SkippingDummyGrandChild
+                '_classname'=>'SkippingDummyGrandChild',
+                '_uuid'=>'3962cb40-1f33-4d05-b0e0-2bc1ade2f467',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
         ]);    
     }
     

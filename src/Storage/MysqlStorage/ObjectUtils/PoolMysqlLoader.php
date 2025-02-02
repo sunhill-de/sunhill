@@ -73,7 +73,8 @@ class PoolMysqlLoader extends PoolMysqlUtility
         $result = json_decode(json_encode($object),true);
         foreach ($this->getStorageSubids() as $subid) {
             if ($subid !== 'objects') {
-                $result = array_merge($result, json_decode(json_encode($this->loadTable($subid, $id)),true));
+                $table = $this->loadTable($subid, $id);
+                $result = array_merge($result, json_decode(json_encode($table),true));
             }
         }
         $result = array_merge($result, $this->loadArrays($id));        

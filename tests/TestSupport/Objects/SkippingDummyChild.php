@@ -10,19 +10,16 @@ use Sunhill\Tests\Database\Seeds\TagsSeeder;
 use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
 use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
 use Sunhill\Tests\Database\Seeds\DummyChildrenSeeder;
+use Sunhill\Tests\Database\Seeds\SkippingDummyChildrenSeeder;
 
-class DummyChild extends Dummy
+class SkippingDummyChild extends Dummy
 {
-    protected static function initializeRecord(ElementBuilder $builder)
-    {
-        $builder->addProperty(TypeInteger::class,'dummychildint');
-    }
   
     protected static function setupInfos()
     {
-        static::addInfo('name', 'DummyChild');
-        static::addInfo('description', 'A simple child object with only one integer member.', true);
-        static::addInfo('storage_id', 'dummychildren');
+        static::addInfo('name', 'SkippingDummyChild');
+        static::addInfo('description', 'A simple child object with no member.', true);
+        static::addInfo('storage_id', 'skippingdummychildren');
         static::addInfo('taggable', true);
         static::addInfo('attributable', true);
     }
@@ -37,19 +34,13 @@ class DummyChild extends Dummy
         $result->elements['dummyint'] = makeStdClass([
             'name'=>'dummyint',
             'type'=>'integer',
-            'storage_subid'=>'dummies'
+            'storage_subid'=>'dummies'            
         ]);
-        $result->elements['dummychildint'] = makeStdClass([
-            'name'=>'dummychildint',
-            'type'=>'integer',
-            'storage_subid'=>'dummychildren'
-        ]);
-        
         $result->elements['_uuid'] = makeStdClass([
             'name'=>'_uuid',
             'type'=>'string',
             'max_length'=>40,
-            'storage_subid'=>'objects'
+            'storage_subid'=>'objects'            
         ]);
         $result->elements['_classname'] = makeStdClass([
             'name'=>'_classname',
@@ -78,7 +69,7 @@ class DummyChild extends Dummy
         $result->elements['_created_at'] = makeStdClass([
             'name'=>'_created_at',
             'type'=>'datetime',
-            'storage_subid'=>'objects'
+            'storage_subid'=>'objects'            
         ]);
         $result->elements['_updated_at'] = makeStdClass([
             'name'=>'_updated_at',
@@ -87,9 +78,9 @@ class DummyChild extends Dummy
         ]);
         
         $result->options = [
-            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'DummyChild']),
-            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with only one integer member.']),
-            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'dummychildren']),
+            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'SkippingDummyChild']),
+            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple child object with no member.']),
+            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'skippingdummychildren']),
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
@@ -102,7 +93,7 @@ class DummyChild extends Dummy
         $test->seed([
             ObjectsSeeder::class,
             DummiesSeeder::class,
-            DummyChildrenSeeder::class,
+            SkippingDummyChildrenSeeder::class,
             TagsSeeder::class,
             TagCacheSeeder::class,
             TagObjectAssignsSeeder::class

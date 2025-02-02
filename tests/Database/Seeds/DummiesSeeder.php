@@ -17,6 +17,10 @@ class DummiesSeeder extends Seeder
             ['id'=>4,'dummyint'=>456],
             ['id'=>5,'dummyint'=>567],
             ['id'=>6,'dummyint'=>678],
+            ['id'=>13,'dummyint'=>999],
+            ['id'=>14,'dummyint'=>987],
+            ['id'=>15,'dummyint'=>986],
+            ['id'=>16,'dummyint'=>976],
         ]);    
     }
     

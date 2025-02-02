@@ -10,19 +10,20 @@ use Sunhill\Tests\Database\Seeds\TagsSeeder;
 use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
 use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
 use Sunhill\Tests\Database\Seeds\DummyChildrenSeeder;
+use Sunhill\Tests\Database\Seeds\DummyGrandChildrenSeeder;
 
-class DummyChild extends Dummy
+class DummyGrandChild extends DummyChild
 {
     protected static function initializeRecord(ElementBuilder $builder)
     {
-        $builder->addProperty(TypeInteger::class,'dummychildint');
+        $builder->addProperty(TypeInteger::class,'dummygrandchildint');
     }
   
     protected static function setupInfos()
     {
-        static::addInfo('name', 'DummyChild');
-        static::addInfo('description', 'A simple child object with only one integer member.', true);
-        static::addInfo('storage_id', 'dummychildren');
+        static::addInfo('name', 'DummyGrandChild');
+        static::addInfo('description', 'A simple grand child object with only one integer member.', true);
+        static::addInfo('storage_id', 'dummygrandchildren');
         static::addInfo('taggable', true);
         static::addInfo('attributable', true);
     }
@@ -43,6 +44,11 @@ class DummyChild extends Dummy
             'name'=>'dummychildint',
             'type'=>'integer',
             'storage_subid'=>'dummychildren'
+        ]);
+        $result->elements['dummygrandchildint'] = makeStdClass([
+            'name'=>'dummygrandchildint',
+            'type'=>'integer',
+            'storage_subid'=>'dummygrandchildren'
         ]);
         
         $result->elements['_uuid'] = makeStdClass([
@@ -87,9 +93,9 @@ class DummyChild extends Dummy
         ]);
         
         $result->options = [
-            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'DummyChild']),
-            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with only one integer member.']),
-            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'dummychildren']),
+            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'DummyGrandChild']),
+            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple grand child object with only one integer member.']),
+            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'dummygrandchildren']),
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
@@ -103,6 +109,7 @@ class DummyChild extends Dummy
             ObjectsSeeder::class,
             DummiesSeeder::class,
             DummyChildrenSeeder::class,
+            DummyGrandChildrenSeeder::class,
             TagsSeeder::class,
             TagCacheSeeder::class,
             TagObjectAssignsSeeder::class
