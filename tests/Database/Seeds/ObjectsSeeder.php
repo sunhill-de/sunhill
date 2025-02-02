@@ -171,6 +171,36 @@ class ObjectsSeeder extends Seeder
                 '_created_at'=>'2024-10-17 13:55:00',
                 '_updated_at'=>'2024-10-17 13:55:00',
             ],
+            [
+                'id'=>17,// A ParentReference
+                '_classname'=>'ParentReference',
+                '_uuid'=>'6f7f878e-eb38-4744-800e-82d7c55d10fd',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>18,// A ParentReference
+                '_classname'=>'ParentReference',
+                '_uuid'=>'0c9dcfc9-9167-4eb9-b621-7b84fa9f2161',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
+            [
+                'id'=>19,// A SkippingDummyGrandChild
+                '_classname'=>'ParentReference',
+                '_uuid'=>'aadf08cb-2d28-4c21-85a9-12914bda95a9',
+                '_read_cap'=>null,
+                '_modify_cap'=>null,
+                '_delete_cap'=>null,
+                '_created_at'=>'2024-10-17 13:55:00',
+                '_updated_at'=>'2024-10-17 13:55:00',
+            ],
         ]);    
     }
     

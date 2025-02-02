@@ -52,7 +52,7 @@ class ChildObject extends ParentObject
             'name'=>'parent_sarray',
             'type'=>'array',
             'storage_subid'=>'parentobjects',
-            'element_type'=>TypeInteger::class,
+            'element_type'=>'integer',
             'index_type'=>'integer'
         ]);
         

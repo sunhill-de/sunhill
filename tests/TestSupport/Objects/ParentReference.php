@@ -12,21 +12,24 @@ use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
 use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
 use Sunhill\Tests\Database\Seeds\ParentObjectsSeeder;
 use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
+use Sunhill\Properties\ReferenceProperty;
+use Sunhill\Tests\Database\Seeds\ParentReferencesSeeder;
+use Sunhill\Tests\Database\Seeds\ParentReferences_parent_rarraySeeder;
 
-class ParentObject extends ORMObject
+class ParentReference extends ORMObject
 {
     protected static function initializeRecord(ElementBuilder $builder)
     {
         $builder->addProperty(TypeInteger::class,'parent_int');
-        $builder->addProperty(TypeVarchar::class,'parent_string')->setMaxLen(3);
-        $builder->array('parent_sarray')->setAllowedElementTypes(TypeInteger::class);
+        $builder->referRecord(Dummy::class, 'parent_reference');
+        $builder->arrayOfReferences('parent_rarray')->setAllowedElementTypes(Dummy::class);
     }
     
     protected static function setupInfos()
     {
-        static::addInfo('name', 'ParentObject');
-        static::addInfo('description', 'A simple object with an int, string and array of int.', true);
-        static::addInfo('storage_id', 'parentobjects');
+        static::addInfo('name', 'ParentReference');
+        static::addInfo('description', 'A simple object with an int, a reference to dummy and an array of dummies.', true);
+        static::addInfo('storage_id', 'parentreferences');
     }
 
     public static function getExpectedStructure()
@@ -39,22 +42,20 @@ class ParentObject extends ORMObject
         $result->elements['parent_int'] = makeStdClass([
             'name'=>'parent_int',
             'type'=>'integer',
-            'storage_subid'=>'parentobjects'
+            'storage_subid'=>'parentreferences'
         ]);
-        $result->elements['parent_string'] = makeStdClass([
-            'name'=>'parent_string',
-            'type'=>'string',
-            'max_length'=>3,
-            'storage_subid'=>'parentobjects'
+        $result->elements['parent_reference'] = makeStdClass([
+            'name'=>'parent_reference',
+            'type'=>'integer',
+            'storage_subid'=>'parentreferences',
         ]);
-        $result->elements['parent_sarray'] = makeStdClass([
-            'name'=>'parent_sarray',
+        $result->elements['parent_rarray'] = makeStdClass([
+            'name'=>'parent_rarray',
             'type'=>'array',
-            'storage_subid'=>'parentobjects',
+            'storage_subid'=>'parentreferences',
             'element_type'=>'integer',
             'index_type'=>'integer'
-        ]);
-        
+        ]);        
         $result->elements['_uuid'] = makeStdClass([
             'name'=>'_uuid',
             'type'=>'string',
@@ -97,9 +98,9 @@ class ParentObject extends ORMObject
         ]);
         
         $result->options = [
-            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'ParentObject']),
-            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with an int, string and array of int.']),
-            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'parentobjects']),
+            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'ParentReference']),
+            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with an int, a reference to dummy and an array of dummies.']),
+            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'parentreferences']),
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
@@ -111,8 +112,8 @@ class ParentObject extends ORMObject
     {
         $test->seed([
             ObjectsSeeder::class,
-            ParentObjectsSeeder::class,
-            ParentObjects_parent_sarraySeeder::class,
+            ParentReferencesSeeder::class,
+            ParentReferences_parent_rarraySeeder::class,
             TagsSeeder::class,
             TagCacheSeeder::class,
             TagObjectAssignsSeeder::class

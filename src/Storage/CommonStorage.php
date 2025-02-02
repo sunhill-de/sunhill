@@ -35,7 +35,7 @@ abstract class CommonStorage extends AbstractStorage
 
     private function checkFieldExistence(string $name)
     {
-        if (!isset($this->values[$name])) {
+        if (!array_key_exists($name, $this->values)) {
             throw new FieldNotAvaiableException("The field '$name' is not avaiable.");
         }       
     }
