@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * A very simple 2nd generation inherited testing object that inherited no additional field but implements one
+ * @file
+ */
+
 namespace Sunhill\Tests\TestSupport\Objects;
 
 use Sunhill\Types\TypeInteger;

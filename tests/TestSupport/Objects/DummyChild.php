@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * A very simple testing inherited object with only one additional integer as a member
+ * @file
+ */
+
 namespace Sunhill\Tests\TestSupport\Objects;
 
 use Sunhill\Types\TypeInteger;

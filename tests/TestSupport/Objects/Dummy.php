@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * A very simple testing object with only one integer as a member
+ * @file
+ */
+
 namespace Sunhill\Tests\TestSupport\Objects;
 
 use Sunhill\Objects\ORMObject;
