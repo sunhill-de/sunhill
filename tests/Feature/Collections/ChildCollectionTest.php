@@ -2,9 +2,8 @@
 
 use Sunhill\Tests\SunhillKeepingDatabaseTestCase;
 use Sunhill\Facades\Properties;
-use Illuminate\Support\Facades\DB;
-use Sunhill\Tests\TestSupport\Objects\ParentCollection;
-use Sunhill\Tests\TestSupport\Objects\ChildCollection;
+use Sunhill\Tests\TestSupport\Collections\ParentCollection;
+use Sunhill\Tests\TestSupport\Collections\ChildCollection;
 
 uses(SunhillKeepingDatabaseTestCase::class);
 

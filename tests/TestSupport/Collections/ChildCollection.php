@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Tests\TestSupport\Objects;
+namespace Sunhill\Tests\TestSupport\Collections;
 
 use Sunhill\Types\TypeInteger;
 use Sunhill\Properties\ElementBuilder;
