@@ -21,6 +21,11 @@ use Sunhill\Tests\Database\Seeds\SkippingDummyGrandChildrenSeeder;
 class SkippingDummyGrandChild extends Dummy
 {
   
+    protected static function initializeRecord(ElementBuilder $builder)
+    {
+        $builder->addProperty(TypeInteger::class,'dummygrandchildint');
+    }
+    
     protected static function setupInfos()
     {
         static::addInfo('name', 'SkippingDummyGrandChild');
