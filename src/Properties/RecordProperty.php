@@ -89,11 +89,20 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         $this->setupRecord([$class,'initializeRecord'], (static::$inherited_inclusion == 'include')?static::getStorageID():$class::getStorageID());
     }
     
+    private function definesOwnProperties($pointer): bool
+    {
+        $class = new \ReflectionClass($pointer);
+        $method = $class->getMethod('initializeRecord');
+        return ($method->class == $pointer);
+    }
+    
     private function initializeInheritance()
     {
         $pointer = $this::class;
         while ($pointer !== RecordProperty::class) {
-            $this->initializeChild($pointer);
+            if ($this->definesOwnProperties($pointer)) {
+                $this->initializeChild($pointer);
+            }
             $pointer = (static::$inherited_inclusion == 'none')?RecordProperty::class:get_parent_class($pointer);
         }
     }
