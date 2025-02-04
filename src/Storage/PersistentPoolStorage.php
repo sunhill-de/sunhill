@@ -69,6 +69,17 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
     }
     
     /**
+     * This function returns true, when the given ID exists in the pool.
+     * 
+     * @param mixed $id
+     * @return bool
+     */
+    public function IDExists(mixed $id): bool
+    {
+        return true; // We assume true, could be overwritten  
+    }
+    
+    /**
      * Performs the load of data from the persitent
      * @param mixed $id
      */

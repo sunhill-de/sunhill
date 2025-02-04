@@ -25,6 +25,8 @@ class ReferenceProperty extends AbstractProperty
      */
     protected $allowed_properties = [];
     
+    protected $refered_record;
+    
     /**
      * First checks if it is a record property at all, then if it is in the list of 
      * allowed properties (or the list is empty)
@@ -101,5 +103,61 @@ class ReferenceProperty extends AbstractProperty
         }
         return parent::handleUninitialized();
     }
+
+    protected function formatForStorage($value)
+    {
+        if (is_a($value, PooledRecordProperty::class)) {
+            $this->refered_record = $value;
+            return $value->getID();
+        } else {
+            return $value;       
+        }
+    }
     
+    /**
+     * We received an ID from the storage so we try to load the referenced record
+     * 
+     * @param unknown $id
+     */
+    protected function tryToLoadRecord($id)
+    {
+        foreach ($this->allowed_properties as $property) {
+            if (method_exists($property, 'IDexists')) {
+                $test = new $property();
+                if ($test->IDexists($id)) {
+                    $test->load($id);
+                    $this->refered_record = $test;
+                    return $this->refered_record;
+                }
+            }
+        }
+    }
+    
+    /**
+     * When dealing with pooled records the storage only stores the id of the record. So in this method we have
+     * to convert the id to a record. 
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Properties\AbstractProperty::formatFromStorage()
+     */
+    protected function formatFromStorage($value)
+    {
+        if (isset($this->refered_record)) {
+            // A record is already referenced
+            return $this->refered_record;
+        } else if (is_scalar($value)) {
+            // We assume an ID
+            return $this->tryToLoadRecord($value);
+        }
+        return $value; // In all other cases we assume a non pooled record and return whatever the storage returns
+    }
+    
+    public function getID()
+    {
+        if (isset($this->refered_record)) {
+           return $this->refered_record->getID(); 
+        } else {
+            return $this->getValue();
+        }
+    }
 }

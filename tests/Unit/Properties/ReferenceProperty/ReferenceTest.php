@@ -6,10 +6,11 @@ use Sunhill\Tests\TestSupport\Properties\DummyRecordProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\RecordProperty;
 use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Properties\PooledRecordProperty;
 
 uses(SimpleTestCase::class);
 
-test('Assigning an record works', function()
+test('Assigning a standard record works', function()
 {
     $property = new DummyRecordProperty();
     
@@ -23,7 +24,44 @@ test('Assigning an record works', function()
     $test->setStorage($storage);   
     
     $test->setValue($property);
-    $test->getValue();
+    expect($test->getValue())->toBe($property);
+});
+
+test('Assigning a pooled record works', function()
+{
+    $property = \Mockery::mock(PooledRecordProperty::class);
+    $property->shouldReceive('getID')->andReturn(10);
+    
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->shouldReceive('setValue')->once()->with('container', 10);
+    $storage->shouldReceive('getIsInitialized')->with('container')->andReturn(true);
+    $storage->shouldReceive('getValue')->once()->with('container')->andReturn(10);
+    
+    $test = new ReferenceProperty();
+    $test->setName('container');
+    $test->setStorage($storage);
+    
+    $test->setValue($property);
+    expect($test->getValue())->toBe($property);
+});
+
+test('Loading a record from a pool works', function()
+{
+    $property = \Mockery::mock(PooledRecordProperty::class);
+    $property->shouldReceive('getID')->andReturn(10);
+        
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->shouldReceive('getIsInitialized')->with('container')->andReturn(true);
+    $storage->shouldReceive('getValue')->once()->with('container')->andReturn(10);
+
+    $test = \Mockery::mock(ReferenceProperty::class)->makePartial()->shouldAllowMockingProtectedMethods();;
+    $test->shouldReceive('tryToLoadRecord')->with(10)->andReturn($property);
+    
+    $test->setName('container');
+    $test->setStorage($storage);
+    
+    expect($test->getValue())->toBe($property);
+    
 });
 
 test('Test for allowed property passes', function()
