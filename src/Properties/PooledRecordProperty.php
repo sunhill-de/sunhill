@@ -41,7 +41,7 @@ class PooledRecordProperty extends PersistentRecordProperty
         $this->checkForStorage();
         $storage = $this->getStorage();
         $storage->setStructure($this->getStructure());
-        return $storage->IDexsists($id);        
+        return $storage->IDExists($id);        
     }
     
     protected function isValidStorage(AbstractStorage $storage): bool
