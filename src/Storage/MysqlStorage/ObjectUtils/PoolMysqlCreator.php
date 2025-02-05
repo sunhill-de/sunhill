@@ -55,8 +55,8 @@ class PoolMysqlCreator extends PoolMysqlUtility
     private function createTags(int $id, array $values)
     {
         $dataset = [];
-        foreach ($values['tags']??[] as $tag) {
-            $dataset[] = ['container_id'=>$id,'tag_id'=>$tag->getID()];
+        foreach ($values['_tags']??[] as $tag) {
+            $dataset[] = ['container_id'=>$id,'tag_id'=>$tag];
         }
         DB::table('tagobjectassigns')->insert($dataset);
     }
@@ -75,7 +75,9 @@ class PoolMysqlCreator extends PoolMysqlUtility
             }
         }
         $this->createArrays($id, $values);
-        $this->createTags($id, $values);
+        if ($this->structure->options['taggable']->value) {
+            $this->createTags($id, $values);
+        }
         $this->createAttributes($id, $values);
         return $id;
     }
