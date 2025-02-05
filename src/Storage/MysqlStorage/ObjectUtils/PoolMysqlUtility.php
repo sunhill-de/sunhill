@@ -107,6 +107,9 @@ class PoolMysqlUtility
                 $result[$field] = $this->getField($values[$field]);
             }
         }
+        if (!isset($result['_classname'])) {
+            $result['_classname'] = $this->structure->options['name']->value;
+        }
         return $result;
     }
     
