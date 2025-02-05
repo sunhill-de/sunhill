@@ -28,6 +28,8 @@ class ArrayOnlyChildObject extends ParentObject
         static::addInfo('name', 'ArrayOnlyChildObject');
         static::addInfo('description', 'A simple derrived object with an array of int.', true);
         static::addInfo('storage_id', 'arrayonlychildobjects');
+        static::addInfo('taggable', true);
+        static::addInfo('attributable', true);
     }
   
     public static function getExpectedStructure()
@@ -60,7 +62,7 @@ class ArrayOnlyChildObject extends ParentObject
             'name'=>'child_sarray',
             'type'=>'array',
             'storage_subid'=>'arrayonlychildobjects',
-            'element_type'=>TypeInteger::class,
+            'element_type'=>'integer',
             'index_type'=>'integer'
         ]);
         

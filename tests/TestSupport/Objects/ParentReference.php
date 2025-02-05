@@ -30,6 +30,8 @@ class ParentReference extends ORMObject
         static::addInfo('name', 'ParentReference');
         static::addInfo('description', 'A simple object with an int, a reference to dummy and an array of dummies.', true);
         static::addInfo('storage_id', 'parentreferences');
+        static::addInfo('taggable', true);
+        static::addInfo('attributable', true);
     }
 
     public static function getExpectedStructure()

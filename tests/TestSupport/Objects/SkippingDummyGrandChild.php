@@ -18,7 +18,7 @@ use Sunhill\Tests\Database\Seeds\DummyChildrenSeeder;
 use Sunhill\Tests\Database\Seeds\SkippingDummyChildrenSeeder;
 use Sunhill\Tests\Database\Seeds\SkippingDummyGrandChildrenSeeder;
 
-class SkippingDummyGrandChild extends Dummy
+class SkippingDummyGrandChild extends SkippingDummyChild
 {
   
     protected static function initializeRecord(ElementBuilder $builder)

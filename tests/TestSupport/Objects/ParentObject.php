@@ -27,6 +27,8 @@ class ParentObject extends ORMObject
         static::addInfo('name', 'ParentObject');
         static::addInfo('description', 'A simple object with an int, string and array of int.', true);
         static::addInfo('storage_id', 'parentobjects');
+        static::addInfo('taggable', true);
+        static::addInfo('attributable', true);
     }
 
     public static function getExpectedStructure()

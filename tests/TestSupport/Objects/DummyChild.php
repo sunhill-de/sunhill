@@ -93,7 +93,7 @@ class DummyChild extends Dummy
         
         $result->options = [
             'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'DummyChild']),
-            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with only one integer member.']),
+            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple child object with only one integer member.']),
             'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'dummychildren']),
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),

@@ -55,7 +55,7 @@ class ReferenceProperty extends AbstractProperty
     
     public static function getAccessType(): string
     {
-        return 'record';
+        return 'integer';
     }
     
     private function handleArray(array $allowed_properties)

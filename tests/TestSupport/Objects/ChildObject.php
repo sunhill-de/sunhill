@@ -28,6 +28,8 @@ class ChildObject extends ParentObject
         static::addInfo('name', 'ChildObject');
         static::addInfo('description', 'A simple derrived object with an int, string and array of int.', true);
         static::addInfo('storage_id', 'childobjects');
+        static::addInfo('taggable', true);
+        static::addInfo('attributable', true);
     }
   
     public static function getExpectedStructure()
@@ -71,7 +73,7 @@ class ChildObject extends ParentObject
             'name'=>'child_sarray',
             'type'=>'array',
             'storage_subid'=>'childobjects',
-            'element_type'=>TypeInteger::class,
+            'element_type'=>'integer',
             'index_type'=>'integer'
         ]);
         
