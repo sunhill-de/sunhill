@@ -24,7 +24,6 @@ test('Append a Dummy', function()
     $test->setValue('dummyint',1999);
     $test->commit();
     
-    $query = DB::table('objects')->get();
     $this->assertDatabaseHas('dummies',['dummyint'=>1999]);
     $this->assertDatabaseHas('objects', ['_classname'=>'Dummy','_uuid'=>'ABCD','_created_at'=>'2025-02-05 17:54:10']);
 });

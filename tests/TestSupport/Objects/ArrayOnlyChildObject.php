@@ -113,6 +113,7 @@ class ArrayOnlyChildObject extends ParentObject
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
         
+        $result->skipping_members = [];
         return $result;
     }
     

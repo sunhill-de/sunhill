@@ -90,6 +90,7 @@ class SkippingDummyChild extends Dummy
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
+        $result->skipping_members = [SkippingDummyChild::class=>'skippingdummychildren'];
         
         return $result;
     }

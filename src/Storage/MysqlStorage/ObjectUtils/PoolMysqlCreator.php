@@ -66,6 +66,17 @@ class PoolMysqlCreator extends PoolMysqlUtility
         return [];    
     }
     
+    private function handleSkippingMembers(int $id, array $members)
+    {
+        foreach ($members as $member) {
+            if ($member == 'objects') {
+               continue;
+            }
+            $this->tableNeeded($member);
+            DB::table($member)->insert(['id'=>$id]);
+        }
+    }
+    
     public function create(array $values): int
     {
         $id = $this->createObject($values);
@@ -74,8 +85,11 @@ class PoolMysqlCreator extends PoolMysqlUtility
                 $this->createTable($subid, $id, $values);
             }
         }
+        if (!empty($this->structure->skipping_members)) {
+            $this->handleSkippingMembers($id, $this->structure->skipping_members);
+        }
         $this->createArrays($id, $values);
-        if ($this->structure->options['taggable']->value) {
+        if (isset($this->structure->options['taggable']) && $this->structure->options['taggable']->value) {
             $this->createTags($id, $values);
         }
         $this->createAttributes($id, $values);

@@ -123,6 +123,7 @@ class ChildObject extends ParentObject
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
+        $result->skipping_members = [];
         
         return $result;
     }

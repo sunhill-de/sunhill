@@ -24,6 +24,8 @@ use Sunhill\Properties\Exceptions\InvalidInclusionException;
 use Sunhill\Properties\Exceptions\NotAllowedInclusionException;
 use Sunhill\Properties\Exceptions\PropertyNotFoundException;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Objects\Collection;
+use Sunhill\Objects\ORMObject;
 
 class RecordProperty extends AbstractProperty implements \Countable,\Iterator
 {
@@ -35,6 +37,8 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      */
     protected static $inherited_inclusion = 'include';
         
+    protected $skipping_members = [];
+    
     public function __construct($elements = null)
     {
         parent::__construct();
@@ -96,12 +100,25 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         return ($method->class == $pointer);
     }
     
+    /**
+     * This method is callen whenever the class defines no own properties (= skipping record)
+     * @param string $pointer
+     */
+    private function handleSkippingRecord(string $pointer)
+    {
+        if ($pointer::hasInfo('storage_id') && ($pointer::getInfo('storage_id') !== 'objects')) {
+            $this->skipping_members[$pointer] = $pointer::getInfo('storage_id');
+        }
+    }
+    
     private function initializeInheritance()
     {
         $pointer = $this::class;
         while ($pointer !== RecordProperty::class) {
             if ($this->definesOwnProperties($pointer)) {
                 $this->initializeChild($pointer);
+            } else {
+                $this->handleSkippingRecord($pointer);
             }
             $pointer = (static::$inherited_inclusion == 'none')?RecordProperty::class:get_parent_class($pointer);
         }
@@ -335,6 +352,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
         $return = parent::getStructure();
         $return->elements = $this->getElements();
         $return->options = static::getAllInfos();
+        $return->skipping_members = $this->skipping_members;
         return $return;
     }
 }

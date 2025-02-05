@@ -47,8 +47,8 @@ class SkippingDummyGrandChild extends Dummy
             'type'=>'integer',
             'storage_subid'=>'dummies'            
         ]);
-        $result->elements['grandchilddummyint'] = makeStdClass([
-            'name'=>'grandchilddummyint',
+        $result->elements['dummygrandchildint'] = makeStdClass([
+            'name'=>'dummygrandchildint',
             'type'=>'integer',
             'storage_subid'=>'skippingdummygrandchildren'
         ]);
@@ -100,6 +100,7 @@ class SkippingDummyGrandChild extends Dummy
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
+        $result->skipping_members = [SkippingDummyChild::class=>'skippingdummychildren'];
         
         return $result;
     }
