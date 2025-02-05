@@ -15,6 +15,9 @@
 
 namespace Sunhill\Properties;
 
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\PropertyNotFoundException;
+
 class ReferenceProperty extends AbstractProperty 
 {
    
