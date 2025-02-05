@@ -13,7 +13,7 @@ test('getObjectName() works on Dummy', function()
 
 test('getObjectName() works on DummyChild', function()
 {
-    expect(DummyChild::getObjectName())->toBe('Dummychild');    
+    expect(DummyChild::getObjectName())->toBe('DummyChild');    
 });
 
 test('getStorageID() works on Dummy', function()
@@ -24,7 +24,7 @@ test('getStorageID() works on Dummy', function()
 
 test('getStorageID() works on DummyChild', function()
 {
-    expect(DummyChild::getInfo('storage_id'))->toBe('dummies');
-    expect(DummyChild::getStorageID())->toBe('dummychilds');
+    expect(DummyChild::getInfo('storage_id'))->toBe('dummychildren');
+    expect(DummyChild::getStorageID())->toBe('dummychildren');
 });
 
