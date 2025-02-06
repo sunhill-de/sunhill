@@ -104,11 +104,8 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * This method is callen whenever the class defines no own properties (= skipping record)
      * @param string $pointer
      */
-    private function handleSkippingRecord(string $pointer)
+    protected function handleSkippingRecord(string $pointer)
     {
-        if ($pointer::hasInfo('storage_id') && ($pointer::getInfo('storage_id') !== 'objects')) {
-            $this->skipping_members[$pointer] = $pointer::getInfo('storage_id');
-        }
     }
     
     private function initializeInheritance()
