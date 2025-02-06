@@ -57,6 +57,16 @@ class PoolMysqlDeleter extends PoolMysqlUtility
         return [];    
     }
     
+    private function handleSkippingMembers(int $id, array $members)
+    {
+        foreach ($members as $member) {
+            if ($member == 'objects') {
+                continue;
+            }
+            DB::table($member)->where('id',$id)->delete();
+        }
+    }
+    
     public function delete(int $id): bool
     {
         if (!$this->deleteObject($id)) {
@@ -66,6 +76,9 @@ class PoolMysqlDeleter extends PoolMysqlUtility
             if ($subid !== 'objects') {
                 $this->deleteTable($subid, $id);
             }
+        }
+        if (!empty($this->structure->skipping_members)) {
+            $this->handleSkippingMembers($id, $this->structure->skipping_members);
         }
         $this->deleteArrays($id);        
         $this->deleteTags($id);
