@@ -22,6 +22,11 @@ class ParentObjects_parent_sarraySeeder extends Seeder
             ['container_id'=>10,'index'=>0,'element'=>40],
             ['container_id'=>10,'index'=>1,'element'=>41],
             ['container_id'=>10,'index'=>2,'element'=>42],
+
+            ['container_id'=>20,'index'=>0,'element'=>40],
+            ['container_id'=>20,'index'=>1,'element'=>41],
+            ['container_id'=>20,'index'=>2,'element'=>42],
+            
         ]);    
     }
     
