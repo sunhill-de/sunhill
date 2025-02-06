@@ -1145,6 +1145,17 @@ abstract class AbstractProperty extends Base
     abstract public static function getAccessType(): string;
     
     /**
+     * The storage type is a hint for the storages how to store this property. By default this is the same as
+     * the access type. 
+     * 
+     * @return string
+     */
+    public static function getStorageType(): string
+    {
+        return static::getAccessType();
+    }
+    
+    /**
      * Assembles the metadata of this property and returns them as a associative array
      * 
      * @return string[]
@@ -1159,6 +1170,7 @@ abstract class AbstractProperty extends Base
         $result['unit'] = static::getUnit();
         $result['type'] = static::getAccessType();
         $result['update'] = static::getUpdate();
+        $result['storage_type'] = static::getStorageType();
         return $result;
     }
     
@@ -1466,7 +1478,7 @@ abstract class AbstractProperty extends Base
     {
         $result = new \stdClass();
         $result->name = $this->getName();
-        $result->type = static::getAccessType();
+        $result->type = static::getStorageType();
         
         return $result;
     }

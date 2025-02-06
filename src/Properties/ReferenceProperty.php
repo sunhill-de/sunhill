@@ -55,7 +55,7 @@ class ReferenceProperty extends AbstractProperty
     
     public static function getAccessType(): string
     {
-        return 'integer';
+        return 'record';
     }
     
     private function handleArray(array $allowed_properties)
@@ -163,4 +163,10 @@ class ReferenceProperty extends AbstractProperty
             return $this->getValue();
         }
     }
+    
+    public static function getStorageType(): string
+    {
+        return 'integer';
+    }
+    
 }

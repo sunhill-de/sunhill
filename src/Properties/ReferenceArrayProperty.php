@@ -23,12 +23,18 @@ use Sunhill\Properties\Exceptions\InvalidIndexException;
 class ReferenceArrayProperty extends ArrayProperty
 {
      
+    /**
+     * @todo At the momemnt we assuma a reference to by an integer. It could be a string too
+     * {@inheritDoc}
+     * @see \Sunhill\Properties\ArrayProperty::getStructure()
+     */
     public function getStructure(): \stdClass
     {
         $result = new \stdClass();
         $result->name = $this->getName();
-        $result->type = $this->getAccessType();
-        $result->element_type = $this->getAllowedElementTypes();
+        $result->type = 'array';
+        $result->element_type = 'integer';
+        $result->index_type = 'integer';
         
         return $result;
     }
