@@ -351,21 +351,7 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
     
     private function getElementType(): string
     {
-        if (count($this->getAllowedElementTypes()) == 0) {
-            return 'string'; // Default element type is string
-        }
-        if (count($this->getAllowedElementTypes()) == 1) {
-            return $this->getAllowedElementTypes()[0]::getAccessType();
-        }
-        
-        $matrix = ['boolean'=>1,'integer'=>2,'float'=>3,'date'=>4,'datetime'=>4,'time'=>4,'string'=>4,'text'=>5];
-        $reverse_matrix = ['boolean','integer','float','string','text'];
-
-        $highest = 0;
-        foreach ($this->getAllowedElementTypes() as $type) {
-            $highest = ($matrix[$type::getAccessType()] > $highest)?$matrix[$type::getAccessType()]:$highest;
-        }
-        return $reverse_matrix[$highest];
+        return $this->getAllowedElementType()::getStorageType();
     }
     
     public function getStructure(): \stdClass
