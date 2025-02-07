@@ -15,6 +15,7 @@ use Sunhill\Tests\Database\Seeds\ParentObjects_parent_sarraySeeder;
 use Sunhill\Properties\ReferenceProperty;
 use Sunhill\Tests\Database\Seeds\ParentReferencesSeeder;
 use Sunhill\Tests\Database\Seeds\ParentReferences_parent_rarraySeeder;
+use Sunhill\Tests\Database\Seeds\DummiesSeeder;
 
 class ParentReference extends ORMObject
 {
@@ -22,7 +23,7 @@ class ParentReference extends ORMObject
     {
         $builder->addProperty(TypeInteger::class,'parent_int');
         $builder->referRecord(Dummy::class, 'parent_reference');
-        $builder->arrayOfReferences('parent_rarray')->setAllowedElementTypes(Dummy::class);
+        $builder->arrayOfReferences('parent_rarray')->setAllowedElementType(Dummy::class);
     }
     
     protected static function setupInfos()
@@ -115,6 +116,7 @@ class ParentReference extends ORMObject
     {
         $test->seed([
             ObjectsSeeder::class,
+            DummiesSeeder::class,
             ParentReferencesSeeder::class,
             ParentReferences_parent_rarraySeeder::class,
             TagsSeeder::class,

@@ -6,35 +6,14 @@
 
 uses(\Sunhill\Tests\TestCase::class);
 
-use Sunhill\Properties\Exceptions\InvalidParameterException;
 use Sunhill\Types\TypeInteger;
 use Sunhill\Types\TypeVarchar;
-use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\InvalidValueException;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Properties\Exceptions\InvalidIndexException;
 use Sunhill\Properties\Exceptions\InvalidIndexTypeException;
 use Sunhill\Properties\MapProperty;
-
-test('set allowed type', function ($types, $pass) {
-    Properties::shouldReceive('isPropertyRegistered')->andReturn($pass);
-    Properties::shouldReceive('getNamespaceOfProperty')->andReturn('Namesapce');
-    if (!$pass) {
-        $this->expectException(InvalidParameterException::class);
-    }
-    $test = new ArrayProperty();
-    $test->setAllowedElementTypes($types);
-    expect(true)->toBeTrue();
-})->with([
-    'single class with namespace'=>[TypeInteger::class, true],
-    'list of classes with namespace'=>[[TypeInteger::class, TypeVarchar::class], true],
-    'class id'=>['integer', true],
-    'non existing class id'=>['notexisting', false],
-    'wrong type'=>[3.3, false],
-    'list of wrong types'=>[[3.3,4.3], false],
-    'list with one wrong type'=>[[TypeInteger::class, 3.3], false],    
-]);
 
 test('return array element count', function () {
     $test = new ArrayProperty();
@@ -44,14 +23,6 @@ test('return array element count', function () {
     $test->setStorage($storage);
     expect($test->count())->toEqual(2);
 });
-
-it('fails writing an array element with wrong type', function ($allowed, $value) {
-    $test = new ArrayProperty();
-    $test->setAllowedElementTypes($allowed);
-    $test[] = $value;    
-})->throws(InvalidValueException::class)->with(
-    ['Wrong type'=>[TypeInteger::class, 'ABC']]
-    );
 
 test('read array element', function() {
     $test = new ArrayProperty();
@@ -64,7 +35,7 @@ test('read array element', function() {
     expect($test[1], 5);
 });
 
-it('failes when reading an inavlid array element index', function() {
+it('fails when reading an inavlid array element index', function() {
         $test = new ArrayProperty();
         $test->setName('test');
         $storage = Mockery::mock(AbstractStorage::class);
@@ -79,13 +50,13 @@ test('write array element', function ($allowed, $value) {
     $storage = Mockery::mock(AbstractStorage::class);
     $storage->shouldReceive('setIndexedValue')->once();
     $test->setStorage($storage);
-    $test->setAllowedElementTypes($allowed);
+    $test->setAllowedElementType($allowed);
     $test[] = $value;
 })->with([
     [null, 'ABC'],
     [TypeVarchar::class, 'ABC'],
     [TypeInteger::class, 123],
-    [[TypeInteger::class, TypeVarchar::class], 'ABC'],
+    [TypeVarchar::class, 'ABC'],
 ]);
 
 test('Traversing an array element with integer indices', function() {
@@ -230,7 +201,7 @@ test('string index type acceps keys', function()
     $test = new ArrayProperty();
     $test->setName('test');
     $test->setIndexType('string');
-    $test->setAllowedElementTypes(TypeInteger::class);
+    $test->setAllowedElementType(TypeInteger::class);
     
     $storage = Mockery::mock(AbstractStorage::class);
     $storage->shouldReceive('getIsInitialized')->with('test')->once()->andReturn(true);

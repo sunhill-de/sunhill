@@ -15,6 +15,6 @@ test('modify a ParentReference', function()
     $test->parent_int = 20;
     $test->commit();
     
-    $this->assertDatabaseHas('parentreferences',['id'=>1,'parent_int'=>20]);
+    $this->assertDatabaseHas('parentreferences',['id'=>17,'parent_int'=>20]);
 });
 

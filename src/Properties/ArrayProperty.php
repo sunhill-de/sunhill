@@ -23,65 +23,86 @@ use Sunhill\Properties\Exceptions\InvalidIndexException;
 class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,\Iterator
 {
      
-    protected $allowed_element_types = [];
+    protected $allowed_element_type = '';
     
-    private function setAllowedElementTypes_array($array): array
+    protected $shadow_element;
+
+    /**
+     * A instance of a property class was passed. So use this class
+     * 
+     * @param unknown $class
+     * @return string
+     */
+    private function setAllowedElementType_class($class): string
     {
-        $result = [];
-        
-        foreach ($array as $element) {
-            $result = array_merge($result, $this->checkElementType($element));
+        return $class::class;        
+    }
+    
+    /**
+     * A string was passed. Could be a fully qualified class name or a internal class name
+     * 
+     * @param unknown $name
+     * @return string
+     */
+    private function setAllowedElementType_name($name): string
+    {
+        if (class_exists($name)) {
+            return $name;
         }
-        
-        return $result;
-    }
-    
-    private function setAllowedElementTypes_class($class): array
-    {
-        return [$class];        
-    }
-    
-    private function setAllowedElementTypes_name($name): array
-    {
         if (!Properties::isPropertyRegistered($name)) {
             throw new InvalidParameterException("'$name' is not a property name.");
         }
-        return [Properties::getNamespaceOfProperty($name)];
+        return Properties::getNamespaceOfProperty($name);
     }
     
-    private function checkElementType($type_or_types): array
+    /**
+     * Checks a passed parameter if it is valid for an array
+     * 
+     * @param unknown $type
+     * @return string
+     */
+    private function checkElementType($type): string
     {
-        if (is_array($type_or_types)) {
-            return $this->setAllowedElementTypes_array($type_or_types);
+        if (is_string($type)) {
+            return $this->setAllowedElementType_name($type);
         }
-        if (is_a($type_or_types, AbstractProperty::class, true)) {
-            return $this->setAllowedElementTypes_class($type_or_types);
+        if (is_a($type, AbstractProperty::class, true)) {
+            return $this->setAllowedElementType_class($type);
         }
-        if (is_string($type_or_types)) {
-            return $this->setAllowedElementTypes_name($type_or_types);
+        throw new InvalidParameterException(getScalarMessage("The passed parameter :variable could not be processed to a property", $type));
+    }
+    
+    /**
+     * Stores the allowed element type and creates a shadow element for validity checks 
+     * @param string $element_property
+     */
+    private function doSetElementType(string $element_property)
+    {
+        if (empty($element_property)) {
+            return;
         }
-        if (is_scalar($type_or_types)) {
-            throw new InvalidParameterException("The passed scalar parameter could not be processed.");
-        } else {
-            throw new InvalidParameterException("The passed non scalar parameter could not be processed.");
-        }        
+        // For now there are no array of arrays!
+        if (is_a($element_property,ArrayProperty::class,true)) {
+            throw new InvalidParameterException("An array is not allowed as a element type");            
+        }
+        $this->allowed_element_type = $element_property;
+        $this->shadow_element = new $element_property();
     }
     
     /**
      * Sets the allowed element type for this array
      * 
      * @param unknown $type_or_types
-     * when $type_or_types is an array each element is an allowed property type for this array
-     * when $type_or_types is a string and the full qualified name of a property class then this is the allowed data Type
-     * when $type_or_types is a string and the name of a property then this is the allowed data_type 
+     * when $type is a string and the full qualified name of a property class then this is the allowed data Type
+     * when $type is a string and the name of a property then this is the allowed data_type 
      * @return self
      * 
      * wiki: /Array_properties#Allowed_element_types
      */
-    public function setAllowedElementTypes($type_or_types): self
+    public function setAllowedElementType($type): self
     {
-        if (!empty($type_or_types)) {
-            $this->allowed_element_types = array_merge($this->allowed_element_types, $this->checkElementType($type_or_types));
+        if (!empty($type)) {
+            $this->doSetElementType($this->checkElementType($type));
         }
         return $this;
     }
@@ -93,9 +114,9 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
      * 
      * wiki: /Array_properties#Allowed_element_types
      */
-    public function getAllowedElementTypes(): array
+    public function getAllowedElementType(): string
     {
-        return $this->allowed_element_types;    
+        return $this->allowed_element_type;    
     }
     
     protected function doOffsetSet(mixed $offset, mixed $value): void
@@ -103,26 +124,18 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         $this->getStorage()->setIndexedValue($this->getName(), $offset, $this->formatForStorage($this->formatFromInput($value)));        
     }
     
-    protected function checkElementAgainstAllowed($value, string $type)
+    /**
+     * Checks if a passed element is allowed as an element for this array
+     * 
+     * @param unknown $value
+     * @return bool
+     */
+    public function checkElement($value): bool
     {
-        if (is_a($value, $type)) {
-            return true;
-        }
-        $tester = new $type();
-        return $tester->isValid($value);
-    }
-    
-    protected function checkElement($value): bool
-    {
-        if (empty($this->allowed_element_types)) {
+        if (empty($this->shadow_element)) {
             return true; // everything is allowed
         }
-        foreach ($this->allowed_element_types as $allowed_type) {
-            if ($this->checkElementAgainstAllowed($value, $allowed_type)) {
-                return true;
-            }
-        }
-        return false;
+        return $this->shadow_element->isValid($value);
     }
     
     protected $index_type = 'integer';

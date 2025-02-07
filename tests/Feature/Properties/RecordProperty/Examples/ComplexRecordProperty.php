@@ -17,7 +17,7 @@ class ComplexRecordProperty extends RecordProperty
         $builder->string('complex_str');
         $builder->includeRecord(SimpleRecordProperty::class);
         $builder->referRecord(SimpleRecordProperty::class, 'reference_record');
-        $builder->array('complex_array_of_int')->setAllowedElementTypes(TypeInteger::class);
+        $builder->array('complex_array_of_int')->setAllowedElementType(TypeInteger::class);
     }
     
     protected function createStorage(): ?AbstractStorage
