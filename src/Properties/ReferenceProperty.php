@@ -97,6 +97,11 @@ class ReferenceProperty extends AbstractProperty
         return $this;
     }
     
+    public function getAllowedProperties(): array
+    {
+        return $this->allowed_properties;
+    }
+    
     protected function handleUninitialized()
     {
         if (count($this->allowed_properties) == 1) {
