@@ -102,7 +102,7 @@ class ElementBuilder
     public function arrayOfReferences(string $name): ReferenceArrayProperty
     {
         $property = new ReferenceArrayProperty();
-        $this->elements[$name] = $property;
+        $this->elements[$name] = $property->setAllowedElementType(ReferenceProperty::class);
         return $property;        
     }
  
