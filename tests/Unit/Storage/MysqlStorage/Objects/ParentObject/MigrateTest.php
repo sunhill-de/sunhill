@@ -2,14 +2,38 @@
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Illuminate\Support\Facades\Schema;
+use Sunhill\Tests\TestSupport\Objects\ParentObject;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 uses(SunhillDatabaseTestCase::class);
 
-require_once('PrepareStorage.php');
+test('Migrate fresh for parentobject', function()
+{
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
+    Schema::drop('parentobjects');
+    
+    $test->migrate();
+    
+    $this->assertDatabaseHasTable('parentobjects');
+    $this->assertDatabaseHasTable('parentobjects_parent_sarray');
+    
+    $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_int', 'integer');
+    $this->assertDatabaseTableColumnIsType('parentobjects', 'parent_string', 'string');
+    
+    $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','container_id','integer');
+    $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','index','integer');
+    $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','element','integer');
+});
 
 test('column was dropped', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -27,8 +51,6 @@ test('column was dropped', function()
         $table->integer('element');
     });
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
@@ -37,6 +59,10 @@ test('column was dropped', function()
 
 test('two columns were dropped', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -55,8 +81,6 @@ test('two columns were dropped', function()
         $table->integer('element');
     });
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
@@ -65,6 +89,10 @@ test('two columns were dropped', function()
 
 test('column was added', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -80,8 +108,6 @@ test('column was added', function()
         $table->integer('element');
     });
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
@@ -89,6 +115,10 @@ test('column was added', function()
 
 test('array column was dropped', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -112,8 +142,6 @@ test('array column was dropped', function()
         $table->integer('element');
     });
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseHasTable('parentobjects_parent_sarray');
@@ -122,6 +150,10 @@ test('array column was dropped', function()
 
 test('array column was added', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -132,8 +164,6 @@ test('array column was added', function()
     });
     Schema::dropIfExists('parentobjects_parent_sarray');
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseHasTable('parentobjects_parent_sarray');
@@ -141,6 +171,10 @@ test('array column was added', function()
 
 test('column type changed', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -156,9 +190,7 @@ test('column type changed', function()
         $table->integer('index');
         $table->integer('element');
     });
-
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
+    
     $test->migrate();
     
     $this->assertDatabaseTableColumnIsType('parentobjects','parent_int','integer');
@@ -166,6 +198,10 @@ test('column type changed', function()
 
 test('column array type changed', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -182,8 +218,6 @@ test('column array type changed', function()
         $table->integer('element');
     });
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','index','integer');
@@ -192,6 +226,10 @@ test('column array type changed', function()
 
 test('column array index type changed', function()
 {
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ParentObject::getExpectedStructure());
+    ParentObject::prepareDatabase($this);
+    
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
     {
@@ -208,8 +246,6 @@ test('column array index type changed', function()
         $table->string('element');
     });
     
-    $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'parentobject', false));
     $test->migrate();
     
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','element','integer');

@@ -1,0 +1,653 @@
+<?php
+use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
+use Sunhill\Tests\SunhillDatabaseTestCase;
+use Sunhill\Tests\TestSupport\Objects\ChildObject;
+
+uses(SunhillDatabaseTestCase::class);
+
+test('Update a childobject with modified array (all entries) and modified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_int',3331);
+    $test->setValue('parent_string','CCCA');
+    $test->setValue('parent_sarray',[301,311,321]);
+    $test->setValue('child_int',2121);
+    $test->setValue('child_string','BCDA');
+    $test->setValue('child_sarray',[2001,2101,2201]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>3331,'parent_string'=>'CCCA']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>2121,'child_string'=>'BCDA']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>301]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>311]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>321]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
+});
+
+test('Update a childobject with modified both array (all entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[301,311,321]);
+    $test->setValue('child_sarray',[2001,2101,2201]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>301]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>311]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>321]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
+});
+
+test('Update a childobject with modified both array (added entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[30,31,32,666]);
+    $test->setValue('child_sarray',[200,210,220,6666]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>3,'element'=>666]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>3,'element'=>6666]);
+});
+
+test('Update a childobject with modified both array (removed entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[30,31]);
+    $test->setValue('child_sarray',[200,210]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9,'index'=>2]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9,'index'=>2]);
+});
+
+test('Update a childobject with modified both array (cleared arrays) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[]);
+    $test->setValue('child_sarray',[]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9]);
+});
+
+test('Update a childobject with modified parent array (all entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[301,311,321]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>301]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>311]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>321]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+});
+
+test('Update a childobject with modified parent array (added entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[30,31,32,666]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>3,'element'=>666]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+});
+
+test('Update a childobject with modified parent array (removed entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[30,31]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9,'index'=>2]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+});
+
+test('Update a childobject with modified parent array (cleared arrays) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('parent_sarray',[]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9]);
+});
+
+// **********************************************************************
+test('Update a childobject with modified child array (all entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('child_sarray',[2001,2101,2201]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>2001]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>2101]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>2201]);
+});
+
+test('Update a childobject with modified child array (added entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('child_sarray',[200,210,220,6666]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2,'element'=>32]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>2,'element'=>220]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>3,'element'=>6666]);
+});
+
+test('Update a childobject with modified child array (removed entries) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('child_sarray',[200,210]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>0,'element'=>30]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>1,'element'=>31]);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9,'index'=>2]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>0,'element'=>200]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>9,'index'=>1,'element'=>210]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9,'index'=>2]);
+});
+
+test('Update a childobject with modified child array (cleared arrays) and unmodified simple fields', function()
+{
+    
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 9);
+    
+    $test->setValue('parent_int',333);
+    $test->setValue('parent_string','CCC');
+    $test->setValue('parent_sarray',[30,31,32]);
+    $test->setValue('child_int',212);
+    $test->setValue('child_string','BCD');
+    $test->setValue('child_sarray',[200,210,220]);
+    
+    $test->setValue('child_sarray',[]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>9,'parent_int'=>333,'parent_string'=>'CCC']);
+    $this->assertDatabaseHas('childobjects',['id'=>9,'child_int'=>212,'child_string'=>'BCD']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>9]);
+    $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9]);
+});
+
+test('Update a childobject with modified parent array (previously empty) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 11);
+    
+    $test->setValue('parent_int',555);
+    $test->setValue('parent_string','EEE');
+    $test->setValue('parent_sarray',[]);
+    $test->setValue('child_int',232);
+    $test->setValue('child_string','DEF');
+    $test->setValue('child_sarray',[400,410,420]);
+    
+    $test->setValue('parent_sarray',[1234,2345,3456]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>11,'parent_int'=>555,'parent_string'=>'EEE']);
+    $this->assertDatabaseHas('childobjects',['id'=>11,'child_int'=>232,'child_string'=>'DEF']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>11]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>11]);
+});
+
+test('Update a childobject with modified child array (parent previously empty) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 11);
+    
+    $test->setValue('parent_int',555);
+    $test->setValue('parent_string','EEE');
+    $test->setValue('parent_sarray',[]);
+    $test->setValue('child_int',232);
+    $test->setValue('child_string','DEF');
+    $test->setValue('child_sarray',[400,410,420]);
+    
+    $test->setValue('child_sarray',[1234,2345,3456]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>11,'parent_int'=>555,'parent_string'=>'EEE']);
+    $this->assertDatabaseHas('childobjects',['id'=>11,'child_int'=>232,'child_string'=>'DEF']);
+    $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>11]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>11,'index'=>1,'element'=>2345]);
+});
+
+test('Update a childobject with modified child array (previously empty) and unmodified simple fields', function()
+{
+    
+    $test = new MysqlObjectStorage();
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
+    setProtectedProperty($test, 'id', 10);
+    
+    $test->setValue('parent_int',444);
+    $test->setValue('parent_string','DDD');
+    $test->setValue('parent_sarray',[40,41,42]);
+    $test->setValue('child_int',222);
+    $test->setValue('child_string','CDE');
+    $test->setValue('child_sarray',[]);
+    
+    $test->setValue('child_sarray',[1234,2345,3456]);
+    
+    $test->setValue('_classname','Dummy');
+    $test->setValue('_uuid','11b47be8-05f1-4f7b-8a97-e1e6488dbd44');
+    $test->setValue('_read_cap', null);
+    $test->setValue('_write_cap', null);
+    $test->setValue('_modify_cap', null);
+    $test->setValue('_delete_cap', null);
+    $test->setValue('_created_at', '2024-11-14 20:00:00');
+    $test->setValue('_updated_at', '2024-11-14 20:00:00');
+    $test->setValue('_tags',[]);
+    $test->setValue('_attributes',[]);
+    
+    $test->commit();
+    
+    $this->assertDatabaseHas('parentobjects',['id'=>10,'parent_int'=>444,'parent_string'=>'DDD']);
+    $this->assertDatabaseHas('childobjects',['id'=>10,'child_int'=>222,'child_string'=>'CDE']);
+    $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>10]);
+    $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>10]);
+});

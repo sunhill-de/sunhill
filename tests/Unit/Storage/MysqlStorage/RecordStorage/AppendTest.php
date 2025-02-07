@@ -4,7 +4,7 @@ use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
-use Sunhill\Tests\TestSupport\Objects\Dummy;
+use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
 require_once('PrepareStorage.php');
 
@@ -13,7 +13,9 @@ uses(SunhillDatabaseTestCase::class);
 it('fails when a table is missing', function()
 {
     $test = new MysqlObjectStorage();
-    $test->setStructure(prepareStorage($this, 'childobject'));
+    $test->setStructure(ChildObject::getExpectedStructure());
+    ChildObject::prepareDatabase($this);
+    
     Schema::drop('parentobjects_parent_sarray');
     
     $test->setValue('parent_int',1509);
