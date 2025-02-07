@@ -22,8 +22,8 @@ class ParentReference extends ORMObject
     protected static function initializeRecord(ElementBuilder $builder)
     {
         $builder->addProperty(TypeInteger::class,'parent_int');
-        $builder->referRecord(Dummy::class, 'parent_reference');
-        $builder->arrayOfReferences('parent_rarray')->setAllowedElementType(Dummy::class);
+        $builder->referRecord(Dummy::class, 'parent_reference')->setAllowedProperty(Dummy::class);
+        $builder->arrayOfReferences('parent_rarray')->setAllowedProperty(Dummy::class);
     }
     
     protected static function setupInfos()

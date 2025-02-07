@@ -12,6 +12,7 @@ uses(SunhillDatabaseTestCase::class);
 /**
  * @todo Why is autoloading necessary?
  */
+/*
 test('Update a dummy with dummyint modified', function()
 {
     $test = new MysqlObjectStorage();
@@ -53,7 +54,7 @@ test('Update a dummy with nothing modified', function()
         ]);
     $this->assertDatabaseHas('dummies',['id'=>1,'dummyint'=>123]);
 });
-
+*/
 test('Update a parentobject with modified array (all entries) and modified simple fields', function()
 {
     

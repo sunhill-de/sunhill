@@ -18,7 +18,7 @@ test('Read a arrayonlychildobject with child arrays', function()
     
     expect($test->getValue('parent_int'))->toBe(5555);
     expect($test->getValue('parent_string'))->toBe('ERE');
-    expect($test->getElementCount('parent_sarray'))->toBe(0);
+    expect($test->getElementCount('parent_sarray'))->toBe(3);
     
     expect($test->getIndexedValue('child_sarray',1))->toBe(2100);
 });

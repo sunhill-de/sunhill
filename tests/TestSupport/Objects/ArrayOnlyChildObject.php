@@ -20,7 +20,7 @@ class ArrayOnlyChildObject extends ParentObject
 {
     protected static function initializeRecord(ElementBuilder $builder)
     {
-        $builder->array('child_sarray')->setAllowedElementTypes(TypeInteger::class);
+        $builder->array('child_sarray')->setAllowedElementType(TypeInteger::class);
     }
     
     protected static function setupInfos()

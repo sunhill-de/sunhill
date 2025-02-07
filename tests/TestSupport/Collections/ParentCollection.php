@@ -13,7 +13,7 @@ class ParentCollection extends Collection
     {
         $builder->addProperty(TypeInteger::class,'parent_int');
         $builder->addProperty(TypeVarchar::class,'parent_string')->setMaxLen(3);
-        $builder->array('parent_sarray')->setAllowedElementTypes(TypeInteger::class);
+        $builder->array('parent_sarray')->setAllowedElementType(TypeInteger::class);
     }
     
     protected static function setupInfos()

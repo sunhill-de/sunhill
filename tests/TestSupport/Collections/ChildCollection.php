@@ -12,7 +12,7 @@ class ChildCollection extends ParentCollection
     {
         $builder->addProperty(TypeInteger::class,'child_int');
         $builder->addProperty(TypeVarchar::class,'child_string')->setMaxLen(3);
-        $builder->array('child_sarray')->setAllowedElementTypes(TypeInteger::class);
+        $builder->array('child_sarray')->setAllowedElementType(TypeInteger::class);
     }
     
     protected static function setupInfos()
