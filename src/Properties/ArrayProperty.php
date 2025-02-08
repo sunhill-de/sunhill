@@ -170,6 +170,11 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         return $this->index_type;
     }
     
+    public function clear()
+    {
+        $this->getStorage()->clearArray($this->getName());
+    }
+    
     /**
      * returns if the given index exists
      * 
@@ -301,9 +306,8 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
         if (is_array($value) || ($value instanceof \Traversable)) {
             $result = [];
             foreach ($value as $key => $element) {
-                $result[$key] = $element;   
+                $this->offsetSet($key, $element);
             }
-            parent::setValue($result);
         } else {
             parent::setValue($value);
         }
