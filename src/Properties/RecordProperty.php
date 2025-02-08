@@ -302,7 +302,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
             return $this->handleGetUnkownElement($varname);
         }
         $property = $this->elements[$varname];
-        if (in_array($property::class,[ArrayProperty::class])) {
+        if (is_a($property, ArrayProperty::class)) {
             return $property;
         } else {
             return $property->getValue();
