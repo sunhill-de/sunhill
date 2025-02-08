@@ -25,7 +25,7 @@ test('create a ParentReference', function()
     $test->commit();
     
     $this->assertDatabaseHas('parentreferences',['id'=>$test->getID(),'parent_int'=>10,'parent_reference'=>1]);
-    $this->assertDatabaseHas('parentreferences_parent_rarray',['container_id'=>$test->getID(),'index'=>0,'elememt'=>2]);
-    $this->assertDatabaseHas('parentreferences_parent_rarray',['container_id'=>$test->getID(),'index'=>1,'elememt'=>3]);
+    $this->assertDatabaseHas('parentreferences_parent_rarray',['container_id'=>$test->getID(),'index'=>0,'element'=>2]);
+    $this->assertDatabaseHas('parentreferences_parent_rarray',['container_id'=>$test->getID(),'index'=>1,'element'=>3]);
 });
 
