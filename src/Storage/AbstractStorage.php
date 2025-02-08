@@ -183,6 +183,11 @@ abstract class AbstractStorage extends Base
         return $value;
     }
     
+    public function clearArray(string $name)
+    {
+            
+    }
+    
     /**
      * Returns how many entries the array element has.
      * Note: This routine does not check if it is an array at all, this has to be done on a higher level

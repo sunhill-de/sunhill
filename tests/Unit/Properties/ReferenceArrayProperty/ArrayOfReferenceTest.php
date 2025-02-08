@@ -76,6 +76,7 @@ test('Assigning a whole array works', function()
     $property2->shouldReceive('getID')->andReturn(11);
     
     $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->shouldReceive('clearArray')->with('test');
     $storage->shouldReceive('getIsInitialized')->with('test')->andReturn(true);
     $storage->shouldReceive('setIndexedValue')->once()->with('test',0,10);
     $storage->shouldReceive('setIndexedValue')->once()->with('test',1,11);

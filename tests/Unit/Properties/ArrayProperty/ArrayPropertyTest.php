@@ -128,8 +128,10 @@ test('Assign an array to a array property', function()
     $test->setName('test');
 
     $storage = Mockery::mock(AbstractStorage::class);
-    $storage->shouldReceive('setValue')->once()->with('test',[1,2,3])->andReturn(true);
-    $storage->shouldReceive('getIsInitialized')->once()->with('test')->andReturn(false);
+    $storage->shouldReceive('clearArray')->once()->with('test');
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',0,1);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',1,2);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',2,3);
     
     $test->setStorage($storage);
     
@@ -142,8 +144,10 @@ test('Assign an collection to a array property', function()
     $test->setName('test');
     
     $storage = Mockery::mock(AbstractStorage::class);
-    $storage->shouldReceive('setValue')->once()->with('test',[1,2,3])->andReturn(true);
-    $storage->shouldReceive('getIsInitialized')->once()->with('test')->andReturn(false);
+    $storage->shouldReceive('clearArray')->once()->with('test');
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',0,1);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',1,2);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',2,3);
     
     $test->setStorage($storage);
     
@@ -157,8 +161,10 @@ test('Assign another array property to an array property', function()
     $test->setName('test');
     
     $storage = Mockery::mock(AbstractStorage::class);
-    $storage->shouldReceive('setValue')->once()->with('test',[1,2,3])->andReturn(true);
-    $storage->shouldReceive('getIsInitialized')->once()->with('test')->andReturn(false);
+    $storage->shouldReceive('clearArray')->once()->with('test');
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',0,1);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',1,2);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',2,3);
     
     $source_storage = Mockery::mock(AbstractStorage::class);
     $source_storage->shouldReceive('getIndexedValue')->once()->with('othertest',0)->andReturn(1);

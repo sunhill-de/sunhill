@@ -304,7 +304,7 @@ class ArrayProperty extends AbstractProperty implements \ArrayAccess,\Countable,
     public function setValue($value)
     {
         if (is_array($value) || ($value instanceof \Traversable)) {
-            $result = [];
+            $this->clear();
             foreach ($value as $key => $element) {
                 $this->offsetSet($key, $element);
             }
