@@ -68,4 +68,22 @@ test('Loading a record from a pool works', function()
     expect($test[0])->toBe($property);    
 });
 
+test('Assigning a whole array works', function()
+{
+    $property1 = \Mockery::mock(PooledRecordProperty::class);
+    $property1->shouldReceive('getID')->andReturn(10);
+    $property2 = \Mockery::mock(PooledRecordProperty::class);
+    $property2->shouldReceive('getID')->andReturn(11);
+    
+    $storage = \Mockery::mock(AbstractStorage::class);
+    $storage->shouldReceive('getIsInitialized')->with('test')->andReturn(true);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',0,10);
+    $storage->shouldReceive('setIndexedValue')->once()->with('test',1,11);
+    
+    $test = new ReferenceArrayProperty();
+    $test->setName('test');
+    $test->setStorage($storage);
+    
+    $test->setValue([$property1,$property2]);
+});
 
