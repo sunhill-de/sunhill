@@ -18,6 +18,11 @@ use Sunhill\Query\Exceptions\NoResultException;
 use Sunhill\Query\Exceptions\UnknownFieldException;
 use Sunhill\Query\Exceptions\TooManyResultsException;
 use Sunhill\Query\Exceptions\QueryNotWriteableException;
+use Sunhill\Basic\Base;
+use Sunhill\Query\Exceptions\InvalidStatementException;
+use phpDocumentor\Reflection\Types\Static_;
+use phpDocumentor\Reflection\Types\Mixed_;
+use Illuminate\Support\Str;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -27,388 +32,266 @@ use Sunhill\Query\Exceptions\QueryNotWriteableException;
  * @author klaus
  *
  */
-abstract class BasicQuery
+abstract class BasicQuery extends Base
 {
-
+    
     /**
-     * Defines if the query is writeable at all (if the findalizing methods delete(), update() and insert() 
-     * work at all)
-     * 
+     * A static boolean that indicates if this query is readonly
      * @var boolean
      */
-    protected static $writeable = true;
+    protected static $read_only = false;
     
     /**
-     * When calling the offset() method, it writes the offset to this variable
+     * Checks if this query is readonly. If yes it throws an exception
      * 
-     * @var integer
+     * @param string $feature
      */
-    protected int $offset = 0;
-    
-    /**
-     * When calling the limit() method, it writes the offset to this variable
-     * 
-     * @var integer
-     */
-    protected int $limit = 0;
-    
-    /**
-     * When calling the order() method, it writes the order key to this variable
-     * 
-     * @var string
-     */
-    protected string $order_key = '';
-    
-    /**
-     * When calling the order() method and pass a direction statement it is written to
-     * this variable
-     * 
-     * @var string
-     */
-    protected string $order_direction = '';
-    
-    /**
-     * The conditions are put in this array
-     * 
-     * @var array
-     */
-    protected array $conditions = [];
-    
-    public function __construct()
+    protected function checkForReadonly(string $feature)
     {
-    }
-
-    /**
-     * Assembles the query according to the given conditions and returns @author lokal
-     * pseudo query that is further processed by a finalizing call.
-     */
-    abstract protected function assmebleQuery();
-    
-    /**
-     * Returns the count of record that the previously assembled query returns
-     * 
-     * @param unknown $assambled_query
-     * @return int
-     */
-    abstract protected function doGetCount($assambled_query): int;
-    
-    /**
-     * Returns a Collection object of all records that match the given query conditions.
-     * 
-     * @param unknown $assembled_query
-     */
-    abstract protected function doGet($assembled_query): Collection;
-    
-    /**
-     * Returns if the field exists or a pseudo field of that name exists
-     * 
-     * @param string $field
-     * @return bool
-     */
-    abstract protected function fieldExists(string $field): bool;
-    
-    /**
-     * Returns if the field can be uses as a sorting key
-     * 
-     * @param string $field
-     * @return bool
-     */
-    abstract protected function fieldOrderable(string $field): bool;
-    
-    /**
-     * Deletes the records that match the condition
-     * Note: A check if the pool is writeable at all has already been performed. Read-only
-     * queries can ignore this method
-     * 
-     * @param unknown $assembled_query
-     * @return int
-     */
-    protected function doDelete($assembled_query): int
-    {
-        return 0;    
-    }
-    
-    /**
-     * Updates the records that match the condition
-     * Note: A check if the pool is writeable at all has already been performed. Read-only
-     * queries can ignore this method
-     * 
-     * @param unknown $assembled_query
-     * @param array $fields
-     * @return int
-     */
-    protected function doUpdate($assembled_query, array $fields): int
-    {
-        return 0;    
-    }
-    
-    /**
-     * Inserts one or more new records into the pool of records
-     * Note: A check if the pool is writeable at all has already been performed. Read-only
-     * queries can ignore this method
-     *
-     * @param unknown $assembled_query
-     * @param array $fields
-     * @return int
-     */
-    protected function doInsert($assembled_query, array $fields)
-    {
-        return null;
-    }
-    
-    /**
-     * This method does not have to necessarily be overwritten. By default it just return $record. 
-     * In some cases it is necessary to return another type (e.g. Object).
-     * 
-     * @param unknown $record
-     * @return unknown
-     */
-    protected function getRecord($key, $record)
-    {
-        return $record;
-    }
-    
-    /** 
-     * Fininalizing call that returns the number of records that match the 
-     * given criteria
-     * 
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->doGetCount($this->assmebleQuery());
-    }
-    
-    /**
-     * Returns the first record that matches the given criteria. It raises an 
-     * exception, if no element exists.
-     * 
-     * @param string|array of strings $fields either a single field or a list of
-     * fields that should be returned be first. If none if given, all fields are
-     * returned. 
-     * 
-     * @throws NoResultException::class
-     */
-    public function first($fields = null)
-    {
-        if (!is_null($result = $this->firstIfExists($fields))) {
-            return $result;
+        if (static::$read_only) {
+            throw new QueryNotWriteableException("The feature '$feature' is not avaiable, because this query is read-only");
         }
-        throw new NoResultException("The query has no results and first() was called.");
     }
     
-    /**
-     * Returns the first record that mathes the given criteria or null if no record
-     * exists. 
-     * 
-     * @param unknown $fields
-     */
-    public function firstIfExists($fields = null)
-    {
-         $result = $this->get($fields);
-         
-         if (empty($result)) {
-             return null;
-         } else {
-            return $result->first();
-         }
-    }
+    protected $where_statements = [];
+    
+    protected $order_fields = [];
+    
+    protected $group_fields = [];
+    
+    protected $limit = 0; 
+    
+    protected $offset = 0; 
     
     /**
-     * Returns only a Collection of this single field
+     * For some operations (insert and upserts) a where, limit, offset, order or group statement 
+     * makes no sense. So if one of those are set, throw an exception.
      * 
-     * @param Collection $result
-     * @param string $field
-     * @return Collection
+     * @param string $feature
      */
-    protected function mapField(Collection $result, string $field): Collection
+    protected function checkForNoConditions(string $feature)
     {
-        return $result->map(function($item, $key) use($field) {
-            return $item->$field;
-        });
+        if (!empty($this->where_statements)) {
+            throw new InvalidStatementException("A where condition was used with feature '$feature'");            
+        }
+        if (!empty($this->order_fields)) {
+            throw new InvalidStatementException("A order statement was used with feature '$feature'");
+        }
+        if (!empty($this->group_fields)) {
+            throw new InvalidStatementException("A group statement was used with feature '$feature'");
+        }
+        if ($this->limit) {
+            throw new InvalidStatementException("A order statement was used with feature '$feature'");
+        }
+        if ($this->offset) {
+            throw new InvalidStatementException("A order statement was used with feature '$feature'");
+        }
     }
     
-    /**
-     * Returns only a Collection of StdClasses of thie given fields
-     * 
-     * @param Collection $result
-     * @param array $fields
-     * @return Collection
-     */
-    protected function mapFields(Collection $result, array $fields): Collection
+    // Where statements
+    protected function getField(string $field)
     {
-        return $result->map(function($item, $key) use($fields) {
-            $result = new \StdClass();
-            foreach($fields as $field) {
-                $result->$field = $item->$field;
+        return $field;
+    }
+    
+    protected function getCondition($condition)
+    {
+        return $condition;
+    }
+    
+    protected function addWhereStatement(string $connect, string $field, string $operator, $condition)
+    {
+        $entry = new \stdClass();
+        $entry->connect = $connect;
+        $entry->field = $this->getField($field);
+        $entry->operator = $operator;
+        $entry->condition = $this->getCondition($condition);
+        $this->where_statements[] = $entry;
+    }
+    
+    private function checkMethodStartsWith(string $name, string $start, string $connection, array $arguments)
+    {
+        if (Str::startsWith($name,$start)) {
+            if ($name == $start) {
+                $this->addWhereStatement($connection, $arguments[0],$arguments[1]??null,$arguments[2]??null);
+            } else {
+                $this->addWhereStatement($connection, $arguments[0],Str::substr($name,strlen($start)),$arguments[1]??null);
             }
-            return $result;
-        });            
+            return true;
+        }
+        return false;
     }
     
-    /**
-     * Returns all records that matches the given criteria
-     * 
-     * @param unknown $fields
-     * @return Collection
-     */
-    public function get($fields = null): Collection
+    public function __call(string $name, array $arguments): mixed
     {
-        $result = $this->doGet($this->assmebleQuery(),$fields);
-        
-        if (is_string($fields)) {
-            return $this->mapField($result,$fields);
-        } else if (is_array($fields)) {
-            return $this->mapFields($result,$fields);
-        } else {
-            return $result->map(function($item, $key) {
-                return $this->getRecord($key, $item);
-            });
+        if ($this->checkMethodStartsWith($name, "whereNot", "andnot", $arguments)) {
+            return $this;
         }
-        return $result;
+        if ($this->checkMethodStartsWith($name, "orWhereNot", "ornot", $arguments)) {
+            return $this;
+        }
+        if ($this->checkMethodStartsWith($name, "where", "and", $arguments)) {
+            return $this;
+        }
+        if ($this->checkMethodStartsWith($name, "orWhere", "or", $arguments)) {
+            return $this;
+        }
+        throw new \Exception("Method '$name' not found");
     }
 
+    // Other statements
+    
+    public function order(string $field, string $direction = 'asc'): static
+    {
+        return $this;    
+    }
+    
     /**
-     * Expect excactly one result and returns is or throws an exception.
+     * Indicates that only $limit entries of the result set should be returned
      * 
-     * @param unknown $fields
+     * @param int $limit
+     * @return static
      */
-    public function only($fields = null)
-    {
-        $query = $this->assembleQuery();
-        $count = $query->count();
-        if ($count < 1) {
-            throw new NoResultException("Excactly one result expected, none was returned.");
-        }
-        if ($count > 1) {
-            throw new TooManyResultsException("Excactly one result expected, '$count' where returned.");
-        }
-        return $query->first();
-    }
-    
-    /**
-     * The records matching the given condition are deleted (if query is writeable at all)
-     */
-    public function delete()
-    {
-        $this->checkWriteable();
-    }
-    
-    /**
-     * The record matching the given condition are updated with the given parameters
-     * 
-     * @param array $fields
-     */
-    public function update(array $fields)
-    {
-        $this->checkWriteable();        
-    }
-    
-    /**
-     * A new record is inserted into the pool.
-     * 
-     * @param array $fields
-     */
-    public function insert(array $fields)
-    {
-        $this->checkWriteable();        
-    }
-    
-    public function offset(int $offset): BasicQuery
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-    
-    public function limit(int $limit): BasicQuery
+    public function limit(int $limit): static
     {
         $this->limit = $limit;
         return $this;
     }
     
-    public function where($key, $relation = null, $value = null): BasicQuery
+    /**
+     * Indicates that only the entries beginning with $offset should be returned
+     * @param int $offset
+     * @return static
+     */
+    public function offset(int $offset): static
     {
-        $this->addCondition('and', $key, $relation, $value);
-        return $this;        
-    }
-    
-    public function orWhere($key, $relation = null, $value = null): BasicQuery
-    {
-        $this->addCondition('or', $key, $relation, $value);
+        $this->offset = $offset;
         return $this;
     }
     
-    public function whereNot($key, $relation = null, $value = null): BasicQuery
-    {
-        $this->addCondition('andnot', $key, $relation, $value);
-        return $this;        
-    }
+    // Finalizing methods
     
-    public function orWhereNot($key, $relation = null, $value = null): BasicQuery
-    {
-        $this->addCondition('ornot', $key, $relation, $value);
-        return $this;
-    }
+    abstract protected function doAssembleQuery();
     
-    protected function handleNestedCondition(callable $key)
+    private function checkWhereConditions()
     {
-        $nested = new static();
-        $key($nested);
-        return $nested;
-    }
-    
-    protected function checkAndAdjustCondition($key, $relation ,$value)
-    {
-        if (is_null($value)) {
-            $value = $relation;
-            $relation = '=';
-        }
-        return [$key, $relation, $value];
-    }
-    
-    protected function addCondition(string $connection, $key, $relation, $value)
-    {
-        $entry = new \StdClass();
-        $entry->connection  = $connection;
         
-        if (is_callable($key)) {
-            $entry->key = $this->handleNestedCondition($key);
-        } else {
-            list($key,$relation,$value) = $this->checkAndAdjustCondition($key, $relation, $value);
-            
-            $entry->key         = $key;
-            $entry->relation    = $relation;
-            $entry->value       = $value;            
-        }
-        $this->conditions[] = $entry;
     }
     
-    public function getConditions(): array
+    private function checkOrderConditions()
     {
-        return $this->conditions;    
+        
     }
     
-    public function orderBy($key, $direction = 'asc'): BasicQuery
+    private function checkGroupConditions()
     {
-        $direction = strtolower($direction);
-        if (!in_array($direction,['asc','desc'])) {
-            throw new InvalidOrderException("'$direction' is not a valid order direction.");
-        }
-        if (!$this->fieldExists($key)) {
-            throw new UnknownFieldException("'$key' is not a valid field or pseudo field.");
-        }
-        if (!$this->fieldOrderable($key)) {
-            throw new InvalidOrderException("'$key' is usable as a sorting key.");
-        }
-        $this->order_key = $key;
-        $this->order_direction = $direction;
-        return $this;
+        
     }
     
-    protected function checkWriteable()
+    protected function assembleQuery()
     {
-        if (!static::$writeable) {
-            throw new QueryNotWriteableException("The query is not writeable.");
+        if (!empty($this->where_statements)) {
+            $this->checkWhereConditions();
         }
+        if (!empty($this->order_fields)) {
+            $this->checkOrderConditions();            
+        }
+        if (!empty($this->group_fields)) {
+            $this->checkGroupConditions();
+        }
+        $this->doAssembleQuery();
     }
+    
+    /**
+     * Returns the first record that matches the conditions
+     */
+    public function first()
+    {
+        $this->assembleQuery();
+    }
+    
+    /**
+     * Returns the count of records that matches the conditions
+     */
+    public function count(): int
+    {
+        
+    }
+    
+    /**
+     * Returns all record that matches the conditions
+     */
+    public function get()
+    {
+        
+    }
+    
+    /**
+     * Returns the first id that matches the conditions
+     */
+    public function firstID()
+    {
+        
+    }
+    
+    /**
+     * Returns a list of ids that matches the conditions
+     */
+    public function getIDs()
+    {
+        
+    }
+    
+    /**
+     * Expects excactly one result and returns it. If more or less it raises an exception
+     */
+    public function only()
+    {
+        
+    }
+    
+    /**
+     * Expects excactly one result and returns its id. If more or less it raises an exception
+     */
+    public function onlyID()
+    {
+        
+    }
+    
+    /**
+     * Deletes all records that macthes the conditions
+     */
+    public function delete()
+    {
+        $this->checkForReadonly('delete');
+    }
+
+    /**
+     * Inserts a record into the set
+     * @param unknown $data_set
+     */
+    public function insert($data_set)
+    {
+        $this->checkForReadonly('insert');
+    }
+    
+    /**
+     * Update all records that match the conditions
+     * @param unknown $data_set
+     */
+    public function update($data_set)
+    {
+        $this->checkForReadonly('update');
+    }
+    
+    /**
+     * Inserts or updates a record depending of $condition
+     * @param unknown $condition
+     * @param unknown $data_set
+     */
+    public function usert($condition, $data_set)
+    {
+        $this->checkForReadlnly('upsert');
+    }
+    
 }

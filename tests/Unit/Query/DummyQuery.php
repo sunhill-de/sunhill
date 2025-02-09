@@ -7,90 +7,62 @@ use Illuminate\Support\Collection;
 
 class DummyQuery extends BasicQuery
 {
-   
-    private function getWhereStatement(array $conditions)
+    
+    public $assembled_query = '';
+    
+    private function addWhereConditions()
     {
-        $result = '[';
+        $this->assembled_query .= 'where:(';
         $first = true;
-        foreach ($conditions as $condition) {
-            if ($first) {
-                $first = false;
-            } else {
-                $result .= ',';
-            }
-            $result .= '('.$condition->connection.':';
-            if (is_a($condition->key,DummyQuery::class)) {
-                $result .= $this->getWhereStatement($condition->key->getConditions()).')';   
-            } else {
-                $result .= $condition->key.$condition->relation.$condition->value.')';
-            }
+        foreach ($this->where_statements as $field) {
+            $this->assembled_query .= ($first?'':',').'[';
+            $this->assembled_query .= $field->connect.';'.$field->field.';';
+            $this->assembled_query .= $field->operator.';'.$field->condition;
+            $this->assembled_query .= ']';                
+            $first = false;
         }
-        $result .= ']';
-        return $result;
+        $this->assembled_query .= ')';        
     }
     
-    protected function getInfo()
+    private function addOrderConditions()
     {
-        $result = '';
-        
-        if (!empty($this->conditions)) {
-            $result .= 'where:'.$this->getWhereStatement($this->conditions);
+        $this->assembled_query .= ',order:(';
+        $first = true;
+        foreach ($this->order_fields as $field) {
+            $this->assembled_query .= ($first?'':',').$field;
+            $first = false;
         }
-        if ($this->offset) {
-            $result .= "offset:".$this->offset;
+        $this->assembled_query .= ')';
+    }
+    
+    private function addGroupConditions()
+    {
+        $this->assembled_query .= ',group:(';
+        $first = true;
+        foreach ($this->group_fields as $field) {
+            $this->assembled_query .= ($first?'':',').$field;
+            $first = false;
         }
-        if ($this->limit) {
-            $result .= "limit:".$this->limit;
-        }
-        if ($this->order_key) {
-            $result .= 'order:'.$this->order_key.'dir:'.$this->order_direction;
-        }
-        return $result;    
+        $this->assembled_query .= ')';
     }
     
-    protected function assmebleQuery()
+    private function addOffset()
     {
-        $result = new \StdClass();
-        $result->count = 5;
-        $result->element = [
-            makeStdClass(['payload'=>$this->getInfo(),'name'=>'name','id'=>1]),
-            makeStdClass(['payload'=>'A','name'=>'nameA','id'=>1]),
-            makeStdClass(['payload'=>'B','name'=>'nameB','id'=>2]),
-            makeStdClass(['payload'=>'C','name'=>'nameC','id'=>3]),
-            makeStdClass(['payload'=>'D','name'=>'nameD','id'=>4])
-        ];    
-        return $result;
+        $this->assembled_query .= ',offset:('.$this->offset.')';    
     }
     
-    /**
-     * Returns the count of record that the previously assembled query returns
-     *
-     * @param unknown $assambled_query
-     * @return int
-     */
-    protected function doGetCount($assambled_query): int
+    private function addLimit()
     {
-        return $assambled_query->count;
+        $this->assembled_query .= ',limit:('.$this->limit.')';
     }
     
-    protected function doGet($assembled_query): Collection
+    protected function doAssembleQuery()
     {
-        return collect($assembled_query->element);
+        $this->addWhereConditions();
+        $this->addOrderConditions();
+        $this->addGroupConditions();
+        $this->addOffset();
+        $this->addLimit();
     }
     
-    protected function fieldExists(string $field): bool
-    {
-        return in_array($field,['payload','name','id']);            
-    }
-    
-    protected function fieldOrderable(string $field): bool
-    {
-        return in_array($field,['name','id']);
-    }
-    
-    protected function getRecord($key, $element)
-    {
-        $element->payload = $key.':'.$element->payload;
-        return $element;
-    }
 }
