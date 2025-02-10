@@ -89,23 +89,72 @@ abstract class BasicQuery extends Base
     }
     
     // Where statements
+    /**
+     * Parses the argument list of of function 
+     * 
+     * @param unknown $argument
+     * @return unknown[]|\stdClass[]
+     */
+    private function getArgumentList($argument)
+    {
+        $result = [];
+        foreach (explode(',',$argument) as $single_argument) {
+            $result[] = $this->getField($single_argument);
+        }
+        return $result;
+    }
+       
     protected function getField(string $field)
     {
-        return $field;
+        $result = new \stdClass();
+        if (preg_match('/([a-zA-Z_][_[:alnum:]]*)\((.*)\)/',$field,$matches)) {
+            $result->type = 'function';
+            $result->function = $matches[1];
+            $result->argument = $this->getArgumentList($matches[2]);
+            return $result;
+        } 
+        if (preg_match('/([a-zA-Z_][_[:alnum:]]*)->(.*)/',$field,$matches)) {
+            $result->type = 'reference';
+            $result->parent = $matches[1];
+            $result->reference = $this->getField($matches[2]);
+            return $result;
+        }
+        if (preg_match('/\"(.*)\"/',$field,$matches)) {
+            return makeStdClass(['type'=>'const','value'=>$matches[1]]);
+        }
+        if (preg_match("/\'(.*)\'/",$field,$matches)) {
+            return makeStdClass(['type'=>'const','value'=>$matches[1]]);
+        }
+        if (preg_match("/([_[:alnum:]]+)/", $field, $matches)) {
+            // if it consist only of allowed characters for a field we assume a field. We have to decide later
+            return makeStdClass(['type'=>'field','name'=>$field]);
+        }
+        return makeStdClass(['type'=>'const','value'=>$field]);
     }
-    
-    protected function getCondition($condition)
+
+    private function parseFieldOrCondition($test)
     {
-        return $condition;
+        if (is_string($test)) {
+            return $this->getField($test);
+        }
+        if (is_scalar($test)) {
+            return makeStdClass(['type'=>'const','value'=>$test]);
+        }
+        if (is_a($test, BasicQuery::class)) {
+            return makeStdClass(['type'=>'subquery','value'=>$test]);
+        }
+        if (is_callable($test)) {
+            return makeStdClass(['type'=>'callback','value'=>$test]);
+        }
     }
     
     protected function addWhereStatement(string $connect, string $field, string $operator, $condition)
     {
         $entry = new \stdClass();
         $entry->connect = $connect;
-        $entry->field = $this->getField($field);
+        $entry->field = $this->parseFieldOrCondition($field);
         $entry->operator = $operator;
-        $entry->condition = $this->getCondition($condition);
+        $entry->condition = $this->parseFieldOrCondition($condition);
         $this->where_statements[] = $entry;
     }
     
@@ -115,7 +164,7 @@ abstract class BasicQuery extends Base
             if ($name == $start) {
                 $this->addWhereStatement($connection, $arguments[0],$arguments[1]??null,$arguments[2]??null);
             } else {
-                $this->addWhereStatement($connection, $arguments[0],Str::substr($name,strlen($start)),$arguments[1]??null);
+                $this->addWhereStatement($connection, $arguments[0],strtolower(Str::substr($name,strlen($start))),$arguments[1]??null);
             }
             return true;
         }
@@ -187,18 +236,29 @@ abstract class BasicQuery extends Base
     {
         
     }
-    
-    protected function assembleQuery()
+
+    /**
+     * This method does some prechecks, if the statement are valid at all
+     */
+    protected function precheckQuery()
     {
         if (!empty($this->where_statements)) {
             $this->checkWhereConditions();
         }
         if (!empty($this->order_fields)) {
-            $this->checkOrderConditions();            
+            $this->checkOrderConditions();
         }
         if (!empty($this->group_fields)) {
             $this->checkGroupConditions();
-        }
+        }        
+    }
+    
+    /**
+     * Assembles the parsed query to something the finalizing methods can use to execute the query
+     */
+    protected function assembleQuery()
+    {
+        $this->precheckQuery();
         $this->doAssembleQuery();
     }
     
