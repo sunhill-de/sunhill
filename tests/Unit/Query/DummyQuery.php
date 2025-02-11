@@ -66,8 +66,17 @@ class DummyQuery extends BasicQuery
         $this->assembled_query .= ',order:(';
         $first = true;
         foreach ($this->order_fields as $field) {
-            $this->assembled_query .= ($first?'':',').$field;
+            $this->assembled_query .= ($first?"":",")."[";
+            switch ($field->type) {
+                case 'field':
+                    $this->assembled_query .= $field->field.",".$field->direction;
+                    break;
+                case 'callback':
+                    $this->assembled_query .= "callback,".$field->direction;
+                    break;
+            }
             $first = false;
+            $this->assembled_query .= "]";
         }
         $this->assembled_query .= ')';
     }

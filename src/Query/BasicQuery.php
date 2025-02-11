@@ -53,16 +53,40 @@ abstract class BasicQuery extends Base
         }
     }
     
+    /**
+     * If not empty this list lists the fields that should be returned by first(), only() or get()
+     * @var array
+     */
     protected $fields = [];
     
+    /**
+     * Here the where statement are stored (empty if there is no where condition)
+     * @var array
+     */
     protected $where_statements = [];
     
+    /**
+     * A list of field that indicate the ordering of the result
+     * @var array
+     */
     protected $order_fields = [];
-    
+
+    /**
+     * A list of fields to which the result should be grouped
+     * @var array
+     */
     protected $group_fields = [];
     
+    /**
+     * Indicates the limit (the maximum number of results of get() and getIDs()
+     * @var integer
+     */
     protected $limit = 0; 
     
+    /**
+     * Indicates the first result that should be retured of the result set of get() and getIDs()
+     * @var integer
+     */
     protected $offset = 0; 
     
     /**
@@ -83,16 +107,17 @@ abstract class BasicQuery extends Base
             throw new InvalidStatementException("A group statement was used with feature '$feature'");
         }
         if ($this->limit) {
-            throw new InvalidStatementException("A order statement was used with feature '$feature'");
+            throw new InvalidStatementException("A limit statement was used with feature '$feature'");
         }
         if ($this->offset) {
-            throw new InvalidStatementException("A order statement was used with feature '$feature'");
+            throw new InvalidStatementException("A offset statement was used with feature '$feature'");
         }
     }
     
     // Where statements
+    
     /**
-     * Parses the argument list of of function 
+     * Helper function that parses the argument list of of function 
      * 
      * @param unknown $argument
      * @return unknown[]|\stdClass[]
@@ -105,12 +130,24 @@ abstract class BasicQuery extends Base
         }
         return $result;
     }
-       
+    
+    /**
+     * Returns true if this record has the given property "$etst"
+     * 
+     * @param string $test
+     * @return bool
+     */
     protected function hasProperty(string $test): bool
     {
         
     }
     
+    /**
+     * Try to parse a string to a field
+     * 
+     * @param string $field
+     * @return \stdClass|StdClass
+     */
     protected function getField(string $field)
     {
         $result = new \stdClass();
@@ -139,6 +176,12 @@ abstract class BasicQuery extends Base
         return makeStdClass(['type'=>'const','value'=>$field]);
     }
 
+    /**
+     * Try to parse the given parameter to something the query can process
+     * 
+     * @param unknown $test
+     * @return stdClass|\Sunhill\Query\StdClass|StdClass
+     */
     private function parseFieldOrCondition($test)
     {
         if (is_string($test)) {
@@ -156,8 +199,17 @@ abstract class BasicQuery extends Base
         if (is_callable($test)) {
             return makeStdClass(['type'=>'callback','value'=>$test]);
         }
+        throw new InvalidStatementException("The given parameter was not parsable for a query");
     }
     
+    /**
+     * Adds a where statement to the query
+     * 
+     * @param string $connect
+     * @param string $field
+     * @param string $operator
+     * @param unknown $condition
+     */
     protected function addWhereStatement(string $connect, string $field, string $operator, $condition)
     {
         $entry = new \stdClass();
@@ -168,6 +220,17 @@ abstract class BasicQuery extends Base
         $this->where_statements[] = $entry;
     }
     
+    /**
+     * Helper function that checks if a method named "$name" starts with "$start". If yes it checks if $name 
+     * is excactly $start. If yes add the condition with the given connection and other arguments. If not
+     * take the rest of the method name, make it an condition and add the where statement
+     * 
+     * @param string $name
+     * @param string $start
+     * @param string $connection
+     * @param array $arguments
+     * @return boolean
+     */
     private function checkMethodStartsWith(string $name, string $start, string $connection, array $arguments)
     {
         if (Str::startsWith($name,$start)) {
@@ -181,6 +244,13 @@ abstract class BasicQuery extends Base
         return false;
     }
     
+    /**
+     * Catchall for method calls that checks if the method starts with where, whereNot, orWhere or orWhereNot
+     * 
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
     public function __call(string $name, array $arguments): mixed
     {
         if ($this->checkMethodStartsWith($name, "whereNot", "andnot", $arguments)) {
@@ -199,6 +269,13 @@ abstract class BasicQuery extends Base
     }
 
     // Other statements
+    
+    /**
+     * A statement that indicates that only of subsets of the records should be returned 
+     * 
+     * @param unknown $fields
+     * @return \Sunhill\Query\BasicQuery
+     */
     public function fields($fields)
     {
         if (is_array($fields) || is_a($fields, \Traversable::class)) {
@@ -215,8 +292,22 @@ abstract class BasicQuery extends Base
         return $this;
     }
     
-    public function order(string $field, string $direction = 'asc'): static
+    public function order($field, string $direction = 'asc'): static
     {
+        $direction = strtolower($direction);
+        if (($direction !== "asc") && ($direction !== 'desc')) {
+            throw new InvalidOrderException("The direction $direction is invalid");
+        }
+        if (is_string($field)) {
+            if (!$this->hasProperty($field)) {
+                throw new InvalidOrderException("It's not possible to order by '$field'");                    
+            }
+            $this->order_fields[] = makeStdclass(['type'=>'field','field'=>$field,'direction'=>'asc']);
+        } else if (is_callable($field)) {
+            $this->order_fields[] = makeStdclass(['type'=>'callback','callback'=>$field,'direction'=>'asc']);            
+        } else {
+            throw new InvalidOrderException(getScalarMessage("It's not possible to sort by given variable :variable", $field));
+        }
         return $this;    
     }
     

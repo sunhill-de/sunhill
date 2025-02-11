@@ -321,5 +321,58 @@ test('assemble query', function($modification, $expectation)
                 },
                 'fields:(subquery),where:(),order:(),group:(),offset:(0),limit:(0)'
             ],
+            'with a string as fields'=>
+            [
+                function($query)
+                {
+                    return $query->fields("abc,a,b")->first();
+                },
+                'fields:("abc",a,b),where:(),order:(),group:(),offset:(0),limit:(0)'
+            ],
+                
+            'with a field as order statement'=>
+            [
+                function($query)
+                {
+                    return $query->order('a')->first();
+                },
+                'fields:(),where:(),order:([a,asc]),group:(),offset:(0),limit:(0)'
+            ],
+            'with a callback as order statement'=>
+            [
+                function($query)
+                {
+                    return $query->order(function() { })->first();
+                },
+                'fields:(),where:(),order:([callback,asc]),group:(),offset:(0),limit:(0)'
+            ],
                 
                 ]);
+
+it('fails when ordering by a non field string', function()
+{
+    $test = \Mockery::mock(DummyQuery::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    $test->shouldReceive('precheckQuery')->andReturn(true);
+    $test->shouldReceive('hasProperty')->with('a')->andReturn(true);
+    $test->shouldReceive('hasProperty')->andReturn(false);
+    
+    $test->order('abc')->first();
+})->throws(InvalidOrderException::class);
+
+it('fails when ordering by something else', function()
+{
+    $test = \Mockery::mock(DummyQuery::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    $test->shouldReceive('precheckQuery')->andReturn(true);
+    
+    $test->order(12)->first();
+})->throws(InvalidOrderException::class);
+
+it('fails when direction is something else', function()
+{
+    $test = \Mockery::mock(DummyQuery::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    $test->shouldReceive('precheckQuery')->andReturn(true);
+    
+    $test->order("a","something")->first();
+})->throws(InvalidOrderException::class);
+
+
