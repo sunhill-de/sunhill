@@ -302,9 +302,9 @@ abstract class BasicQuery extends Base
             if (!$this->hasProperty($field)) {
                 throw new InvalidOrderException("It's not possible to order by '$field'");                    
             }
-            $this->order_fields[] = makeStdclass(['type'=>'field','field'=>$field,'direction'=>'asc']);
+            $this->order_fields[] = makeStdclass(['type'=>'field','field'=>$field,'direction'=>$direction]);
         } else if (is_callable($field)) {
-            $this->order_fields[] = makeStdclass(['type'=>'callback','callback'=>$field,'direction'=>'asc']);            
+            $this->order_fields[] = makeStdclass(['type'=>'callback','callback'=>$field,'direction'=>$direction]);            
         } else {
             throw new InvalidOrderException(getScalarMessage("It's not possible to sort by given variable :variable", $field));
         }

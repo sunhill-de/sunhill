@@ -338,6 +338,14 @@ test('assemble query', function($modification, $expectation)
                 },
                 'fields:(),where:(),order:([a,asc]),group:(),offset:(0),limit:(0)'
             ],
+            'with a field as order statement'=>
+            [
+                function($query)
+                {
+                    return $query->order('a','desc')->first();
+                },
+                'fields:(),where:(),order:([a,desc]),group:(),offset:(0),limit:(0)'
+            ],
             'with a callback as order statement'=>
             [
                 function($query)
