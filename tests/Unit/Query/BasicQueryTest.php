@@ -12,6 +12,11 @@ test('assemble query', function($modification, $expectation)
 {
     $test = \Mockery::mock(DummyQuery::class)->makePartial()->shouldAllowMockingProtectedMethods();
     $test->shouldReceive('precheckQuery')->andReturn(true);
+    $test->shouldReceive('hasProperty')->with('a')->andReturn(true);
+    $test->shouldReceive('hasProperty')->with('b')->andReturn(true);
+    $test->shouldReceive('hasProperty')->with('c')->andReturn(true);
+    $test->shouldReceive('hasProperty')->andReturn(false);
+    
     $modification($test);
     expect($test->assembled_query)->toBe($expectation);
 })->with(
@@ -214,10 +219,10 @@ test('assemble query', function($modification, $expectation)
             [
                 function($query)
                 {
-                    $query = new DummyQuery();
-                    return $query->where('a','=',$query)->first();
+                    $subquery = new DummyQuery();
+                    return $query->where('a','=',$subquery)->first();
                 },
-                'where:([and;a;=;query]),order:(),group:(),offset:(0),limit:(0)'
+                'where:([and;a;=;subquery]),order:(),group:(),offset:(0),limit:(0)'
             ],
                 'with a closure as a condition'=>
             [
@@ -231,16 +236,24 @@ test('assemble query', function($modification, $expectation)
             [
                 function($query)
                 {
+                    return $query->where('a','=','a')->first();
+                },
+                'where:([and;a;=;a]),order:(),group:(),offset:(0),limit:(0)'
+            ],
+            'with a assumed string constant as a condition'=>
+            [
+                function($query)
+                {
                     return $query->where('a','=','abc')->first();
                 },
-                'where:([and;a;=;abc),order:(),group:(),offset:(0),limit:(0)'
+                'where:([and;a;=;"abc"]),order:(),group:(),offset:(0),limit:(0)'
             ],
-            'with a assumed field name as a condition'=>
+                'with a assumed another string constant as a condition'=>
             [
                 function($query)
                 {
                     return $query->where('a','=','ab-cd')->first();
             },
-            'where:([and;a;=;"ab-cd"),order:(),group:(),offset:(0),limit:(0)'
+            'where:([and;a;=;"ab-cd"]),order:(),group:(),offset:(0),limit:(0)'
                 ],
                 ]);

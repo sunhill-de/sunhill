@@ -104,10 +104,15 @@ abstract class BasicQuery extends Base
         return $result;
     }
        
+    protected function hasProperty(string $test): bool
+    {
+        
+    }
+    
     protected function getField(string $field)
     {
         $result = new \stdClass();
-        if (preg_match('/([a-zA-Z_][_[:alnum:]]*)\((.*)\)/',$field,$matches)) {
+        if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)\((.*)\)$/',$field,$matches)) {
             $result->type = 'function';
             $result->function = $matches[1];
             $result->argument = $this->getArgumentList($matches[2]);
@@ -125,7 +130,7 @@ abstract class BasicQuery extends Base
         if (preg_match("/\'(.*)\'/",$field,$matches)) {
             return makeStdClass(['type'=>'const','value'=>$matches[1]]);
         }
-        if (preg_match("/([_[:alnum:]]+)/", $field, $matches)) {
+        if ($this->hasProperty($field)) {
             // if it consist only of allowed characters for a field we assume a field. We have to decide later
             return makeStdClass(['type'=>'field','name'=>$field]);
         }
@@ -142,6 +147,9 @@ abstract class BasicQuery extends Base
         }
         if (is_a($test, BasicQuery::class)) {
             return makeStdClass(['type'=>'subquery','value'=>$test]);
+        }
+        if (is_array($test) || is_a($test, \Traversable::class)) {
+            return makeStdClass(['type'=>'array', 'value'=>$test]);
         }
         if (is_callable($test)) {
             return makeStdClass(['type'=>'callback','value'=>$test]);

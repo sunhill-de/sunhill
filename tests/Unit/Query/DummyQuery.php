@@ -34,8 +34,16 @@ class DummyQuery extends BasicQuery
                 return '"'.$field->value.'"';
             case 'callback':
                 return 'callback';
-            case 'query':
+            case 'subquery':
                 return 'subquery';
+            case 'array':
+                $return = '';
+                $first = true;
+                foreach ($field->value as $entry) {
+                    $return .= ($first?"":",").$entry;
+                    $first = false;
+                }
+                return "[ ".$return." ]";
         }
     }
     
