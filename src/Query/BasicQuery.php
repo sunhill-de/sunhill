@@ -53,6 +53,8 @@ abstract class BasicQuery extends Base
         }
     }
     
+    protected $fields = [];
+    
     protected $where_statements = [];
     
     protected $order_fields = [];
@@ -197,6 +199,21 @@ abstract class BasicQuery extends Base
     }
 
     // Other statements
+    public function fields($fields)
+    {
+        if (is_array($fields) || is_a($fields, \Traversable::class)) {
+            foreach ($fields as $single_field) {
+                $this->fields[] = $this->parseFieldOrCondition($single_field);                
+            }
+        } else if (is_string($fields)) {
+            foreach (explode(",",$fields) as $single_field) {
+                    $this->fields[] = $this->parseFieldOrCondition($single_field);
+            }
+        } else {
+                $this->fields[] = $this->parseFieldOrCondition($fields);
+        }
+        return $this;
+    }
     
     public function order(string $field, string $direction = 'asc'): static
     {

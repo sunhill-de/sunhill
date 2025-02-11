@@ -49,7 +49,7 @@ class DummyQuery extends BasicQuery
     
     private function addWhereConditions()
     {
-        $this->assembled_query .= 'where:(';
+        $this->assembled_query .= ',where:(';
         $first = true;
         foreach ($this->where_statements as $field) {
             $this->assembled_query .= ($first?'':',').'[';
@@ -93,8 +93,20 @@ class DummyQuery extends BasicQuery
         $this->assembled_query .= ',limit:('.$this->limit.')';
     }
     
+    private function addFieldsCondition()
+    {
+        $this->assembled_query .= 'fields:(';
+        $first = true;
+        foreach ($this->fields as $field) {
+            $this->assembled_query .= ($first?"":",").$this->assembleField($field);
+            $first = false;
+        }
+        $this->assembled_query .= ')';
+    }
+    
     protected function doAssembleQuery()
     {
+        $this->addFieldsCondition();
         $this->addWhereConditions();
         $this->addOrderConditions();
         $this->addGroupConditions();
