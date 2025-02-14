@@ -6,6 +6,7 @@ use Sunhill\Query\Tokenizer;
 use Sunhill\Tests\Unit\Query\DummyQuery;
 use Sunhill\Query\Exceptions\InvalidTokenException;
 use Sunhill\Tests\TestSupport\Objects\DummyChild;
+use Sunhill\Query\Exceptions\UnexpectedTokenException;
 
 uses(SunhillTestCase::class);
 

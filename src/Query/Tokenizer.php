@@ -15,6 +15,8 @@ namespace Sunhill\Query;
 
 use Sunhill\Basic\Base;
 use Sunhill\Query\Exceptions\InvalidTokenClassException;
+use Sunhill\Query\Exceptions\InvalidTokenException;
+use Sunhill\Query\Exceptions\UnexpectedTokenException;
 
 class Tokenizer extends Base
 {
@@ -67,14 +69,142 @@ class Tokenizer extends Base
         }
     }
     
+    
+    /**
+     * Returns true if this record has the given property "$etst"
+     *
+     * @param string $test
+     * @return bool
+     */
+    protected function hasProperty(string $test): bool
+    {
+        return isset($this->structure->elements[$test]);
+    }
+    
+    /**
+     * Helper function that parses the argument list of of function
+     *
+     * @param unknown $argument
+     * @return unknown[]|\stdClass[]
+     */
+    private function getArgumentList($argument)
+    {
+        $result = [];
+        foreach (explode(',',$argument) as $single_argument) {
+            $result[] = $this->parseForToken($single_argument);
+        }
+        return $result;
+    }
+    
+    private function parseFunction(string $name, string $arguments)
+    {
+        $result = new \stdClass();
+        $result->function = $name;
+        $result->argument = $this->parseForToken($arguments);
+        switch ($result->argument->type) {
+            case 'field':
+            case 'array_of_fields':
+                $result->type = 'function_of_field';
+                break;
+            default:
+                $result->type = 'function_of_value';
+                break;
+        }
+        return $result;        
+    }
+    
+    private function testForArrayofFields($parameter)
+    {
+        $result = new \stdClass();
+        $result->type = 'array_of_fields';
+        $result->elements = [];
+        foreach ($parameter as $field) {
+            $field = trim($field);
+            if (!$this->hasProperty($field)) {
+                return false;
+            }
+            $result->elements[] = makeStdClass(['type'=>'field','field'=>$field]);
+        }
+        
+        return $result;    
+    }
+    
+    /**
+     * Try to parse a string to a field
+     *
+     * @param string $field
+     * @return \stdClass|StdClass
+     */
+    protected function parseString(string $parameter)
+    {
+        $result = new \stdClass();
+        if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)\((.*)\)$/',$parameter,$matches)) {
+            return $this->parseFunction($matches[1],$matches[2]);
+        }
+        if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)->(.*)$/',$parameter,$matches)) {
+            $result->type = 'reference';
+            $result->parent = $matches[1];
+            $result->reference = $this->getField($matches[2]);
+            return $result;
+        }
+        if (preg_match('/^\"(.*)\"$/',$parameter,$matches)) {
+            return makeStdClass(['type'=>'const','value'=>$matches[1]]);
+        }
+        if (preg_match("/^\'(.*)\'$/",$parameter,$matches)) {
+            return makeStdClass(['type'=>'const','value'=>$matches[1]]);
+        }
+        if ((strpos($parameter,',') !== false) && (preg_match("/^([a-zA-Z_0-9,\s]*)$/",$parameter))) {
+            if ($result = $this->testForArrayOfFields(explode(",",$parameter))) {
+                return $result;
+            }
+        }
+        if ($this->hasProperty($parameter)) {
+            // if it consist only of allowed characters for a field we assume a field. We have to decide later
+            return makeStdClass(['type'=>'field','name'=>$parameter]);
+        }
+        return makeStdClass(['type'=>'const','value'=>$parameter]);
+    }
+    
+    private function parseArray(array $parameter)
+    {
+        if ($result = $this->testForArrayofFields($parameter)) {
+            return $result;
+        } else {
+            return makeStdClass(['type'=>'array_of_constants', 'value'=>$parameter]);
+        }
+    }
+    
+    /**
+     * Try to parse the given parameter to something the query can process
+     *
+     * @param unknown $parameter
+     * @return stdClass|\Sunhill\Query\StdClass|StdClass
+     */
     private function parseForToken($parameter)
     {
-        
+        if (is_string($parameter)) {
+            return $this->parseString($parameter);
+        }
+        if (is_scalar($parameter)) {
+            return makeStdClass(['type'=>'const','value'=>$parameter]);
+        }
+        if (is_a($parameter, BasicQuery::class)) {
+            return makeStdClass(['type'=>'subquery','value'=>$parameter]);
+        }
+        if (is_array($parameter) || is_a($parameter, \Traversable::class)) {
+            return $this->parseArray($parameter);
+        }
+        if (is_callable($parameter)) {
+            return makeStdClass(['type'=>'callback','value'=>$parameter]);
+        }
+        throw new InvalidTokenException("The given parameter was not parsable for a query");        
     }
     
     private function checkIfTokenWasExpected($token, array $expected_tokens)
     {
-        
+        if (!in_array($token->type,$expected_tokens)) {
+            throw new UnexpectedTokenException("A token of class '".$token->type."' is not expected here.");
+        }
     }
     
     /**
