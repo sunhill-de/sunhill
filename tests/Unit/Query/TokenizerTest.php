@@ -70,3 +70,9 @@ test("Unexpected token detected", function()
     ]);
 })->throws(UnexpectedTokenException::class);
 
+test("Additional field for parseParameter()", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter(10,['const'],['key'=>'value']);
+    expect($result->key)->toBe('value');    
+});

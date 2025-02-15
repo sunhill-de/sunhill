@@ -43,6 +43,19 @@ class Tokenizer extends Base
         $this->setStructure($structure);
     }
     
+    protected $additional = [];
+    
+    protected function setAdditional(array $additional)
+    {
+        $this->additional = $additional;
+        return $this;
+    }
+    
+    private function makeStdClass(array $items)
+    {
+        return makeStdClass(array_merge($items, $this->additional));    
+    }
+    
     /**
      * Sets the structure of the underlying record
      * 
@@ -98,9 +111,7 @@ class Tokenizer extends Base
     
     private function parseFunction(string $name, string $arguments)
     {
-        $result = new \stdClass();
-        $result->function = $name;
-        $result->argument = $this->parseForToken($arguments);
+        $result = $this->makeStdClass(['function'=>$name,'argument'=>$this->parseForToken($arguments)]);
         switch ($result->argument->type) {
             case 'field':
             case 'array_of_fields':
@@ -115,15 +126,13 @@ class Tokenizer extends Base
     
     private function testForArrayofFields($parameter)
     {
-        $result = new \stdClass();
-        $result->type = 'array_of_fields';
-        $result->elements = [];
+        $result = $this->makeStdClass(['type'=>'array_of_fields','elements'=>[]]);
         foreach ($parameter as $field) {
             $field = trim($field);
             if (!$this->hasProperty($field)) {
                 return false;
             }
-            $result->elements[] = makeStdClass(['type'=>'field','field'=>$field]);
+            $result->elements[] = $this->makeStdClass(['type'=>'field','field'=>$field]);
         }
         
         return $result;    
@@ -137,21 +146,17 @@ class Tokenizer extends Base
      */
     protected function parseString(string $parameter)
     {
-        $result = new \stdClass();
         if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)\((.*)\)$/',$parameter,$matches)) {
             return $this->parseFunction($matches[1],$matches[2]);
         }
         if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)->(.*)$/',$parameter,$matches)) {
-            $result->type = 'reference';
-            $result->parent = $matches[1];
-            $result->reference = $this->getField($matches[2]);
-            return $result;
+            return $this->makeStdClass(['type'=>'reference','parent'=>$matches[1],'reference'=>$this->getField($matches[2])]);
         }
         if (preg_match('/^\"(.*)\"$/',$parameter,$matches)) {
-            return makeStdClass(['type'=>'const','value'=>$matches[1]]);
+            return $this->makeStdClass(['type'=>'const','value'=>$matches[1]]);
         }
         if (preg_match("/^\'(.*)\'$/",$parameter,$matches)) {
-            return makeStdClass(['type'=>'const','value'=>$matches[1]]);
+            return $this->makeStdClass(['type'=>'const','value'=>$matches[1]]);
         }
         if ((strpos($parameter,',') !== false) && (preg_match("/^([a-zA-Z_0-9,\s]*)$/",$parameter))) {
             if ($result = $this->testForArrayOfFields(explode(",",$parameter))) {
@@ -160,9 +165,9 @@ class Tokenizer extends Base
         }
         if ($this->hasProperty($parameter)) {
             // if it consist only of allowed characters for a field we assume a field. We have to decide later
-            return makeStdClass(['type'=>'field','name'=>$parameter]);
+            return $this->makeStdClass(['type'=>'field','name'=>$parameter]);
         }
-        return makeStdClass(['type'=>'const','value'=>$parameter]);
+        return $this->makeStdClass(['type'=>'const','value'=>$parameter]);
     }
     
     private function parseArray(array $parameter)
@@ -170,7 +175,7 @@ class Tokenizer extends Base
         if ($result = $this->testForArrayofFields($parameter)) {
             return $result;
         } else {
-            return makeStdClass(['type'=>'array_of_constants', 'value'=>$parameter]);
+            return $this->makeStdClass(['type'=>'array_of_constants', 'value'=>$parameter]);
         }
     }
     
@@ -186,16 +191,16 @@ class Tokenizer extends Base
             return $this->parseString($parameter);
         }
         if (is_scalar($parameter)) {
-            return makeStdClass(['type'=>'const','value'=>$parameter]);
+            return $this->makeStdClass(['type'=>'const','value'=>$parameter]);
         }
         if (is_a($parameter, BasicQuery::class)) {
-            return makeStdClass(['type'=>'subquery','value'=>$parameter]);
+            return $this->makeStdClass(['type'=>'subquery','value'=>$parameter]);
         }
         if (is_array($parameter) || is_a($parameter, \Traversable::class)) {
             return $this->parseArray($parameter);
         }
         if (is_callable($parameter)) {
-            return makeStdClass(['type'=>'callback','value'=>$parameter]);
+            return $this->makeStdClass(['type'=>'callback','value'=>$parameter]);
         }
         throw new InvalidTokenException("The given parameter was not parsable for a query");        
     }
@@ -213,8 +218,9 @@ class Tokenizer extends Base
      * @param unknown $parameter
      * @param array $expected_token
      */
-    public function parseParameter($parameter, array $expected_token)
+    public function parseParameter($parameter, array $expected_token, array $additional = [])
     {
+        $this->setAdditional($additional);
         $this->checkExpectedToken($expected_token);
         $token = $this->parseForToken($parameter);
         $this->checkIfTokenWasExpected($token, $expected_token);
