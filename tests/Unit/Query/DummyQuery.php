@@ -26,7 +26,9 @@ class DummyQuery extends BasicQuery
         switch ($field->type) {
             case 'field':
                 return $field->name;
-            case 'function':
+            case 'function_of_field':
+                return $field->function.'( '.$this->assembleArguments($field->argument).' )';
+            case 'function_of_value':
                 return $field->function.'( '.$this->assembleArguments($field->argument).' )';
             case 'reference':
                 return $field->parent.' -> '.$this->assembleField($field->reference);
