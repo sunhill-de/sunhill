@@ -291,13 +291,63 @@ abstract class BasicQuery extends Base
         $this->precheckQuery();
         $this->doAssembleQuery();
     }
-    
+
+// ============================================ Finalizing methods =============================================================    
     /**
      * Returns the first record that matches the conditions
      */
     public function first()
     {
         $this->assembleQuery();
+    }
+
+    /**
+     * Returns the first entry that matches the conditions or throws an exception if none exists
+     */
+    public function firstOrFail()
+    {
+    }
+
+    /**
+     * Returns the first id that matches the conditions or throws an exception if none exists
+     */
+    public function firstIDOrFail()
+    {
+    }
+
+    /**
+     * Returns only the value of the given row(s)
+     */
+    public function value($column)
+    {
+    }
+
+    /**
+     * Returns that record with id given id
+     */
+    public function find($id)
+    {
+    }
+
+    /**
+     * Returns only the given fields in a collection of stdClass of all items that match the conditions
+     */
+    public function pluck(... $fields)
+    {
+    }
+
+    /**
+     * Collects $number of entries and passes them to callback
+     */
+    public function chunk(int $number, callable $callback)
+    {
+    }
+
+    /**
+     *
+     */
+    public function chunkByID(int $number, callable $callback)
+    {
     }
     
     /**
@@ -307,6 +357,36 @@ abstract class BasicQuery extends Base
     {
         
     }
+
+    public function max(string $field)
+    {
+    
+    }
+
+    public function min(string $field)
+    {
+    
+    }
+
+    public function avg(string $field): numeric
+    {
+    
+    }
+
+    public function sum(string $field): numeric
+    {
+    
+    }
+
+    public function exists(): bool
+    {
+    
+    }
+
+    public function doesntExist(): bool
+    {
+    
+    }    
     
     /**
      * Returns all record that matches the conditions
