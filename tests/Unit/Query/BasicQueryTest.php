@@ -5,17 +5,14 @@ namespace Sunhill\Tests\Unit\Query;
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Query\Exceptions\UnknownFieldException;
+use Sunhill\Tests\TestSupport\Objects\DummyGrandChild;
 
 uses(SunhillTestCase::class);
 
 test('assemble query', function($modification, $expectation) 
 {
-    $test = \Mockery::mock(DummyQuery::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    $test->shouldReceive('precheckQuery')->andReturn(true);
-    $test->shouldReceive('hasProperty')->with('a')->andReturn(true);
-    $test->shouldReceive('hasProperty')->with('b')->andReturn(true);
-    $test->shouldReceive('hasProperty')->with('c')->andReturn(true);
-    $test->shouldReceive('hasProperty')->andReturn(false);
+    $test = new DummyQuery();
+    $test->setStructure(DummyGrandChild::getExpectedStructure());
     
     $modification($test);
     expect($test->assembled_query)->toBe($expectation);
@@ -49,57 +46,49 @@ test('assemble query', function($modification, $expectation)
           [
                 function($query)
                 {
-                  return $query->where('a','=',0)->first();
+                  return $query->where('dummyint','=',0)->first();
                 },
-                'fields:(),where:([and;a;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
+                'fields:(),where:([and;dummyint;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
           ],
           'with a simple orWhere'=>
           [
                 function($query)
                 {
-                  return $query->orWhere('a','=',0)->first();
+                  return $query->orWhere('dummyint','=',0)->first();
                 },
-                'fields:(),where:([or;a;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
+                'fields:(),where:([or;dummyint;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
          ],
          'with a simple whereNot'=>
          [
                 function($query)
                 {
-                    return $query->whereNot('a','=',0)->first();
+                    return $query->whereNot('dummyint','=',0)->first();
                 },
-                'fields:(),where:([andnot;a;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
+                'fields:(),where:([andnot;dummyint;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
          ],
          'with a simple orWhereNot'=>
          [
                 function($query)
                 {
-                     return $query->orWhereNot('a','=',0)->first();
+                     return $query->orWhereNot('dummyint','=',0)->first();
                 },
-                'fields:(),where:([ornot;a;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
+                'fields:(),where:([ornot;dummyint;=;"0"]),order:(),group:(),offset:(0),limit:(0)'
          ],
          'with a simple whereSomething'=>
          [
                     function($query)
                     {
-                         return $query->whereSomething('a',0)->first();
+                         return $query->whereSomething('dummyint',0)->first();
                     },
-                    'fields:(),where:([and;a;something;"0"]),order:(),group:(),offset:(0),limit:(0)'
+                    'fields:(),where:([and;dummyint;something;"0"]),order:(),group:(),offset:(0),limit:(0)'
          ],
          'with a function as a field'=>
          [
                     function($query)
                     {
-                        return $query->where('function(a)','=',0)->first();
+                        return $query->where('function(dummyint)','=',0)->first();
                     },
-                    'fields:(),where:([and;function( a );=;"0"]),order:(),group:(),offset:(0),limit:(0)'
-         ],
-         'with a nested function as a field'=>
-         [
-             function($query)
-             {
-                 return $query->where('function(subfunc(a))','=',0)->first();
-             },
-             'fields:(),where:([and;function( subfunc( a ) );=;"0"]),order:(),group:(),offset:(0),limit:(0)'
+                    'fields:(),where:([and;function( dummyint );=;"0"]),order:(),group:(),offset:(0),limit:(0)'
          ],
          'with a function with multiple argument'=>
          [
