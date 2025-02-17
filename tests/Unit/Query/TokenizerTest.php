@@ -16,6 +16,70 @@ it('fails when a non defined tokenclass was passed', function()
     $test->parseParameter("test", ["non_existing_token"]);
 })->throws(InvalidTokenClassException::class);
 
+test("Detect a field", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter("dummyint",['const','field']);
+    
+    expect($result->type)->toBe('field');
+    expect($result->name)->toBe("dummyint");    
+});
+
+test("Detect a const value", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter(10,['const']);
+    
+    expect($result->type)->toBe('const');
+    expect($result->value)->toBe(10);
+});
+
+test("Detect a const float value", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter(1.5,['const']);
+    
+    expect($result->type)->toBe('const');
+    expect($result->value)->toBe(1.5);
+});
+
+test("Detect a const string with double tics", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter('"abc"',['const','field']);
+    
+    expect($result->type)->toBe('const');
+    expect($result->value)->toBe('abc');    
+});
+
+test("Detect a const string with single tics", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter("'abc'",['const','field']);
+    
+    expect($result->type)->toBe('const');
+    expect($result->value)->toBe('abc');
+});
+
+test("Detect a const string without tics", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter("abc",['const','field']);
+    
+    expect($result->type)->toBe('const');
+    expect($result->value)->toBe('abc');
+});
+
+test("Detect a const string as fieldname with tics", function()
+{
+    $test = new Tokenizer(DummyChild::getExpectedStructure());
+    $result = $test->parseParameter("'dummyint'",['const','field']);
+    
+    expect($result->type)->toBe('const');
+    expect($result->value)->toBe('dummyint');
+});
+
+
 test("Token is detected", function($parameter, $expect)
 {
     $test = new Tokenizer(DummyChild::getExpectedStructure());
@@ -31,11 +95,6 @@ test("Token is detected", function($parameter, $expect)
     ]);
     expect($result->type)->toBe($expect);
 })->with([
-    [10,'const'],
-    ['dummyint','field'],
-    ['something','const'],
-    [3.2,'const'],
-    ['"something"','const'],
     [function() {},'callback'],
     ['func(dummyint)','function_of_field'],
     ['func(10)','function_of_value'],
@@ -43,8 +102,6 @@ test("Token is detected", function($parameter, $expect)
     [[1,2,3],'array_of_constants'],
     [['dummyint','dummychildint'],'array_of_fields'],
     ["dummyint,dummychildint",'array_of_fields'],
-    ["'dummyint'",'const'],
-    ['"dummyint"','const']
 ]);
 
 test("No token detected", function()
