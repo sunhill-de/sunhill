@@ -2,5 +2,5 @@
 
 Welcome to the Sunhill Framework
 
-For more information see: https://dimde-frobieter.de/
+For more information see: https://framework.dimde-frobieter.de/
 
