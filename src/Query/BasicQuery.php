@@ -133,6 +133,24 @@ abstract class BasicQuery extends Base
         $entry->condition = $this->parseFieldOrCondition($condition);
         $this->where_statements[] = $entry;
     }
+
+    private function addDefaultWhereStatement(string $connection, array $arguments)
+    {
+                switch (count($arguments)) {
+                    case 0:
+                    case 1:
+                      throw new InvalidStatementException("A where statement needs at least 2 parameter);
+                      break;
+                    case 2:  
+                      $this->addWhereStatement($connection, $arguments[0],"=",$arguments[1]);
+                      break;
+                    case 3:  
+                      $this->addWhereStatement($connection, $arguments[0],$arguments[1],$arguments[2]);
+                      break;
+                    default:
+                      
+                }    
+    }
     
     /**
      * Helper function that checks if a method named "$name" starts with "$start". If yes it checks if $name 
@@ -149,7 +167,7 @@ abstract class BasicQuery extends Base
     {
         if (Str::startsWith($name,$start)) {
             if ($name == $start) {
-                $this->addWhereStatement($connection, $arguments[0],$arguments[1]??null,$arguments[2]??null);
+                $this->addDefaultWhereStatement($connection,$arguments); 
             } else {
                 $this->addWhereStatement($connection, $arguments[0],strtolower(Str::substr($name,strlen($start))),$arguments[1]??null);
             }
@@ -358,31 +376,49 @@ abstract class BasicQuery extends Base
         
     }
 
-    public function max(string $field)
+    /**
+     * Returns the highest value of the given field
+     */
+    public function max($field)
     {
     
     }
 
-    public function min(string $field)
+    /**
+     * Returns the lowest value of the given field
+     */
+    public function min($field)
     {
     
     }
 
+    /**
+     * Calculates the average of the given field (when it is numeric)
+     */
     public function avg(string $field): numeric
     {
     
     }
 
-    public function sum(string $field): numeric
+    /**
+     * Sums up all values of the given field (when it is numeric)
+     */
+    public function sum($field): numeric
     {
     
     }
 
+    /**
+     * Returns true when at least one dataset matches the given condition
+     */
     public function exists(): bool
     {
     
     }
 
+    /**
+     * Returns true when no dataset matches the given condition
+     */
     public function doesntExist(): bool
     {
     
