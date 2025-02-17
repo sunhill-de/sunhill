@@ -36,6 +36,25 @@ abstract class BasicQuery extends Base
 {
     
     /**
+     * Stores the structure of the owning PooledRecord
+     * 
+     * @var unknown
+     */
+    protected $structure;
+    
+    /**
+     * Setter for $structure
+     * 
+     * @param \stdClass $structure
+     * @return \Sunhill\Query\BasicQuery
+     */
+    public function setStructure(\stdClass $structure)
+    {
+        $this->structure = $structure;
+        return $this;
+    }
+    
+    /**
      * A static boolean that indicates if this query is readonly
      * @var boolean
      */
@@ -124,13 +143,15 @@ abstract class BasicQuery extends Base
      * @param string $operator
      * @param unknown $condition
      */
-    protected function addWhereStatement(string $connect, string $field, string $operator, $condition)
+    protected function addWhereStatement(string $connect, $field, $operator, $condition)
     {
+        $tokenizer = new Tokenizer($this->structure);
+        
         $entry = new \stdClass();
-        $entry->connect = $connect;
-        $entry->field = $this->parseFieldOrCondition($field);
+        $entry->connect = $connect;        
+        $entry->field = $tokenizer->parseParameter($field, ['field','function_of_field','callback','subquery']);
         $entry->operator = $operator;
-        $entry->condition = $this->parseFieldOrCondition($condition);
+        $entry->condition = $tokenizer->parseParameter($condition, ['field','const','callback','array_of_constants','subquery','function_of_field','function_of_value']);
         $this->where_statements[] = $entry;
     }
 
