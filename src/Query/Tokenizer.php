@@ -23,6 +23,8 @@ class Tokenizer extends Base
     
     protected $structure;
     
+    protected $early_call = true;
+    
     protected $expectable_tokens = [
         'field',
         'const',
@@ -218,9 +220,10 @@ class Tokenizer extends Base
      * @param unknown $parameter
      * @param array $expected_token
      */
-    public function parseParameter($parameter, array $expected_token, array $additional = [])
+    public function parseParameter($parameter, array $expected_token, array $additional = [], bool $early_call = true)
     {
         $this->setAdditional($additional);
+        $this->early_call = $early_call;
         $this->checkExpectedToken($expected_token);
         $token = $this->parseForToken($parameter);
         $this->checkIfTokenWasExpected($token, $expected_token);
