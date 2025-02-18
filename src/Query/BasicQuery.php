@@ -23,6 +23,8 @@ use Sunhill\Query\Exceptions\InvalidStatementException;
 use phpDocumentor\Reflection\Types\Static_;
 use phpDocumentor\Reflection\Types\Mixed_;
 use Illuminate\Support\Str;
+use Sunhill\Query\Exceptions\UnexpectedResultCountException;
+use Sunhill\Facades\Properties;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -160,7 +162,7 @@ abstract class BasicQuery extends Base
                 switch (count($arguments)) {
                     case 0:
                     case 1:
-                      throw new InvalidStatementException("A where statement needs at least 2 parameter);
+                      throw new InvalidStatementException("A where statement needs at least 2 parameter");
                       break;
                     case 2:  
                       $this->addWhereStatement($connection, $arguments[0],"=",$arguments[1]);
@@ -289,55 +291,55 @@ abstract class BasicQuery extends Base
     
     // Finalizing methods
     
-    abstract protected function doAssembleQuery();
+    abstract protected function doExecuteQuery();
     
-    private function checkWhereConditions()
-    {
-        
-    }
-    
-    private function checkOrderConditions()
-    {
-        
-    }
-    
-    private function checkGroupConditions()
-    {
-        
-    }
-
     /**
-     * This method does some prechecks, if the statement are valid at all
+     * Returns a query checker. This method can be overwritten for implementing extended checkers
+     * 
+     * @return \Sunhill\Query\Checker
      */
-    protected function precheckQuery()
+    protected function getQueryChecker()
     {
-        if (!empty($this->where_statements)) {
-            $this->checkWhereConditions();
-        }
-        if (!empty($this->order_fields)) {
-            $this->checkOrderConditions();
-        }
-        if (!empty($this->group_fields)) {
-            $this->checkGroupConditions();
-        }        
+        return new Checker();
+    }
+    
+    protected function checkQuery(string $finalizer)
+    {
+        $checker = $this->getQueryChecker( $this->structure );
+        $checker
+            ->setFields($this->fields)
+            ->setWhere($this->where_statements)
+            ->setOrder($this->order_fields)
+            ->setGroup($this->group_fields)
+            ->setLimit($this->limit)
+            ->setOffset($this->offset)
+            ->setFinalizer($this->finalizer);
+        $checker->performCheck();        
     }
     
     /**
-     * Assembles the parsed query to something the finalizing methods can use to execute the query
+     * First checks the query (if it is valid), prepares it and then Calls the query executor and returns its result
+     * 
+     * @param string $finalizer. This could be any of:
+     * - "first": Returns the id that matches the conditions
+     * - "get": Returns all ids that macthes the conditions
+     * @param array $params
      */
-    protected function assembleQuery()
+    protected function executeQuery(string $finalizer, array $params = [])
     {
-        $this->precheckQuery();
-        $this->doAssembleQuery();
+        $this->checkQuery($finalizer);
+        return $this->doExecuteQuery( $finalizer, $params );
     }
-
+    
 // ============================================ Finalizing methods =============================================================    
     /**
      * Returns the first record that matches the conditions
      */
     public function first()
     {
-        $this->assembleQuery();
+        $id = $this->firstID();
+        
+        return Properties::loadRecord($id);
     }
 
     /**
@@ -345,6 +347,9 @@ abstract class BasicQuery extends Base
      */
     public function firstOrFail()
     {
+        $id = $this->firstIDOrFail();
+        
+        return Properties::loadRecord($id);
     }
 
     /**
@@ -352,8 +357,22 @@ abstract class BasicQuery extends Base
      */
     public function firstIDOrFail()
     {
+        $result = $this->firstID();
+        if (empty($result)) {
+            throw new UnexpectedResultCountException("At least one result is expected for firstOrFail(), none returned");
+        }
+        
+        return $result;
     }
 
+    /**
+     * Returns the first id that matches the conditions
+     */
+    public function firstID()
+    {
+        return $this->executeQuery( 'first' );        
+    }
+    
     /**
      * Returns only the value of the given row(s)
      */
@@ -449,14 +468,6 @@ abstract class BasicQuery extends Base
      * Returns all record that matches the conditions
      */
     public function get()
-    {
-        
-    }
-    
-    /**
-     * Returns the first id that matches the conditions
-     */
-    public function firstID()
     {
         
     }
