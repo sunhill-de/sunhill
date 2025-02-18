@@ -19,8 +19,6 @@ use Sunhill\Query\Exceptions\UnknownFieldException;
 use Sunhill\Query\Exceptions\TooManyResultsException;
 use Sunhill\Query\Exceptions\QueryNotWriteableException;
 use Sunhill\Query\Exceptions\InvalidStatementException;
-use phpDocumentor\Reflection\Types\Static_;
-use phpDocumentor\Reflection\Types\Mixed_;
 use Illuminate\Support\Str;
 use Sunhill\Query\Exceptions\UnexpectedResultCountException;
 use Sunhill\Facades\Properties;
@@ -100,21 +98,31 @@ abstract class BasicQuery extends QueryHandler
     protected function addWhereStatement(string $connect, $field, $operator, $condition)
     {
         $tokenizer = new Tokenizer($this->structure);
-        
-        $entry = new \stdClass();
-        $entry->connect = $connect;        
-        $entry->field = $tokenizer->parseParameter($field, ['field','function_of_field','callback','subquery']);
-        $entry->operator = $operator;
-        $entry->condition = $tokenizer->parseParameter($condition, ['field','const','callback','array_of_constants','subquery','function_of_field','function_of_value']);
-        $this->where_statements[] = $entry;
+        $this->getQueryObject()->addWhereStatement(
+            $connect,
+            $tokenizer->parseParameter($field, ['field','function_of_field','callback','subquery']),
+            $operator,
+            $tokenizer->parseParameter($condition, ['field','const','callback','array_of_constants','subquery','function_of_field','function_of_value'])
+        );
     }
 
+    /**
+     * When a where statement is passed a single parameter this can only be a callable. This indicates that this is a bracket where statement
+     */
+    private function addBracketStatement(string $connect, $argument)
+    {
+        if (!is_callable($argument)) {
+             throw new InvalidStatementException("A where statement needs at least 2 parameter");
+        }
+        $this->addWhereStatement($connect, "", "()", $argument);
+    }
+    
     private function addDefaultWhereStatement(string $connection, array $arguments)
     {
                 switch (count($arguments)) {
                     case 0:
                     case 1:
-                      throw new InvalidStatementException("A where statement needs at least 2 parameter");
+                      $this->addBracketStatement($connection, $arguments[0]);
                       break;
                     case 2:  
                       $this->addWhereStatement($connection, $arguments[0],"=",$arguments[1]);
@@ -122,8 +130,7 @@ abstract class BasicQuery extends QueryHandler
                     case 3:  
                       $this->addWhereStatement($connection, $arguments[0],$arguments[1],$arguments[2]);
                       break;
-                    default:
-                      
+                    default:                      
                 }    
     }
     
@@ -226,7 +233,8 @@ abstract class BasicQuery extends QueryHandler
      */
     public function limit(int $limit): static
     {
-        $this->limit = $limit;
+        $this->getQueryObject()->setLimit($limit);
+
         return $this;
     }
     
@@ -237,7 +245,8 @@ abstract class BasicQuery extends QueryHandler
      */
     public function offset(int $offset): static
     {
-        $this->offset = $offset;
+        $this->getQueryObject()->setOffset($offset);
+
         return $this;
     }
     
