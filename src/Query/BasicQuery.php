@@ -75,42 +75,6 @@ abstract class BasicQuery extends Base
     }
     
     /**
-     * If not empty this list lists the fields that should be returned by first(), only() or get()
-     * @var array
-     */
-    protected $fields = [];
-    
-    /**
-     * Here the where statement are stored (empty if there is no where condition)
-     * @var array
-     */
-    protected $where_statements = [];
-    
-    /**
-     * A list of field that indicate the ordering of the result
-     * @var array
-     */
-    protected $order_fields = [];
-
-    /**
-     * A list of fields to which the result should be grouped
-     * @var array
-     */
-    protected $group_fields = [];
-    
-    /**
-     * Indicates the limit (the maximum number of results of get() and getIDs()
-     * @var integer
-     */
-    protected $limit = 0; 
-    
-    /**
-     * Indicates the first result that should be retured of the result set of get() and getIDs()
-     * @var integer
-     */
-    protected $offset = 0; 
-    
-    /**
      * For some operations (insert and upserts) a where, limit, offset, order or group statement 
      * makes no sense. So if one of those are set, throw an exception.
      * 
