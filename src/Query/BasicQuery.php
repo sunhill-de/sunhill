@@ -3,7 +3,7 @@
  * @file BasicQuery.php
  * A base class for other queries
  * Lang en
- * Reviewstatus: 2024-10-08
+ * Reviewstatus: 2025-02-18
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Query/BasicQueryTest.php
@@ -18,7 +18,6 @@ use Sunhill\Query\Exceptions\NoResultException;
 use Sunhill\Query\Exceptions\UnknownFieldException;
 use Sunhill\Query\Exceptions\TooManyResultsException;
 use Sunhill\Query\Exceptions\QueryNotWriteableException;
-use Sunhill\Basic\Base;
 use Sunhill\Query\Exceptions\InvalidStatementException;
 use phpDocumentor\Reflection\Types\Static_;
 use phpDocumentor\Reflection\Types\Mixed_;
@@ -34,26 +33,15 @@ use Sunhill\Facades\Properties;
  * @author klaus
  *
  */
-abstract class BasicQuery extends Base
+abstract class BasicQuery extends QueryHandler
 {
-    
+
     /**
-     * Stores the structure of the owning PooledRecord
-     * 
-     * @var unknown
+     * The constructor creates a new QueryObject
      */
-    protected $structure;
-    
-    /**
-     * Setter for $structure
-     * 
-     * @param \stdClass $structure
-     * @return \Sunhill\Query\BasicQuery
-     */
-    public function setStructure(\stdClass $structure)
+    public function __construct()
     {
-        $this->structure = $structure;
-        return $this;
+        $this->setQueryObject(new QueryObject());
     }
     
     /**
