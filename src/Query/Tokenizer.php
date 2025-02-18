@@ -180,6 +180,14 @@ class Tokenizer extends Base
             return $this->makeStdClass(['type'=>'array_of_constants', 'value'=>$parameter]);
         }
     }
+
+    private function handleCallback(callable $callback)
+    {
+        if ($this->early_call) {
+            return $this->parseForToken($callback());
+        }
+        return makeStdClass(['type'=>'callback','callback'=>$callback)];
+    }
     
     /**
      * Try to parse the given parameter to something the query can process
@@ -202,7 +210,7 @@ class Tokenizer extends Base
             return $this->parseArray($parameter);
         }
         if (is_callable($parameter)) {
-            return $this->makeStdClass(['type'=>'callback','value'=>$parameter]);
+            return $this->handleCallback($parameter);
         }
         throw new InvalidTokenException("The given parameter was not parsable for a query");        
     }
