@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @file QueryObject.php
- * A class that stores information about a query to pass between builder, checker and executor
+ * @file Executor.php
+ * A class that executes the assmbles and validated query and returns the wanted results
  * Lang en
  * Reviewstatus: 2025-02-18
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Query/QueryObjectTest.php
+ * Tests: Unit/Query/ExecutorTest.php
  * Coverage: 
  */
 
@@ -15,14 +15,11 @@ namespace Sunhill\Query;
 
 use Sunhill\Basic\Base;
 
-class Executor extends Base
+class Executor extends QueryHandler
 {
-  
-  protected $query_object;
-  
   public function __construct(QueryObject $query)
   {
-      $this->query_object = $query;
+     $this->setQueryObject($query);
   }
   
 }    
