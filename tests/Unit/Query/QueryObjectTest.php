@@ -3,6 +3,9 @@
 namespace Sunhill\Tests\Unit\Query;
 
 use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Query\QueryObject;
+use Sunhill\Query\Exceptions\StructureMissingException;
+use Sunhill\Tests\TestSupport\Objects\Dummy;
 
 uses(SunhillTestCase::class);
 
@@ -36,28 +39,28 @@ test("getFieldType() works", function()
     expect($test->getFieldType("dummyint"))->toBe("integer");
 });
      
-test("setFields() with array of fields", function()
+test("addFields() with array of fields", function()
 {
     $test = new QueryObject();
-    $test->setFields(['a','b','c']);
+    $test->addFields(['a','b','c']);
     expect($test->getFields()[1])->toBe('b');
 });
 
-test("setFields() with single fields", function()
+test("addFields() with single fields", function()
 {
     $test = new QueryObject();
-    $test->setFields('a');
+    $test->addFields('a');
     expect($test->getFields()[0])->toBe('a');  
 });
 
-test("addWhereStatement() and getWhereStatements()", function
+test("addWhereStatement() and getWhereStatements()", function()
 {
      $test = new QueryObject();
      $test->addWhereStatement('and','a','=','abc');
      expect($test->getWhereStatements()[0]->field)->toBe('a');
 });
 
-test("setter and getter for offset", function
+test("setter and getter for offset", function()
 {
      $test = new QueryObject();
      $test->setOffset(10);
@@ -65,24 +68,24 @@ test("setter and getter for offset", function
      expect($test->getOffset())->toBe(10);
 });
 
-test("setter and getter for limit", function
+test("setter and getter for limit", function()
 {
      $test = new QueryObject();
      $test->setLimit(10);
 
-     expect($test->getLimmit())->toBe(10);
+     expect($test->getLimit())->toBe(10);
 });
 
-test("addOrder() and getOrderStatements()", function
+test("addOrder() and getOrderStatements()", function()
 {
      $test = new QueryObject();
      $test->addOrder('a','asc');
 
-     expect($test->getOrderStatement()[0]->field)->toBe('a');
-     expect($test->getOrderStatement()[0]->dir)->toBe('asc');
+     expect($test->getOrderStatements()[0]->field)->toBe('a');
+     expect($test->getOrderStatements()[0]->dir)->toBe('asc');
 }); 
 
-test("addGroupField() and getGroupFields() with single field", function
+test("addGroupField() and getGroupFields() with single field", function()
 {
      $test = new QueryObject();
      $test->addGroupField('a');
@@ -90,7 +93,7 @@ test("addGroupField() and getGroupFields() with single field", function
      expect($test->getGroupFields()[0])->toBe('a');
 }); 
 
-test("addGroupField() and getGroupFields() with array of fields", function
+test("addGroupField() and getGroupFields() with array of fields", function()
 {
      $test = new QueryObject();
      $test->addGroupField(['a','b','c']);

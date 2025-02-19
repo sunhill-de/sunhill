@@ -13,6 +13,7 @@
 namespace Sunhill\Query;
 
 use Sunhill\Basic\Base;
+use Sunhill\Query\Exceptions\StructureMissingException;
 
 class QueryObject extends Base
 {
@@ -48,7 +49,7 @@ class QueryObject extends Base
     /**
      * Returns the current set structure or throws an exception if none is set
      */
-    public function getStructure(): BasicQuery
+    public function getStructure(): \stdClass
     {
         $this->checkForStructure();    
         return $this->structure;
@@ -61,7 +62,7 @@ class QueryObject extends Base
      */
     public function hasField(string $field_name): bool
     {
-        return isset($this->elements[$field_name]);
+        return isset($this->getStructure()->elements[$field_name]);
     }
 
     /**
@@ -71,7 +72,7 @@ class QueryObject extends Base
      */
     public function getFieldType(string $field_name): string
     {
-        return $this->elements[$field_name]->type;
+        return $this->getStructure()->elements[$field_name]->type;
     }
     
     /**
@@ -85,7 +86,7 @@ class QueryObject extends Base
      */
     public function addFields($fields): static
     {
-        if (is_a($fields, \Traversable::class)) {
+        if (is_array($fields) || is_a($fields, \Traversable::class)) {
             foreach ($fields as $field) {
                 $this->fields[] = $field;
             }    
@@ -101,7 +102,7 @@ class QueryObject extends Base
      */
     public function getFields(): array
     {
-        return $this->fields:
+        return $this->fields;
     }
         
     /**
@@ -137,7 +138,7 @@ class QueryObject extends Base
 
     public function addGroupField($group)
     {
-        if (is_a($group, \Traversable::class)) {
+        if (is_array($group) || is_a($group, \Traversable::class)) {
             foreach ($group as $single_group) {
                 $this->group_fields[] = $single_group;
             }    
@@ -204,7 +205,7 @@ class QueryObject extends Base
     /**
      * Adds a new where statement to the where statements
      */
-    public function addWhereStatement(string $connection, $field, $opreator, $relation)
+    public function addWhereStatement(string $connection, $field, $operator, $relation)
     {           
         $entry = new \stdClass();
         $entry->connect = $connection;        
