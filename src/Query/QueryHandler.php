@@ -26,7 +26,7 @@ class QueryHandler extends Base
     /**
      * Sets the query_object
      */
-    protected function setQueryObject(QueryObject $query): static
+    public function setQueryObject(QueryObject $query): static
     {
         $this->query_object = $query;
         return $this;
@@ -35,7 +35,7 @@ class QueryHandler extends Base
     /**
      * Check if a query_object was set. If not throw an exception otherwise return it
      */
-    protected function getQueryObject(): QueryObject    
+    public function getQueryObject(): QueryObject    
     {
         if (is_null($this->query_object)) {
           throw new QueryObjectExpectedException("A QueryObject was expected but not defined.");
