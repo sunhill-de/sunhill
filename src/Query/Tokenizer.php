@@ -18,10 +18,8 @@ use Sunhill\Query\Exceptions\InvalidTokenClassException;
 use Sunhill\Query\Exceptions\InvalidTokenException;
 use Sunhill\Query\Exceptions\UnexpectedTokenException;
 
-class Tokenizer extends Base
+class Tokenizer extends QueryHandler
 {
-    
-    protected $structure;
     
     protected $early_call = true;
     
@@ -36,40 +34,34 @@ class Tokenizer extends Base
         'function_of_value',
     ];
     /**
-     * Constructure, just sets the structure of the underlaying record
+     * Constructure, just sets the QueryObject
      * 
-     * @param unknown $structure
+     * @param QueryObject $query
      */
-    public function __construct($structure)
+    public function __construct(QueryObject $query)
     {
-        $this->setStructure($structure);
+        $this->setQueryObject($query);
     }
     
     protected $additional = [];
-    
+
+    /**
+     * Sometimes it is necessary to pass some additional parameters to the Tokenizer, these are added to the token information
+     */
     protected function setAdditional(array $additional)
     {
         $this->additional = $additional;
         return $this;
     }
-    
+
+    /**
+     * A private re-implementation of the makeStdClass() helper function. Merges the additional informations
+     */
     private function makeStdClass(array $items)
     {
         return makeStdClass(array_merge($items, $this->additional));    
     }
-    
-    /**
-     * Sets the structure of the underlying record
-     * 
-     * @param unknown $structure
-     * @return \Sunhill\Query\Tokenizer
-     */
-    public function setStructure($structure)
-    {
-        $this->structure = $structure;
-        return $this;
-    }
-    
+        
     /**
      * Checks if the given list of expected tokeens are in the list of allowed tokens
      * 
