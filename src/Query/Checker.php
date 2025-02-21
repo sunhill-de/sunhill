@@ -14,13 +14,38 @@ namespace Sunhill\Query;
 
 use Sunhill\Basic\Base;
 
-class Checker extends Base
+class Checker extends QueryHandler
 {
     
-    protected $structure;
-    
-    public function __construct(\stdClass $structure)
+    public function __construct(QueryObject $query)
     {
-        $this->structure = $structure;
+        $this->setQueryObject($query);
     }
+
+    private function checkFields(array $fields)
+    {
+    }
+
+    private function checkWhereCondition(\stdClass $condition)
+    {
+    
+    }
+    
+    private function checkWhereStatements(array $where)
+    {
+        foreach ($where as $where_condition) {
+            $this->checkWereCondition($where_condition);
+        }    
+    }
+    
+    public function check()
+    {
+        if ($fields = $this->getQueryObject()->getFields()) {
+            $this->checkFields($fields);
+        }
+        if ($where = $this->getQueryObject()->getWhereStatements()) {
+            $this->checWhereStatements($fields);
+        }
+    }
+    
 }
