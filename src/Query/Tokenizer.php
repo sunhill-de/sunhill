@@ -13,7 +13,6 @@
 
 namespace Sunhill\Query;
 
-use Sunhill\Basic\Base;
 use Sunhill\Query\Exceptions\InvalidTokenClassException;
 use Sunhill\Query\Exceptions\InvalidTokenException;
 use Sunhill\Query\Exceptions\UnexpectedTokenException;
@@ -28,7 +27,7 @@ class Tokenizer extends QueryHandler
         'const',
         'callback',
         'array_of_fields',
-        'array_of_constants',
+        'array_of_consts',
         'subquery',
         'function_of_field',
         'function_of_value',
@@ -78,17 +77,6 @@ class Tokenizer extends QueryHandler
     
     
     /**
-     * Returns true if this record has the given property "$etst"
-     *
-     * @param string $test
-     * @return bool
-     */
-    protected function hasProperty(string $test): bool
-    {
-        return isset($this->structure->elements[$test]);
-    }
-    
-    /**
      * Helper function that parses the argument list of of function
      *
      * @param unknown $argument
@@ -105,14 +93,32 @@ class Tokenizer extends QueryHandler
     
     private function parseFunction(string $name, string $arguments)
     {
-        $result = $this->makeStdClass(['function'=>$name,'argument'=>$this->parseForToken($arguments)]);
-        switch ($result->argument->type) {
+        $result = $this->makeStdClass(['function'=>$name]);
+        
+        $arguments = trim($arguments);
+        if (empty($arguments)) {
+            $result->type = 'function_of_value';
+            $result->arguments = null;
+            return $result;
+        }
+        $arguments = $this->parseForToken($arguments);
+        switch ($arguments->type) {
             case 'field':
+                $result->type = 'function_of_field';
+                $result->arguments = [$arguments];
+                break;
             case 'array_of_fields':
                 $result->type = 'function_of_field';
+                $result->arguments = $arguments->elements;
                 break;
+            case 'array_of_consts':
+                $result->type = 'function_of_value';
+                $result->arguments = $arguments->elements;
+                break;
+            case 'const':
             default:
                 $result->type = 'function_of_value';
+                $result->arguments = [$arguments];
                 break;
         }
         return $result;        
@@ -120,13 +126,15 @@ class Tokenizer extends QueryHandler
     
     private function testForArrayofFields($parameter)
     {
-        $result = $this->makeStdClass(['type'=>'array_of_fields','elements'=>[]]);
+        $result = $this->makeStdClass(['type'=>'array_of_consts','elements'=>[]]);
         foreach ($parameter as $field) {
             $field = trim($field);
-            if (!$this->hasProperty($field)) {
-                return false;
+            if ($this->getQueryObject()->hasField($field)) {
+                $result->type = 'array_of_fields';
+                $result->elements[] = $this->makeStdClass(['type'=>'field','field'=>$field]);
+            } else {
+                $result->elements[] = $this->makeStdClass(['type'=>'const','value'=>$field]);                
             }
-            $result->elements[] = $this->makeStdClass(['type'=>'field','field'=>$field]);
         }
         
         return $result;    
@@ -157,7 +165,7 @@ class Tokenizer extends QueryHandler
                 return $result;
             }
         }
-        if ($this->hasProperty($parameter)) {
+        if ($this->getQueryObject()->hasField($parameter)) {
             // if it consist only of allowed characters for a field we assume a field. We have to decide later
             return $this->makeStdClass(['type'=>'field','name'=>$parameter]);
         }
@@ -178,7 +186,7 @@ class Tokenizer extends QueryHandler
         if ($this->early_call) {
             return $this->parseForToken($callback());
         }
-        return makeStdClass(['type'=>'callback','callback'=>$callback)];
+        return makeStdClass(['type'=>'callback','callback'=>$callback]);
     }
     
     /**
