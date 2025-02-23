@@ -4,8 +4,8 @@ namespace Sunhill\Tests\Unit\Query;
 
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Exceptions\InvalidOrderException;
-use Sunhill\Query\Exceptions\UnknownFieldException;
 use Sunhill\Tests\TestSupport\Objects\DummyGrandChild;
+use Sunhill\Tests\Unit\Query\Examples\DummyQuery;
 
 uses(SunhillTestCase::class);
 
