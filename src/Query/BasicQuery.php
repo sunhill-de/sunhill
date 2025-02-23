@@ -252,7 +252,15 @@ abstract class BasicQuery extends QueryHandler
     
     // Finalizing methods
     
-    abstract protected function doExecuteQuery();
+    protected function getQueryExecutor()
+    {
+        
+    }
+    
+    protected function doExecuteQuery()
+    {
+        
+    }
     
     /**
      * Returns a query checker. This method can be overwritten for implementing extended checkers
@@ -266,16 +274,8 @@ abstract class BasicQuery extends QueryHandler
     
     protected function checkQuery(string $finalizer)
     {
-        $checker = $this->getQueryChecker( $this->structure );
-        $checker
-            ->setFields($this->fields)
-            ->setWhere($this->where_statements)
-            ->setOrder($this->order_fields)
-            ->setGroup($this->group_fields)
-            ->setLimit($this->limit)
-            ->setOffset($this->offset)
-            ->setFinalizer($this->finalizer);
-        $checker->performCheck();        
+        $checker = $this->getQueryChecker( $this->getQueryObject() );
+        $checker->check();        
     }
     
     /**
@@ -396,7 +396,7 @@ abstract class BasicQuery extends QueryHandler
     /**
      * Calculates the average of the given field (when it is numeric)
      */
-    public function avg(string $field): numeric
+    public function avg(string $field): int|float
     {
     
     }
@@ -404,7 +404,7 @@ abstract class BasicQuery extends QueryHandler
     /**
      * Sums up all values of the given field (when it is numeric)
      */
-    public function sum($field): numeric
+    public function sum($field): int|float
     {
     
     }
