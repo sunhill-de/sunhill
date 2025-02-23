@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Tests\Unit\Query;
+namespace Sunhill\Tests\Unit\Query\Examples;
 
 use Sunhill\Query\BasicQuery;
 use Illuminate\Support\Collection;
