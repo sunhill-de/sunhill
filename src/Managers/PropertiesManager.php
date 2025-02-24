@@ -157,7 +157,18 @@ class PropertiesManager
         $key = $this->searchOrThrow($property);
         return $key;
     }
-    
+    /**
+     * Returns the structure of this property
+     *
+     * @param unknown $property Any kind of reference to a property.
+     * @return The structure of this property
+     */
+    public function getStructureOfProperty($property)
+    {
+         $namespace = $this->getNamespaceOfrProperty($property);
+         return $namespace::getStructure();
+    }
+ 
     /**
      * Testss if the given property has a method with the given name
      *
