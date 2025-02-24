@@ -74,6 +74,26 @@ class Checker extends QueryHandler
         }
         return 'string';
     }
+
+    private function doGetReferenceTypeOf(\stdClass $test, QueryObject $query_object)
+    {
+           if (!$query_object->hasField($test->name)) {
+               throw new InvalidStatementException("The field '".$test->name."' does not exist.");
+           }    
+           if (!($query_object->getFieldType($test->name) == 'reference')) {
+               throw new InvalidStatementException("The field '".$test->name."' is not a reference.");
+           }
+    }
+    
+    /**
+     * Helper routine for getTypef that handles references. References could be itself a reference, so this has to be handled.
+     * @param \stdClass $test
+     * @return string
+     */
+    private function getReferenceTypeOf(\stdClass $test)
+    {
+        return $this->doGetReferenceTypeOf($test, $this->getQueryObject());
+    }
     
     /**
      * Returns the type of the given token. Possible results are 'string', 'int', 'float', 'date', 'datetime', 'time' or 'array'
@@ -86,6 +106,9 @@ class Checker extends QueryHandler
         switch ($test->type) {
             case 'field':
                 return $this->getQueryObject()->getFieldType($test->field);
+                break;
+            case 'reference':
+                return $this->getReferenceTypeOf($test);
                 break;
             case 'const':
                 if (is_float($test->value)) {
