@@ -24,6 +24,7 @@ class Tokenizer extends QueryHandler
     
     protected $expectable_tokens = [
         'field',
+        'reference',
         'const',
         'callback',
         'array_of_fields',
@@ -103,6 +104,7 @@ class Tokenizer extends QueryHandler
         }
         $arguments = $this->parseForToken($arguments);
         switch ($arguments->type) {
+            case 'reference':
             case 'field':
                 $result->type = 'function_of_field';
                 $result->arguments = [$arguments];
