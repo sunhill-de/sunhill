@@ -312,6 +312,34 @@ test("subquery", function()
     
 });
 
+test("Reference", function()
+{
+    $query_object = \Mockery::mock(QueryObject::class);
+    
+    $test = new Tokenizer($query_object);
+    $result = $test->parseParameter("reference->somekey",['const','field']);
+    
+    expect($result->type)->toBe('reference');
+    expect($result->name)->toBe("reference");
+    expect($result->key->type)->toBe("field");
+    expect($result->key->field)->toBe("somekey");
+});
+
+test("Double reference", function()
+{
+    $query_object = \Mockery::mock(QueryObject::class);
+    
+    $test = new Tokenizer($query_object);
+    $result = $test->parseParameter("reference->somekey->anotherkey",['const','field']);
+    
+    expect($result->type)->toBe('reference');
+    expect($result->name)->toBe("reference");
+    expect($result->key->type)->toBe("reference");
+    expect($result->key->name)->toBe("somekey");
+    expect($result->key->key->type)->toBe("field");
+    expect($result->key->key->field)->toBe("anotherkey");
+});
+
 test("No token detected", function()
 {
     $query_object = \Mockery::mock(QueryObject::class);
