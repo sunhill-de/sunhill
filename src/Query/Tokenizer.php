@@ -152,7 +152,8 @@ class Tokenizer extends QueryHandler
             return $this->parseFunction($matches[1],$matches[2]);
         }
         if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)->(.*)$/',$parameter,$matches)) {
-            return $this->makeStdClass(['type'=>'reference','parent'=>$matches[1],'reference'=>$this->getField($matches[2])]);
+            // Note: There is no check, if $name really is a field of the given structure (because of nested references). Th check has to be done later!
+            return $this->makeStdClass(['type'=>'reference','name'=>$matches[1],'key'=>$this->getField($matches[2])]);
         }
         if (preg_match('/^\"(.*)\"$/',$parameter,$matches)) {
             return $this->makeStdClass(['type'=>'const','value'=>$matches[1]]);
