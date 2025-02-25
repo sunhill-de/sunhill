@@ -166,7 +166,8 @@ class PropertiesManager
     public function getStructureOfProperty($property)
     {
          $namespace = $this->getNamespaceOfrProperty($property);
-         return $namespace::getStructure();
+         $object = new $namespace(); // getStructure() is not static !
+         return $object->getStructure();
     }
  
     /**
