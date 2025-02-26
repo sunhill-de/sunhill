@@ -24,8 +24,9 @@ test('Test special chars',function($input, $token, $value = null, $type = null)
         expect($result->field_type)->toBe($type);
     }
 })->with([
-    'null'=>["null def","NULL"],
-    'identifier'=>['abc def','ident','abc'],  
+  'null'=>["null def","NULL"],
+  'as'=>["as def","AS"],
+  'identifier'=>['abc def','ident','abc'],  
   'identifier with numbers and underscore'=>['abc_d3 def','ident','abc_d3'],  
   'identifier starting with underscore'=>['_abc def','ident','_abc'],  
   'integer'=>['123 def','const','123','int'],  
