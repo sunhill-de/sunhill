@@ -44,4 +44,6 @@ class Parser extends QueryHandler
          'ORDER'=>['field','field|asc','field|desc'],
          'ASSIGN'=>['field','=','EXPRESSION'], 
     ];
+
+    protected $stack = [];
 }  
