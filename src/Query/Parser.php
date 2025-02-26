@@ -20,18 +20,28 @@ class Parser extends QueryHandler
             ['BETWEENEXPRESSION'],
         ],
         'BETWEENEXPRESSION'=>[['BETWEEN','BETWEENLIMIT','AND','BETWEENLIMIT'],['LIKEEXPRESSION']],
-        'VALUEEXPRESSION'=>[['const'],['field']],
         'LIKEEXPRESSION'=>[['VALUEFIELD','like','VALUEFIELD'],['VALUEFIELD','regexp','VALUEFIELD'],['VALUEFIELD','in','VALUEFIELD'],['BITWISEOR']],
         'BITWISEOR'=>[['VALUEFIELD','|','VALUEFIELD'],['BITWISEAND']],
         'BITWISEAND'=>[['VALUEFIELD','&','VALUEFIELD'],['SHIFTEXPRESSION']],
         'SHIFTEXPRESSION'=>[['VALUEFIELD','>>','VALUEFIELD'],['VALUEFIELD','<<','VALUEFIELD'],['ADDEXPRESSION']],
-    [
-    ['EXPRESSION','+','SUM'],['EXPRESSION','-','SUM'],['SUM'],['€']],
-        'SUM'=>['SUM|*|FAKTOR','SUM|/|FAKTOR','SUM|%|FAKTOR','SUM|mod|FAKTOR','SUM|div|FAKTOR','FAKTOR','€'],
-        'FAKTOR'=>['(|EXPRESSION|]','const','field','field|as|ident','FUNCT','€'],
-        'FUNCT'=>['ident|(|LIST|)'],
-        'LIST'=>['EXPRESSION','EXPRESSION|,|EXPRESSION','€'],
-        'ORDER'=>['field','field|asc','field|desc'],
-        'ASSIGN'=>['field','=','EXPRESSION'], // For set statements
+        'ADDEXPRESSION'=>[['ADDEXPRESSION','+','MULTEXPRESSION'],['ADDEXPRESSION','-','MULTEXPRESSION'],['MULTEXPRESSION']],
+        'MULTEXPRESSION'=>[
+            ['MULTEXPRESSION','*','BITWISEXOR'],
+            ['MULTEXPRESSION','/','BITWISEXOR'],
+            ['MULTEXPRESSION','%','BITWISEXOR'],
+            ['MULTEXPRESSION','div','BITWISEXOR'],
+            ['BITWISEXOR']
+         ],
+         'BITWISEXOR'=>[['VALUEFIELD','^','VALUEFIELD'],['CONCATATION']],
+         'CONCATATION'=>[['CONCATATION','||','UNARYMINUS'],['UNARYMINUS']],
+         'UNARYMINUS'=>[['-','NOTEXPRESSION'],['~','NOTEXPRESSION'],['NOTEXPRESSION']],
+         'NOTEXPRESSION'=>[['!','BINARYEXPRESSION'],['BINARYEXPRESSION']],
+         'BINARYEXPRESSION'=>[['binary','INTERVALEXPRESSION'],['collate','const'],['INTERVALLEXPRESSION']],
+         'INTERVALLEXPRESSION'=>[['interval','TIMEAMOUNT','TIMEUNIT'],['VALUEEXPRESSION']]
+         'VALUEEXPRESSION'=>[['const'],['field','as','identifier'],['field'],['(','EXPRESSION',')','FUNCTION']],
+         'FUNCT'=>['ident|(|LIST|)'],
+         'LIST'=>['EXPRESSION','EXPRESSION|,|EXPRESSION','€'],
+         'ORDER'=>['field','field|asc','field|desc'],
+         'ASSIGN'=>['field','=','EXPRESSION'], 
     ];
 }  
