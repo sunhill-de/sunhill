@@ -11,12 +11,27 @@ class Lexer extends Base
 
   protected $pointer = 0;
   
-  const MAX_SYMBOL_LEN = 4;
+  const MAX_SYMBOL_LEN = 8;
   
   const SYMBOLS = [
+      'interval'=>'INTERVAL',  
+      'between'=>'BETWEEN',
+      'regexp'=>'REGEXP',
+      'collate'=>'COLLATE',    
+      'binary'=>'BINARY',
       'null'=>'NULL',
+      'like'=>'LIKE',
+      'div'=>'DIV',
+      'mod'=>'%',
+      'and'=>'&&',
+      'not'=>'!',
+      'xor'=>'XOR',
       '<=>'=>'<=>',
       'as'=>'AS',
+      'in'=>'IN',
+      'or'=>'||',
+      '&&'=>'&&',
+      '||'=>'||', 
       '=='=>'=',
       '<='=>'<=',
       '>='=>'>=',
