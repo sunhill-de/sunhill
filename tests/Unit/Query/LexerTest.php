@@ -24,8 +24,8 @@ test('Test special chars',function($input, $token, $value = null, $type = null)
         expect($result->field_type)->toBe($type);
     }
 })->with([
-  'null'=>["null def","NULL"],
-  'as'=>["as def","AS"],
+  'null'=>["null def","null"],
+  'as'=>["as def","as"],
   'identifier'=>['abc def','ident','abc'],  
   'identifier with numbers and underscore'=>['abc_d3 def','ident','abc_d3'],  
   'identifier starting with underscore'=>['_abc def','ident','_abc'],  
@@ -48,8 +48,7 @@ test('Test special chars',function($input, $token, $value = null, $type = null)
   '>='=>['>=def','>='],  
   '<'=>['<def','<'],  
   '>'=>['>def','>'],  
-  '->'=>['->def','->'],  
-  '<=>'=>['<=>def','<=>'],  
+  '->'=>['->def','->'],
   ','=>[',def',','],  
   '['=>['[def','['],  
   ']'=>[']def',']'],  
@@ -64,6 +63,12 @@ test('Test special chars',function($input, $token, $value = null, $type = null)
   '2025-02-25 02:02:22'=>['2025-02-25 02:02:22 def','const','2025-02-25 02:02:22','datetime'],  
   '02:02:22'=>['02:02:22 def','const','02:02:22','time'],
 ]);
+
+test('Test spaceship', function()
+{
+    $test = new Lexer('<=> def');
+    expect($test->getNextToken()->type)->toBe('<=>');
+});
 
 test('Test move pointer', function() 
 {
