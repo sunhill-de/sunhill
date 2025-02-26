@@ -16,6 +16,7 @@ class Lexer extends Base
   const SYMBOLS = [
       'null'=>'NULL',
       '<=>'=>'<=>',
+      'as'=>'AS',
       '=='=>'=',
       '<='=>'<=',
       '>='=>'>=',
