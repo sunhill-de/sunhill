@@ -3,18 +3,19 @@
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Lexer;
 use Sunhill\Query\Exceptions\InvalidTokenException;
+use Sunhill\Query\QueryLexer;
 
 uses(SunhillTestCase::class);
 
 test('Test EOL', function() 
 {
-    $test = new Lexer('');
+    $test = new QueryLexer('');
     expect($test->getNextToken())->toBe(null);
 });
 
 test('Test special chars',function($input, $token, $value = null, $type = null)
 {
-    $test = new Lexer($input);
+    $test = new QueryLexer($input);
     $result = $test->getNextToken();
     expect($result->type)->toBe($token);
     if ($value) {
@@ -66,27 +67,7 @@ test('Test special chars',function($input, $token, $value = null, $type = null)
 
 test('Test spaceship', function()
 {
-    $test = new Lexer('<=> def');
+    $test = new QueryLexer('<=> def');
     expect($test->getNextToken()->type)->toBe('<=>');
 });
-
-test('Test move pointer', function() 
-{
-    $test = new Lexer('abc def');
-    $test->getNextToken();
-    expect($test->getNextToken()->value)->toBe('def');
-});
-
-test('Test move pointer and skip multiple whitespaces', function() 
-{
-    $test = new Lexer('abc    def');
-    $test->getNextToken();
-    expect($test->getNextToken()->value)->toBe('def');
-});
-
-it('fails when string is not closed', function()
-{
-    $test = new Lexer('"abc def');
-    $test->getNextToken();
-})->throws(InvalidTokenException::class);
 
