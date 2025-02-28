@@ -1,5 +1,8 @@
 <?php
 
+use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Query\QueryObject;
+
 uses(SunhillTestCase::class);
 
 test('Detect just a field', function()
