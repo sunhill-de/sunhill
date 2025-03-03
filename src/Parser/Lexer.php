@@ -19,7 +19,11 @@ class Lexer extends Base
 {
   protected $parse_string = '';
 
-  protected $pointer = 0;
+  protected $position = 0;
+  
+  protected $column = 0;
+  
+  protected $row = 0;
   
   protected $default_terminals = [];
   
@@ -36,7 +40,9 @@ class Lexer extends Base
   public function __construct(string $parse_string)
   {
       $this->parse_string = $parse_string;
-      $this->pointer = 0;
+      $this->column = 0;
+      $this->row = 0;
+      $this->position = 0;
       $this->sortTerminals();
   }
 
@@ -67,7 +73,7 @@ class Lexer extends Base
    */
   private function getNextCharacters(int $count): string
   {
-      return substr($this->parse_string, $this->pointer, $count);
+      return substr($this->parse_string, $this->position, $count);
   }
 
   /**
@@ -78,10 +84,27 @@ class Lexer extends Base
    */
   private function getNextIdentifier(): ?string
   {
-      if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)/',substr($this->parse_string,$this->pointer),$matches)) {
+      if (preg_match('/^([a-zA-Z_][_[:alnum:]]*)/',substr($this->parse_string,$this->position),$matches)) {
           return $matches[1];
       } 
       return null;
+  }
+  
+  private function createToken(string $symbol, int $row, int $column, $value = null)
+  {
+      $result = new Token($symbol);
+      $result->setPosition($row, $column);
+      if (!is_null($value)) {
+          $result->setValue($value);
+      }
+      
+      return $result;
+  }
+  
+  private function movePointer(int $by_chars)
+  {
+      $this->position += $by_chars;
+      $this->column += $by_chars;
   }
   
   /**
@@ -89,14 +112,14 @@ class Lexer extends Base
    *  
    * @return \stdClass|NULL
    */
-  private function getSymbol(): ?\stdClass
+  private function getSymbol(): ?Token
   {
       for ($i=$this->longest_terminal;$i>0;$i--) {
           $next = strtolower($this->getNextCharacters($i));
           if (array_key_exists($next,$this->terminals)) {
-              $current_position = $this->pointer;
-              $this->pointer += strlen($next);
-              return makeStdClass(['type'=>$this->terminals[$next],'position'=>$current_position]);
+              $current_position = $this->column;
+              $this->movePointer(strlen($next));
+              return $this->createToken($this->terminals[$next], $this->row, $current_position);
           }
       }
       return null;
@@ -107,12 +130,12 @@ class Lexer extends Base
    * 
    * @return \stdClass|NULL
    */
-  private function getIdentifier(): ?\stdClass
+  private function getIdentifier(): ?Token
   {
       if ($identifier = $this->getNextIdentifier()) {
-          $current_position = $this->pointer; // Mark the current position
-          $this->pointer += strlen($identifier);
-          return makeStdClass(['type'=>'ident','value'=>$identifier,'position'=>$current_position]);
+          $current_position = $this->column; // Mark the current position
+          $this->movePointer(strlen($identifier));
+          return $this->createToken('ident', $this->row, $current_position, $identifier);
       }
       return null;
   }
@@ -123,33 +146,34 @@ class Lexer extends Base
    * 
    * @return \stdClass|NULL
    */
-  private function getStringConstant(): ?\stdClass
+  private function getStringConstant(): ?Token
   {
-      if ($this->parse_string[$this->pointer] == '"') {
+      if ($this->parse_string[$this->position] == '"') {
           $ending_symbol = '"';
-      } else if ($this->parse_string[$this->pointer] == "'") {
+      } else if ($this->parse_string[$this->position] == "'") {
           $ending_symbol = "'";
       } else {
           return null;
       }
-      $current_position = $this->pointer;
+      $current_position = $this->column;
       
-      $this->pointer++;
+      $this->movePointer(1);
       $result = '';
-      while ($this->pointer < strlen($this->parse_string) && ($this->parse_string[$this->pointer]) !== $ending_symbol) {
-          if ($this->parse_string[$this->pointer] == '\\') {
-              $this->pointer++;
-              if ($this->pointer >= strlen($this->parse_string)) {
+      while ($this->column < strlen($this->parse_string) && ($this->parse_string[$this->position]) !== $ending_symbol) {
+          if ($this->parse_string[$this->column] == '\\') {
+              $this->movePointer(1);  
+              if ($this->position >= strlen($this->parse_string)) {
                   throw new InvalidTokenException("The string is not closed");
               }
           }
-          $result .= $this->parse_string[$this->pointer++];
+          $result .= $this->parse_string[$this->position];
+          $this->movePointer(1);
       }
-      if ($this->pointer >= strlen($this->parse_string)) {
+      if ($this->position >= strlen($this->parse_string)) {
           throw new InvalidTokenException("The string is not closed");
       }
-      $this->pointer++;
-      return makeStdClass(['type'=>'const','field_type'=>'str','value'=>$result,'position'=>$current_position]);
+      $this->movePointer(1);
+      return $this->createToken('const', $this->row, $current_position, $result);
   }
   
   /**
@@ -161,20 +185,20 @@ class Lexer extends Base
    * 
    * @return StdClass|NULL
    */
-  function getDateConstant()
+  function getDateConstant(): ?Token
   {
-      $current_position = $this->pointer;
-      if (in_array('DATETIME', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->pointer),$matches)) {
-          $this->pointer += strlen($matches[0]);
-          return makeStdClass(['type'=>'const','field_type'=>'datetime','value'=>$matches[0],'position'=>$current_position]);
+      $current_position = $this->column;
+      if (in_array('DATETIME', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->position),$matches)) {
+          $this->movePointer(strlen($matches[0]));
+          return $this->createToken('const', $this->row, $current_position, $matches[0]);
       }
-      if (in_array('DATE', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01])/",substr($this->parse_string,$this->pointer),$matches)) {
-          $this->pointer += strlen($matches[0]);
-          return makeStdClass(['type'=>'const','field_type'=>'date','value'=>$matches[0],'position'=>$current_position]);
+      if (in_array('DATE', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01])/",substr($this->parse_string,$this->position),$matches)) {
+          $this->movePointer(strlen($matches[0]));
+          return $this->createToken('const', $this->row, $current_position, $matches[0]);
       }
-      if (in_array('TIME', $this->default_terminals) && preg_match("/^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->pointer),$matches)) {
-          $this->pointer += strlen($matches[0]);
-          return makeStdClass(['type'=>'const','field_type'=>'time','value'=>$matches[0],'position'=>$current_position]);
+      if (in_array('TIME', $this->default_terminals) && preg_match("/^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->position),$matches)) {
+          $this->movePointer(strlen($matches[0]));
+          return $this->createToken('const', $this->row, $current_position, $matches[0]);
       }
       
       return null;
@@ -185,32 +209,38 @@ class Lexer extends Base
    *  
    * @return StdClass|NULL
    */
-  function getNumericConstant()
+  function getNumericConstant(): ?Token
   {
-      if (preg_match('/^-?\d+(\.\d+)?/',substr($this->parse_string,$this->pointer),$matches)) {
+      if (preg_match('/^-?\d+(\.\d+)?/',substr($this->parse_string,$this->position),$matches)) {
           if (in_array('FLOAT', $this->default_terminals) && strpos($matches[0],'.') !== false) {
-              $current_position = $this->pointer;
-              $this->pointer += strlen($matches[0]);
-              return makeStdClass(['type'=>'const','field_type'=>'float','value'=>$matches[0],'position'=>$current_position]);
+              $current_position = $this->column;
+              $this->movePointer(strlen($matches[0]));
+              return $this->createToken('const', $this->row, $current_position, $matches[0]);
           } else if (in_array('INT',$this->default_terminals)) {
-              $current_position = $this->pointer;
-              $this->pointer += strlen($matches[0]);
-              return makeStdClass(['type'=>'const','field_type'=>'int','value'=>$matches[0],'position'=>$current_position]);              
+              $current_position = $this->column;
+              $this->movePointer(strlen($matches[0]));
+              return $this->createToken('const', $this->row, $current_position, $matches[0]);
           }              
       }
       
       return null;
   }
   
-  public function getNextToken(): ?\stdClass
+  public function getNextToken(): ?Token
   {
-    if ($this->pointer >= strlen($this->parse_string)) {
+    if ($this->position >= strlen($this->parse_string)) {
       return null; // EOL
     }
 
     // Ignore whitespaces
-    while ($this->pointer < strlen($this->parse_string) && (ctype_space($this->parse_string[$this->pointer]))) {
-        $this->pointer++;
+    while ($this->position < strlen($this->parse_string) && (ctype_space($this->parse_string[$this->position]))) {
+        if ($this->parse_string[$this->position] == "\n") {
+            $this->column = 0;
+            $this->position++;
+            $this->row++;
+        } else {
+            $this->movePointer(1);
+        }
     }
     if (!empty($this->terminals) && ($symbol = $this->getSymbol())) {
         return $symbol;
@@ -227,7 +257,7 @@ class Lexer extends Base
     if ($string = $this->getNumericConstant()) {
         return $string;
     }
-    throw new InvalidTokenException("Can't process token: ".substr($this->parse_string,$this->pointer));
+    throw new InvalidTokenException("Can't process token: ".substr($this->parse_string,$this->column));
   }
  
   /**
@@ -237,7 +267,7 @@ class Lexer extends Base
    */
   public function getPointer(): int
   {
-    return $this->pointer;    
+    return $this->column;    
   }
   
   /**
@@ -250,7 +280,7 @@ class Lexer extends Base
   {
       return [
           $this->parse_string,
-          str_repeat(' ', $this->position).'^'
+          str_repeat(' ', $this->column).'^'
       ];
   }
 }

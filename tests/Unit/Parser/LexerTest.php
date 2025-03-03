@@ -17,25 +17,22 @@ test('Move pointer to next token', function()
     $test = new DummyLexer('1 2');
     $result = $test->getNextToken();
     $result = $test->getNextToken();
-    expect($result->value)->toBe('2');
+    expect($result->getValue())->toBe('2');
 });
 
-test('Test special chars',function($input, $token, $position, $next_pos, $value = null, $type = null)
+test('Test special chars',function($input, $token, $position, $next_pos, $value = null)
 {
     $test = new DummyLexer($input);
     $result = $test->getNextToken();
-    expect($result->type)->toBe($token);
+    expect($result->getSymbol())->toBe($token);
     expect($test->getPointer())->toBe($position);
     if ($value) {
-        expect($result->value)->toBe($value);
-    }
-    if ($type) {
-        expect($result->field_type)->toBe($type);
+        expect($result->getValue())->toBe($value);
     }
     $next = $test->getNextToken();
-    expect($result->position)->toBe(0);
-    expect($next->value)->toBe('def');
-    expect($next->position)->toBe($next_pos);
+    expect($result->getColumn())->toBe(0);
+    expect($next->getValue())->toBe('def');
+    expect($next->getColumn())->toBe($next_pos);
 })->with([
     ['or def','||',2,3],
     ['and def','&&',3,4],
