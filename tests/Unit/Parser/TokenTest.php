@@ -28,3 +28,12 @@ test('Value', function()
    
    expect($test->getValue())->toBe(10);
 });
+
+test('TypeHint', function()
+{
+    $test = new Token('+');
+    expect($test->getTypeHint())->toBe('unknown');
+    $test->setTypeHint('int');
+    
+    expect($test->getTypeHint())->toBe('int');
+});

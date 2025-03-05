@@ -26,6 +26,8 @@ class Token extends Base
     
     protected $value;
     
+    protected $type_hint = 'unknown';
+    
     /**
      * Constructor. Takes the symbol (because every token needs at least a symbol)
      * 
@@ -72,4 +74,14 @@ class Token extends Base
     }
     
 
+    public function setTypeHint(string $type_hint): static
+    {
+        $this->type_hint = $type_hint;
+        return $this;
+    }
+    
+    public function getTypeHint(): string
+    {
+        return $this->type_hint;
+    }
 }

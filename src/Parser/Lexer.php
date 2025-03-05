@@ -90,14 +90,16 @@ class Lexer extends Base
       return null;
   }
   
-  private function createToken(string $symbol, int $row, int $column, $value = null)
+  private function createToken(string $symbol, int $row, int $column, $value = null, string $type_hint = null)
   {
       $result = new Token($symbol);
       $result->setPosition($row, $column);
       if (!is_null($value)) {
           $result->setValue($value);
       }
-      
+      if (!is_null($type_hint)) {
+          $result->setTypeHint($type_hint);
+      }
       return $result;
   }
   
@@ -173,7 +175,7 @@ class Lexer extends Base
           throw new InvalidTokenException("The string is not closed");
       }
       $this->movePointer(1);
-      return $this->createToken('const', $this->row, $current_position, $result);
+      return $this->createToken('const', $this->row, $current_position, $result, 'string');
   }
   
   /**
@@ -190,15 +192,15 @@ class Lexer extends Base
       $current_position = $this->column;
       if (in_array('DATETIME', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->position),$matches)) {
           $this->movePointer(strlen($matches[0]));
-          return $this->createToken('const', $this->row, $current_position, $matches[0]);
+          return $this->createToken('const', $this->row, $current_position, $matches[0], 'datetime');
       }
       if (in_array('DATE', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01])/",substr($this->parse_string,$this->position),$matches)) {
           $this->movePointer(strlen($matches[0]));
-          return $this->createToken('const', $this->row, $current_position, $matches[0]);
+          return $this->createToken('const', $this->row, $current_position, $matches[0], 'date');
       }
       if (in_array('TIME', $this->default_terminals) && preg_match("/^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->position),$matches)) {
           $this->movePointer(strlen($matches[0]));
-          return $this->createToken('const', $this->row, $current_position, $matches[0]);
+          return $this->createToken('const', $this->row, $current_position, $matches[0], 'time');
       }
       
       return null;
@@ -215,11 +217,11 @@ class Lexer extends Base
           if (in_array('FLOAT', $this->default_terminals) && strpos($matches[0],'.') !== false) {
               $current_position = $this->column;
               $this->movePointer(strlen($matches[0]));
-              return $this->createToken('const', $this->row, $current_position, $matches[0]);
+              return $this->createToken('const', $this->row, $current_position, $matches[0], 'float');
           } else if (in_array('INT',$this->default_terminals)) {
               $current_position = $this->column;
               $this->movePointer(strlen($matches[0]));
-              return $this->createToken('const', $this->row, $current_position, $matches[0]);
+              return $this->createToken('const', $this->row, $current_position, $matches[0], 'int');
           }              
       }
       

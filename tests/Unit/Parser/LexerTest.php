@@ -45,6 +45,7 @@ test('Test special chars',function($input, $token, $position, $next_pos, $value 
     ['( def','(',1,2],
     [') def',')',1,2],
     ['-> def','->',2,3],
+    ["->"."\n"."def",'->',2,0],
     'identifier'=>['abc def','ident',3,4,'abc'],
     'identifier with numbers and underscore'=>['abc_d3 def','ident',6,7,'abc_d3'],
     'identifier starting with underscore'=>['_abc def','ident',4,5,'_abc'],
@@ -71,3 +72,19 @@ it('fails when string is not closed', function()
     $test = new DummyLexer('"abc def');
     $test->getNextToken();
 })->throws(InvalidTokenException::class);
+
+test('Detect type hint', function($test, $expect)
+{
+    $test = new DummyLexer($test);
+    $token = $test->getNextToken();
+    
+    expect($token->getTypeHint())->toBe($expect);
+})->with(
+    [
+        ['"abc"', "string"],
+        ['2025-02-25','date'],
+        ['2025-02-25 02:02:22','datetime'],
+        ['02:02:22','time'],
+        ['123','int'],
+        ['1.23','float'],
+    ]);
