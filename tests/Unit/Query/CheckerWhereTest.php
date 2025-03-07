@@ -60,17 +60,17 @@ test('Where statement fails with field, simple relation and type mismatching con
 {
     $test = new Checker(prepareQueryObject(['type'=>'field','field'=>'a','resulttype'=>'int'],'=',['type'=>'const','value'=>'abc']));
     $test->check();    
-})->throws(InvalidStatementException);
+})->throws(InvalidStatementException::class);
 
 test('Where statement fails with field, invalid relation and const', function() 
 {
     $test = new Checker(prepareQueryObject(['type'=>'field','field'=>'a','resulttype'=>'bool'],'>',['type'=>'const','value'=>0]));
     $test->check();    
-})->throws(InvalidStatementException);
+})->throws(InvalidStatementException::class);
 
 test('Where statement fails with field, unknown relation and const', function() 
 {
     $test = new Checker(prepareQueryObject(['type'=>'field','field'=>'a','resulttype'=>'int'],'&%',['type'=>'const','value'=>0]));
     $test->check();    
-})->throws(InvalidStatementException);
+})->throws(InvalidStatementException::class);
 
