@@ -88,3 +88,11 @@ test('Detect type hint', function($test, $expect)
         ['123','int'],
         ['1.23','float'],
     ]);
+
+test('previewOperator()', function()
+{
+   $test = new DummyLexer('abc+');
+   $token = $test->getNextToken();
+   expect($test->previewOperator())->toBe('+');
+   expect($test->getColumn())->toBe(3);
+});

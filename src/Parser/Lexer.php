@@ -73,9 +73,20 @@ class Lexer extends Base
    */
   private function getNextCharacters(int $count): string
   {
-      return substr($this->parse_string, $this->position, $count);
+      return $this->getNextCharactersFrom($this->position, $count);
   }
 
+  /**
+   * Returns the next $count characters of the parse_string from a given position without touching the pointer
+   *
+   * @param int $count
+   * @return string
+   */
+  private function getNextCharactersFrom(int $start, int $count): string
+  {
+      return substr($this->parse_string, $start, $count);
+  }
+  
   /**
    * If the next characters define an identifier (anything that starts with _ or a letter and 
    * is followed by _, a letter or a digit). if none is found it returns null
@@ -125,6 +136,17 @@ class Lexer extends Base
           }
       }
       return null;
+  }
+
+  private function previewSymbol(int $start_position): string
+  {
+      for ($i=$this->longest_terminal;$i>0;$i--) {
+          $next = strtolower($this->getNextCharactersFrom($start_position, $i));
+          if (array_key_exists($next,$this->terminals)) {
+              return $this->terminals[$next];
+          }
+      }
+      return null;      
   }
   
   /**
@@ -262,6 +284,23 @@ class Lexer extends Base
     throw new InvalidTokenException("Can't process token: ".substr($this->parse_string,$this->column));
   }
  
+  public function previewOperator(): ?String
+  {
+      if ($this->position >= strlen($this->parse_string)) {
+          return null; // EOL
+      }
+      
+      $dummy_pointer = $this->position;
+      
+      // Ignore whitespaces
+      while ($dummy_pointer < strlen($this->parse_string) && (ctype_space($this->parse_string[$dummy_pointer]))) {
+        $dummy_pointer++;
+      }
+      if (!empty($this->terminals) && ($symbol = $this->previewSymbol($dummy_pointer))) {
+          return $symbol;
+      }      
+  }
+  
   /**
    * Returns the current position of the pointer
    * 
@@ -269,7 +308,17 @@ class Lexer extends Base
    */
   public function getPointer(): int
   {
-    return $this->column;    
+    return $this->position;    
+  }
+  
+  public function getColumn(): int
+  {
+     return $this->column;    
+  }
+  
+  public function getRow(): int
+  {
+      return $this->row;
   }
   
   /**
