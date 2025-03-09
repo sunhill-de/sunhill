@@ -2,6 +2,7 @@
 
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\QueryObject;
+use Sunhill\Query\Parser;
 
 uses(SunhillTestCase::class);
 

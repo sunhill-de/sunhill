@@ -4,15 +4,37 @@ namespace Sunhill\Query;
 
 use Sunhill\Query\Exceptions\InvalidStatementException;
 
-class Parser extends QueryHandler
+class QueryParser extends QueryHandler
 {
-    const GRAMMAR = [
-        'FINAL'=>[['LIST'],['ORDER'],['ASSIGN'],['EXPRESSION']],
-        'LIST'=>[['EXPRESSION',',','EXPRESSION'],['EXPRESSION'],['€']],
-        'ORDER'=>[['field'],['field','asc'],['field','desc']],
-        'ASSIGN'=>[['field','=','EXPRESSION']],
-        'EXPRESSION'=>[['EXPRESSION','||','XOREXPRESSION'],['XOREXPRESSION']],
-        'XOREXPRESSION'=>[['XOREXPRESSION','xor','ANDEXPRESSION'],['ANDEXPRESSION']],
+    protected $grammar = [
+        'FINAL'=>[
+            ['LIST'],
+            ['ORDER'],
+            ['ASSIGN'],
+            ['EXPRESSION']            
+        ],
+        'LIST'=>[
+            ['EXPRESSION',',','EXPRESSION','!execute!'=>'addToList($0,$2)'],
+            ['EXPRESSION'],
+            ['€']            
+        ],
+        'ORDER'=>[
+            ['field','!execute!'=>'orderStatement($0,"asc")'],
+            ['field','asc','!execute!'=>'orderStatement($0,"asc")'],
+            ['field','desc','!execute!'=>'orderStatement($0,"asc")']            
+        ],
+        'ASSIGN'=>[
+            ['field','=','EXPRESSION','!execute!'=>'assignStatement($0,$2)'],            
+            ['field',':=','EXPRESSION','!execute!'=>'assignStatement($0,$2)'],
+        ],
+        'EXPRESSION'=>[
+            ['EXPRESSION','||','XOREXPRESSION','!execute!'=>'operator($0,$1,$2)'],
+            ['XOREXPRESSION']            
+        ],
+        'XOREXPRESSION'=>[
+            ['XOREXPRESSION','xor','ANDEXPRESSION'],
+            ['ANDEXPRESSION']            
+        ],
         'ANDEXPRESSION'=>[['ANDEXPRESSION','and','COMPEXPRESSION'],['COMPEXPRESSION']],
         'COMPEXPRESSION'=>[
             ['COMPEXPRESSION','=','BETWEENEXPRESSION'],
