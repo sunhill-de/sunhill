@@ -22,7 +22,7 @@ class UnaryNode extends Node
         parent::__construct($type,[]);
     }
     
-    public function child(?Node $node): Node
+    public function child(?Node $node = null): Node
     {
         if (!is_null($node)) {
             $this->children['child'] = $node;
