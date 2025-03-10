@@ -13,7 +13,7 @@ class Parser extends Base
    
     protected $accepted_finals = [];
     
-    protected $operator_precence = [];
+    protected $operator_precedence = [];
     
     private function shift(Token $token)
     {
@@ -51,9 +51,20 @@ class Parser extends Base
         return false;
     }
     
-    private function shouldReduce(): bool
+    private function shouldReduce(array $rule, ?Lexer $lexer): bool
     {
-        return true;    
+        if (!isset($lexer)) {
+            return true;
+        }
+        $lookup = $lexer->previewOperator();
+        if (is_null($lookup) || !isset($this->operator_precedence[$lookup])) {
+            return true;
+        }
+        $priority_of_next = $this->operator_precedence[$lookup];
+        $left_hand = array_keys($rule)[0];
+        $priority_to_reduce =  $this->grammar[array_keys($rule)[0]]['priority'];
+        
+        return $this->operator_precedence[$lookup] <= $this->grammar[array_keys($rule)[0]]['priority'];
     }
     
     private function reduce(array $rule)
@@ -78,13 +89,13 @@ class Parser extends Base
     {
         while ($token = $lexer->getNextToken()) {
             $this->shift($token);
-            $this->reducePart();
+            $this->reducePart($lexer);
         }        
     }
     
-    private function reducePart()
+    private function reducePart(?Lexer $lexer = null)
     {
-        while (($rule = $this->canReduce()) && $this->shouldReduce()) {
+        while (($rule = $this->canReduce()) && $this->shouldReduce($rule, $lexer)) {
             $this->reduce($rule);
         }        
     }
@@ -113,6 +124,13 @@ class Parser extends Base
         }
 
         return new TerminalNode($token->getSymbol(),$token->getValue(),$token->getTypeHint());
+    }
+    
+    protected function unaryOperator(Token $operator, Token $right)
+    {
+        $result = new UnaryNode('u'.$operator->getSymbol());
+        $result->child($right->getAST());
+        return $result;
     }
     
     protected function twoSideOperator(Token $left, Token $operator, Token $right)

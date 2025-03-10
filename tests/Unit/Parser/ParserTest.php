@@ -14,7 +14,7 @@ test('Simple constant [4]', function()
        (new Token('const'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
        null
        );
-   
+   $lexer->shouldReceive('previewOperator')->andReturn(null);   
    $test = new DummyParser();
    $result = $test->parse($lexer);
    
@@ -31,6 +31,7 @@ test('Simple addition [4+3]', function()
         (new Token('const'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
         null
         );
+    $lexer->shouldReceive('previewOperator')->andReturn('+','+','+','+',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -53,6 +54,7 @@ test('Addition with three summands [4+3+2]', function()
         (new Token('const'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(12)->andReturn('+','+','+','+','+','+','+','+',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -80,6 +82,7 @@ test('Addition with three summands and brackets [4+(3+2)]', function()
         (new Token(')'))->setPosition(6,0),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(16)->andReturn('+','+','+','+','+','+','+','+',null,null,null,null,null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -92,7 +95,7 @@ test('Addition with three summands and brackets [4+(3+2)]', function()
     expect($result->right()->right()->getType())->toBe('const');
     expect($result->right()->right()->getValue())->toBe(2);
 });
-test('Simple product', function()
+test('Simple product [4*3]', function()
 {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
@@ -101,6 +104,7 @@ test('Simple product', function()
         (new Token('const'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(8)->andReturn('*','*','*','*',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -112,7 +116,7 @@ test('Simple product', function()
     expect($result->right()->getValue())->toBe(3);
 });
 
-test('Multiplication with three factors', function()
+test('Multiplication with three factors [4*3*2]', function()
 {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
@@ -123,6 +127,7 @@ test('Multiplication with three factors', function()
         (new Token('const'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(12)->andReturn('*','*','*','*','*','*','*','*',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -137,7 +142,7 @@ test('Multiplication with three factors', function()
     expect($result->right()->getValue())->toBe(2);
 });
 
-test('Sum with product left', function()
+test('Sum with product left [4*3+2]', function()
 {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
@@ -148,6 +153,7 @@ test('Sum with product left', function()
         (new Token('const'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(12)->andReturn('*','*','*','*','+','+','+','+',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -162,7 +168,7 @@ test('Sum with product left', function()
     expect($result->right()->getValue())->toBe(2);
 });
 
-test('Sum with product right', function()
+test('Sum with product right [4+3*2]', function()
 {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
@@ -173,6 +179,7 @@ test('Sum with product right', function()
         (new Token('const'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(12)->andReturn('+','+','+','+','*','*','*','*',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -181,10 +188,10 @@ test('Sum with product right', function()
     expect($result->left()->getType())->toBe('const');
     expect($result->left()->getValue())->toBe(4);
     expect($result->right()->getType())->toBe('*');
-    expect($result->right()->right()->type)->toBe('const');
-    expect($result->right()->right()->getValue())->toBe(3);
     expect($result->right()->left()->getType())->toBe('const');
-    expect($result->right()->left()->getValue())->toBe(2);
+    expect($result->right()->left()->getValue())->toBe(3);
+    expect($result->right()->right()->type)->toBe('const');
+    expect($result->right()->right()->getValue())->toBe(2);
 });
 
 
@@ -201,6 +208,7 @@ test('Product with sum in brackets (4*(3+2))', function()
         (new Token(')'))->setPosition(6,0),
         null
         );
+    $lexer->shouldReceive('previewOperator')->times(16)->andReturn('*','*','*','*','+','+','+','+',null,null,null,null,null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -209,8 +217,50 @@ test('Product with sum in brackets (4*(3+2))', function()
     expect($result->left()->getType())->toBe('const');
     expect($result->left()->getValue())->toBe(4);
     expect($result->right()->getType())->toBe('+');
-    expect($result->right()->right()->getType())->toBe('const');
-    expect($result->right()->right()->getValue())->toBe(3);
     expect($result->right()->left()->getType())->toBe('const');
-    expect($result->right()->left()->getValue())->toBe(2);
+    expect($result->right()->left()->getValue())->toBe(3);
+    expect($result->right()->right()->getType())->toBe('const');
+    expect($result->right()->right()->getValue())->toBe(2);
 });
+
+test('Simple unary minus [-4]', function()
+{
+    $lexer = \Mockery::mock(Lexer::class);
+    $lexer->shouldReceive('getNextToken')->andReturn(
+        (new Token('-'))->setPosition(1,0),
+        (new Token('const'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
+        null
+        );
+    $lexer->shouldReceive('previewOperator')->times(4)->andReturn(null);
+    
+    $test = new DummyParser();
+    $result = $test->parse($lexer);
+    
+    expect($result->getType())->toBe('u-');
+    expect($result->child()->getType())->toBe('const');
+    expect($result->child()->getValue())->toBe(4);    
+});
+
+test('Simple addition with unary minus [4+-3]', function()
+{
+    $lexer = \Mockery::mock(Lexer::class);
+    $lexer->shouldReceive('getNextToken')->andReturn(
+        (new Token('const'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
+        (new Token('+'))->setPosition(1,0),
+        (new Token('-'))->setPosition(2,0),
+        (new Token('const'))->setPosition(3,0)->setValue(3)->setTypeHint('int'),
+        null
+        );
+    $lexer->shouldReceive('previewOperator')->andReturn('+','+','+','+',null,null,null,null);
+    
+    $test = new DummyParser();
+    $result = $test->parse($lexer);
+    
+    expect($result->getType())->toBe('+');
+    expect($result->left()->getType())->toBe('const');
+    expect($result->left()->getValue())->toBe(4);
+    expect($result->right()->getType())->toBe('u-');
+    expect($result->right()->child()->getType())->toBe('const');
+    expect($result->right()->child()->getValue())->toBe(3);
+});
+
