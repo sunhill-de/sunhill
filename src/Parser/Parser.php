@@ -7,27 +7,61 @@ use Sunhill\Basic\Base;
 
 class Parser extends Base
 {
-    protected $grammar = [];
 
     protected $stack = [];
    
     protected $accepted_finals = [];
     
     protected $operator_precedence = [];
+
+    protected $grammar_rules = [];
     
+    /**
+     * Adds a new rule to the parser
+     * 
+     * @param string $left_hand The symbol that the stack could be reduced to
+     * @param array|string $right_hand The necessary top stack elements that have to match
+     * @return ParserRule
+     */
+    public function addRule(string $left_hand, array|string $right_hand): ParserRule
+    {
+        $rule = new ParserRule($left_hand, $right_hand);
+        $this->grammar_rules[] = $rule;
+        return $rule;
+    }
+    
+    /**
+     * Adds an entry to the operator precedence table
+     * 
+     * @param string $operator
+     * @param int $precedence
+     */
+    public function addOperatorPrecedence(string $operator, int $precedence)
+    {
+        $this->operator_precedence[$operator] = $precedence;    
+    }
+    
+    /**
+     * Shifts the given token on top of the stack
+     * 
+     * @param Token $token
+     */
     private function shift(Token $token)
     {
         $this->stack[] = $token;    
     }
     
+    /**
+     * Tests if the given token of a rule match to the top entries of the stack
+     * 
+     * @param array $right_hand_tokens
+     * @return bool
+     */
     private function matches(array $right_hand_tokens): bool
     {
         $stack_size = count($this->stack);
-        if (array_key_exists('!execute!', $right_hand_tokens)) {
-            $rule_size = count($right_hand_tokens)-1;
-        } else {
-            $rule_size = count($right_hand_tokens);
-        }
+        $rule_size = count($right_hand_tokens);
+
         if ($rule_size > $stack_size) {
             return false; // Stack to small, can't fit
         }
@@ -39,19 +73,30 @@ class Parser extends Base
         return true;
     }
     
+    /**
+     * Tests if the top stack elements match a rule. If yes it return the first matrching rule
+     * 
+     * @return unknown|boolean
+     */
     private function canReduce()
     {
-        foreach ($this->grammar as $left_hand => $rules) {
-            foreach ($rules as $right_hand) {
-                if (is_array($right_hand) && $this->matches($right_hand)) {
-                    return [$left_hand => $right_hand];
-                }
-            }
+        foreach ($this->grammar_rules as $rule) {
+           if ($this->matches($rule->getRightHand())) {
+               return $rule;
+           }
         }
         return false;
     }
     
-    private function shouldReduce(array $rule, ?Lexer $lexer): bool
+    /**
+     * The former method said that it is possible to reduce, this method checks if it should reduce or 
+     * shift for a higher precedence operator that comes next
+     * 
+     * @param ParserRule $rule
+     * @param Lexer $lexer
+     * @return bool
+     */
+    private function shouldReduce(ParserRule $rule, ?Lexer $lexer): bool
     {
         if (!isset($lexer)) {
             return true;
@@ -60,22 +105,21 @@ class Parser extends Base
         if (is_null($lookup) || !isset($this->operator_precedence[$lookup])) {
             return true;
         }
-        $priority_of_next = $this->operator_precedence[$lookup];
-        $left_hand = array_keys($rule)[0];
-        $priority_to_reduce =  $this->grammar[array_keys($rule)[0]]['priority'];
         
-        return $this->operator_precedence[$lookup] <= $this->grammar[array_keys($rule)[0]]['priority'];
+        return $this->operator_precedence[$lookup] <= $rule->getPriority();
     }
     
-    private function reduce(array $rule)
+    /**
+     * The former methods said that it possible and ok to reduce so pop the matching entries from stack
+     * manipulate the ast-tree and push the new symbol back on the stack
+     * 
+     * @param ParserRule $rule
+     */
+    private function reduce(ParserRule $rule)
     {
-        $left_hand = array_keys($rule)[0];
-        $right_hand = array_values($rule)[0];
-        if (array_key_exists('!execute!',$right_hand)) {
-            $execute = array_pop($right_hand);
-        } else {
-            $execute = 'passThrough';
-        }
+        $left_hand = $rule->getLeftHand();
+        $right_hand = $rule->getRightHand();
+        $execute = $rule->getASTCallback();
         $parameters = [];
         for ($i = 0; $i < count($right_hand) ;$i++) {
             array_unshift($parameters,array_pop($this->stack));
@@ -85,6 +129,11 @@ class Parser extends Base
         $this->stack[] = $new_element;
     }
     
+    /**
+     * There are token in the lexer left so decide to shift or to reduce
+     * 
+     * @param unknown $lexer
+     */
     private function shiftReducePart($lexer)
     {
         while ($token = $lexer->getNextToken()) {
@@ -93,6 +142,10 @@ class Parser extends Base
         }        
     }
     
+    /**
+     * Tests if it is possible to reduce, then if it makes sense to reeduce and then it call reduce()
+     * @param Lexer $lexer
+     */
     private function reducePart(?Lexer $lexer = null)
     {
         while (($rule = $this->canReduce()) && $this->shouldReduce($rule, $lexer)) {
@@ -100,6 +153,9 @@ class Parser extends Base
         }        
     }
     
+    /**
+     * There are no more possibilities to shift or reduce so check the top of the stack if it is valiid
+     */
     private function validateStack()
     {
         if ((count($this->stack) > 1) || (!in_array($this->stack[0]->getSymbol(), $this->accepted_finals))) {
@@ -108,6 +164,12 @@ class Parser extends Base
         }
     }
        
+    /**
+     * Performs the parsing
+     * 
+     * @param Lexer $lexer
+     * @return Node
+     */
     public function parse(Lexer $lexer): Node
     {
         $this->stack = [];
@@ -117,6 +179,13 @@ class Parser extends Base
         return $this->stack[0]->getAST();
     }
     
+    /**
+     * Internal callbacks for manipulation of the ast-tree. This method just passes through the inhertied 
+     * ast tree.
+     * 
+     * @param Token $token
+     * @return Node|NULL
+     */
     protected function passThrough(Token $token): ?Node
     {
         if ($token->getAST() !== null) {
@@ -126,6 +195,13 @@ class Parser extends Base
         return new TerminalNode($token->getSymbol(),$token->getValue(),$token->getTypeHint());
     }
     
+    /**
+     * Internal callback fot manipulation of the ast-tree. This method handles an unary operator.
+     * 
+     * @param Token $operator
+     * @param Token $right
+     * @return \Sunhill\Parser\UnaryNode
+     */
     protected function unaryOperator(Token $operator, Token $right)
     {
         $result = new UnaryNode('u'.$operator->getSymbol());
@@ -133,6 +209,14 @@ class Parser extends Base
         return $result;
     }
     
+    /**
+     * Internal callback for manipulating of the ast-tree. This method combines two sub trees with an operator
+     * 
+     * @param Token $left
+     * @param Token $operator
+     * @param Token $right
+     * @return \Sunhill\Parser\BinaryNode
+     */
     protected function twoSideOperator(Token $left, Token $operator, Token $right)
     {
         $result = new BinaryNode($operator->getSymbol());
@@ -141,6 +225,14 @@ class Parser extends Base
         return $result;    
     }
     
+    /**
+     * Internal callback for manipulating the ast-tree. This method handles a bracket
+     * 
+     * @param Token $open
+     * @param Token $expression
+     * @param Token $close
+     * @return unknown
+     */
     protected function bracket(Token $open, Token $expression, Token $close)
     {
         return $expression->getAST();

@@ -6,39 +6,26 @@ use Sunhill\Parser\Parser;
 
 class DummyParser extends Parser
 {
-    protected $grammar = [
-        'EXPRESSION'=>[
-            'priority'=>10,
-            ['EXPRESSION','+','PRODUCT','!execute!'=>'twoSideOperator'],
-            ['EXPRESSION','-','PRODUCT','!execute!'=>'twoSideOperator'],
-            ['PRODUCT']
-        ],
-        'PRODUCT'=>[
-            'priority'=>20,
-            ['PRODUCT','*','UNARYMINUS','!execute!'=>'twoSideOperator'],
-            ['PRODUCT','/','UNARYMINUS','!execute!'=>'twoSideOperator'],
-            ['UNARYMINUS']
-        ],
-        'UNARYMINUS'=>[
-            'priority'=>100,
-            ['-','FACTOR','!execute!'=>'unaryOperator'],
-            ['FACTOR']
-        ],
-        'FACTOR'=>[
-            'priority'=>100,
-            ['(','EXPRESSION',')','!execute!'=>'bracket'],
-            ['const'],
-            ['ident']            
-        ]
-    ];
-    
-    protected $operator_precedence=[
-        '+'=>10,
-        '-'=>10,
-        '*'=>20,
-        '/'=>20,
-    ];
     
     protected $accepted_finals = ['EXPRESSION'];
     
+    public function __construct()
+    {
+        $this->addRule('EXPRESSION',['EXPRESSION','+','PRODUCT'])->setPriority(10)->setASTCallback('twoSideOperator');
+        $this->addRule('EXPRESSION',['EXPRESSION','-','PRODUCT'])->setPriority(10)->setASTCallback('twoSideOperator');
+        $this->addRule('EXPRESSION','PRODUCT')->setPriority(10);
+        $this->addRule('PRODUCT',['PRODUCT','*','UNARYMINUS'])->setPriority(20)->setASTCallback('twoSideOperator');
+        $this->addRule('PRODUCT',['PRODUCT','/','UNARYMINUS'])->setPriority(20)->setASTCallback('twoSideOperator');
+        $this->addRule('PRODUCT','UNARYMINUS')->setPriority(20);
+        $this->addRule('UNARYMINUS',['-','FACTOR'])->setPriority(100)->setASTCallback('unaryOperator');
+        $this->addRule('UNARYMINUS','FACTOR')->setPriority(100);
+        $this->addRule('FACTOR',['(','EXPRESSION',')'])->setPriority(100)->setASTCallback('bracket');
+        $this->addRule('FACTOR','const')->setPriority(100);
+        $this->addRule('FACTOR','ident')->setPriority(100);
+        
+        $this->addOperatorPrecedence('+', 10);
+        $this->addOperatorPrecedence('-', 10);
+        $this->addOperatorPrecedence('*', 20);
+        $this->addOperatorPrecedence('/', 20);
+    }
 }
