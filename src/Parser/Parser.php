@@ -237,4 +237,12 @@ class Parser extends Base
     {
         return $expression->getAST();
     }
+    
+    protected function functionHandler(Token $name, Token $arguments)
+    {
+        $result = new FunctionNode();
+        $result->name($name->getValue())->arguments($arguments->getAST());
+        
+        return $result;
+    }
 }  

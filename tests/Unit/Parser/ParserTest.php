@@ -264,3 +264,49 @@ test('Simple addition with unary minus [4+-3]', function()
     expect($result->right()->child()->getValue())->toBe(3);
 });
 
+test('Simple function [sin(3)]', function()
+{
+    $lexer = \Mockery::mock(Lexer::class);
+    $lexer->shouldReceive('getNextToken')->andReturn(
+        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
+        (new Token('('))->setPosition(3,0),
+        (new Token('const'))->setPosition(3,0)->setValue(3)->setTypeHint('int'),
+        (new Token(')'))->setPosition(4,0),
+        null
+        );
+    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
+    
+    $test = new DummyParser();
+    $result = $test->parse($lexer);
+    
+    expect($result->getType())->toBe('func');
+    expect($result->name())->toBe('sin');
+    expect($result->arguments()->getType())->toBe('const');
+    expect($result->arguments()->getValue())->toBe(3);
+});
+
+test('Function in sum [sin(4)+3]', function()
+{
+    $lexer = \Mockery::mock(Lexer::class);
+    $lexer->shouldReceive('getNextToken')->andReturn(
+        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
+        (new Token('('))->setPosition(3,0),
+        (new Token('const'))->setPosition(3,0)->setValue(4)->setTypeHint('int'),
+        (new Token(')'))->setPosition(4,0),
+        (new Token('+'))->setPosition(5,0),
+        (new Token('const'))->setPosition(6,0)->setValue(3),
+        null
+        );
+    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
+    
+    $test = new DummyParser();
+    $result = $test->parse($lexer);
+    
+    expect($result->getType())->toBe('+');
+    expect($result->left()->name())->toBe('sin');
+    expect($result->left()->arguments()->getType())->toBe('const');
+    expect($result->left()->arguments()->getValue())->toBe(4);
+    expect($result->right()->getType())->toBe('const');
+    expect($result->right()->getValue())->toBe(3);
+});
+

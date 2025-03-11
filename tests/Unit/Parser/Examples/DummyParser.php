@@ -22,10 +22,12 @@ class DummyParser extends Parser
         $this->addRule('FACTOR',['(','EXPRESSION',')'])->setPriority(100)->setASTCallback('bracket');
         $this->addRule('FACTOR','const')->setPriority(100);
         $this->addRule('FACTOR','ident')->setPriority(100);
-        
+        $this->addRule('FACTOR','FUNCTION')->setPriority(100);
+        $this->addRule('FUNCTION',['ident','EXPRESSION'])->setPriority(100)->setASTCallback('functionHandler');
         $this->addOperatorPrecedence('+', 10);
         $this->addOperatorPrecedence('-', 10);
         $this->addOperatorPrecedence('*', 20);
         $this->addOperatorPrecedence('/', 20);
+        $this->addOperatorPrecedence('(', 150);
     }
 }
