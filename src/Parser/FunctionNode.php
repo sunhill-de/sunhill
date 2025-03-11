@@ -36,7 +36,7 @@ class FunctionNode extends Node
             $this->children['arguments'] = $arguments;
             return $this;
         } else {
-            return $this->children['arguments'];
+            return $this->children['arguments']??null;
         }
     }
     
