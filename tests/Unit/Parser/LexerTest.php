@@ -49,15 +49,15 @@ test('Test special chars',function($input, $token, $position, $next_pos, $value 
     'identifier'=>['abc def','ident',3,4,'abc'],
     'identifier with numbers and underscore'=>['abc_d3 def','ident',6,7,'abc_d3'],
     'identifier starting with underscore'=>['_abc def','ident',4,5,'_abc'],
-    'integer'=>['123 def','const',3,4,'123','int'],
-    'float'=>['1.23 def','const',4,5,'1.23','float'],
-    '"abc"'=>['"abc" def','const',5,6,'abc','str'],
-    "'abc'"=>["'abc' def",'const',5,6,'abc','str'],
-    '"abc\"def"'=>['"abc\"def" def','const',10,11,'abc"def','str'],
-    "'abc\'def'"=>["'abc\'def' def",'const',10,11,"abc'def",'str'],
-    '2025-02-25'=>['2025-02-25 def','const',10,11,'2025-02-25','date'],
-    '2025-02-25 02:02:22'=>['2025-02-25 02:02:22 def','const',19,20,'2025-02-25 02:02:22','datetime'],
-    '02:02:22'=>['02:02:22 def','const',8,9,'02:02:22','time'],
+    'integer'=>['123 def','integer',3,4,'123'],
+    'float'=>['1.23 def','float',4,5,'1.23'],
+    '"abc"'=>['"abc" def','string',5,6,'abc'],
+    "'abc'"=>["'abc' def",'string',5,6,'abc'],
+    '"abc\"def"'=>['"abc\"def" def','string',10,11,'abc"def'],
+    "'abc\'def'"=>["'abc\'def' def",'string',10,11,"abc'def"],
+    '2025-02-25'=>['2025-02-25 def','date',10,11,'2025-02-25'],
+    '2025-02-25 02:02:22'=>['2025-02-25 02:02:22 def','datetime',19,20,'2025-02-25 02:02:22'],
+    '02:02:22'=>['02:02:22 def','time',8,9,'02:02:22'],
 ]);
 
 test('Test move pointer and skip multiple whitespaces', function()
@@ -72,22 +72,6 @@ it('fails when string is not closed', function()
     $test = new DummyLexer('"abc def');
     $test->getNextToken();
 })->throws(InvalidTokenException::class);
-
-test('Detect type hint', function($test, $expect)
-{
-    $test = new DummyLexer($test);
-    $token = $test->getNextToken();
-    
-    expect($token->getTypeHint())->toBe($expect);
-})->with(
-    [
-        ['"abc"', "string"],
-        ['2025-02-25','date'],
-        ['2025-02-25 02:02:22','datetime'],
-        ['02:02:22','time'],
-        ['123','int'],
-        ['1.23','float'],
-    ]);
 
 test('previewOperator()', function()
 {

@@ -6,7 +6,7 @@ use Sunhill\Parser\Lexer;
 
 class DummyLexer extends Lexer
 {
-    protected $default_terminals = ['INT','FLOAT','DATETIME','TIME','DATE','IDENTIFIER','STRING'];
+    protected $default_terminals = ['INTEGER','FLOAT','DATETIME','TIME','DATE','IDENTIFIER','STRING'];
     
     protected $terminals = [
         'or'=>'||',

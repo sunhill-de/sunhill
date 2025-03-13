@@ -17,6 +17,11 @@ use Sunhill\Query\Exceptions\InvalidTokenException;
 
 class Lexer extends Base
 {
+  
+    const TERMINAL_PRIORITY = [
+       'DATETIME','DATE','TIME','FLOAT','INT','STRING','BOOLEAN','IDENTIFIER' 
+    ];
+    
   protected $parse_string = '';
 
   protected $position = 0;
@@ -29,7 +34,53 @@ class Lexer extends Base
   
   protected $terminals = [];
   
+  /**
+   * Indicator, if the lexer was initialized when getting the first token
+   *  
+   * @var boolean
+   */
+  private bool $initialized = false;
+  
   private $longest_terminal = 0;
+  
+  public function addDefaultTerminal(string $terminal): static
+  {
+      switch (strtolower($terminal)) {
+          case 'integer':
+          case 'int':    
+              $this->default_terminals[] = 'INTEGER';
+              break;
+          case 'float':
+              $this->default_terminals[] = 'FLOAT';
+              break;
+          case 'string':
+              $this->default_terminals[] = 'STRING';
+              break;
+          case 'bool':
+          case 'boolean':
+              $this->default_terminals[] = 'BOOLEAN';
+              break;
+          case 'date':
+              $this->default_terminals[] = 'DATE';
+              break;
+          case 'time':
+              $this->default_terminals[] = 'TIME';
+              break;
+          case 'datetime':
+              $this->default_terminals[] = 'DATETIME';
+              break;
+          case 'identifier':
+              $this->default_terminals[] = 'IDENTIFIER';
+              break;
+              
+      }
+      return $this;      
+  }
+  
+  public function addTerminal(string $terminal): static
+  {
+    return $this;    
+  }
   
   /**
    * The constructor is passed the current parsing string. Then the terminals are sorted by length. And the 
@@ -63,6 +114,7 @@ class Lexer extends Base
       if (!empty($this->terminals)) {
           $this->longest_terminal = strlen(array_keys($this->terminals)[0]);
       }
+      $this->initialized = true;
   }
   
   /**
@@ -150,27 +202,111 @@ class Lexer extends Base
   }
   
   /**
-   * If the next symbols define a identifier, create a identifier token
+   * Helper function that returns the parse_string from the current position till the end
    * 
-   * @return \stdClass|NULL
+   * @return string
    */
-  private function getIdentifier(): ?Token
+  function getRemainingParseString(): string
   {
-      if ($identifier = $this->getNextIdentifier()) {
-          $current_position = $this->column; // Mark the current position
-          $this->movePointer(strlen($identifier));
-          return $this->createToken('ident', $this->row, $current_position, $identifier);
+      return substr($this->parse_string,$this->position);
+  }
+  
+  /**
+   * Creates a token and moves the pointer
+   * 
+   * @param string $token_str
+   * @param string $symbol
+   * @param unknown $value
+   * @return Token
+   */
+  function consumeToken(string $token_str, string $symbol, $value = null): Token
+  {
+      $current_position = $this->column;
+      $this->movePointer(strlen($token_str));
+      return $this->createToken($symbol, $this->row, $current_position, $value);
+  }
+  
+  /**
+   * Tries to detect a float value
+   * 
+   * @return Token|NULL
+   */
+  function getFloat(): ?Token
+  {
+      if (preg_match('/^\d+\.\d+/', $this->getRemainingParseString(), $matches)) {
+          return $this->consumeToken($matches[0], 'float', $matches[0]);
       }
+      
       return null;
   }
   
   /**
+   * Tries to detect a integer value
+   * 
+   * @return Token|NULL
+   */
+  function getInteger(): ?Token
+  {
+      if (preg_match('/^\d+/', $this->getRemainingParseString(), $matches)) {
+          return $this->consumeToken($matches[0], 'integer', $matches[0]);
+      }      
+      
+      return null;
+  }
+
+  /**
+   * Tries to detect a datetime constant
+   * 
+   * @return Token|NULL
+   */
+  function getDatetime(): ?Token
+  {
+      if (preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/", $this->getRemainingParseString(), $matches)) {
+          return $this->consumeToken($matches[0], 'datetime', $matches[0]);
+      }
+      
+      return null;
+  }
+  
+  /**
+   * Tries to detect a date constant
+   * 
+   * @Note that at least a date constant could
+   * also be a mathematical expression like 2024 - 10 - 2. If this function is called, strings matching a date
+   * have a higher priority than mathematical expressions. 
+   *
+   * @return Token|NULL
+   */
+  function getDate(): ?Token
+  {
+      if (preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01])/", $this->getRemainingParseString(), $matches)) {
+          return $this->consumeToken($matches[0], 'date', $matches[0]);
+      }      
+      
+      return null;
+  }
+  
+  /**
+   * Tries to detect a time constant
+   * 
+   * @return Token|NULL
+   */
+  function getTime(): ?Token
+  {
+      if (preg_match("/^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/", $this->getRemainingParseString(), $matches)) {
+          return $this->consumeToken($matches[0], 'time', $matches[0]);
+      }      
+      
+      return null;
+  }
+
+  /**
    * If the next symbol begins with a " or a ' assume it a string constant. If the string is not closed,
    * raise an expcetion. Respect escape signs.
-   * 
+   *
    * @return \stdClass|NULL
    */
-  private function getStringConstant(): ?Token
+  private function getString(): ?Token
   {
       if ($this->parse_string[$this->position] == '"') {
           $ending_symbol = '"';
@@ -185,7 +321,7 @@ class Lexer extends Base
       $result = '';
       while ($this->column < strlen($this->parse_string) && ($this->parse_string[$this->position]) !== $ending_symbol) {
           if ($this->parse_string[$this->column] == '\\') {
-              $this->movePointer(1);  
+              $this->movePointer(1);
               if ($this->position >= strlen($this->parse_string)) {
                   throw new InvalidTokenException("The string is not closed");
               }
@@ -197,90 +333,70 @@ class Lexer extends Base
           throw new InvalidTokenException("The string is not closed");
       }
       $this->movePointer(1);
-      return $this->createToken('const', $this->row, $current_position, $result, 'string');
+      return $this->createToken('string', $this->row, $current_position, $result);
   }
   
   /**
-   * This function tries to detect a date, time or datetime constant. 
-   * 
-   * @Note that at least a date constant could
-   * also be a mathematical expression like 2024 - 10 - 2. If this function is called, strings matching a date
-   * have a higher priority than mathematical expressions. 
-   * 
-   * @return StdClass|NULL
+   * If the next symbols define a identifier, create a identifier token
+   *
+   * @return Token|NULL
    */
-  function getDateConstant(): ?Token
+  private function getIdentifier(): ?Token
   {
-      $current_position = $this->column;
-      if (in_array('DATETIME', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->position),$matches)) {
-          $this->movePointer(strlen($matches[0]));
-          return $this->createToken('const', $this->row, $current_position, $matches[0], 'datetime');
+      if ($identifier = $this->getNextIdentifier()) {
+          $current_position = $this->column; // Mark the current position
+          $this->movePointer(strlen($identifier));
+          return $this->createToken('ident', $this->row, $current_position, $identifier);
       }
-      if (in_array('DATE', $this->default_terminals) && preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01])/",substr($this->parse_string,$this->position),$matches)) {
-          $this->movePointer(strlen($matches[0]));
-          return $this->createToken('const', $this->row, $current_position, $matches[0], 'date');
-      }
-      if (in_array('TIME', $this->default_terminals) && preg_match("/^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/",substr($this->parse_string,$this->position),$matches)) {
-          $this->movePointer(strlen($matches[0]));
-          return $this->createToken('const', $this->row, $current_position, $matches[0], 'time');
-      }
-      
       return null;
+  }
+    
+  /**
+   * Ignores whitespaces but respects them when counting columns and rows
+   */
+  private function skipWhitespace()
+  {
+      while ($this->position < strlen($this->parse_string) && (ctype_space($this->parse_string[$this->position]))) {
+          if ($this->parse_string[$this->position] == "\n") {
+              $this->column = 0;
+              $this->position++;
+              $this->row++;
+          } else {
+              $this->movePointer(1);
+          }
+      }      
   }
   
   /**
-   * Tries to detect
-   *  
-   * @return StdClass|NULL
+   * Checks if this is the first call of getNextToken() after setting the terminals
    */
-  function getNumericConstant(): ?Token
+  private function checkInitialization()
   {
-      if (preg_match('/^-?\d+(\.\d+)?/',substr($this->parse_string,$this->position),$matches)) {
-          if (in_array('FLOAT', $this->default_terminals) && strpos($matches[0],'.') !== false) {
-              $current_position = $this->column;
-              $this->movePointer(strlen($matches[0]));
-              return $this->createToken('const', $this->row, $current_position, $matches[0], 'float');
-          } else if (in_array('INT',$this->default_terminals)) {
-              $current_position = $this->column;
-              $this->movePointer(strlen($matches[0]));
-              return $this->createToken('const', $this->row, $current_position, $matches[0], 'int');
-          }              
-      }
-      
-      return null;
+      if (!$this->initialized) {
+          $this->sortTerminals();
+      }      
   }
   
   public function getNextToken(): ?Token
   {
-    if ($this->position >= strlen($this->parse_string)) {
-      return null; // EOL
-    }
-
-    // Ignore whitespaces
-    while ($this->position < strlen($this->parse_string) && (ctype_space($this->parse_string[$this->position]))) {
-        if ($this->parse_string[$this->position] == "\n") {
-            $this->column = 0;
-            $this->position++;
-            $this->row++;
-        } else {
-            $this->movePointer(1);
-        }
-    }
-    if (!empty($this->terminals) && ($symbol = $this->getSymbol())) {
-        return $symbol;
-    }
-    if (in_array('IDENTIFIER',$this->default_terminals) && ($identifier = $this->getIdentifier())) {
-        return $identifier;
-    }
-    if (in_array('STRING', $this->default_terminals) && ($string = $this->getStringConstant())) {
-        return $string;
-    }
-    if ($string = $this->getDateConstant()) {
-        return $string;
-    }
-    if ($string = $this->getNumericConstant()) {
-        return $string;
-    }
+      $this->checkInitialization();
+      $this->skipWhitespace();
+      // EOL?
+      if ($this->position >= strlen($this->parse_string)) {
+        return null; // EOL
+      }
+      if (!empty($this->terminals) && ($symbol = $this->getSymbol())) {
+          return $symbol;
+      }
+      foreach (static::TERMINAL_PRIORITY as $terminal) {
+          if (in_array($terminal, $this->default_terminals)) {
+              $method = 'get'.ucfirst(strtolower($terminal));
+              if ($identifier = $this->$method()) {
+                  return $identifier;
+              }
+          }
+      }
+          
     throw new InvalidTokenException("Can't process token: ".substr($this->parse_string,$this->column));
   }
  
