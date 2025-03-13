@@ -4,6 +4,7 @@ use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Parser\Lexer;
 use Sunhill\Tests\Unit\Parser\Examples\DummyParser;
 use Sunhill\Parser\Token;
+use Sunhill\Query\Exceptions\InvalidStatementException;
 
 uses(SunhillTestCase::class);
 
@@ -329,3 +330,17 @@ test('Function in sum [sin(4)+3]', function()
     expect($result->right()->getValue())->toBe(3);
 });
 
+it('Fails when an unexpected token comes', function()
+{
+    $lexer = \Mockery::mock(Lexer::class);
+    $lexer->shouldReceive('getNextToken')->andReturn(
+        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
+        (new Token('('))->setPosition(3,0),
+        (new Token('+'))->setPosition(4,0),
+        null
+        );
+    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
+    
+    $test = new DummyParser();
+    $test->parse($lexer);    
+})->throws(InvalidStatementException::class);

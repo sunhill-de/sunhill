@@ -1,4 +1,14 @@
 <?php
+/**
+ * @file Parser.php
+ * The shift-reduce-parser with look ahead
+ * Lang en
+ * Reviewstatus: 2025-03-11
+ * Localization: complete
+ * Documentation: complete
+ * Tests: Unit/Parser/ParserTest.php
+ * Coverage:98,28 % (11.3.2025)
+ */
 
 namespace Sunhill\Parser;
 
