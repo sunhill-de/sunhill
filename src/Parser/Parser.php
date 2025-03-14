@@ -12,8 +12,8 @@
 
 namespace Sunhill\Parser;
 
-use Sunhill\Query\Exceptions\InvalidStatementException;
 use Sunhill\Basic\Base;
+use Sunhill\Parser\Exceptions\InputNotParsableException;
 
 class Parser extends Base
 {
@@ -169,7 +169,7 @@ class Parser extends Base
     private function validateStack()
     {
         if ((count($this->stack) > 1) || (!in_array($this->stack[0]->getSymbol(), $this->accepted_finals))) {
-            throw new InvalidStatementException("The input string was not parsable");
+            throw new InputNotParsableException("The input string was not parsable");
             // @todo Give some hints what went wrong
         }
     }

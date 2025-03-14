@@ -5,6 +5,7 @@ use Sunhill\Parser\Lexer;
 use Sunhill\Tests\Unit\Parser\Examples\DummyParser;
 use Sunhill\Parser\Token;
 use Sunhill\Query\Exceptions\InvalidStatementException;
+use Sunhill\Parser\Exceptions\InputNotParsableException;
 
 uses(SunhillTestCase::class);
 
@@ -343,4 +344,4 @@ it('Fails when an unexpected token comes', function()
     
     $test = new DummyParser();
     $test->parse($lexer);    
-})->throws(InvalidStatementException::class);
+})->throws(InputNotParsableException::class);
