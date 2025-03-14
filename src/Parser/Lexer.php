@@ -100,9 +100,14 @@ class Lexer extends Base
       return $this;      
   }
   
-  public function addTerminal(string $terminal): static
+  public function addTerminal(string $terminal, ?string $alias = null): static
   {
-    return $this;    
+      if (is_null($alias)) {
+          $alias = $terminal;
+      }
+      $this->terminals[$terminal] = $alias;
+      $this->initialized = false;
+      return $this;    
   }
   
   /**
