@@ -16,6 +16,7 @@ use Sunhill\Basic\Base;
 use Sunhill\Parser\Exceptions\StringNotClosedException;
 use Sunhill\Parser\Exceptions\InvalidTokenException;
 use Sunhill\Parser\Exceptions\UnknownDefaultTerminalException;
+use PhpParser\Lexer;
 
 /**
  * The lexer class for the sunhill parser subsystem.
@@ -478,4 +479,37 @@ class Lexer extends Base
           str_repeat(' ', $this->column).'^'
       ];
   }
+}
+
+function getArithmeticLexer(string $parse_string): Lexer
+{
+    $result = new Lexer($parse_string);
+    $result->addDefaultTerminal('INTEGER');
+    $result->addDefaultTerminal('FLOAT');
+    $result->addDefaultTerminal('IDENTIFIER');
+    $result->addTerminal('+');
+    $result->addTerminal('-');
+    $result->addTerminal('/');
+    $result->addTerminal('*');
+    $result->addTerminal('(');
+    $result->addTerminal(')');
+    
+    return $result;
+}
+
+function getLogicalLexer(string $parse_string): Lexer
+{
+    $result = getArithmeticLexer($parse_string);
+    $result->addDefaultTerminal('BOOLEAN');
+    $result->addTerminal('&&');
+    $result->addTerminal('||');
+    $result->addTerminal('==');
+    $result->addTerminal('!');
+    $result->addTerminal('=','==');
+    $result->addTerminal('and','&&');
+    $result->addTerminal('or','||');
+    $result->addTerminal('not','!');
+    
+    return $result;
+    
 }
