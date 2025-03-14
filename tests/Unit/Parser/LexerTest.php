@@ -50,6 +50,8 @@ test('Test special chars',function($input, $token, $position, $next_pos, $value 
     'identifier'=>['abc def','ident',3,4,'abc'],
     'identifier with numbers and underscore'=>['abc_d3 def','ident',6,7,'abc_d3'],
     'identifier starting with underscore'=>['_abc def','ident',4,5,'_abc'],
+    'boolean (true)'=>['true def','boolean',true,'123'],
+    'boolean (false)'=>['false def','boolean',false,'123'],
     'integer'=>['123 def','integer',3,4,'123'],
     'float'=>['1.23 def','float',4,5,'1.23'],
     '"abc"'=>['"abc" def','string',5,6,'abc'],

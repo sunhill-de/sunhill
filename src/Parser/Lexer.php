@@ -17,6 +17,7 @@ use Sunhill\Parser\Exceptions\StringNotClosedException;
 use Sunhill\Parser\Exceptions\InvalidTokenException;
 use Sunhill\Parser\Exceptions\UnknownDefaultTerminalException;
 use PhpParser\Lexer;
+use PhpParser\Token;
 
 /**
  * The lexer class for the sunhill parser subsystem.
@@ -253,6 +254,21 @@ class Lexer extends Base
       $current_position = $this->column;
       $this->movePointer(strlen($token_str));
       return $this->createToken($symbol, $this->row, $current_position, $value);
+  }
+
+  /**
+   * Tries to detect a boolean value
+   * 
+   * @return Token|NULL
+   */ 
+  function getBoolean(): ?Token
+  {
+      if (strtolower(substr($this->getRemainingParseString(),4)) == 'true') {
+          return $this->consumeToken('true','boolean',true);
+      }
+      if (strtolower(substr($this->getRemainingParseString(),5)) == 'false') {
+          return $this->consumeToken('false','boolean',false);
+      }
   }
   
   /**
@@ -512,4 +528,4 @@ function getLogicalLexer(string $parse_string): Lexer
     
     return $result;
     
-}
+} 
