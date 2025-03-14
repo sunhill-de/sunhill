@@ -13,7 +13,9 @@
 namespace Sunhill\Parser;
 
 use Sunhill\Basic\Base;
-use Sunhill\Query\Exceptions\InvalidTokenException;
+use Sunhill\Parser\Exceptions\StringNotClosedException;
+use Sunhill\Parser\Exceptions\InvalidTokenException;
+use Sunhill\Parser\Exceptions\UnknownDefaultTerminalException;
 
 /**
  * The lexer class for the sunhill parser subsystem.
@@ -91,6 +93,8 @@ class Lexer extends Base
           case 'identifier':
               $this->default_terminals[] = 'IDENTIFIER';
               break;
+          default:
+              throw new UnknownDefaultTerminalException("The default terminal '$terminal' is not known"); 
               
       }
       return $this;      
@@ -342,14 +346,14 @@ class Lexer extends Base
           if ($this->parse_string[$this->column] == '\\') {
               $this->movePointer(1);
               if ($this->position >= strlen($this->parse_string)) {
-                  throw new InvalidTokenException("The string is not closed");
+                  throw new StringNotClosedException("The string is not closed");
               }
           }
           $result .= $this->parse_string[$this->position];
           $this->movePointer(1);
       }
       if ($this->position >= strlen($this->parse_string)) {
-          throw new InvalidTokenException("The string is not closed");
+          throw new StringNotClosedException("The string is not closed");
       }
       $this->movePointer(1);
       return $this->createToken('string', $this->row, $current_position, $result);

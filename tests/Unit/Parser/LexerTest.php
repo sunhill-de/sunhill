@@ -3,6 +3,7 @@
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Exceptions\InvalidTokenException;
 use Sunhill\Tests\Unit\Parser\Examples\DummyLexer;
+use Sunhill\Parser\Exceptions\StringNotClosedException;
 
 uses(SunhillTestCase::class);
 
@@ -71,7 +72,13 @@ it('fails when string is not closed', function()
 {
     $test = new DummyLexer('"abc def');
     $test->getNextToken();
-})->throws(InvalidTokenException::class);
+})->throws(StringNotClosedException::class);
+
+it('fails when an unknown token is found', function()
+{
+    $test = new DummyLexer('§ def');
+    $test->getNextToken();
+})->throws(\Sunhill\Parser\Exceptions\InvalidTokenException::class);
 
 test('previewOperator()', function()
 {
