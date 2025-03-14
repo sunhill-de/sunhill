@@ -25,7 +25,7 @@ class Lexer extends Base
     
   
     const TERMINAL_PRIORITY = [
-       'DATETIME','DATE','TIME','FLOAT','INT','STRING','BOOLEAN','IDENTIFIER' 
+       'DATETIME','DATE','TIME','FLOAT','INTEGER','STRING','BOOLEAN','IDENTIFIER' 
     ];
     
  /*
