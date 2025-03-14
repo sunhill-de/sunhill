@@ -6,8 +6,8 @@
  * Reviewstatus: 2025-02-28
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Parser/AnalyzerTest.php
- * Coverage:
+ * Tests: Unit/Parser/LexerTest.php
+ * Coverage: 90,6% (2025-03-11<9
  */
 
 namespace Sunhill\Parser;
@@ -15,20 +15,39 @@ namespace Sunhill\Parser;
 use Sunhill\Basic\Base;
 use Sunhill\Query\Exceptions\InvalidTokenException;
 
+/**
+ * The lexer class for the sunhill parser subsystem.
+ * @author klaus
+ *
+ */
 class Lexer extends Base
 {
+    
   
     const TERMINAL_PRIORITY = [
        'DATETIME','DATE','TIME','FLOAT','INT','STRING','BOOLEAN','IDENTIFIER' 
     ];
     
-  protected $parse_string = '';
+ /*
+  * The string that this lexer should separate into tokens
+  */
+  protected string $parse_string = '';
 
-  protected $position = 0;
+  /*
+   * The current overall position in the parse string (counting whitespaces and linebreaks) 
+   */
+  protected int $position = 0;
   
-  protected $column = 0;
+  /*
+   * The current column (respecting linebreaks of the parse string) 
+   */
+  protected int $column = 0;
   
-  protected $row = 0;
+  /**
+   * The current row (respecting linebreaks of the parse string
+   * @var integer
+   */
+  protected int $row = 0;
   
   protected $default_terminals = [];
   
