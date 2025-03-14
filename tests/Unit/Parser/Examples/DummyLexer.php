@@ -11,6 +11,7 @@ class DummyLexer extends Lexer
     {
         parent::__construct($parse_string);
         $this->addDefaultTerminal('INTEGER');
+        $this->addDefaultTerminal('BOOLEAN');
         $this->addDefaultTerminal('FLOAT');
         $this->addDefaultTerminal('DATETIME');
         $this->addDefaultTerminal('TIME');
