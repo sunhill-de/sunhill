@@ -17,7 +17,7 @@ class IntegerNode extends Node
         
     public function __construct($value)
     {
-        parent::__construct('integer',['value'=>$value);
+        parent::__construct('integer',$value);
     }
 
 }
