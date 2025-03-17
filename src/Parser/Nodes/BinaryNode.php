@@ -10,7 +10,7 @@
  * Coverage:
  */
 
-namespace Sunhill\Parser;
+namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 
