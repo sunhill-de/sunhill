@@ -15,8 +15,12 @@ namespace Sunhill\Parser;
 use Sunhill\Basic\Base;
 use Sunhill\Parser\Nodes\Node;
 
-abstract class Analyzer extends Base
+class Analyzer extends Base
 {
+    protected $identifiers = [];
+
+    protected $functions = [];
+    
     protected $tree_root;
     
     public function __construct(Node $tree_root)
@@ -24,6 +28,20 @@ abstract class Analyzer extends Base
         $this->tree_root = $tree_root;
     }
 
+    public function addIdentifier(string $name, string $type): static
+    {
+        $this->identifiers[$name] = $type;
+        
+        return $this;
+    }
+    public function addFunction(string $name, string $return_type): FunctionDescriptor    
+    {
+        $item = new FunctionDescriptor($name, $return_type);
+        $this->functions[$name] = $item;
+
+        return $item;
+    }
+    
     public function checkTree()
     {
         $this->checkSubTree($this->tree_root);
