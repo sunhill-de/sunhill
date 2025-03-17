@@ -10,28 +10,42 @@
  * Coverage:
  */
 
-namespace Sunhill\Parser;
+namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 
 class Node extends Base
 {
-    
+    /**
+     * The type of this node 
+     */
     protected string $type;
-    
+
+    /**
+     * The children of this node (if any)
+     */
     protected array $children;
-    
+
+    /**
+     * simple constructor that takes the type and the children as parameters
+     */
     public function __construct(string $type, array $children = [])
     {
         $this->type = $type;
         $this->children = $children;
     }
-    
+
+    /**
+     * Getter for type
+     */
     public function getType()
     {
         return $this->type;
     }
-    
+
+    /**
+     * Getter for children
+     */
     public function getChildren()
     {
         return $this->children;
