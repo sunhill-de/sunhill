@@ -14,6 +14,13 @@ namespace Sunhill\Parser;
 
 use Sunhill\Basic\Base;
 use Sunhill\Parser\Exceptions\InputNotParsableException;
+use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\FloatNode;
+use Sunhill\Parser\Nodes\FunctionNode;
+use Sunhill\Parser\Nodes\IdentifierNode;
+use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Parser\Nodes\UnaryNode;
 
 class Parser extends Base
 {
@@ -201,8 +208,17 @@ class Parser extends Base
         if ($token->getAST() !== null) {
             return $token->getAST();
         }
-
-        return new TerminalNode($token->getSymbol(),$token->getValue(),$token->getTypeHint());
+        switch ($token->getSymbol())
+        {
+            case 'integer':
+              return new IntegerNode($token->getValue());
+            case 'float':
+              return new FloatNode($token->getValue());
+            case 'string':
+              return new StringNode($token->getValue());
+            case 'identifier':
+              return new IdentifierNode($token->getValue());
+        }    
     }
     
     /**
