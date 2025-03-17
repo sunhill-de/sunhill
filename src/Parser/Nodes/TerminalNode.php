@@ -19,7 +19,7 @@ class TerminalNode extends Node
         
     public function __construct(string $type, $value)
     {
-        parent::__construct($type,['value'=>$value);
+        parent::__construct($type,['value'=>$value]);
     }
 
     /**
