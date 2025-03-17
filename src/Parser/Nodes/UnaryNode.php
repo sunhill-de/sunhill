@@ -10,7 +10,7 @@
  * Coverage:
  */
 
-namespace Sunhill\Parser;
+namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 
@@ -21,7 +21,10 @@ class UnaryNode extends Node
     {
         parent::__construct($type,[]);
     }
-    
+
+    /**
+     * Simplified setter/getter for the child. When called with parameter it acts as a setter otherwise as a getter.
+     */              
     public function child(?Node $node = null): Node
     {
         if (!is_null($node)) {
