@@ -15,7 +15,7 @@ namespace Sunhill\Parser;
 use Sunhill\Basic\Base;
 use Sunhill\Parser\Nodes\Node;
 
-class Analyzer extends Base
+abstract class Analyzer extends Base
 {
     protected $tree_root;
     
@@ -26,27 +26,100 @@ class Analyzer extends Base
 
     public function checkTree()
     {
+        $this->checkSubTree($this->tree_root);
     }
 
+    protected function checkSubTree(Node $node)
+    {
+        switch ($node::class) {
+            
+        }    
+    }
+    
     /**
      * Returns the datatype of the given node
      */
     protected function getTypeOfNode(Node $node): string
     {
-        if (is_a($node, IntegerNode::class)) {
-            return 'integer';
+        switch ($node::class) {
+            case IntegerNode::class:
+                 return 'integer';
+            case FloatNode::class:
+                 return 'float';
+            case StringNode::class:
+                 return 'string';
+            case BooleanNode::class:
+                 return 'boolean';
+            case ArrayNode::class:
+                 return 'array';
+            case IdentifierNode::class:
+                 return $this->getIdentifierType($node->getName());
+            case FunctionNode::class:
+                 return $this->getFunctionReturnType($node->getName());
+            case BinaryNode::class:
+                 return $this->getBinaryType($node);
+            case UnaryNode::class:
+                 return $this->getUnaryType($node);
         }    
-        if (is_a($node, FloatNode::class)) {
-            return 'float';
-        }    
-        if (is_a($node, StringNode::class)) {
-            return 'string';
-        }    
-        if (is_a($node, BooleanNode::class)) {
-            return 'boolean';
-        }    
-        if (is_a($node, ArrayNode::class)) {
-            return 'array';
-        }    
+    } 
+
+    /**
+     * Returns if the given identifier exists
+     *
+     * @param string $name The name of the identifier
+     * @return bool True if the identiier exists otherwise false
+     */
+    abstract protected function hasIdentifier(string $name): bool; 
+
+    /**
+     * Returns the type of the identifier
+     *
+     * @param string $name The name of the identifier
+     * @return string The name of the type
+     */
+    abstract protected function doGetIdentifierType(string $name): string;
+
+    /**
+     * Returns the type of the identifier if it exists
+     *
+     * @param string $name The name of the identifier
+     * @return string The name of the type
+     * @throws IdentifierNotFoundException When the identifier was not found
+     */
+    protected function getIdentifierType(string $name): string
+    {
+        if ($this->hasIdentifier($name)) {
+            return $this->doGetIdentifierType($name);
+        }
+        throw new IdentifierNotFoundException("The identifier '$name' was not found.");
     }    
+
+    /**
+     * Returns true when the given function is defined
+     * 
+     * @param string $name The name of the function
+     */
+    abstract protected function hasFunction(string $name): bool;
+    
+    /**
+     * Returns the type of the return value of the given function
+     *
+     * @param string $name The name of the function
+     * @return string The name of the return type
+     */
+    abstract protected function doGetFunctionReturnType(string $name): string;
+
+    /**
+     * Returns the type of the return value of the given function if it exists
+     *
+     * @param string $name The name of the function
+     * @return string The name of the return type
+     */
+    protected function getFunctionReturnType(string $name): string
+    {
+         if ($this->hasFunction($name)) {
+             return $this->doGetFunctionReturnType($name);
+         }    
+    }
+    
 }
