@@ -10,25 +10,24 @@
  * Coverage:
  */
 
-namespace Sunhill\Parser;
+namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 
 class TerminalNode extends Node
 {
         
-    public function __construct(string $type, $value, string $type_hint)
+    public function __construct(string $type, $value)
     {
-        parent::__construct($type,['value'=>$value,'type_hint'=>$type_hint]);
+        parent::__construct($type,['value'=>$value);
     }
-    
+
+    /**
+     * Getter for value
+     */   
     public function getValue()
     {
         return $this->children['value'];
     }
         
-    public function getTypeHint(): string
-    {
-        return $this->children['type_hint'];
-    }
 }
