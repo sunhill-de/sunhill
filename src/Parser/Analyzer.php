@@ -13,8 +13,40 @@
 namespace Sunhill\Parser;
 
 use Sunhill\Basic\Base;
+use Sunhill\Parser\Nodes\Node;
 
 class Analyzer extends Base
 {
+    protected $tree_root;
     
+    public function __construct(Node $tree_root)
+    {
+        $this->tree_root = $tree_root;
+    }
+
+    public function checkTree()
+    {
+    }
+
+    /**
+     * Returns the datatype of the given node
+     */
+    protected function getTypeOfNode(Node $node): string
+    {
+        if (is_a($node, IntegerNode::class)) {
+            return 'integer';
+        }    
+        if (is_a($node, FloatNode::class)) {
+            return 'float';
+        }    
+        if (is_a($node, StringNode::class)) {
+            return 'string';
+        }    
+        if (is_a($node, BooleanNode::class)) {
+            return 'boolean';
+        }    
+        if (is_a($node, ArrayNode::class)) {
+            return 'array';
+        }    
+    }    
 }
