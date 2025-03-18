@@ -18,9 +18,10 @@ class FunctionNode extends Node
     /**
      * Simplyfied constructor that just fills the parent with default values
      */   
-    public function __construct()
+    public function __construct(string $name)
     {
         parent::__construct('func',[]);
+        $this->name($name);
     }
 
     /**
