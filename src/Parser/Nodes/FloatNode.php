@@ -12,7 +12,7 @@
 
 namespace Sunhill\Parser\Nodes;
 
-class FloatNode extends Node
+class FloatNode extends TerminalNode
 {
         
     public function __construct($value)

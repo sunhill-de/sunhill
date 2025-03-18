@@ -12,7 +12,7 @@
 
 namespace Sunhill\Parser\Nodes;
 
-class IdentifierNode extends Node
+class IdentifierNode extends TerminalNode
 {
         
     public function __construct($value)

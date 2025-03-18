@@ -15,9 +15,28 @@ namespace Sunhill\Parser\Nodes;
 class ArrayNode extends Node
 {
         
-    public function __construct($value)
+    public function __construct($first_element)
     {
-        parent::__construct('array',[]);
+        parent::__construct('array',['values'=>[$first_element]]);
     }
 
+    public function addElement(Node $element): static
+    {
+        $this->children['values'][] = $element;
+        
+        return $this;
+    }
+    
+    public function getElement(int $index): ?Node
+    {
+        if (($index >= 0) && ($index < $this->elementCount())) {
+            return $this->children['values'][$index];
+        }
+        return null;
+    }
+    
+    public function elementCount(): int
+    {
+        return count($this->children['values']);
+    }
 }

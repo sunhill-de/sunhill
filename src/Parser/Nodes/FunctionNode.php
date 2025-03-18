@@ -48,5 +48,20 @@ class FunctionNode extends Node
             return $this->children['arguments']??null;
         }
     }
+
+    public function getArgumentCount(): int
+    {
+        if (isset($this->children['arguments'])) {
+            return is_a($this->children['arguments'],ArrayNode::class)?$this->children['arguments']->elementCount():1;
+        }
+        return 0;
+    }
     
+    public function getArgument(int $index): ?Node
+    {
+        if (!isset($this->children['arguments']) || ($index < 0) || ($index >= $this->getArgumentCount())) {
+            return null;
+        }
+        return is_a($this->children['arguments'],ArrayNode::class)?$this->children['arguments']->getElement($index):$this->children['arguments'];
+    }
 }

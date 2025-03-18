@@ -12,7 +12,7 @@
 
 namespace Sunhill\Parser\Nodes;
 
-class StringNode extends Node
+class StringNode extends TerminalNode
 {
         
     public function __construct($value)
