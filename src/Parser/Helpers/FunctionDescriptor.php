@@ -46,6 +46,8 @@ class FunctionDescriptor extends Base
      */
     protected bool $unlimited_parameters = false;
     
+    protected string $unlimited_type = '';
+    
     /**
      * With unlimited parameters there is sometimes a mimimum number of parameters
      * @var integer
@@ -74,22 +76,43 @@ class FunctionDescriptor extends Base
         return $this->return_type;
     }
     
-    public function setUnlimitedParameters(int $minimum_count): static
+    public function setUnlimitedParameters(int $minimum_count, string $type): static
     {
         $this->unlimited_parameters = true;
+        $this->unlimited_type = $type;
         $this->mimimum_parameters = $minimum_count;
         
         return $this;
     }
     
+    /**
+     * Returns if this function supports an unlimited count of parameters (true) or not (false)
+     * 
+     * @return bool
+     */
     public function getUnlimitedParameters(): bool
     {
         return $this->unlimited_parameters;    
     }
     
+    /**
+     * Returns how many unlimited parameters have there to be at least
+     * 
+     * @return int
+     */
     public function getMinimumParameterCount(): int
     {
         return $this->mimimum_parameters;    
+    }
+    
+    /**
+     * Returns the type the unlimited parametrs have to match
+     * 
+     * @return string
+     */
+    public function getUnlimitedType(): string
+    {
+        return $this->unlimited_type;    
     }
     
     public function addParameter(string $type, bool $optional = false, ?string $subtype = null): static

@@ -50,10 +50,11 @@ test('function with one mandatory and one optional parameters', function()
 test('function with unlimited parameters', function()
 {
     $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer')->setUnlimitedParameters(2);
+    $test->setReturnType('integer')->setUnlimitedParameters(2,'string');
     
     expect($test->getUnlimitedParameters())->toBe(true);
     expect($test->getMinimumParameterCount())->toBe(2);
+    expect($test->getUnlimitedType())->toBe('string');
     expect($test->getTotalParameterCount())->toBe(-1);
     expect($test->getMandatoryParameterCount())->toBe(0);
 });
@@ -61,7 +62,7 @@ test('function with unlimited parameters', function()
 test('function with one mandatory and unlimited optional parameters', function()
 {
     $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer')->setUnlimitedParameters(2);
+    $test->setReturnType('integer')->setUnlimitedParameters(2,'string');
     $test->addParameter('integer');
     
     expect($test->getTotalParameterCount())->toBe(-1);
