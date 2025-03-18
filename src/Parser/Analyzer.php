@@ -14,12 +14,26 @@ namespace Sunhill\Parser;
 
 use Sunhill\Basic\Base;
 use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\Exceptions\IdentifierNotFoundException;
+use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Parser\Nodes\FloatNode;
+use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Parser\Nodes\BooleanNode;
+use Sunhill\Parser\Nodes\ArrayNode;
+use Sunhill\Parser\Nodes\IdentifierNode;
+use Sunhill\Parser\Nodes\FunctionNode;
+use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\UnaryNode;
+use Sunhill\Parser\Helpers\FunctionDescriptor;
+use Sunhill\Parser\Helpers\BinaryOperatorDescriptor;
 
 class Analyzer extends Base
 {
     protected $identifiers = [];
 
     protected $functions = [];
+    
+    protected $binary_operators = [];
     
     protected $tree_root;
     
@@ -36,10 +50,18 @@ class Analyzer extends Base
     }
     public function addFunction(string $name, string $return_type): FunctionDescriptor    
     {
-        $item = new FunctionDescriptor($name, $return_type);
+        $item = new FunctionDescriptor($name);
+        $item->setReturnType($return_type);
         $this->functions[$name] = $item;
 
         return $item;
+    }
+    
+    public function addBinaryOperator(string $operator): BinaryOperatorDescriptor
+    {
+        $entry = new BinaryOperatorDescriptor($operator);
+        
+        return $entry;
     }
     
     public function checkTree()
@@ -52,6 +74,16 @@ class Analyzer extends Base
         switch ($node::class) {
             
         }    
+    }
+    
+    protected function getBinaryType(BinaryNode $node)
+    {
+        if (isset($this->binary_operators[$node->getType()])) {
+            if ($result = $this->binary_operators[$node->getType()]->matches($node->left(), $node->right())) {
+                return $result;
+            }
+        }
+        throw 
     }
     
     /**
@@ -73,7 +105,7 @@ class Analyzer extends Base
             case IdentifierNode::class:
                  return $this->getIdentifierType($node->getName());
             case FunctionNode::class:
-                 return $this->getFunctionReturnType($node->getName());
+                 return $this->getFunctionReturnType($node->name());
             case BinaryNode::class:
                  return $this->getBinaryType($node);
             case UnaryNode::class:
@@ -82,12 +114,25 @@ class Analyzer extends Base
     } 
 
     /**
+     * Returns the type of the whole tree
+     * 
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->getTypeOfNode($this->tree_root);    
+    }
+    
+    /**
      * Returns if the given identifier exists
      *
      * @param string $name The name of the identifier
      * @return bool True if the identiier exists otherwise false
      */
-    abstract protected function hasIdentifier(string $name): bool; 
+    public function hasIdentifier(string $name): bool
+    {
+        return isset($this->identifiers[$name]);
+    }
 
     /**
      * Returns the type of the identifier
@@ -95,7 +140,10 @@ class Analyzer extends Base
      * @param string $name The name of the identifier
      * @return string The name of the type
      */
-    abstract protected function doGetIdentifierType(string $name): string;
+    protected function doGetIdentifierType(string $name): string
+    {
+        return $this->identifiers[$name];
+    }
 
     /**
      * Returns the type of the identifier if it exists
@@ -104,7 +152,7 @@ class Analyzer extends Base
      * @return string The name of the type
      * @throws IdentifierNotFoundException When the identifier was not found
      */
-    protected function getIdentifierType(string $name): string
+    public function getIdentifierType(string $name): string
     {
         if ($this->hasIdentifier($name)) {
             return $this->doGetIdentifierType($name);
@@ -117,7 +165,10 @@ class Analyzer extends Base
      * 
      * @param string $name The name of the function
      */
-    abstract protected function hasFunction(string $name): bool;
+    public function hasFunction(string $name): bool
+    {
+        return isset($this->functions[$name]);
+    }
     
     /**
      * Returns the type of the return value of the given function
@@ -125,7 +176,10 @@ class Analyzer extends Base
      * @param string $name The name of the function
      * @return string The name of the return type
      */
-    abstract protected function doGetFunctionReturnType(string $name): string;
+    public function doGetFunctionReturnType(string $name): string
+    {
+        return $this->functions[$name]->getReturnType();
+    }
 
     /**
      * Returns the type of the return value of the given function if it exists
@@ -133,7 +187,7 @@ class Analyzer extends Base
      * @param string $name The name of the function
      * @return string The name of the return type
      */
-    protected function getFunctionReturnType(string $name): string
+    public function getFunctionReturnType(string $name): string
     {
          if ($this->hasFunction($name)) {
              return $this->doGetFunctionReturnType($name);
