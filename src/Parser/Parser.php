@@ -21,6 +21,7 @@ use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\UnaryNode;
+use Sunhill\Parser\Nodes\Node;
 
 class Parser extends Base
 {
