@@ -85,16 +85,15 @@ test('BinaryNode', function()
 
 test('FunctionNode with no arguments', function()
 {
-    $test = new FunctionNode();
-    $test->name('testfunc');
+    $test = new FunctionNode('testfunc');
     expect($test->name())->toBe('testfunc');
     expect($test->getArgumentCount())->toBe(0);    
 });
 
 test('FunctionNode with single node', function()
 {
-    $test = new FunctionNode();
-    $test->name('testfunc')->arguments(new IntegerNode(10));
+    $test = new FunctionNode('testfunc');
+    $test->arguments(new IntegerNode(10));
     expect($test->getArgumentCount())->toBe(1);
     expect($test->getArgument(0)->getValue())->toBe(10);
 });
@@ -104,8 +103,8 @@ test('FunctionNode with array node', function()
     $arguments = new ArrayNode(new IntegerNode(10));
     $arguments->addElement(new StringNode('abc'));
     
-    $test = new FunctionNode();
-    $test->name('testfunc')->arguments($arguments);
+    $test = new FunctionNode('testfunc');
+    $test->arguments($arguments);
     expect($test->getArgumentCount())->toBe(2);
 });
 

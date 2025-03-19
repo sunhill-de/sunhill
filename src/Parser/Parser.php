@@ -267,8 +267,8 @@ class Parser extends Base
     
     protected function functionHandler(Token $name, Token $arguments)
     {
-        $result = new FunctionNode();
-        $result->name($name->getValue())->arguments($arguments->getAST());
+        $result = new FunctionNode($name->getValue());
+        $result->arguments($arguments->getAST());
         
         return $result;
     }
