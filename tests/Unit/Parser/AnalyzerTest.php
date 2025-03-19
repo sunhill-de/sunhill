@@ -17,17 +17,17 @@ test('getType', function($tree, $expected)
     $test = new DummyAnalyzer($tree());
     expect($test->getType())->toBe($expected);
 })->with([
-    [ function() { return new IntegerNode(10); }, 'integer'],
-    [ function() { return new FloatNode(1.23); }, 'float'],
-    [ function() { return new BooleanNode(true); }, 'boolean'],
-    [ function() { return new StringNode('abc'); }, 'string'],
-    [ function() { return new IdentifierNode('test_int'); }, 'integer'],
-    [ function() { return new FunctionNode('sin'); }, 'float'],
-    [ function() 
+    'simple integer node'=>[ function() { return new IntegerNode(10); }, 'integer'],
+    'simple float node'=>[ function() { return new FloatNode(1.23); }, 'float'],
+    'simple boolean node'=>[ function() { return new BooleanNode(true); }, 'boolean'],
+    'simple string node'=>[ function() { return new StringNode('abc'); }, 'string'],
+    'identifier node'=>[ function() { return new IdentifierNode('test_int'); }, 'integer'],
+    'function node'=>[ function() { return new FunctionNode('sin'); }, 'float'],
+    'binary tree node'=>[ function() 
     { 
         $result = new BinaryNode('+');
         $result->left(new IntegerNode(10));
         $result->right(new IntegerNode(20));
         return $result; 
-    }, 'float'],
+    }, 'integer'],
     ]);

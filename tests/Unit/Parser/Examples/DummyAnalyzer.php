@@ -18,9 +18,9 @@ class DummyAnalyzer extends Analyzer
         $this->addFunction('test_function', 'string')->addParameter('string', true);
         $this->addFunction('test_ellipsis', 'string')->setUnlimitedParameters(2, 'string');
         $this->addBinaryOperator('+')
-            ->addOperatorType('int','int','int')
-            ->addOperatorType('float','int','float')
-            ->addOperatorType('int','float','float')
+            ->addOperatorType('integer','integer','integer')
+            ->addOperatorType('float','integer','float')
+            ->addOperatorType('integer','float','float')
             ->addOperatorType('string','string','string');
     }
 }

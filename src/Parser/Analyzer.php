@@ -60,7 +60,7 @@ class Analyzer extends Base
     public function addBinaryOperator(string $operator): BinaryOperatorDescriptor
     {
         $entry = new BinaryOperatorDescriptor($operator);
-        
+        $this->binary_operators[$operator] = $entry;
         return $entry;
     }
     
@@ -79,11 +79,10 @@ class Analyzer extends Base
     protected function getBinaryType(BinaryNode $node)
     {
         if (isset($this->binary_operators[$node->getType()])) {
-            if ($result = $this->binary_operators[$node->getType()]->matches($node->left(), $node->right())) {
+            if ($result = $this->binary_operators[$node->getType()]->matches($this->getTypeOfNode($node->left()), $this->getTypeOfNode($node->right()))) {
                 return $result;
             }
         }
-        throw 
     }
     
     /**
