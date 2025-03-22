@@ -19,6 +19,7 @@ namespace Sunhill\Modules;
 use Sunhill\Basic\Base;
 use Sunhill\Modules\Exceptions\InvalidModuleNameException;
 use Sunhill\Modules\Exceptions\ChildNotFoundException;
+use Sunhill\Modules\Exceptions\CantProcessModuleException;
 
 /**
  * The basic class for a sunhill module. Modules have a parent->child relation with "site" being 
@@ -195,6 +196,24 @@ class Module extends Base
             }
         }
     }
+
+    /**
+     * Returns the breadcrumbs array. Ths array is an associative array which keys are the link
+     * and its values are the description of the module
+     * 
+     * @return string
+     */
+    public function getBreadcrumbs()
+    {
+        if ($this->hasParent()) {
+            $result = $this->getParent()->getBreadcrumbs();
+        } else {
+            $result = [];
+        }
+        $result['/'.$this->getParentNames('/').'/'] = $this->getVisibleName();
+        
+        return $result;
+    }
     
     /**
      * Setter for description
@@ -294,5 +313,31 @@ class Module extends Base
             throw new ChildNotFoundException("There is no child named '$name'");
         }
     }
+    
+    /**
+     * Adds a new submodule. This is a wrapper around addChild()
+     * 
+     * @param unknown $module
+     * @param string $name
+     * @param callable $callback
+     * @return Module
+     */
+    public function addSubmodule($module, string $name = '', ?callable $callback = null): Module
+    {
+        if (is_string($module) && class_exists($module)) {
+            $module = new $module();
+        }
+        if (is_a($module, Module::class)) {
+            $this->addChild($module, $name);
+        } else {
+            throw new CantProcessModuleException(getScalarMessage("The passed parameter :variable can't be processed to a module", $module));
+        }
         
+        if (!is_null($callback)) {
+            $callback($module);
+        }
+        return $module;
+    }
+    
+    
 }

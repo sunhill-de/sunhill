@@ -230,3 +230,63 @@ it('Fails when wrong child name is used in deleteChild()', function()
     
     $parent->deleteChild('nonexisting');
 })->throws(ChildNotFoundException::class);
+
+test('Breadcrumbs works', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $parent->setVisibleName('parent module');
+    
+    $child = new Module();
+    $child->setName('child');
+    $child->setVisibleName('child module');
+    $child->setParent($parent);
+    
+    $breadcrumbs = $child->getBreadcrumbs();
+    expect(array_keys($breadcrumbs))->toBe(['/parent/','/parent/child/']);
+    expect(array_values($breadcrumbs))->toBe(['parent module','child module']);
+});
+
+test('addSubmodule works', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child = new Module();
+    $child->setName('child');
+    $parent->addSubmodule($child);
+    
+    expect($child->getParent())->toBe($parent);
+});
+
+test('addSubmodule works with overwriting name', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child = new Module();
+    $child->setName('child');
+    $parent->addSubmodule($child, 'submodule');
+    
+    expect($child->getName())->toBe('submodule');
+});
+
+test('addSubmodule works with classname', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $parent->addSubmodule(Module::class, 'child');
+    
+    expect($parent->hasChild('child'))->toBe(true);
+});
+
+test('addSubmodule works with classname and callback', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $parent->addSubmodule(Module::class, 'child', function($child) 
+    {
+        $child->addSubmodule(Module::class, 'subchild');
+    });
+        
+    expect($parent->getChild('child')->hasChild('subchild'))->toBe(true);
+});
+
