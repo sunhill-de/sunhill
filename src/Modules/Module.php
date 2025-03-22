@@ -18,6 +18,7 @@ namespace Sunhill\Modules;
 
 use Sunhill\Basic\Base;
 use Sunhill\Modules\Exceptions\InvalidModuleNameException;
+use Sunhill\Modules\Exceptions\ChildNotFoundException;
 
 /**
  * The basic class for a sunhill module. Modules have a parent->child relation with "site" being 
@@ -49,6 +50,19 @@ class Module extends Base
      */
     protected ?Module $parent = null;
     
+    /**
+     * The description of this module. 
+     * 
+     * @var unknown
+     */
+    protected ?string $description = null;
+    
+    /**
+     * Stores the children. Children are always identifed by a name (that has to be returned by getName())
+     * @var array
+     */
+    protected array $children = [];
+        
     /**
      * Sets the name of the module. It checks if this name is valid
      * 
@@ -126,6 +140,16 @@ class Module extends Base
     }
     
     /**
+     * Returns true when this module has an owner
+     * 
+     * @return bool
+     */
+    public function hasParent(): bool
+    {
+        return !is_null($this->parent);    
+    }
+    
+    /**
      * Returns the object of all arent objects (wen includde_self is set even its own)
      * 
      * @param bool $include_self
@@ -172,4 +196,103 @@ class Module extends Base
         }
     }
     
+    /**
+     * Setter for description
+     * 
+     * @param string $description
+     * @return static
+     */
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+        
+        return $this;
+    }
+    
+    /**
+     * Getter for description
+     * 
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    
+    /**
+     * Adds the child to the list. If no name is passed it fetches it via getName(). if one is submitted
+     * it sets the name in the child
+     *
+     * @param unknown $child
+     * @param string $name
+     */
+    public function addChild($child, string $name = '')
+    {
+        if (empty($name)) {
+            $name = $child->getName();
+        } else {
+            $child->setName($name);
+        }
+        
+        $this->children[$name] = $child;
+        $child->setParent($this);
+        return $this;
+    }
+    
+    /**
+     * Returns true when this object has any children
+     *
+     * @return bool
+     */
+    public function hasChildren(): bool
+    {
+        return !empty($this->children);
+    }
+    
+    /**
+     * Clears the list of children
+     */
+    public function flushChildren()
+    {
+        $this->children = [];
+    }
+    
+    /**
+     * Returns true when the object has a child with this name
+     *
+     * @param string $name
+     * @return unknown
+     */
+    public function hasChild(string $name)
+    {
+        return isset($this->children[$name]);
+    }
+    
+    /**
+     * Returns the child with the given name of raises an exception when it doesn't exist
+     *
+     * @param string $name
+     */
+    public function getChild(string $name)
+    {
+        if (isset($this->children[$name])) {
+            return $this->children[$name];
+        }
+        throw new ChildNotFoundException("There is no child named '$name'");
+    }
+    
+    /**
+     * Deletes the child with the given name or raises an exception when it doesn't exist
+     *
+     * @param string $name
+     */
+    public function deleteChild(string $name)
+    {
+        if (isset($this->children[$name])) {
+            unset($this->children[$name]);
+        } else {
+            throw new ChildNotFoundException("There is no child named '$name'");
+        }
+    }
+        
 }

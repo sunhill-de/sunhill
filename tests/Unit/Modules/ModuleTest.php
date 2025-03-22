@@ -3,6 +3,7 @@
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Modules\Module;
 use Sunhill\Modules\Exceptions\InvalidModuleNameException;
+use Sunhill\Modules\Exceptions\ChildNotFoundException;
 
 uses(SunhillTestCase::class);
 
@@ -45,12 +46,26 @@ test('name empty', function()
     expect($test->getName())->toBe('');
 });
 
+test('Description setter and getter works', function() 
+{
+    $test = new Module();
+    $test->setDescription('test');
+    expect($test->getDescription())->toBe('test');
+});
+    
+test('Description setter and getter works with empty description', function()
+{
+    $test = new Module();
+    expect($test->getDescription())->toBe(null);
+});
+
 test('parent', function()
 {
     $parent = new Module();
     $test = new Module();
-    
+    expect($test->hasParent())->toBe(false);
     expect($test->setParent($parent))->toBe($parent);
+    expect($test->hasParent())->toBe(true);
     expect($test->getParent())->toBe($parent);
 });
 
@@ -92,3 +107,126 @@ test('getParentNames()', function()
     expect($test->getParentNames('.'))->toBe('grandparent.parent.child');
 });
 
+test('Add child works with name', function() 
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child = new Module();
+    $child->setName('child');
+    
+    expect($parent->hasChildren())->toBe(false);
+    $parent->addChild($child, 'child');
+    expect($parent->hasChildren())->toBe(true);
+});
+    
+test('Add child works with name to overwrite', function() 
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child = new Module();
+    $child->setName('child');
+    
+    $parent->addChild($child, 'justachild');
+    expect($child->getName())->toBe('justachild');
+});
+        
+test('Add child works with default name ', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child = new Module();
+    $child->setName('child');
+    
+    $parent->addChild($child);
+    expect($parent->hasChild('child'))->toBe(true);
+});
+
+test('parent is added as owner', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child = new Module();
+    $child->setName('child');
+    
+    $parent->addChild($child,'child');
+    
+    expect($child->getParent())->toBe($parent);
+});
+
+test('Flush children works', function() 
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child1 = new Module();
+    $child1->setName('child1');
+    $child2 = new Module();
+    $child2->setName('child2');
+    
+    $parent->addChild($child1,'child1');
+    $parent->addChild($child2,'child2');
+    $parent->flushChildren();
+    
+    expect($parent->hasChildren())->toBe(false);
+});
+    
+test('Delete child works', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child1 = new Module();
+    $child1->setName('child1');
+    $child2 = new Module();
+    $child2->setName('child2');
+    
+    $parent->addChild($child1,'child1');
+    $parent->addChild($child2,'child2');
+    
+    expect($parent->hasChild('child1'))->toBe(true);
+    $parent->deleteChild('child1');
+    expect($parent->hasChild('child1'))->toBe(false);
+});
+
+test('Get child works', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child1 = new Module();
+    $child1->setName('child1');
+    $child2 = new Module();
+    $child2->setName('child2');
+    
+    $parent->addChild($child1,'child1');
+    $parent->addChild($child2,'child2');
+    
+    expect($parent->getChild('child1'))->toBe($child1);
+});
+
+it('Fails when wrong child name is used in getChild()', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child1 = new Module();
+    $child1->setName('child1');
+    $child2 = new Module();
+    $child2->setName('child2');
+    
+    $parent->addChild($child1,'child1');
+    $parent->addChild($child2,'child2');
+    
+    $parent->getChild('nonexisting');
+})->throws(ChildNotFoundException::class);
+
+it('Fails when wrong child name is used in deleteChild()', function()
+{
+    $parent = new Module();
+    $parent->setName('parent');
+    $child1 = new Module();
+    $child1->setName('child1');
+    $child2 = new Module();
+    $child2->setName('child2');
+    
+    $parent->addChild($child1,'child1');
+    $parent->addChild($child2,'child2');
+    
+    $parent->deleteChild('nonexisting');
+})->throws(ChildNotFoundException::class);
