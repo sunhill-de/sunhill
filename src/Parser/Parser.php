@@ -22,6 +22,7 @@ use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\UnaryNode;
 use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 
 class Parser extends Base
 {
@@ -33,6 +34,13 @@ class Parser extends Base
     protected $operator_precedence = [];
 
     protected $grammar_rules = [];
+    
+    public function loadLanguageDescriptor(LanguageDescriptor $descriptor)
+    {
+        $this->grammar_rules = $descriptor->getParserRules();
+        $this->operator_precedence = $descriptor->getOperatorPrecedences();
+        $this->accepted_finals = $descriptor->getAcceptedSymbols();
+    }
     
     /**
      * Adds a new rule to the parser
@@ -183,8 +191,11 @@ class Parser extends Base
      */
     private function validateStack()
     {
-        if ((count($this->stack) > 1) || (!in_array($this->stack[0]->getSymbol(), $this->accepted_finals))) {
-            throw new InputNotParsableException("The input string was not parsable");
+        if (count($this->stack) !== 1) {
+            throw new InputNotParsableException("Input not parsable: Syntaxerror");
+        }
+        if (!in_array($this->stack[0]->getSymbol(), $this->accepted_finals)) {
+            throw new InputNotParsableException("Input not parsable: Symbol not accepted");
             // @todo Give some hints what went wrong
         }
     }

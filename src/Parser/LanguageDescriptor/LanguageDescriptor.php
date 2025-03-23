@@ -14,16 +14,47 @@
 namespace Sunhill\Parser\LanguageDescriptor;
 
 use Sunhill\Basic\Base;
+use Sunhill\Parser\ParserRule;
 
 class LanguageDescriptor extends Base
 {
     
+    /**
+     * The default terminals the lexer for this language should parse
+     * 
+     * @var array
+     */
     protected array $default_terminals = [];
     
+    /**
+     * The list of operators
+     * 
+     * @var array
+     */
     protected array $operators = [];
     
+    /**
+     * A list of all other terminals that are not operators
+     * 
+     * @var array
+     */
     protected array $other_terminals = [];
     
+    /**
+     * The parser rules for this language
+     * 
+     * @var array
+     */
+    protected array $parser_rules = [];
+    
+    protected array $accepted_symbols = [];
+    
+    /**
+     * Adds a default terminal to the list of default terminals 
+     * 
+     * @param string $default_terminal
+     * @return static
+     */
     public function addDefaultTerminal(string $default_terminal): static
     {
         $this->default_terminals[] = $default_terminal;
@@ -63,4 +94,44 @@ class LanguageDescriptor extends Base
         }
         return $result;
     }
+    
+    public function getOperatorPrecedences(): array
+    {
+        $result = [];        
+        foreach ($this->operators as $operator => $descriptor) {
+            $result[$operator] = $descriptor->getPrecedence();
+        }
+        return $result;
+    }
+    
+    /**
+     * Adds a new rule to the parser
+     *
+     * @param string $left_hand The symbol that the stack could be reduced to
+     * @param array|string $right_hand The necessary top stack elements that have to match
+     * @return ParserRule
+     */
+    public function addRule(string $left_hand, array|string $right_hand): ParserRule
+    {
+        $rule = new ParserRule($left_hand, $right_hand);
+        $this->parser_rules[] = $rule;
+        return $rule;
+    }
+    
+   public function getParserRules(): array
+   {
+        return $this->parser_rules;      
+   }
+
+   public function addAcceptedSymbol(string $symbol)
+   {
+       $this->accepted_symbols[] = $symbol;
+       
+       return $this;
+   }
+   
+   public function getAcceptedSymbols(): array
+   {
+       return $this->accepted_symbols;
+   }
 }
