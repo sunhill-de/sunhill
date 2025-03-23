@@ -166,6 +166,25 @@ test('Response is called with id and optional', function()
     $response->assertSee('DEF20');
 });
 
+test('Response throws an user exception', function()
+{
+    $first = new Module();
+    $first->setName('first');
+    $second = new Module();
+    $second->setName('second');
+    $second->setParent($first);
+    
+    $test = new DummyResponse();
+    $test->setParent($second);
+    $test->setName('action');
+    $test->setArguments('{id}/{optional?}');
+    $test->addRoute();
+    $test->error = true;
+    
+    $response = $this->get('/first/second/action/20/DEF');
+    $response->assertStatus(200);
+});
+
 test('Response is called with too many options', function()
 {
     $first = new Module();

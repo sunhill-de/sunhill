@@ -162,6 +162,9 @@ abstract class Response extends Module
      */
     protected function getConsoleErrorResponse(string $message)
     {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("There was an user error with following message: ".$message);
+        return "";
         
     }
     
@@ -173,7 +176,7 @@ abstract class Response extends Module
      */
     protected function getWebErrorResponse(string $message, ?string $return_link): string
     {
-        
+        return view('sunhill:error.usererror', ['error_message'=>$this->error_message,'return_link'=>$this->return_link]);
     }
     
     /**

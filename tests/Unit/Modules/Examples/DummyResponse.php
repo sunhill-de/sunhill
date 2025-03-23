@@ -3,6 +3,7 @@
 namespace Sunhill\Tests\Unit\Modules\Examples;
 
 use Sunhill\Modules\Response\Response;
+use Sunhill\Exceptions\SunhillUserException;
 
 class DummyResponse extends Response
 {
@@ -11,8 +12,13 @@ class DummyResponse extends Response
     
     protected $optional = 'ABC';
     
+    public $error = false;
+    
     protected function prepareResponse(): string|false
     {
+        if ($this->error) {
+            throw new SunhillUserException("This is a sample user exception");
+        }
         return $this->optional.$this->id;
     }
     
