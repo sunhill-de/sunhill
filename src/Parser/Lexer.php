@@ -16,6 +16,7 @@ use Sunhill\Basic\Base;
 use Sunhill\Parser\Exceptions\StringNotClosedException;
 use Sunhill\Parser\Exceptions\InvalidTokenException;
 use Sunhill\Parser\Exceptions\UnknownDefaultTerminalException;
+use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 
 /**
  * The lexer class for the sunhill parser subsystem.
@@ -63,6 +64,17 @@ class Lexer extends Base
   private bool $initialized = false;
   
   private $longest_terminal = 0;
+  
+  public function loadLanguageDescriptor(LanguageDescriptor $descriptor)
+  {
+      foreach ($descriptor->getDefaultTerminals() as $terminal) {
+          $this->addDefaultTerminal($terminal);
+      }
+      foreach ($descriptor->getTerminals() as $terminal => $alias)
+      {
+          $this->addTerminal($terminal, $alias);
+      }
+  }
   
   public function addDefaultTerminal(string $terminal): static
   {

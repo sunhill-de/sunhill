@@ -57,6 +57,10 @@ class LanguageDescriptor extends Base
     
     public function getTerminals(): array
     {
-        return array_merge($this->other_terminals, array_keys($this->operators));
+        $result = $this->other_terminals;
+        foreach ($this->operators as $operator => $descriptor) {
+            $result[$operator] = $operator;
+        }
+        return $result;
     }
 }

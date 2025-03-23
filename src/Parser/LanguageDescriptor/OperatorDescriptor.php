@@ -13,6 +13,7 @@
 namespace Sunhill\Parser\LanguageDescriptor;
 
 use Sunhill\Basic\Base;
+use phpDocumentor\Reflection\Types\Static_;
 
 class OperatorDescriptor extends Base
 {
@@ -63,10 +64,18 @@ class OperatorDescriptor extends Base
     public function setPrecedence(int $precedence): static
     {
         $this->precedence = $precedence;
+        
+        return $this;
     }
     
     public function getPrecedence(): int
     {
         return $this->precedence;
     }
+    
+    public function addTypes(...$args): static
+    {
+        return $this;
+    }
+    
 }
