@@ -56,7 +56,7 @@ test('Addition with three summands [4+3+2]', function()
         (new Token('integer'))->setPosition(4,0)->setValue(2),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('+','+','+','+','+','+','+','+','+','+',null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('+','+','+','+','+','+','+','+','+','+',null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -84,7 +84,7 @@ test('Addition with three summands and brackets [4+(3+2)]', function()
         (new Token(')'))->setPosition(6,0),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(19)->andReturn('+','+','+','+','+','+','+','+',null,null,null,null,null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(17)->andReturn('+','+','+','+','+','+','+','+',null,null,null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -106,7 +106,7 @@ test('Simple product [4*3]', function()
         (new Token('integer'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(10)->andReturn('*','*','*','*','*',null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(9)->andReturn('*','*','*','*','*',null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -129,7 +129,7 @@ test('Multiplication with three factors [4*3*2]', function()
         (new Token('integer'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('*','*','*','*','*','*','*','*','*','*',null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('*','*','*','*','*','*','*','*','*','*',null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -155,7 +155,8 @@ test('Sum with product left [4*3+2]', function()
         (new Token('integer'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('*','*','*','*','*','+','+','+','+','+',null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('*','*','*','*','*','+','+','+','+','+',null,null,null);
+    
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -181,7 +182,7 @@ test('Sum with product right [4+3*2]', function()
         (new Token('integer'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('+','+','+','+','+','*','*','*','*','*',null,null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('+','+','+','+','+','*','*','*','*','*',null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -210,7 +211,7 @@ test('Product with sum in brackets (4*(3+2))', function()
         (new Token(')'))->setPosition(6,0),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(19)->andReturn('*','*','*','*','*','+','+','+','+','+',null,null,null,null,null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->times(17)->andReturn('*','*','*','*','*','+','+','+','+','+',null,null,null,null,null,null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
@@ -233,7 +234,7 @@ test('Simple unary minus [-4]', function()
         (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
         null
         );
-    $lexer->shouldReceive('previewOperator')->times(5)->andReturn(null);
+    $lexer->shouldReceive('previewOperator')->times(4)->andReturn(null);
     
     $test = new DummyParser();
     $result = $test->parse($lexer);

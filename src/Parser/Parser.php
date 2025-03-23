@@ -123,8 +123,15 @@ class Parser extends Base
         if (is_null($lookup) || !isset($this->operator_precedence[$lookup])) {
             return true;
         }
-        
-        return $this->operator_precedence[$lookup] <= $rule->getPriority();
+        $rule_prio = $rule->getPriority();
+        if (!$rule_prio) {
+            foreach ($rule->getRightHand() as $item) {
+                if (isset($this->operator_precedence[$item]) && ($this->operator_precedence[$item] > $rule_prio)) {
+                    $rule_prio = $this->operator_precedence[$item];
+                }
+            }
+        }
+        return $this->operator_precedence[$lookup] <= $rule_prio;
     }
     
     /**
