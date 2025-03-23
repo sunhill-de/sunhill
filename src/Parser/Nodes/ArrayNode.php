@@ -15,7 +15,7 @@ namespace Sunhill\Parser\Nodes;
 class ArrayNode extends Node
 {
         
-    public function __construct($first_element)
+    public function __construct(Node $first_element)
     {
         parent::__construct('array',['values'=>[$first_element]]);
     }

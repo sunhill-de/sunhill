@@ -17,10 +17,15 @@ class DummyAnalyzer extends Analyzer
         $this->addFunction('time','integer');
         $this->addFunction('test_function', 'string')->addParameter('string', true);
         $this->addFunction('test_ellipsis', 'string')->setUnlimitedParameters(2, 'string');
-        $this->addBinaryOperator('+')
-            ->addOperatorType('integer','integer','integer')
-            ->addOperatorType('float','integer','float')
-            ->addOperatorType('integer','float','float')
-            ->addOperatorType('string','string','string');
+        $this->addOperatorTypes('+',['integer','integer','integer']);
+        $this->addOperatorTypes('+',['float','integer','float']);
+        $this->addOperatorTypes('+',['integer','float','float']);
+        $this->addOperatorTypes('+',['string','string','string']);
+        $this->addOperatorTypes('-',['integer','integer','integer']);
+        $this->addOperatorTypes('-',['float','integer','float']);
+        $this->addOperatorTypes('-',['integer','float','float']);
+        $this->addOperatorTypes('-',['string','string','string']);
+        $this->addOperatorTypes('-',['integer','integer']); // Unary -
+        $this->addOperatorTypes('-',['float','float']);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Parser\Helpers\FunctionDescriptor;
+use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 
 uses(SunhillTestCase::class);
 

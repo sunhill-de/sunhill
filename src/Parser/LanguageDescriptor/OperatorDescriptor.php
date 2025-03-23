@@ -39,6 +39,8 @@ class OperatorDescriptor extends Base
      */
     protected string $type = 'binary';
     
+    protected array $accepted_types = [];
+    
     public function __construct(string $operator)
     {
         $this->operator = $operator;
@@ -75,7 +77,13 @@ class OperatorDescriptor extends Base
     
     public function addTypes(...$args): static
     {
+        $this->accepted_types[] = $args;
         return $this;
+    }
+    
+    public function getAcceptedTypes(): array
+    {
+        return $this->accepted_types;
     }
     
 }
