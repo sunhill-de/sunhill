@@ -1,13 +1,13 @@
 <?php
 /**
- * @file BasicQuery.php
+ * @file Query.php
  * A base class for other queries
  * Lang en
- * Reviewstatus: 2025-02-18
+ * Reviewstatus: 2025-03-25
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Query/BasicQueryTest.php
- * Coverage: 77.782% (2024-10-17)
+ * Tests: Unit/Query/QueryTest.php
+ * Coverage: 
  */
 
 namespace Sunhill\Query;
@@ -22,6 +22,7 @@ use Sunhill\Query\Exceptions\InvalidStatementException;
 use Illuminate\Support\Str;
 use Sunhill\Query\Exceptions\UnexpectedResultCountException;
 use Sunhill\Facades\Properties;
+use Sunhill\Basic\Base;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -31,7 +32,7 @@ use Sunhill\Facades\Properties;
  * @author klaus
  *
  */
-abstract class BasicQuery extends QueryHandler
+class Query extends Base
 {
 
     /**
@@ -39,7 +40,6 @@ abstract class BasicQuery extends QueryHandler
      */
     public function __construct()
     {
-        $this->setQueryObject(new QueryObject());
     }
     
     /**
