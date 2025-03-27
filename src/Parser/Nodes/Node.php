@@ -50,4 +50,32 @@ class Node extends Base
     {
         return $this->children;
     }
+    
+    protected function handleReplacingChild(string $name, $node)
+    {
+        if (isset($node)) {
+            $this->children[$name] = $node;
+            return $this;
+        } else {
+            return isset($this->children[$name])?$this->children['name']:null;
+        }
+    }
+    
+    protected function handleOptionalArrayChild(string $name, $node)
+    {
+        if (isset($node)) {
+            if (isset($this->children[$name])) {
+                if (!is_a($this->children[$name], ArrayNode::class)) {
+                    $this->children[$name] = new ArrayNode($this->children[$name]);
+                }
+                $this->children[$name]->addElement($node);
+            } else {
+                $this->children[$name] = $node;
+            }
+            return $this;
+        } else {
+            return isset($this->children[$name])?$this->children['name']:null;
+        }         
+    }
+    
 }
