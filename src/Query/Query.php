@@ -23,6 +23,9 @@ use Illuminate\Support\Str;
 use Sunhill\Query\Exceptions\UnexpectedResultCountException;
 use Sunhill\Facades\Properties;
 use Sunhill\Basic\Base;
+use Sunhill\Query\Helpers\MethodSignature;
+use Sunhill\Query\Helpers\QueryNode;
+use Sunhill\Parser\Nodes\BinaryNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -34,19 +37,40 @@ use Sunhill\Basic\Base;
  */
 class Query extends Base
 {
-
-    /**
-     * The constructor creates a new QueryObject
-     */
-    public function __construct()
-    {
-    }
+    
+    protected array $methods = [];
     
     /**
      * A static boolean that indicates if this query is readonly
      * @var boolean
      */
     protected static $read_only = false;
+    
+    protected ?QueryNode $query_node = null;
+    
+    public function __construct()
+    {
+        $this->query_node = new QueryNode();
+        $this->addMethod('where')
+            ->addParameter('string')
+            ->addParameter('string')
+            ->addParameter('string')
+            ->setAction(function($node, $operand, $operator, $condition)
+            {
+                $new_node = new BinaryNode($operator);
+                $new_node->left  = $this->parse($operand);
+                $new_node->right = $this->parse($condition);
+                
+                if ($left = $node->getWhere()) {
+                    $connecting_node = new BinaryNode('&&');
+                    $connecting_node->left = $left;
+                    $connecting_node->right = $new_node;
+                    $node->setWhere($connecting_node);
+                } else {
+                    $node->setWhere($new_node);                    
+                }
+             });
+    }
     
     /**
      * Checks if this query is readonly. If yes it throws an exception
@@ -60,102 +84,24 @@ class Query extends Base
         }
     }
     
-    /**
-     * For some operations (insert and upserts) a where, limit, offset, order or group statement 
-     * makes no sense. So if one of those are set, throw an exception.
-     * 
-     * @param string $feature
-     */
-    protected function checkForNoConditions(string $feature)
+    public function addMethod(string $name): MethodSignature
     {
-        if (!empty($this->where_statements)) {
-            throw new InvalidStatementException("A where condition was used with feature '$feature'");            
+        $signature = new MethodSignature();
+        if (isset($this->methods[$name])) {
+            $this->methods[$name][] = $signature;
+        } else {
+            $this->methods[$name] = [$signature];
         }
-        if (!empty($this->order_fields)) {
-            throw new InvalidStatementException("A order statement was used with feature '$feature'");
-        }
-        if (!empty($this->group_fields)) {
-            throw new InvalidStatementException("A group statement was used with feature '$feature'");
-        }
-        if ($this->limit) {
-            throw new InvalidStatementException("A limit statement was used with feature '$feature'");
-        }
-        if ($this->offset) {
-            throw new InvalidStatementException("A offset statement was used with feature '$feature'");
-        }
+        return $signature;
     }
     
-    // Where statements
-    
-    /**
-     * Adds a where statement to the query
-     * 
-     * @param string $connect
-     * @param string $field
-     * @param string $operator
-     * @param unknown $condition
-     */
-    protected function addWhereStatement(string $connect, $field, $operator, $condition)
+    protected function performAction($action, array $arguments)
     {
-        $tokenizer = new Tokenizer($this->structure);
-        $this->getQueryObject()->addWhereStatement(
-            $connect,
-            $tokenizer->parseParameter($field, ['field','function_of_field','callback','subquery']),
-            $operator,
-            $tokenizer->parseParameter($condition, ['field','const','callback','array_of_constants','subquery','function_of_field','function_of_value'])
-        );
-    }
-
-    /**
-     * When a where statement is passed a single parameter this can only be a callable. This indicates that this is a bracket where statement
-     */
-    private function addBracketStatement(string $connect, $argument)
-    {
-        if (!is_callable($argument)) {
-             throw new InvalidStatementException("A where statement needs at least 2 parameter");
+        if (is_callable($action)) {
+            return $action($this->query_node, ...$arguments);
         }
-        $this->addWhereStatement($connect, "", "()", $argument);
-    }
-    
-    private function addDefaultWhereStatement(string $connection, array $arguments)
-    {
-                switch (count($arguments)) {
-                    case 0:
-                    case 1:
-                      $this->addBracketStatement($connection, $arguments[0]);
-                      break;
-                    case 2:  
-                      $this->addWhereStatement($connection, $arguments[0],"=",$arguments[1]);
-                      break;
-                    case 3:  
-                      $this->addWhereStatement($connection, $arguments[0],$arguments[1],$arguments[2]);
-                      break;
-                    default:                      
-                }    
-    }
-    
-    /**
-     * Helper function that checks if a method named "$name" starts with "$start". If yes it checks if $name 
-     * is excactly $start. If yes add the condition with the given connection and other arguments. If not
-     * take the rest of the method name, make it an condition and add the where statement
-     * 
-     * @param string $name
-     * @param string $start
-     * @param string $connection
-     * @param array $arguments
-     * @return boolean
-     */
-    private function checkMethodStartsWith(string $name, string $start, string $connection, array $arguments)
-    {
-        if (Str::startsWith($name,$start)) {
-            if ($name == $start) {
-                $this->addDefaultWhereStatement($connection,$arguments); 
-            } else {
-                $this->addWhereStatement($connection, $arguments[0],strtolower(Str::substr($name,strlen($start))),$arguments[1]??null);
-            }
-            return true;
+        switch ($action) {
         }
-        return false;
     }
     
     /**
@@ -167,19 +113,14 @@ class Query extends Base
      */
     public function __call(string $name, array $arguments): mixed
     {
-        if ($this->checkMethodStartsWith($name, "whereNot", "andnot", $arguments)) {
-            return $this;
+        if (!isset($this->methods[$name])) {
+            throw new \Exception("Method '$name' not found");
         }
-        if ($this->checkMethodStartsWith($name, "orWhereNot", "ornot", $arguments)) {
-            return $this;
+        foreach ($this->methods[$name] as $signature) {
+            if ($signature->matches($arguments)) {
+                return $this->performAction($signature->getAction(), $arguments);
+            }
         }
-        if ($this->checkMethodStartsWith($name, "where", "and", $arguments)) {
-            return $this;
-        }
-        if ($this->checkMethodStartsWith($name, "orWhere", "or", $arguments)) {
-            return $this;
-        }
-        throw new \Exception("Method '$name' not found");
     }
 
     // Other statements
@@ -192,36 +133,11 @@ class Query extends Base
      */
     public function fields($fields)
     {
-        if (is_array($fields) || is_a($fields, \Traversable::class)) {
-            foreach ($fields as $single_field) {
-                $this->fields[] = $this->parseFieldOrCondition($single_field);                
-            }
-        } else if (is_string($fields)) {
-            foreach (explode(",",$fields) as $single_field) {
-                    $this->fields[] = $this->parseFieldOrCondition($single_field);
-            }
-        } else {
-                $this->fields[] = $this->parseFieldOrCondition($fields);
-        }
         return $this;
     }
     
     public function order($field, string $direction = 'asc'): static
     {
-        $direction = strtolower($direction);
-        if (($direction !== "asc") && ($direction !== 'desc')) {
-            throw new InvalidOrderException("The direction $direction is invalid");
-        }
-        if (is_string($field)) {
-            if (!$this->hasProperty($field)) {
-                throw new InvalidOrderException("It's not possible to order by '$field'");                    
-            }
-            $this->order_fields[] = makeStdclass(['type'=>'field','field'=>$field,'direction'=>$direction]);
-        } else if (is_callable($field)) {
-            $this->order_fields[] = makeStdclass(['type'=>'callback','callback'=>$field,'direction'=>$direction]);            
-        } else {
-            throw new InvalidOrderException(getScalarMessage("It's not possible to sort by given variable :variable", $field));
-        }
         return $this;    
     }
     
@@ -233,8 +149,6 @@ class Query extends Base
      */
     public function limit(int $limit): static
     {
-        $this->getQueryObject()->setLimit($limit);
-
         return $this;
     }
     
@@ -245,37 +159,7 @@ class Query extends Base
      */
     public function offset(int $offset): static
     {
-        $this->getQueryObject()->setOffset($offset);
-
         return $this;
-    }
-    
-    // Finalizing methods
-    
-    protected function getQueryExecutor()
-    {
-        
-    }
-    
-    protected function doExecuteQuery()
-    {
-        
-    }
-    
-    /**
-     * Returns a query checker. This method can be overwritten for implementing extended checkers
-     * 
-     * @return \Sunhill\Query\Checker
-     */
-    protected function getQueryChecker()
-    {
-        return new Checker();
-    }
-    
-    protected function checkQuery(string $finalizer)
-    {
-        $checker = $this->getQueryChecker( $this->getQueryObject() );
-        $checker->check();        
     }
     
     /**
@@ -288,8 +172,6 @@ class Query extends Base
      */
     protected function executeQuery(string $finalizer, array $params = [])
     {
-        $this->checkQuery($finalizer);
-        return $this->doExecuteQuery( $finalizer, $params );
     }
     
 // ============================================ Finalizing methods =============================================================    
@@ -488,7 +370,7 @@ class Query extends Base
      * @param unknown $condition
      * @param unknown $data_set
      */
-    public function usert($condition, $data_set)
+    public function upsert($condition, $data_set)
     {
         $this->checkForReadlnly('upsert');
     }
