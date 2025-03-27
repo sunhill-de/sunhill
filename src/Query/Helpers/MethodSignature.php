@@ -38,6 +38,7 @@ class MethodSignature extends Base
         foreach ($subitems as $item) {
             switch ($test1) {
                 default:
+                    if ($test2 == "*") { return true; }
                     if ($test1 == $item) { return true; }                
             }
         }

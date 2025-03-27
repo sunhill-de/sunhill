@@ -92,4 +92,21 @@ test('matches', function($callback, $params, $expect)
         $signature->addParameter('string');
     },[10,'ABC',20],false
     ],
+    [function($signature)
+    {
+        $signature->addParameter('*');
+    },[10],true
+    ],
+    [function($signature)
+    {
+        $signature->addParameter('integer');
+        $signature->addParameter('*');
+    },[10,10],true
+    ],
+    [function($signature)
+    {
+        $signature->addParameter('ineteger');
+        $signature->addParameter('*');
+    },['ABC',10],false
+    ],
     ]);
