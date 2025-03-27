@@ -103,18 +103,34 @@ test('analyze', function($tree, $expect, $expected_result)
             $result->arguments(new FloatNode('3.14'));
             return $result;
         }, 'float', 'success'],
-     'function node with to less parameters'=>[ function()
+     'function node with optional parameter given'=>[ function()
+        {
+            $result = new FunctionNode('sin');
+            $result->arguments(new StringNode('ABC'));
+            return $result;
+        }, 'string', 'success'],
+     'function node with optional parameter omitted'=>[ function()
+        {
+            $result = new FunctionNode('sin');
+            return $result;
+        }, 'string', 'success'],
+     'function node with no parameters'=>[ function()
+        {
+            $result = new FunctionNode('time');
+            return $result;
+        }, 'integer', 'success'],
+    'function node with to less parameters'=>[ function()
         {
             $result = new FunctionNode('sin');
             return $result;
         }, 'float', 'parameters'],
-        'function node with type mismatch'=>[ function()
+    'function node with type mismatch'=>[ function()
         {
             $result = new FunctionNode('sin');
             $result->arguments(new StringNode('ABC'));
             return $result;
         }, 'float', 'parameters'],
-        'function node with to many parameters'=>[ function()
+    'function node with to many parameters'=>[ function()
         {
             $result = new FunctionNode('sin');
             $params = new ArrayNode(new FloatNode('3.14'));
@@ -128,5 +144,61 @@ test('analyze', function($tree, $expect, $expected_result)
             $result->arguments(new FloatNode('3.14'));
             return $result;
         }, 'float', 'function'],
-    
+     'ellipsis function node'=>[ function()
+        {
+            $result = new FunctionNode('test_ellipsis');
+            $params = new ArrayNode(new StringNode('ABC'));
+            $params->addElement(new StringNode('DEF'));
+            $params->addElement(new StringNode('GHI'));
+            $result->arguments($params);
+            return $result;
+        }, 'string', 'success'],
+     'ellipsis function node with too few parameter'=>[ function()
+        {
+            $result = new FunctionNode('test_ellipsis');
+            $params = new ArrayNode(new StringNode('ABC'));
+            $result->arguments($params);
+            return $result;
+        }, 'string', 'parameters'],
+     'mixed ellipsis function node'=>[ function()
+        {
+            $result = new FunctionNode('test_ellipsis');
+            $params = new ArrayNode(new IntegerNode(10));
+            $params->addElement(new StringNode('ABC'));
+            $params->addElement(new StringNode('DEF'));
+            $params->addElement(new StringNode('GHI'));
+            $params->addElement(new StringNode('JKL'));
+            $result->arguments($params);
+            return $result;
+        }, 'string', 'success'],
+     'mixed ellipsis function node with too few parameter'=>[ function()
+        {
+            $result = new FunctionNode('test_mixedellipsis');
+            $params = new ArrayNode(new IntegerNode(10));
+            $params->addElement(new StringNode('ABC'));
+            $result->arguments($params);
+            return $result;
+        }, 'string', 'parameters'],
+     'binary noode'=>[ function()
+        {
+            $result = new BinaryNode('+');
+            $result->left(new IntegerNode(10));
+            $result->right(new IntegerNode(20));
+            return $result;
+        }, 'integer', 'success'],
+     'binary node with mixed tree'=>[ function()
+        {
+            $result = new BinaryNode('+');
+            $result->left(new IntegerNode(10));
+            $result->right(new FloatNode(3.14));
+            return $result;
+        }, 'float', 'success'],
+    'binary node with wrong types'=>[ function()
+        {
+            $result = new BinaryNode('+');
+            $result->left(new StringNode('ABC'));
+            $result->right(new FloatNode(3.14));
+            return $result;
+        }, 'string', 'type'],
+        
     ]);
