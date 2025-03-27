@@ -25,12 +25,27 @@ test('getSignature', function($parameter, $expect)
     [collect([1,2.3,3]),'array of float'],
     [collect(["a","b","c"]),'array of string'],
     [collect([1,1.2,"c"]),'array of mixed'],
-    [function() { return 12; },'callback'],
-    [new Dummy(), 'record'],
-    [new Query(), 'subquery'],
-    [new \stdClass(), 'object']
+    [function() { return 12; },'callback'], 
 ]);         
-       
+
+test('getSignature with Dummy', function()
+{
+    $test = new Dummy();
+    expect(MethodSignature::getSignature($test))->toBe('record');
+});
+
+test('getSignature with Query', function()
+{
+    $test = new Query();
+    expect(MethodSignature::getSignature($test))->toBe('subquery');
+});
+
+test('getSignature with other object', function()
+{
+    $test = new \stdClass();
+    expect(MethodSignature::getSignature($test))->toBe('object');
+});
+
 test('matches', function($callback, $params, $expect)
 {
     $test = new MethodSignature();
@@ -49,6 +64,16 @@ test('matches', function($callback, $params, $expect)
         $signature->addParameter('string');
     },[10,'ABC'],true
     ],
+    [function($signature)
+    {
+        $signature->addParameter('integer|string');
+    },[10],true
+    ],
+    [function($signature)
+    {
+        $signature->addParameter('integer|string');
+    },['abc'],true
+    ], 
     [function($signature)
     {
         $signature->addParameter('integer');
