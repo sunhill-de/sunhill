@@ -20,19 +20,28 @@ class MethodSignature extends Base
         return $this;
     }  
 
-    public function addAction($action): static
+    public function setAction($action): static
     {
         $this->action = $action;
 
         return $this;
     }
 
+    public function getAction()
+    {
+        return $this->action;
+    }
+    
     private function signature_matches(string $test1, string $test2): bool
     {
-        switch ($test1) {
-            default:
-              return $test1 == $test2;
-        }    
+        $subitems = explode('|', $test2);
+        foreach ($subitems as $item) {
+            switch ($test1) {
+                default:
+                    if ($test1 == $item) { return true; }                
+            }
+        }
+        return false;
     }
     
     public function matches(array $test_parameters): bool
