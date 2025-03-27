@@ -51,6 +51,11 @@ class Query extends Base
     public function __construct()
     {
         $this->query_node = new QueryNode();
+        $this->method('where')
+            ->addParameter('callback')
+            ->addParameter('*')
+            ->addParameter('*')
+            ->setAction('recall');
         $this->addMethod('where')
             ->addParameter('string')
             ->addParameter('string')
@@ -101,6 +106,7 @@ class Query extends Base
             return $action($this->query_node, ...$arguments);
         }
         switch ($action) {
+            case 'recall'
         }
     }
     
