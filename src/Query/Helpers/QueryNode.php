@@ -13,27 +13,27 @@ class QueryNode extends Node
     
     public function verb(?string $verb = null)
     {
-        $this->handleReplacingChild('verb', $node);
+        return $this->handleReplacingChild('verb', $node);
     }
     
     public function offset(?Node $node = null)
     {
-        $this->handleReplacingChild('offset', $node);
+        return $this->handleReplacingChild('offset', $node);
     }
     
     public function limit(?Node $node = null)
     {
-        $this->handleReplacingChild('limit', $node);
+        return $this->handleReplacingChild('limit', $node);
     }
     
     public function order(?Node $node = null)
     {
-        $this->handleOptionalArrayChild('order', $node);
+        return $this->handleOptionalArrayChild('order', $node);
     }
     
     public function group(?Node $node = null)
     {
-        $this->handleOptionalArrayChild('group', $node);
+        return $this->handleOptionalArrayChild('group', $node);
     }
     
     public function getWhere(): ?Node
