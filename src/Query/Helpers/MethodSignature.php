@@ -6,6 +6,7 @@ use Sunhill\Basic\Base;
 use Illuminate\Support\Collection;
 use Sunhill\Properties\RecordProperty;
 use Sunhill\Query\Query;
+use Sunhill\Parser\Nodes\Node;
 
 class MethodSignature extends Base
 {
@@ -20,6 +21,15 @@ class MethodSignature extends Base
         return $this;
     }  
 
+    public function addParameters(array $parameter_signatures): static
+    {
+        foreach ($parameter_signatures as $signature) {
+            $this->addParameter($signature);
+        }
+        
+        return $this;
+    }
+    
     public function setAction($action): static
     {
         $this->action = $action;
@@ -102,6 +112,9 @@ class MethodSignature extends Base
         }
         if (is_a($param, Query::class)) {
             return 'subquery';
+        }
+        if (is_a($param, Node::class)) {
+            return 'node';
         }
         if (is_object($param)) {
             return 'object';

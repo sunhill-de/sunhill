@@ -4,6 +4,7 @@ use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Helpers\MethodSignature;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Query\Query;
+use Sunhill\Parser\Nodes\Node;
 
 uses(SunhillTestCase::class);
 
@@ -38,6 +39,12 @@ test('getSignature with Query', function()
 {
     $test = new Query();
     expect(MethodSignature::getSignature($test))->toBe('subquery');
+});
+
+test('getSignature with node', function()
+{
+    $test = new Node('something',[]);
+    expect(MethodSignature::getSignature($test))->toBe('node');
 });
 
 test('getSignature with other object', function()
