@@ -26,6 +26,8 @@ use Sunhill\Basic\Base;
 use Sunhill\Query\Helpers\MethodSignature;
 use Sunhill\Query\Helpers\QueryNode;
 use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Query\Exceptions\WrongActionException;
+use Sunhill\Parser\Nodes\IntegerNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -51,7 +53,15 @@ class Query extends Base
     public function __construct()
     {
         $this->query_node = new QueryNode();
-        $this->method('where')
+        $this->addMethod('offset')->addParameter('integer')->setAction(function(&$node, $offset)
+        {
+            $node->offset(new IntegerNode($offset)); 
+        });
+        $this->addMethod('offset')->addParameter('callback')->setAction(function(&$node, $offset)
+        {
+            $this->offset($offset());
+        });
+        $this->addMethod('where')
             ->addParameter('callback')
             ->addParameter('*')
             ->addParameter('*')
@@ -75,6 +85,15 @@ class Query extends Base
                     $node->setWhere($new_node);                    
                 }
              });
+    }
+    
+    /**
+     * Mainly for internal debugging purposes. Returns the current query node
+     * @return QueryNode
+     */
+    public function getQueryNode(): QueryNode
+    {
+        return $this->query_node;    
     }
     
     /**
@@ -105,9 +124,7 @@ class Query extends Base
         if (is_callable($action)) {
             return $action($this->query_node, ...$arguments);
         }
-        switch ($action) {
-            case 'recall'
-        }
+        throw new WrongActionException("The action is invalid");
     }
     
     /**
@@ -130,43 +147,6 @@ class Query extends Base
     }
 
     // Other statements
-    
-    /**
-     * A statement that indicates that only of subsets of the records should be returned 
-     * 
-     * @param unknown $fields
-     * @return \Sunhill\Query\BasicQuery
-     */
-    public function fields($fields)
-    {
-        return $this;
-    }
-    
-    public function order($field, string $direction = 'asc'): static
-    {
-        return $this;    
-    }
-    
-    /**
-     * Indicates that only $limit entries of the result set should be returned
-     * 
-     * @param int $limit
-     * @return static
-     */
-    public function limit(int $limit): static
-    {
-        return $this;
-    }
-    
-    /**
-     * Indicates that only the entries beginning with $offset should be returned
-     * @param int $offset
-     * @return static
-     */
-    public function offset(int $offset): static
-    {
-        return $this;
-    }
     
     /**
      * First checks the query (if it is valid), prepares it and then Calls the query executor and returns its result
