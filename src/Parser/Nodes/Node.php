@@ -57,7 +57,7 @@ class Node extends Base
             $this->children[$name] = $node;
             return $this;
         } else {
-            return isset($this->children[$name])?$this->children['name']:null;
+            return isset($this->children[$name])?$this->children[$name]:null;
         }
     }
     
@@ -74,7 +74,7 @@ class Node extends Base
             }
             return $this;
         } else {
-            return isset($this->children[$name])?$this->children['name']:null;
+            return isset($this->children[$name])?$this->children[$name]:null;
         }         
     }
     
