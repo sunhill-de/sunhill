@@ -1,5 +1,16 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
     "name": "sunhill/sunhill",
+    "type": "package",
+    "description": "The sunhill framework, an extension to laravel.",
+    "keywords": [
+        "laravel",
+        "framework",
+        "orm",
+        "object-relational-mapping",
+        "parser"
+    ],
+    "license": "MIT",
     "autoload": {
         "files": [
             "src/Helpers/sunhill_helpers.php"
@@ -17,15 +28,14 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "laravel/framework": "^11.0",
-        "doctrine/dbal": "4.3.x-dev"
+        "laravel/framework": "^12.0",
+        "doctrine/dbal": "4.3.x"
     },
-    "reuiqre-dev": {
-        "phpunit/phpunit": "^10.0",
-        "orchestra/testbench": "9.x",
-        "pestphp/pest-plugin-laravel": "2.x-dev",
-        "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-drift": "^2.5",
+    "require-dev": {
+        "orchestra/testbench": "10.x",
+        "pestphp/pest-plugin-laravel": "3.1",
+        "pestphp/pest": "^3.7",
+        "pestphp/pest-plugin-drift": "^3.1",
         "mockery/mockery": "1.7.x-dev"
     },
     "extra": {
@@ -39,10 +49,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
-    },
-    "require-dev": {
-        "pestphp/pest": "3.x-dev",
-        "orchestra/testbench": "9.x-dev"
     },
     "autoload-dev": {
         "psr-4": {
