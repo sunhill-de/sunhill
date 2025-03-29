@@ -10,5 +10,9 @@
 /doc
 *DEADJOE
 --cache-dire
+<<<<<<< HEAD
 /.metadata/
+=======
+/.metadata
+>>>>>>> main
 sunhill
