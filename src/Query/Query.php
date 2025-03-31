@@ -12,22 +12,16 @@
 
 namespace Sunhill\Query;
 
-use Illuminate\Support\Collection;
-use Sunhill\Query\Exceptions\InvalidOrderException;
-use Sunhill\Query\Exceptions\NoResultException;
-use Sunhill\Query\Exceptions\UnknownFieldException;
-use Sunhill\Query\Exceptions\TooManyResultsException;
 use Sunhill\Query\Exceptions\QueryNotWriteableException;
-use Sunhill\Query\Exceptions\InvalidStatementException;
-use Illuminate\Support\Str;
 use Sunhill\Query\Exceptions\UnexpectedResultCountException;
 use Sunhill\Facades\Properties;
 use Sunhill\Basic\Base;
 use Sunhill\Query\Helpers\MethodSignature;
-use Sunhill\Query\Helpers\QueryNode;
+use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Query\Exceptions\WrongActionException;
 use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Query\QueryParser\QueryParser;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -63,8 +57,24 @@ class Query extends Base
         });
         $this->addMethod('offset')->addParameter('string')->setAction(function(&$node, $offset)
         {
-            
-        })
+            $parser = new QueryParser();
+            $node->offset($parser->parseQueryString($offset));   
+        });
+        $this->addMethod('limit')->addParameter('integer')->setAction(function(&$node, $limit)
+        {
+            $node->limit(new IntegerNode($limit));
+        });
+        $this->addMethod('limit')->addParameter('callback')->setAction(function(&$node, $limit)
+        {
+            $this->limit($limit());
+        });
+        $this->addMethod('limit')->addParameter('string')->setAction(function(&$node, $limit)
+        {
+            $parser = new QueryParser();
+            $node->offset($parser->parseQueryString($limit));
+        });
+        
+        
         $this->addMethod('where')
             ->addParameter('callback')
             ->addParameter('*')
