@@ -61,6 +61,10 @@ class Query extends Base
         {
             $this->offset($offset());
         });
+        $this->addMethod('offset')->addParameter('string')->setAction(function(&$node, $offset)
+        {
+            
+        })
         $this->addMethod('where')
             ->addParameter('callback')
             ->addParameter('*')
