@@ -6,6 +6,7 @@
  * Reviewstatus: 2025-02-28
  * Localization: complete
  * Documentation: complete
+ * @subpackage parser
  * Tests: Unit/Parser/LexerTest.php
  * Coverage: 90,6% (2025-03-11<9
  */
