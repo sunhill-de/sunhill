@@ -21,6 +21,15 @@ test('Move pointer to next token', function()
     expect($result->getValue())->toBe('2');
 });
 
+test('Use setParseString()', function()
+{
+    $test = new DummyLexer();
+    $test->setParseString('1 2');
+    $result = $test->getNextToken();
+    $result = $test->getNextToken();
+    expect($result->getValue())->toBe('2');
+});
+
 test('Test special chars',function($input, $token, $position, $next_pos, $value = null)
 {
     $test = new DummyLexer($input);

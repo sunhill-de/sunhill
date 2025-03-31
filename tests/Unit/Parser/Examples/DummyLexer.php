@@ -7,7 +7,7 @@ use Sunhill\Parser\Lexer;
 class DummyLexer extends Lexer
 {
     
-    public function __construct(string $parse_string)
+    public function __construct(string $parse_string = '')
     {
         parent::__construct($parse_string);
         $this->addDefaultTerminal('INTEGER');
