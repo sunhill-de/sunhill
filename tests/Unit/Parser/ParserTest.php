@@ -6,10 +6,11 @@ use Sunhill\Tests\Unit\Parser\Examples\DummyParser;
 use Sunhill\Parser\Token;
 use Sunhill\Query\Exceptions\InvalidStatementException;
 use Sunhill\Parser\Exceptions\InputNotParsableException;
+use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
 
 uses(SunhillTestCase::class);
 
-test('Simple integerant [4]', function()
+test('Simple integer [4]', function()
 {
    $lexer = \Mockery::mock(Lexer::class);
    $lexer->shouldReceive('getNextToken')->andReturn(
@@ -19,6 +20,9 @@ test('Simple integerant [4]', function()
    $lexer->shouldReceive('previewOperator')->andReturn(null);   
    $test = new DummyParser();
    $result = $test->parse($lexer);
+   
+   $executor = new DummyExecutor();
+   expect($executor->execute($result))->toBe("4");
    
    expect($result->getType())->toBe('integer');
    expect($result->getValue())->toBe(4);
@@ -37,6 +41,9 @@ test('Simple addition [4+3]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+   
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(4)+(3)");
     
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
@@ -60,6 +67,9 @@ test('Addition with three summands [4+3+2]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("((4)+(3))+(2)");
     
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('+');
@@ -89,6 +99,9 @@ test('Addition with three summands and brackets [4+(3+2)]', function()
     $test = new DummyParser();
     $result = $test->parse($lexer);
     
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(4)+((3)+(2))");
+    
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -110,6 +123,9 @@ test('Simple product [4*3]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(4)*(3)");
     
     expect($result->getType())->toBe('*');
     expect($result->left()->getType())->toBe('integer');
@@ -133,6 +149,9 @@ test('Multiplication with three factors [4*3*2]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("((4)*(3))*(2)");
     
     expect($result->getType())->toBe('*');
     expect($result->left()->getType())->toBe('*');
@@ -161,6 +180,9 @@ test('Sum with product left [4*3+2]', function()
     $test = new DummyParser();
     $result = $test->parse($lexer);
     
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("((4)*(3))+(2)");
+    
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('*');
     expect($result->left()->left()->getType())->toBe('integer');
@@ -186,6 +208,9 @@ test('Sum with product right [4+3*2]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(4)+((3)*(2))");
     
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
@@ -216,6 +241,9 @@ test('Product with sum in brackets (4*(3+2))', function()
     $test = new DummyParser();
     $result = $test->parse($lexer);
     
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(4)*((3)+(2))");
+    
     expect($result->getType())->toBe('*');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -239,6 +267,9 @@ test('Simple unary minus [-4]', function()
     $test = new DummyParser();
     $result = $test->parse($lexer);
     
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("u-(4)");
+    
     expect($result->getType())->toBe('u-');
     expect($result->child()->getType())->toBe('integer');
     expect($result->child()->getValue())->toBe(4);    
@@ -258,6 +289,9 @@ test('Simple addition with unary minus [4+-3]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(4)+(u-(3))");
     
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
@@ -282,6 +316,9 @@ test('Simple function [sin(3)]', function()
     $test = new DummyParser();
     $result = $test->parse($lexer);
     
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("sin(3)");
+    
     expect($result->getType())->toBe('func');
     expect($result->name())->toBe('sin');
     expect($result->arguments()->getType())->toBe('integer');
@@ -301,6 +338,9 @@ test('Simple function with no argument [sin()]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("sin()");
     
     expect($result->getType())->toBe('func');
     expect($result->name())->toBe('sin');
@@ -323,6 +363,9 @@ test('Function in sum [sin(4)+3]', function()
     
     $test = new DummyParser();
     $result = $test->parse($lexer);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($result))->toBe("(sin(4))+(3)");
     
     expect($result->getType())->toBe('+');
     expect($result->left()->name())->toBe('sin');
