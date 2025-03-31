@@ -128,15 +128,20 @@ class Lexer extends Base
    *  
    * @param string $parse_string
    */
-  public function __construct(string $parse_string)
+  public function __construct(string $parse_string = '')
+  {
+      $this->setParseString($parse_string);
+      $this->sortTerminals();
+  }
+
+  public function setParseString(string $parse_string)
   {
       $this->parse_string = $parse_string;
       $this->column = 0;
       $this->row = 0;
-      $this->position = 0;
-      $this->sortTerminals();
+      $this->position = 0;      
   }
-
+  
   /**
    * Sorts the terminals by their length (terminals have to be strings)
    */
