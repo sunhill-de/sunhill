@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Query\Helpers;
+namespace Sunhill\Query\QueryParser;
 
 use Sunhill\Parser\Nodes\Node;
 
