@@ -116,6 +116,9 @@ class MethodSignature extends Base
         if (is_a($param, Node::class)) {
             return 'node';
         }
+        if (is_a($param, \stdClass::class)) {
+            return 'stdclass';
+        }
         if (is_object($param)) {
             return 'object';
         }
