@@ -13,6 +13,7 @@ use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Query\QueryParser\QueryNode;
 
 class DummyExecutor extends Executor
 {
@@ -41,10 +42,18 @@ class DummyExecutor extends Executor
                 return $ast->getValue();
             case FunctionNode::class:
                 return $ast->name().'('.$this->doExecute($ast->arguments()).')';
+            case QueryNode::class:
+                return "where:[".$this->doExecute($ast->getWhere())."],".
+                       "order:[".$this->doExecute($ast->order())."],".
+                       "group:[".$this->doExecute($ast->group())."],".
+                       "offset:[".$this->doExecute($ast->offset())."],".
+                       "limit:[".$this->doExecute($ast->limit())."]";
             case StringNode::class:
                 return '"'.$ast->getValue().'"';
             case UnaryNode::class:    
                 return $ast->getType().'('.$this->doExecute($ast->child()).')';
+            default:
+                return "unknown Node: ".$ast::class;
         }
     }
 
