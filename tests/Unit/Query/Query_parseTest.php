@@ -3,8 +3,18 @@
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Query;
 use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
 
 uses(SunhillTestCase::class);
+
+test('Empty query', function()
+{
+    $test = new Query();
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+        ->toBe('where:[],order:[],group:[],offset:[],limit:[]');    
+});
 
 // ================================ offset ========================================
 test('Offset: Just a simple integer', function()
@@ -12,9 +22,9 @@ test('Offset: Just a simple integer', function()
     $test = new Query();
     $test->offset(5);
     
-    $ast = $test->getQueryNode();
-    expect($ast->offset()->getType())->toBe('integer');
-    expect($ast->offset()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[5],limit:[]');
 });
 
 test('Offset: A callback', function()
@@ -22,9 +32,9 @@ test('Offset: A callback', function()
     $test = new Query();
     $test->offset(function() { return 5; });
     
-    $ast = $test->getQueryNode();
-    expect($ast->offset()->getType())->toBe('integer');
-    expect($ast->offset()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[5],limit:[]');
 });
 
 test('Offset: An expression', function()
@@ -32,20 +42,19 @@ test('Offset: An expression', function()
     $test = new Query();
     $test->offset("5+3");
     
-    $ast = $test->getQueryNode();
-    expect($ast->offset()->getType())->toBe('+');
-    expect($ast->offset()->left()->getType())->toBe('integer');
-    expect($ast->offset()->right()->getType())->toBe('integer');
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[(5)+(3)],limit:[]');
 });
 
 test('Offset: An string expression', function()
 {
     $test = new Query();
-    $test->offset("'5''");
+    $test->offset("'5'");
     
-    $ast = $test->getQueryNode();
-    expect($ast->offset()->getType())->toBe('integer');
-    expect($ast->offset()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[5],limit:[]');
 });
 
 test('Offset: A node', function()
@@ -93,7 +102,7 @@ test('Limit: An expression', function()
 test('Limit: An string expression', function()
 {
     $test = new Query();
-    $test->limit("'5''");
+    $test->limit("'5'");
     
     $ast = $test->getQueryNode();
     expect($ast->limit()->getType())->toBe('integer');
