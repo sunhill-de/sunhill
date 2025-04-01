@@ -59,6 +59,7 @@ use Sunhill\Semantics\URL;
 use Sunhill\Semantics\UUID4;
 use Sunhill\Managers\FilterManager;
 use Sunhill\Properties\ArrayProperty;
+use Sunhill\Query\Helpers\QueryManager;
 
 class SunhillServiceProvider extends ServiceProvider
 {
@@ -74,6 +75,9 @@ class SunhillServiceProvider extends ServiceProvider
     
         $this->app->singleton(PropertiesManager::class, function () { return new PropertiesManager(); } );
         $this->app->alias(PropertiesManager::class,'properties');
+        
+        $this->app->singleton(QueryManager::class, function () { return new QueryManager(); } );
+        $this->app->alias(QueryManager::class,'queries');
         
         $this->app->singleton(Market::class, function () { return new Market(); } );
         $this->app->alias(Market::class,'infomarket');
