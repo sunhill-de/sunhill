@@ -77,34 +77,25 @@ class Query extends Base
         $this->addMethod('limit')->addParameter('string')->setAction(function(&$node, $limit)
         {
             $parser = new QueryParser();
-            $node->offset($parser->parseQueryString($limit));
+            $node->limit(Queries::parseQueryString($limit));
+        });
+        $this->addMethod('limit')->addParameter('node')->setAction(function(&$node, $limit)
+        {
+            $node->limit($limit);
         });
         
-        
-        $this->addMethod('where')
-            ->addParameter('callback')
-            ->addParameter('*')
-            ->addParameter('*')
-            ->setAction('recall');
-        $this->addMethod('where')
-            ->addParameter('string')
-            ->addParameter('string')
-            ->addParameter('string')
-            ->setAction(function($node, $operand, $operator, $condition)
-            {
-                $new_node = new BinaryNode($operator);
-                $new_node->left  = $this->parse($operand);
-                $new_node->right = $this->parse($condition);
-                
-                if ($left = $node->getWhere()) {
-                    $connecting_node = new BinaryNode('&&');
-                    $connecting_node->left = $left;
-                    $connecting_node->right = $new_node;
-                    $node->setWhere($connecting_node);
-                } else {
-                    $node->setWhere($new_node);                    
-                }
-             });
+        $this->addMethod('order')->addParameter('string')->setAction(function(&$node, $order)
+        {
+             
+        });
+        $this->addMethod('order')->addParameter('stdclass')->setAction(function(&$node, $order)
+        {
+            
+        });
+        $this->addMethod('order')->addParameter('string')->addParameter('string')->setAction(function(&$node, $order, $direction)
+        {
+            
+        });
     }
     
     /**

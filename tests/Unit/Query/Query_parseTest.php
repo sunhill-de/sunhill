@@ -76,55 +76,59 @@ test('Offset: A node', function()
 });
 
 // ================================ limit ========================================
-test('Limit: Just a simple integer', function()
+test('limit: Just a simple integer', function()
 {
     $test = new Query();
     $test->limit(5);
     
-    $ast = $test->getQueryNode();
-    expect($ast->limit()->getType())->toBe('integer');
-    expect($ast->limit()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[],limit:[5]');
 });
 
-test('Limit: A callback', function()
+test('limit: A callback', function()
 {
     $test = new Query();
     $test->limit(function() { return 5; });
     
-    $ast = $test->getQueryNode();
-    expect($ast->limit()->getType())->toBe('integer');
-    expect($ast->limit()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[],limit:[5]');
 });
 
-test('Limit: An expression', function()
+test('limit: An expression', function()
 {
+    $node = new BinaryNode('+');
+    $node->left(new IntegerNode(5));
+    $node->right(new IntegerNode(3));
+    Queries::shouldReceive('parseQueryString')->with("5+3")->once()->andReturn($node);
     $test = new Query();
     $test->limit("5+3");
     
-    $ast = $test->getQueryNode();
-    expect($ast->limit()->getType())->toBe('+');
-    expect($ast->limit()->left()->getType())->toBe('integer');
-    expect($ast->limit()->right()->getType())->toBe('integer');
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[],limit:[(5)+(3)]');
 });
 
-test('Limit: An string expression', function()
+test('limit: An string expression', function()
 {
+    Queries::shouldReceive('parseQueryString')->with("'5'")->once()->andReturn(new StringNode("5"));
     $test = new Query();
     $test->limit("'5'");
     
-    $ast = $test->getQueryNode();
-    expect($ast->limit()->getType())->toBe('integer');
-    expect($ast->limit()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[],limit:["5"]');
 });
 
-test('Limit: A node', function()
+test('limit: A node', function()
 {
     $test = new Query();
     $test->limit(new IntegerNode(5));
     
-    $ast = $test->getQueryNode();
-    expect($ast->limit()->getType())->toBe('integer');
-    expect($ast->limit()->getValue())->toBe(5);
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[],group:[],offset:[],limit:[5]');
 });
 
 // ============================ Order ===================================
