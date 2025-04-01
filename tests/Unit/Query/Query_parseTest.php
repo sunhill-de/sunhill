@@ -4,6 +4,9 @@ use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\Query;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
+use Sunhill\Facades\Queries;
+use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Parser\Nodes\BinaryNode;
 
 uses(SunhillTestCase::class);
 
@@ -39,6 +42,10 @@ test('Offset: A callback', function()
 
 test('Offset: An expression', function()
 {
+    $node = new BinaryNode('+');
+    $node->left(new IntegerNode(5));
+    $node->right(new IntegerNode(3));
+    Queries::shouldReceive('parseQueryString')->with("5+3")->once()->andReturn($node);
     $test = new Query();
     $test->offset("5+3");
     
@@ -49,12 +56,13 @@ test('Offset: An expression', function()
 
 test('Offset: An string expression', function()
 {
+    Queries::shouldReceive('parseQueryString')->with("'5'")->once()->andReturn(new StringNode("5"));
     $test = new Query();
     $test->offset("'5'");
     
     $executor = new DummyExecutor();
     expect($executor->execute($test->getQueryNode()))
-    ->toBe('where:[],order:[],group:[],offset:[5],limit:[]');
+    ->toBe('where:[],order:[],group:[],offset:["5"],limit:[]');
 });
 
 test('Offset: A node', function()
