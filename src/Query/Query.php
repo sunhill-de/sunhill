@@ -22,6 +22,7 @@ use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Query\Exceptions\WrongActionException;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Query\QueryParser\QueryParser;
+use Sunhill\Facades\Queries;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -57,9 +58,14 @@ class Query extends Base
         });
         $this->addMethod('offset')->addParameter('string')->setAction(function(&$node, $offset)
         {
-            $parser = new QueryParser();
-            $node->offset($parser->parseQueryString($offset));   
+            $node->offset(Queries::parseQueryString($offset));   
         });
+        $this->addMethod('offset')->addParameter('node')->setAction(function(&$node, $offset)
+        {
+            $node->offset($offset);
+        });
+        
+        
         $this->addMethod('limit')->addParameter('integer')->setAction(function(&$node, $limit)
         {
             $node->limit(new IntegerNode($limit));
