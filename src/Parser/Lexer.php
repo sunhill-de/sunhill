@@ -236,7 +236,7 @@ class Lexer extends Base
       return null;
   }
 
-  private function previewSymbol(int $start_position): string
+  private function previewSymbol(int $start_position): ?string
   {
       for ($i=$this->longest_terminal;$i>0;$i--) {
           $next = strtolower($this->getNextCharactersFrom($start_position, $i));
@@ -477,6 +477,7 @@ class Lexer extends Base
       if (!empty($this->terminals) && ($symbol = $this->previewSymbol($dummy_pointer))) {
           return $symbol;
       }      
+      return null;
   }
   
   /**
