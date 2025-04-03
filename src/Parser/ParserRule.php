@@ -24,7 +24,7 @@ class ParserRule extends Base
     
     protected int $priority = 0;
     
-    protected string $ast_callback = 'passThrough';
+    protected $ast_callback = 'passThrough';
     
     public function __construct(string $left_hand, string|array $right_hand)
     {
