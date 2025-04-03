@@ -7,6 +7,9 @@ use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
 use Sunhill\Facades\Queries;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\IdentifierNode;
+use Sunhill\Query\QueryParser\OrderNode;
+use Sunhill\Query\Exceptions\InvalidOrderException;
 
 uses(SunhillTestCase::class);
 
@@ -134,68 +137,143 @@ test('limit: A node', function()
 // ============================ Order ===================================
 test('Order: Just two strings', function()
 {
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
+    
     $test = new Query();
     $test->order("a","ASC");
     
-    $ast = $test->getQueryNode();
-    expect($ast->order()->getType())->toBe('order');
-    expect($ast->order()->field())->toBe('a');
-    expect($ast->order()->direction())->toBe('asc');
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+        ->toBe('where:[],order:[a asc],group:[],offset:[],limit:[]');    
 });
 
 test('Order: Just a string (direction omitted)', function()
 {
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
+    
     $test = new Query();
     $test->order("a");
     
-    $ast = $test->getQueryNode();
-    expect($ast->order()->getType())->toBe('order');
-    expect($ast->order()->field())->toBe('a');
-    expect($ast->order()->direction())->toBe('asc');
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a asc],group:[],offset:[],limit:[]');
+});
+
+test('Order: Just a string with order statement', function()
+{
+    $result = new OrderNode();
+    $result->field(new IdentifierNode('a'));
+    $result->direction('desc');
+    Queries::shouldReceive('parseQueryString')->with("a desc")->once()->andReturn($result);
+    
+    $test = new Query();
+    $test->order("a desc");
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a desc],group:[],offset:[],limit:[]');
+});
+
+test('Order: stdclass with direction', function()
+{
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
+    
+    $test = new Query();
+    $return = new \stdClass(); 
+    $return->field = 'a'; 
+    $return->direction = 'desc';
+    $test->order($return);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a desc],group:[],offset:[],limit:[]');
+});
+
+test('Order: stdclass without direction', function()
+{
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
+    
+    $test = new Query();
+    $return = new \stdClass(); 
+    $return->field = 'a';
+    $test->order($return);
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a asc],group:[],offset:[],limit:[]');
 });
 
 test('Order: Callback returning a string with direction', function()
 {
+    $result = new OrderNode();
+    $result->field(new IdentifierNode('a'));
+    $result->direction('desc');
+    Queries::shouldReceive('parseQueryString')->with("a desc")->once()->andReturn($result);
+    
     $test = new Query();
     $test->order(function() { return "a desc"; });
     
-    $ast = $test->getQueryNode();
-    expect($ast->order()->getType())->toBe('order');
-    expect($ast->order()->field())->toBe('a');
-    expect($ast->order()->direction())->toBe('desc');
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a desc],group:[],offset:[],limit:[]');
 });
 
 test('Order: callback returning a string without direction', function()
 {
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
+    
     $test = new Query();
     $test->order(function() { return "a"; });
     
-    $ast = $test->getQueryNode();
-    expect($ast->order()->getType())->toBe('order');
-    expect($ast->order()->field())->toBe('a');
-    expect($ast->order()->direction())->toBe('asc');
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a asc],group:[],offset:[],limit:[]');
 });
 
 test('Order: callback returning a stdclass with direction', function()
 {
-    $test = new Query();
-    $test->order(function() { $return = new \stdClass(); $return->field = 'a'; $return->direction = 'desc'; });
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
     
-    $ast = $test->getQueryNode();
-    expect($ast->order()->getType())->toBe('order');
-    expect($ast->order()->field())->toBe('a');
-    expect($ast->order()->direction())->toBe('desc');
+    $test = new Query();
+    $test->order(function() 
+    { 
+        $return = new \stdClass(); 
+        $return->field = 'a'; 
+        $return->direction = 'desc';
+        
+        return $return;
+    });
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a desc],group:[],offset:[],limit:[]');
 });
 
 test('Order: callback returning a stdclass without direction', function()
 {
-    $test = new Query();
-    $test->order(function() { $return = new \stdClass(); $return->field = 'a'; });
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
     
-    $ast = $test->getQueryNode();
-    expect($ast->order()->getType())->toBe('order');
-    expect($ast->order()->field())->toBe('a');
-    expect($ast->order()->direction())->toBe('asc');
+    $test = new Query();
+    $test->order(function() 
+    { 
+        $return = new \stdClass(); 
+        $return->field = 'a';
+        
+        return $return;
+    });
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))
+    ->toBe('where:[],order:[a asc],group:[],offset:[],limit:[]');
 });
+
+test('Order: it fails when invalid direction is given', function()
+{
+    Queries::shouldReceive('parseQueryString')->with("a")->once()->andReturn(new IdentifierNode('a'));
+    
+    $test = new Query();
+    $test->order('a','invalid');    
+})->throws(InvalidOrderException::class);
+
 
 // ================================ fields ===================================
