@@ -130,7 +130,7 @@ test('analyze', function($tree, $expect, $expected_result)
             $result->arguments(new StringNode('ABC'));
             return $result;
         }, 'float', 'parameters'],
-    'function node with to many parameters'=>[ function()
+    'function node with too many parameters'=>[ function()
         {
             $result = new FunctionNode('sin');
             $params = new ArrayNode(new FloatNode('3.14'));
