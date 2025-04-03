@@ -14,6 +14,7 @@ use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Query\QueryParser\QueryNode;
+use Sunhill\Query\QueryParser\OrderNode;
 
 class DummyExecutor extends Executor
 {
@@ -42,6 +43,8 @@ class DummyExecutor extends Executor
                 return $ast->getValue();
             case FunctionNode::class:
                 return $ast->name().'('.$this->doExecute($ast->arguments()).')';
+            case OrderNode::class:
+                return $this->doExecute($ast->field()).' '.$ast->direction();
             case QueryNode::class:
                 return "where:[".$this->doExecute($ast->getWhere())."],".
                        "order:[".$this->doExecute($ast->order())."],".
