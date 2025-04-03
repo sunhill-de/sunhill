@@ -18,11 +18,12 @@ use Sunhill\Facades\Properties;
 use Sunhill\Basic\Base;
 use Sunhill\Query\Helpers\MethodSignature;
 use Sunhill\Query\QueryParser\QueryNode;
-use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Query\Exceptions\WrongActionException;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Query\QueryParser\QueryParser;
 use Sunhill\Facades\Queries;
+use Sunhill\Query\QueryParser\OrderNode;
+use Sunhill\Query\Exceptions\InvalidOrderException;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -45,12 +46,16 @@ class Query extends Base
     
     protected ?QueryNode $query_node = null;
     
-    public function __construct()
+    /**
+     * Initialized the signatures for the offset() method
+     * 
+     * @param unknown $node
+     */
+    private function initializeOffsetSignatures()
     {
-        $this->query_node = new QueryNode();
         $this->addMethod('offset')->addParameter('integer')->setAction(function(&$node, $offset)
         {
-            $node->offset(new IntegerNode($offset)); 
+            $node->offset(new IntegerNode($offset));
         });
         $this->addMethod('offset')->addParameter('callback')->setAction(function(&$node, $offset)
         {
@@ -58,14 +63,16 @@ class Query extends Base
         });
         $this->addMethod('offset')->addParameter('string')->setAction(function(&$node, $offset)
         {
-            $node->offset(Queries::parseQueryString($offset));   
+            $node->offset(Queries::parseQueryString($offset));
         });
         $this->addMethod('offset')->addParameter('node')->setAction(function(&$node, $offset)
         {
             $node->offset($offset);
-        });
-        
-        
+        });        
+    }
+    
+    private function initializeLimitSignatures()
+    {
         $this->addMethod('limit')->addParameter('integer')->setAction(function(&$node, $limit)
         {
             $node->limit(new IntegerNode($limit));
@@ -76,26 +83,66 @@ class Query extends Base
         });
         $this->addMethod('limit')->addParameter('string')->setAction(function(&$node, $limit)
         {
-            $parser = new QueryParser();
             $node->limit(Queries::parseQueryString($limit));
         });
         $this->addMethod('limit')->addParameter('node')->setAction(function(&$node, $limit)
         {
             $node->limit($limit);
+        });        
+    }
+    
+    private function initializeOrderSignatures()
+    {
+        $this->addMethod('order')->addParameter('callback')->setAction(function(&$node, $callback)
+        {
+            $this->order($callback());
         });
-        
         $this->addMethod('order')->addParameter('string')->setAction(function(&$node, $order)
         {
-             
+            $parsed = Queries::parseQueryString($order);
+            if (is_a($parsed, OrderNode::class)) {
+                $node->order($parsed);
+                return;
+            }
+            $new_node = new OrderNode();
+            $new_node->field($parsed);
+            $new_node->direction('asc');
+            
+            $node->order($new_node);
         });
         $this->addMethod('order')->addParameter('stdclass')->setAction(function(&$node, $order)
         {
+            if (!isset($order->field)) {
+                throw new InvalidOrderException("There is no field parameter in given stdclass");
+            }
+            if (!isset($order->direction)) {
+                $order->direction = 'asc';
+            }
+            $new_node = new OrderNode();
+            $new_node->field(Queries::parseQueryString($order->field));
+            $new_node->direction($order->direction);
             
+            $node->order($new_node);
         });
         $this->addMethod('order')->addParameter('string')->addParameter('string')->setAction(function(&$node, $order, $direction)
         {
-            
-        });
+            $new_node = new OrderNode();
+            $new_node->field( Queries::parseQueryString($order) );
+            $direction = strtolower($direction);
+            if (($direction !== 'asc') && ($direction !== 'desc')) {
+                throw new InvalidOrderException("The direction '$direction' is invalid");
+            }
+            $new_node->direction( $direction );
+            $node->order($new_node);
+        });        
+    }
+    
+    public function __construct()
+    {
+        $this->query_node = new QueryNode();
+        $this->initializeOffsetSignatures();
+        $this->initializeLimitSignatures();
+        $this->initializeOrderSignatures();        
     }
     
     /**
