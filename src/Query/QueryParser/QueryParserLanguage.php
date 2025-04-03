@@ -13,6 +13,7 @@
 namespace Sunhill\Query\QueryParser;
 
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
+use Sunhill\Parser\Nodes\Node;
 
 class QueryParserLanguage extends LanguageDescriptor
 {
@@ -32,6 +33,8 @@ class QueryParserLanguage extends LanguageDescriptor
         $this->addTerminal('and','&&');
         $this->addTerminal(')');
         $this->addOperator('(')->setType('bracket')->setPrecedence(150);
+        $this->addTerminal('asc');
+        $this->addTerminal('desc');
         
         $this->addOperator('||')
         ->setType('binary')
@@ -94,8 +97,22 @@ class QueryParserLanguage extends LanguageDescriptor
         $this->addRule('CONST', 'float')->setPriority(100);
         $this->addRule('CONST', 'string')->setPriority(100);
         $this->addRule('CONST', 'boolean')->setPriority(100);
-        
+        $this->addRule('ORDER_STATEMENT',['EXPRESSION','asc'])->setASTCallback(function(Node $field, $direction)
+        {
+           $result = new OrderNode();
+           $result->field($field);
+           $result->direction($direction);
+           return $result;
+        });        
+        $this->addRule('ORDER_STATEMENT',['EXPRESSION','desc'])->setASTCallback(function(Node $field, $direction)
+        {
+            $result = new OrderNode();
+            $result->field($field);
+            $result->direction($direction);
+            return $result;
+        });
         $this->addAcceptedSymbol('EXPRESSION');
+        $this->addAcceptedSymbol('ORDER_STATEMENT');
     }
     
     
