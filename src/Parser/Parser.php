@@ -158,7 +158,11 @@ class Parser extends Base
             array_unshift($parameters,array_pop($this->stack));
         }
         $new_element = new Token($left_hand);
-        $new_element->setAST($this->$execute(...$parameters));
+        if (is_callable($execute)) {
+            $new_element->setAST($execute(...$parameters));
+        } else {
+            $new_element->setAST($this->$execute(...$parameters));            
+        }
         $this->stack[] = $new_element;
     }
     
@@ -236,6 +240,7 @@ class Parser extends Base
             case 'string':
               return new StringNode($token->getValue());
             case 'identifier':
+            case 'ident':    
               return new IdentifierNode($token->getValue());
         }    
     }
