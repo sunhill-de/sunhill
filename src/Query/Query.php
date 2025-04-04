@@ -143,7 +143,7 @@ class Query extends Base
         {
             $node->fields(Queries::parseQueryString($fields));
         });
-        $this->addMethod('fields')->addParameter('array')->setAction(function(&$node, $fields)
+        $this->addMethod('fields')->addParameter('array of string')->setAction(function(&$node, $fields)
         {
             foreach ($fields as $field) {
                 $this->fields($field);
