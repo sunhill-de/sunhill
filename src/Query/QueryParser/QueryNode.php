@@ -8,12 +8,17 @@ class QueryNode extends Node
 {
     public function __construct()
     {
-        parent::__construct('query',['verb'=>'select','offset'=>null,'limit'=>null,'order'=>null,'group'=>null,'where'=>null]);   
+        parent::__construct('query',['fields'=>null,'verb'=>'select','offset'=>null,'limit'=>null,'order'=>null,'group'=>null,'where'=>null]);   
     }
     
     public function verb(?string $verb = null)
     {
-        return $this->handleReplacingChild('verb', $node);
+        return $this->handleReplacingChild('verb', $verb);
+    }
+
+    public function fields(?Node $fields = null)
+    {
+        return $this->handleReplacingChild('fields', $fields);    
     }
     
     public function offset(?Node $node = null)
