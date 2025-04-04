@@ -27,4 +27,14 @@ class IdentifierNode extends TerminalNode
     {
         return $this->getValue();
     }
+    
+    public function reference(?Node $reference = null)
+    {
+        return $this->handleReplacingChild('reference', $reference);
+    }
+    
+    public function parent(?Node $parent = null)
+    {
+        return $this->handleReplacingChild('parent', $parent);
+    }
 }
