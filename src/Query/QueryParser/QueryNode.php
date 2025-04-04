@@ -18,7 +18,7 @@ class QueryNode extends Node
 
     public function fields(?Node $fields = null)
     {
-        return $this->handleReplacingChild('fields', $fields);    
+        return $this->handleOptionalArrayChild('fields', $fields);    
     }
     
     public function offset(?Node $node = null)
