@@ -28,8 +28,9 @@ class DummyExecutor extends Executor
             case ArrayNode::class:
                 $result = '[';
                 $first = true;
-                for ($i=0;$i<$ast->getElementCount();$i++) {
+                for ($i=0;$i<$ast->elementCount();$i++) {
                     $result .= ($first?"":",").$this->doExecute($ast->getElement($i));
+                    $first = false;
                 }
                 return $result."]";
             case BinaryNode::class:
@@ -44,7 +45,7 @@ class DummyExecutor extends Executor
                 $reference = $ast->reference();                
                 return (is_null($reference)?'':'{'.$this->doExecute($reference).'}.').(is_null($parent)?'':'{'.$this->doExecute($parent).'}->').$ast->getValue();
             case FunctionNode::class:
-                return $ast->name().'('.$this->doExecute($ast->arguments()).')';
+                return $ast->name().'({'.$this->doExecute($ast->arguments()).'})';
             case OrderNode::class:
                 return $this->doExecute($ast->field()).' '.$ast->direction();
             case QueryNode::class:
