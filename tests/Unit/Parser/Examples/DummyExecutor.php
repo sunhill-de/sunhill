@@ -40,13 +40,17 @@ class DummyExecutor extends Executor
             case IntegerNode::class:
                 return strval($ast->getValue());
             case IdentifierNode::class:
-                return $ast->getValue();
+                $parent = $ast->parent();
+                $reference = $ast->reference();                
+                return (is_null($reference)?'':'{'.$this->doExecute($reference).'}.').(is_null($parent)?'':'{'.$this->doExecute($parent).'}->').$ast->getValue();
             case FunctionNode::class:
                 return $ast->name().'('.$this->doExecute($ast->arguments()).')';
             case OrderNode::class:
                 return $this->doExecute($ast->field()).' '.$ast->direction();
             case QueryNode::class:
-                return "where:[".$this->doExecute($ast->getWhere())."],".
+                return $ast->verb().','.
+                       "fields:[".$this->doExecute($ast->fields())."],".
+                       "where:[".$this->doExecute($ast->getWhere())."],".
                        "order:[".$this->doExecute($ast->order())."],".
                        "group:[".$this->doExecute($ast->group())."],".
                        "offset:[".$this->doExecute($ast->offset())."],".
