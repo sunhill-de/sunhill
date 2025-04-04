@@ -285,7 +285,7 @@ test('Fields: single field', function()
     $test->fields('a');
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[a],where:[],order:[a desc],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[a],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: qualified single field', function()
@@ -298,7 +298,7 @@ test('Fields: qualified single field', function()
     $test->fields('a');
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[sample.a],where:[],order:[a desc],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[sample.a],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: multiple fields', function()

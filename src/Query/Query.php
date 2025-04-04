@@ -136,13 +136,27 @@ class Query extends Base
             $node->order($new_node);
         });        
     }
-    
+
+    private function initializeFieldsSignatures()
+    {
+        $this->addMethod('fields')->addParameter('string')->setAction(function(&$node, $fields)
+        {
+            $node->fields(Queries::parseQueryString($fields));
+        });
+        $this->addMethod('fields')->addParameter('array')->setAction(function(&$node, $fields)
+        {
+            foreach ($fields as $field) {
+                $this->fields($field);
+            }
+        });
+    }
     public function __construct()
     {
         $this->query_node = new QueryNode();
         $this->initializeOffsetSignatures();
         $this->initializeLimitSignatures();
-        $this->initializeOrderSignatures();        
+        $this->initializeOrderSignatures();
+        $this->initializeFieldsSignatures();
     }
     
     /**
