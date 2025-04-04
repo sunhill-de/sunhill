@@ -10,6 +10,8 @@ use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Query\QueryParser\OrderNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
+use Sunhill\Parser\Nodes\ArrayNode;
+use Sunhill\Parser\Nodes\FunctionNode;
 
 uses(SunhillTestCase::class);
 
@@ -291,27 +293,54 @@ test('Fields: single field', function()
 test('Fields: qualified single field', function()
 {
     $return = new IdentifierNode('a');
-    $return->reference('sample');
+    $return->reference(new IdentifierNode('sample'));
     Queries::shouldReceive('parseQueryString')->with('sample.a')->once()->andReturn($return);
     
     $test = new Query();
-    $test->fields('a');
+    $test->fields('sample.a');
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[sample.a],where:[],order:[],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[{sample}.a],where:[],order:[],group:[],offset:[],limit:[]');
+});
+
+test('Fields: referenced single field', function()
+{
+    $return = new IdentifierNode('b');
+    $return->parent(new IdentifierNode('a'));
+    Queries::shouldReceive('parseQueryString')->with('a->b')->once()->andReturn($return);
+    
+    $test = new Query();
+    $test->fields('a->b');
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[{a}->b],where:[],order:[],group:[],offset:[],limit:[]');
+});
+
+test('Fields: function as single field', function()
+{
+    $return = new FunctionNode('sin');
+    $return->arguments(new IdentifierNode('a'));
+    Queries::shouldReceive('parseQueryString')->with('sin(a)')->once()->andReturn($return);
+    
+    $test = new Query();
+    $test->fields('sin(a)');
+    
+    $executor = new DummyExecutor();
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[sin({a})],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: multiple fields', function()
 {
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('b')->once()->andReturn(new IdentifierNode('b'));
-    Queries::shouldReceive('parseQueryString')->with('c')->once()->andReturn(new IdentifierNode('c'));
+    $return = new ArrayNode(new IdentifierNode('a'));
+    $return->addElement(new IdentifierNode('b'));
+    $return->addElement(new IdentifierNode('c'));
+    Queries::shouldReceive('parseQueryString')->with('a,b,c')->once()->andReturn($return);
     
     $test = new Query();
     $test->fields('a,b,c');
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[a,b,c],where:[],order:[a desc],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[a,b,c]],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: multiple fields passed as array', function()
@@ -324,7 +353,7 @@ test('Fields: multiple fields passed as array', function()
     $test->fields(['a','b','c']);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[a,b,c],where:[],order:[a desc],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[a,b,c]],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: multiple fields passed as collection', function()
@@ -337,6 +366,6 @@ test('Fields: multiple fields passed as collection', function()
     $test->fields(collect(['a','b','c']));
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[a,b,c],where:[],order:[a desc],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[a,b,c]],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
