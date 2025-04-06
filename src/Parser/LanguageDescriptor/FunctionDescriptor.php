@@ -161,4 +161,9 @@ class FunctionDescriptor extends Base
     {
         return $this->parameter_descriptors[$index];
     }
+    
+    public function getParameterDescriptors(): array
+    {
+        return $this->parameter_descriptors;
+    }
 }

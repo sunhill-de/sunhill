@@ -14,58 +14,15 @@ use Sunhill\Parser\Nodes\ArrayNode;
 
 uses(SunhillTestCase::class);
 
-test('getType', function($tree, $expected)
-{
-    $test = new DummyAnalyzer($tree());
-    expect(callProtectedMethod($test, 'getTypeOfNode', [$tree()]))->toBe($expected);
-})->with([
-    'simple integer node'=>[ function() { return new IntegerNode(10); }, 'integer'],
-    'simple float node'=>[ function() { return new FloatNode(1.23); }, 'float'],
-    'simple boolean node'=>[ function() { return new BooleanNode(true); }, 'boolean'],
-    'simple string node'=>[ function() { return new StringNode('abc'); }, 'string'],
-    'array node'=>[ function() { 
-       $result = new ArrayNode(new StringNode('abc'));
-       $result->addElement(new StringNode('def'));
-       return $result;
-    }, 'array'],
-    'identifier node'=>[ function() { return new IdentifierNode('test_int'); }, 'integer'],
-    'function node'=>[ function() { return new FunctionNode('sin'); }, 'float'],
-    'binary tree node'=>[ function() 
-    { 
-        $result = new BinaryNode('+');
-        $result->left(new IntegerNode(10));
-        $result->right(new IntegerNode(20));
-        return $result; 
-    }, 'integer'],
-    'invalid binary tree node'=>[ function()
-    {
-        $result = new BinaryNode('+');
-        $result->left(new StringNode('abc'));
-        $result->right(new IntegerNode(20));
-        return $result;
-    }, 'invalid'],
-    'unary tree node'=>[ function()
-    {
-        $result = new UnaryNode('-');
-        $result->child(new IntegerNode(10));
-        return $result;
-    }, 'integer'],
-    'invalid unary tree node'=>[ function()
-    {
-        $result = new UnaryNode('+');
-        $result->child(new IntegerNode(10));
-        return $result;
-    }, 'invalid'],
-    ]);
-
 test('analyze', function($tree, $expect, $expected_result) 
 {
    $test = new DummyAnalyzer($tree());
    $test->addAcceptedType($expect);
-   $result = 'success';
    try {
-       $test->analyze($tree());
+       $result = $test->analyze($tree());
    } catch (\Sunhill\Parser\Exceptions\TypesMismatchException $e) {
+       $result = 'type';
+   } catch (\Sunhill\Parser\Exceptions\TypeMismatchException $e) {
        $result = 'type';
    } catch (\Sunhill\Parser\Exceptions\FunctionNotFoundException $e) {
        $result = 'function';
@@ -78,21 +35,21 @@ test('analyze', function($tree, $expect, $expected_result)
    }
    expect($result)->toBe($expected_result);
 })->with([
-    'simple integer node'=>[ function() { return new IntegerNode(10); }, 'integer', 'success'],
-    'simple float node'=>[ function() { return new FloatNode(1.23); }, 'float', 'success'],
-    'simple boolean node'=>[ function() { return new BooleanNode(true); }, 'boolean', 'success'],
-    'simple string node'=>[ function() { return new StringNode('abc'); }, 'string', 'success'],
+    'simple integer node'=>[ function() { return new IntegerNode(10); }, 'integer', 'integer'],
+    'simple float node'=>[ function() { return new FloatNode(1.23); }, 'float', 'float'],
+    'simple boolean node'=>[ function() { return new BooleanNode(true); }, 'boolean', 'boolean'],
+    'simple string node'=>[ function() { return new StringNode('abc'); }, 'string', 'string'],
     'unexpected integer node'=>[ function() { return new IntegerNode(10); }, 'string', 'resulttype'],
     'array node'=>[ function() 
         {
             $result = new ArrayNode(new StringNode('abc'));
             $result->addElement(new StringNode('def'));
             return $result;
-        }, 'array', 'success'],
+        }, 'array', 'array'],
     'identifier node'=>[ function() 
         { 
             return new IdentifierNode('test_int'); 
-        }, 'integer', 'success'],
+        }, 'integer', 'integer'],
     'unknown identifier node'=>[ function()
         {
             return new IdentifierNode('unknown');
@@ -102,23 +59,23 @@ test('analyze', function($tree, $expect, $expected_result)
             $result = new FunctionNode('sin');
             $result->arguments(new FloatNode('3.14'));
             return $result;
-        }, 'float', 'success'],
+        }, 'float', 'float'],
      'function node with optional parameter given'=>[ function()
         {
-            $result = new FunctionNode('sin');
+            $result = new FunctionNode('test_function');
             $result->arguments(new StringNode('ABC'));
             return $result;
-        }, 'string', 'success'],
+        }, 'string', 'string'],
      'function node with optional parameter omitted'=>[ function()
         {
-            $result = new FunctionNode('sin');
+            $result = new FunctionNode('test_function');
             return $result;
-        }, 'string', 'success'],
+        }, 'string', 'string'],
      'function node with no parameters'=>[ function()
         {
             $result = new FunctionNode('time');
             return $result;
-        }, 'integer', 'success'],
+        }, 'integer', 'integer'],
     'function node with to less parameters'=>[ function()
         {
             $result = new FunctionNode('sin');
@@ -152,7 +109,7 @@ test('analyze', function($tree, $expect, $expected_result)
             $params->addElement(new StringNode('GHI'));
             $result->arguments($params);
             return $result;
-        }, 'string', 'success'],
+        }, 'string', 'string'],
      'ellipsis function node with too few parameter'=>[ function()
         {
             $result = new FunctionNode('test_ellipsis');
@@ -162,7 +119,7 @@ test('analyze', function($tree, $expect, $expected_result)
         }, 'string', 'parameters'],
      'mixed ellipsis function node'=>[ function()
         {
-            $result = new FunctionNode('test_ellipsis');
+            $result = new FunctionNode('test_mixedellipsis');
             $params = new ArrayNode(new IntegerNode(10));
             $params->addElement(new StringNode('ABC'));
             $params->addElement(new StringNode('DEF'));
@@ -170,7 +127,7 @@ test('analyze', function($tree, $expect, $expected_result)
             $params->addElement(new StringNode('JKL'));
             $result->arguments($params);
             return $result;
-        }, 'string', 'success'],
+        }, 'string', 'string'],
      'mixed ellipsis function node with too few parameter'=>[ function()
         {
             $result = new FunctionNode('test_mixedellipsis');
@@ -185,14 +142,14 @@ test('analyze', function($tree, $expect, $expected_result)
             $result->left(new IntegerNode(10));
             $result->right(new IntegerNode(20));
             return $result;
-        }, 'integer', 'success'],
+        }, 'integer', 'integer'],
      'binary node with mixed tree'=>[ function()
         {
             $result = new BinaryNode('+');
             $result->left(new IntegerNode(10));
             $result->right(new FloatNode(3.14));
             return $result;
-        }, 'float', 'success'],
+        }, 'float', 'float'],
     'binary node with wrong types'=>[ function()
         {
             $result = new BinaryNode('+');

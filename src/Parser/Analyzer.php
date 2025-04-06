@@ -30,6 +30,8 @@ use Sunhill\Parser\Exceptions\TypeNotExpectedException;
 use Sunhill\Parser\Exceptions\IdentifierNotFoundException;
 use Sunhill\Parser\Exceptions\FunctionNotFoundException;
 use Sunhill\Parser\Exceptions\FunctionParameterException;
+use Sunhill\Parser\Exceptions\InvalidOperatorException;
+use Sunhill\Parser\Exceptions\TypeMismatchException;
 
 class Analyzer extends Base
 {
@@ -121,6 +123,25 @@ class Analyzer extends Base
         return true;
     }
     
+    protected function analyzeBinaryNode(BinaryNode $node)
+    {
+        $this->analyzeNode($node->left());
+        $left_type = $this->getTypeOfNode($node->left());
+        $this->analyzeNode($node->right());
+        $right_type = $this->getTypeOfNode($node->right());
+        
+    }
+    
+    private function getBinarySignature($left, $right, $operator)
+    {
+        foreach ($this->accepted_operators[$operator] as $types) {
+            if ($this->typesMatch([$left,$right],$types)) {
+                return $types[2];
+            }
+        }
+        return 'invalid';
+    }
+    
     /**
      * Returns the type of the binary node
      * 
@@ -129,17 +150,82 @@ class Analyzer extends Base
      */
     protected function getTypeOfBinaryNode(BinaryNode $node)
     {
+        if (!isset($this->accepted_operators[$node->getType()])) {
+            throw new InvalidOperatorException("The operator ".$node->getType()." is not expected");
+        }
         $left = $this->getTypeOfNode($node->left());
         $right = $this->getTypeOfNode($node->right());
-        if (!isset($this->accepted_operators[$node->getType()])) {
-            // Exception
+        $type = $this->getBinarySignature($left, $right, $node->getType());
+        
+        if ($type == 'invalid') {
+            throw new TypeMismatchException("The operator ".$node->getType()." does not handle '$left' and '$right'");
         }
-        foreach ($this->accepted_operators[$node->getType()] as $types) {
-            if ($this->typesMatch([$left,$right],$types)) {
-                return $types[2];
+        return $type;
+    }
+    
+// =================================== Function handling ============================================    
+    private function buildExpectedParameters(FunctionDescriptor $descriptor): array
+    {
+        $result = $descriptor->getParameterDescriptors();
+        if ($descriptor->getUnlimitedParameters()) {
+            for ($i=0;$i<$descriptor->getMinimumParameterCount();$i++) {
+                $entry = new \stdClass();
+                $entry->type = $descriptor->getUnlimitedType();
+                $entry->optional = false;
+                $result[] = $entry;
+            }
+            $entry = new \stdClass();
+            $entry->type = $descriptor->getUnlimitedType();
+            $entry->optional = true;
+            $entry->dontshift = true;
+            $result[] = $entry;
+        }
+        return $result;
+    }
+    
+    private function buildGivenParameters(FunctionNode $node): array
+    {
+        $result = [];
+        for ($i=0;$i<$node->getArgumentCount();$i++) {
+            $result[] = $this->getTypeOfNode($node->getArgument($i));
+        }
+        return $result;        
+    }
+    
+    private function getExpectedParameter(&$expected)
+    {
+       $parameter = array_shift($expected);
+       if (isset($parameter->dontshift)) {
+           array_unshift($expected, $parameter);
+       }
+       return $parameter;
+    }
+    
+    private function checkParameters(FunctionNode $node, FunctionDescriptor $descriptor)
+    {
+        $expected = $this->buildExpectedParameters($descriptor);
+        $given = $this->buildGivenParameters($node);
+        while (!empty($given)) {
+            $given_parameter = array_shift($given);
+            $expected_parameter = $this->getExpectedParameter($expected);
+            if (is_null($expected_parameter)) {
+                throw new FunctionParameterException("Too many parameters.");
+            }
+            if (!$this->typeMatch($given_parameter,$expected_parameter->type)) {
+                throw new FunctionParameterException("Parameter type mismatch. Expected '".$expected_parameter->type."', got '$given_parameter'");
+            }            
+        }
+        if (!empty($expected)) {
+            $expected_parameter = $this->getExpectedParameter($expected);
+            if (!$expected_parameter->optional) {
+                throw new FunctionParameterException("Too few parameters. Expected ".$expected_parameter->type);
             }
         }
-        return 'invalid';
+    }
+    
+    protected function analyzeFunctionNode(FunctionNode $node, $descriptor)
+    {
+        $this->checkParameters($node, $descriptor);
     }
     
     private function tryToLookupFunctionDescriptor(FunctionNode $node): FunctionDescriptor|string
@@ -154,7 +240,7 @@ class Analyzer extends Base
         } 
         return $this->tryToLookupFunctionDescriptor($node);
     }
-    
+  
     /**
      * Returns the return type of the given function
      * 
@@ -164,10 +250,13 @@ class Analyzer extends Base
     protected function getTypeOfFunctionNode(FunctionNode $node)
     {
         if (($func = $this->getFunctionDescriptor($node)) === 'unknown') {
-            return 'unknown';
+            throw new FunctionNotFoundException("The function '".$node->name()."' was not found.");
         }
+        $this->analyzeFunctionNode($node, $func);
         return $func->getReturnType();        
     }
+
+ // ================================ Unary node ==============================================
     
     /**
      * Returns the type of the given unary node
@@ -189,6 +278,7 @@ class Analyzer extends Base
         return 'invalid';
     }
     
+// ================================== Identifier ================================================    
     protected function tryToLookupIdentifierType(string $identifier): string
     {
         return 'unknown';    
@@ -197,7 +287,10 @@ class Analyzer extends Base
     protected function getIdentifierType(IdentifierNode $node): string
     {
         if (!isset($this->predefined_identifiers[$node->getName()])) {
-            return $this->tryToLookupIdentifierType($node->getName());
+            $result = $this->tryToLookupIdentifierType($node->getName());
+            if ($result == 'unknown') {
+                throw new IdentifierNotFoundException("The identifier '".$node->getName()."' was not found.");                
+            }
         }
         return $this->predefined_identifiers[$node->getName()];
     }
@@ -212,6 +305,7 @@ class Analyzer extends Base
         if (isset($this->predefined_identifiers[$node->getName()])) {
             return $this->predefined_identifiers[$node->getName()];
         }
+        throw new IdentifierNotFoundException("The identifier '".$node->getName()."' was not found.");
     }
     
     protected function getTypeOfNode(Node $node)
@@ -251,105 +345,19 @@ class Analyzer extends Base
         
     }
     
-    protected function analyzeBinaryNode(BinaryNode $node)
+    protected function checkIsTypeAccepted(string $type)
     {
-        
-    }
-    
-    private function checkFunctionExistance(FunctionNode $node)
-    {
-        $descriptor = $this->getFunctionDescriptor($node);
-        if ($descriptor == 'unknown') {
-            throw new FunctionNotFoundException("The function '".$node->name()."' was not found.");
-        }
-        return $descriptor;
-    }
-    
-    private function checkUnlimitedParameters(FunctionNode $node, FunctionDescriptor $descriptor)
-    {
-        
-    }
-    
-    private function checkLimitedParameters(FunctionNode $node, FunctionDescriptor $descriptor)
-    {
-        if (($node->getArgumentCount() !== $descriptor->getTotalParameterCount())) {
-            throw new FunctionParameterException("Expected '".$descriptor->getTotalParameterCount()."' parameters, got ".$node->getArgumentCount());
-        }
-        for ($i=0;$i<$node->getArgumentCount();$i++) {
-            $given = $this->getTypeOfNode($node->getArgument($i));
-            $expected = $descriptor->getParameter($i)->type;
-            if (!$this->typeMatch($given, $expected)) {
-                throw new FunctionParameterException("The given type '$given', expected '$expected'");
-            }
-        }
-    }
-    
-    private function checkParameters(FunctionNode $node, FunctionDescriptor $descriptor)
-    {
-        if ($descriptor->getTotalParameterCount() == -1) {
-            $this->checkUnlimitedParameters($node, $descriptor);
-        } else {
-            $this->checkLimitedParameters($node, $descriptor);
-        }
-    }
-    
-    protected function analyzeFunctionNode(FunctionNode $node)
-    {
-        $descriptor = $this->checkFunctionExistance($node);
-        $this->checkParameters($node, $descriptor);
-    }
-    
-    protected function analyzeIdentifierNode(IdentifierNode $node)
-    {
-        $type = $this->getIdentifierType($node);
-        if ($type == 'unknown') {
-            throw new IdentifierNotFoundException("The identifier '".$node->getName()."' was not found.");
-        }
-    }
-    
-    protected function analyzeUnaryNode(UnaryNode $node)
-    {
-        
-    }
-    
-    protected function analyzeNode(Node $node)
-    {
-        switch ($node::class) {
-            case ArrayNode::class:
-                $this->analyzeArrayNode($node);
-                break;
-            case BinaryNode::class:
-                $this->analyzeBinaryNode($node);
-                break;
-            case FunctionNode::class:
-                $this->analyzeFunctionNode($node);
-                break;
-            case IdentifierNode::class:
-                $this->analyzeIdentifierNode($node);
-                break;
-            case UnaryNode::class:
-                $this->analyeUnaryNode($node);
-                break;
-            case BooleanNode::class:
-            case FloatNode::class:
-            case IntegerNode::class:
-            case StringNode::class:
-                // Constants don't have to be analyzed
-                break;
-        }
-    }
-    
-    protected function typeAccepted(Node $node)
-    {
-        if (!in_array($result = $this->getTypeOfNode($node), $this->accepted_types)) {
-            throw new TypeNotExpectedException("The type of the expression ($result) was not expected");
+        if (!in_array($type, $this->accepted_types)) {
+            throw new TypeNotExpectedException("The type of the expression ($type) was not expected");
         }
     }
     
     public function analyze(Node $root_node)
     {
-        $this->analyzeNode($root_node);
-        $this->typeAccepted($root_node);
+        $type = $this->getTypeOfNode($root_node); 
+        $this->checkIsTypeAccepted($type);
+        
+        return $type;
     }
 
 }
