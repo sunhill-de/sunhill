@@ -24,6 +24,10 @@ use Sunhill\Query\QueryParser\QueryParser;
 use Sunhill\Facades\Queries;
 use Sunhill\Query\QueryParser\OrderNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
+use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\UnaryNode;
+use Sunhill\Parser\Nodes\BooleanNode;
+use Sunhill\Parser\Nodes\FloatNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -150,6 +154,130 @@ class Query extends Base
             }
         });
     }
+    
+    private function addWhereCondition(QueryNode &$node, string $connection, $subnode)
+    {
+        if ($where_node = $node->getWhere()) {
+            $connect_node = new BinaryNode($connection);
+            $connect_node->left($where_node);
+            $connect_node->right($subnode);
+            $node->setWhere($connect_node);
+        } else {
+            $node->setWhere($subnode);
+        }
+    }
+        
+    private function initializeWhereSignatures()
+    {
+        // Signatures for where()
+        $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(Queries::parseQueryString($relation));
+            $this->addWhereCondition($node, '&&', $condition);
+        });
+        $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new IntegerNode($relation));
+            $this->addWhereCondition($node, '&&', $condition);
+        });
+        $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new FloatNode($relation));
+            $this->addWhereCondition($node, '&&', $condition);
+        });
+        $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new BooleanNode($relation));
+            $this->addWhereCondition($node, '&&', $condition);
+        });
+        
+        // Signatures for orWhere()
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(Queries::parseQueryString($relation));
+            $this->addWhereCondition($node, '||', $condition);
+        });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new IntegerNode($relation));
+            $this->addWhereCondition($node, '||', $condition);
+        });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new FloatNode($relation));
+            $this->addWhereCondition($node, '||', $condition);
+        });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new BooleanNode($relation));
+            $this->addWhereCondition($node, '||', $condition);
+        });
+        
+        // Signatures for whereNot()
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $operator, $relation)
+        {            
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(Queries::parseQueryString($relation));
+            $not_condition = new UnaryNode('!');
+            $not_condition->child($condition);
+            $this->addWhereCondition($node, '&&', $not_condition);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new IntegerNode($relation));
+            $not_condition = new UnaryNode('!');
+            $not_condition->child($condition);
+            $this->addWhereCondition($node, '&&', $not_condition);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new FloatNode($relation));
+            $not_condition = new UnaryNode('!');
+            $not_condition->child($condition);
+            $this->addWhereCondition($node, '&&', $not_condition);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(new BooleanNode($relation));
+            $not_condition = new UnaryNode('!');
+            $not_condition->child($condition);
+            $this->addWhereCondition($node, '&&', $not_condition);
+        });
+        
+        $this->addMethod('orWhereNot')->addParameter('string')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $condition = new BinaryNode($operator);
+            $condition->left(Queries::parseQueryString($field));
+            $condition->right(Queries::parseQueryString($relation));
+            $not_condition = new UnaryNode('!');
+            $not_condition->child($condition);
+            $this->addWhereCondition($node, '||', $not_condition);
+        });        
+    }
+    
     public function __construct()
     {
         $this->query_node = new QueryNode();
@@ -157,6 +285,7 @@ class Query extends Base
         $this->initializeLimitSignatures();
         $this->initializeOrderSignatures();
         $this->initializeFieldsSignatures();
+        $this->initializeWhereSignatures();
     }
     
     /**
@@ -213,9 +342,11 @@ class Query extends Base
         }
         foreach ($this->methods[$name] as $signature) {
             if ($signature->matches($arguments)) {
-                return $this->performAction($signature->getAction(), $arguments);
+                $this->performAction($signature->getAction(), $arguments);
+                return $this;
             }
         }
+        throw new \Exception("Method '$name' with this signature not found");
     }
 
     // Other statements
