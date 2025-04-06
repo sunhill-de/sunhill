@@ -15,6 +15,7 @@ use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Query\QueryParser\OrderNode;
+use Sunhill\Query\QueryParser\AliasNode;
 
 class DummyExecutor extends Executor
 {
@@ -25,6 +26,8 @@ class DummyExecutor extends Executor
             return "";
         }
         switch ($ast::class) {
+            case AliasNode::class:
+                return '{'.$this->doExecute($ast->expression()).'} as {'.$this->doExecute($ast->alias()).'}';
             case ArrayNode::class:
                 $result = '[';
                 $first = true;

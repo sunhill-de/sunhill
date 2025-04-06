@@ -28,5 +28,7 @@ test('Expression parser', function($input, $output)
     ['sin(x+2)+2','(sin({(x)+(2)}))+(2)'],
     ['[1,2,3]','[{1},{2},{3}]'],
     ['[1]','[{1}]'],
-    ['[1+ident]','[{(1)+(ident)}]']
+    ['[1+ident]','[{(1)+(ident)}]'],
+    ['a as alias','{a} as {alias}'],
+    ['sin(a)+2 as alias','{(sin({a}))+(2)} as {alias}'],
 ]);

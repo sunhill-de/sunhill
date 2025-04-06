@@ -31,6 +31,7 @@ class QueryParserLanguage extends LanguageDescriptor
         $this->addDefaultTerminal('IDENTIFIER');
         $this->addDefaultTerminal('STRING');
         
+        $this->addTerminal('as');
         $this->addTerminal('or','||');
         $this->addTerminal('and','&&');
         $this->addTerminal(')');
@@ -101,6 +102,10 @@ class QueryParserLanguage extends LanguageDescriptor
         $this->addRule('FACTOR','CONST')->setPriority(100);
         $this->addRule('FACTOR','VARIABLE')->setPriority(100);
         $this->addRule('FACTOR','FUNCTION')->setPriority(100);
+        $this->addRule('FACTOR',['EXPRESSION','as','ident'])->setPriority(100)->setASTCallback(function($factor,$as,$identifier)
+        {
+           return new AliasNode($factor->getAST(), new IdentifierNode($identifier->getValue())); 
+        });
         $this->addRule('FUNCTION',['ident','EXPRESSION'])->setPriority(100)->setASTCallback('functionHandler');
         $this->addRule('FUNCTION',['ident','(',')'])->setPriority(100)->setASTCallback('functionHandler');
         $this->addRule('VARIABLE',['ident','.','ident'])->setPriority(110)->setASTCallback(function($variable1, $dot, $variable2)
