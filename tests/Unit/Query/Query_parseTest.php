@@ -340,7 +340,7 @@ test('Fields: multiple fields', function()
     $test->fields('a,b,c');
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[a,b,c]],where:[],order:[],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[{a},{b},{c}]],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: multiple fields passed as array', function()
@@ -353,7 +353,7 @@ test('Fields: multiple fields passed as array', function()
     $test->fields(['a','b','c']);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[a,b,c]],where:[],order:[],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[{a},{b},{c}]],where:[],order:[],group:[],offset:[],limit:[]');
 });
 
 test('Fields: multiple fields passed as collection', function()
@@ -366,6 +366,6 @@ test('Fields: multiple fields passed as collection', function()
     $test->fields(collect(['a','b','c']));
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[a,b,c]],where:[],order:[],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[[{a},{b},{c}]],where:[],order:[],group:[],offset:[],limit:[]');
 });
 

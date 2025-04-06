@@ -47,9 +47,15 @@ test('getSignature with node', function()
     expect(MethodSignature::getSignature($test))->toBe('node');
 });
 
-test('getSignature with other object', function()
+test('getSignature with stdClass', function()
 {
     $test = new \stdClass();
+    expect(MethodSignature::getSignature($test))->toBe('stdclass');
+});
+
+test('getSignature with other class', function()
+{
+    $test = new MethodSignature();
     expect(MethodSignature::getSignature($test))->toBe('object');
 });
 

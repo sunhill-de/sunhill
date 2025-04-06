@@ -29,7 +29,7 @@ class DummyExecutor extends Executor
                 $result = '[';
                 $first = true;
                 for ($i=0;$i<$ast->elementCount();$i++) {
-                    $result .= ($first?"":",").$this->doExecute($ast->getElement($i));
+                    $result .= ($first?"":",")."{".$this->doExecute($ast->getElement($i))."}";
                     $first = false;
                 }
                 return $result."]";

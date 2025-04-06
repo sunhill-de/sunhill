@@ -15,6 +15,7 @@ namespace Sunhill\Query\QueryParser;
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\IdentifierNode;
+use Sunhill\Parser\Nodes\ArrayNode;
 
 class QueryParserLanguage extends LanguageDescriptor
 {
@@ -34,9 +35,12 @@ class QueryParserLanguage extends LanguageDescriptor
         $this->addTerminal('and','&&');
         $this->addTerminal(')');
         $this->addOperator('(')->setType('bracket')->setPrecedence(150);
+        $this->addTerminal(']');
+        $this->addOperator('[')->setType('bracket')->setPrecedence(150);
         $this->addTerminal('asc');
         $this->addTerminal('desc');
         $this->addTerminal('.');
+        $this->addTerminal(',');
         
         $this->addOperator('||')
         ->setType('binary')
@@ -119,6 +123,25 @@ class QueryParserLanguage extends LanguageDescriptor
             return $result;
         });
         $this->addRule('VARIABLE', 'ident')->setPriority(105);
+        $this->addRule('ARRAY',['[','LIST',']'])->setPriority(150)->setASTCallback(function($open, $expression, $close)
+        {
+            return $expression->getAST();
+        });
+        $this->addRule('ARRAY',['[','EXPRESSION',']'])->setPriority(150)->setASTCallback(function($open, $expression, $close)
+        {
+            $result = new ArrayNode($expression->getAST());
+            return $result;
+        });
+        $this->addRule('LIST',['LIST',',','EXPRESSION'])->setPriority(150)->setASTCallback(function($list,$komma,$expression)
+        {
+            return $list->getAST()->addElement($expression->getAST());
+        });
+        $this->addRule('LIST',['EXPRESSION',',','EXPRESSION'])->setPriority(150)->setASTCallback(function($expression1,$komma,$expression2)
+        {
+           $result = new ArrayNode($expression1->getAST());
+           $result->addElement($expression2->getAST());
+           return $result;
+        });
         $this->addRule('CONST', 'integer')->setPriority(100);
         $this->addRule('CONST', 'float')->setPriority(100);
         $this->addRule('CONST', 'string')->setPriority(100);
@@ -139,6 +162,8 @@ class QueryParserLanguage extends LanguageDescriptor
         });
         $this->addAcceptedSymbol('EXPRESSION');
         $this->addAcceptedSymbol('ORDER_STATEMENT');
+        $this->addAcceptedSymbol('ARRAY');
+        $this->addAcceptedSymbol('LIST');
     }
     
     
