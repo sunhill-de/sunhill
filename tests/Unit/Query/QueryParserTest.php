@@ -31,4 +31,5 @@ test('Expression parser', function($input, $output)
     ['[1+ident]','[{(1)+(ident)}]'],
     ['a as alias','{a} as {alias}'],
     ['sin(a)+2 as alias','{(sin({a}))+(2)} as {alias}'],
+    ['a.b->c as alias','{{{a}.b}->c} as {alias}'],
 ]);
