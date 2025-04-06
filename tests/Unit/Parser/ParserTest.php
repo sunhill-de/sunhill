@@ -317,7 +317,7 @@ test('Simple function [sin(3)]', function()
     $result = $test->parse($lexer);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("sin(3)");
+    expect($executor->execute($result))->toBe("sin({3})");
     
     expect($result->getType())->toBe('func');
     expect($result->name())->toBe('sin');
@@ -340,7 +340,7 @@ test('Simple function with no argument [sin()]', function()
     $result = $test->parse($lexer);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("sin()");
+    expect($executor->execute($result))->toBe("sin({})");
     
     expect($result->getType())->toBe('func');
     expect($result->name())->toBe('sin');
@@ -365,7 +365,7 @@ test('Function in sum [sin(4)+3]', function()
     $result = $test->parse($lexer);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(sin(4))+(3)");
+    expect($executor->execute($result))->toBe("(sin({4}))+(3)");
     
     expect($result->getType())->toBe('+');
     expect($result->left()->name())->toBe('sin');
