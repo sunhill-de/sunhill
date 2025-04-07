@@ -24,54 +24,30 @@ test('Empty query', function()
         ->toBe('select,fields:[],where:[],order:[],group:[],offset:[],limit:[]');    
 });
 
-test('Signature', function($function, $mocks, $params, $expect)
+test('Offset signatures', function($input, $expect)
 {
-    foreach ($mocks as $call => $return) {
-        if (is_scalar($return)) {
-            Queries::shouldReceive('parseQueryString')->with($call)->once()->andReturn(new $return($call));
-        } else {
-            Queries::shouldReceive('parseQueryString')->with($call)->once()->andReturn($return());            
-        }
-    }
+    $node = new BinaryNode('+');
+    $node->left(new IntegerNode(5));
+    $node->right(new IntegerNode(3));
+    Queries::shouldReceive('parseQueryString')->with('5+3')->andReturn($node);
+    Queries::shouldReceive('parseQueryString')->with("5")->andReturn(new IntegerNode(5));
+    Queries::shouldReceive('parseQueryString')->with("'5'")->andReturn(new StringNode("5"));
     
     $test = new Query();
-    $test->$function(...$params);
+    $test->offset($input);
     
     $executor = new DummyExecutor();
+    $expect = str_replace('*',$expect,'select,fields:[],where:[],order:[],group:[],offset:[*],limit:[]');
+    
     expect($executor->execute($test->getQueryNode()))->toBe($expect);
 })->with(
     [
-    // ================================ offset ========================================
-        'Offset: Just a simple integer'=>[
-            'offset', 
-            [], 
-            [5],             
-            'select,fields:[],where:[],order:[],group:[],offset:[5],limit:[]'            
-        ],        
-        'Offset: A callback'=>[
-            'offset', 
-            [], 
-            [function() { return 5; }], 
-            'select,fields:[],where:[],order:[],group:[],offset:[5],limit:[]'
-        ],
-        'Offset: An expression'=>[
-            'offset',
-            ['5+3'=>function() {
-               $node = new BinaryNode('+');
-               $node->left(new IntegerNode(5));
-               $node->right(new IntegerNode(3));
-               return $node;
-            }], 
-            ["5+3"], 
-            'select,fields:[],where:[],order:[],group:[],offset:[(5)+(3)],limit:[]'
-         ],
-        'Offset: An string expression'=>[
-            'offset',
-            ["'5'"=>function() { return new StringNode('5'); }],
-            ["'5'"],
-            'select,fields:[],where:[],order:[],group:[],offset:["5"],limit:[]'
-        ],
-     ]);
+        'simple integer'=>[5,'5'],
+        'callback'=>[function() { return 5; },'5'],
+        'expression'=>['5+3', '(5)+(3)'],
+        'integer expression'=>["5", '5'] ,       
+        'string'=>["'5'", '"5"']
+        ]);
 
 test('Offset: A node', function()
 {
@@ -84,59 +60,39 @@ test('Offset: A node', function()
 });
 
 // ================================ limit ========================================
-test('limit: Just a simple integer', function()
-{
-    $test = new Query();
-    $test->limit(5);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))
-    ->toBe('select,fields:[],where:[],order:[],group:[],offset:[],limit:[5]');
-});
-
-test('limit: A callback', function()
-{
-    $test = new Query();
-    $test->limit(function() { return 5; });
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))
-    ->toBe('select,fields:[],where:[],order:[],group:[],offset:[],limit:[5]');
-});
-
-test('limit: An expression', function()
+test('Limit signatures', function($input, $expect)
 {
     $node = new BinaryNode('+');
     $node->left(new IntegerNode(5));
     $node->right(new IntegerNode(3));
-    Queries::shouldReceive('parseQueryString')->with("5+3")->once()->andReturn($node);
+    Queries::shouldReceive('parseQueryString')->with('5+3')->andReturn($node);
+    Queries::shouldReceive('parseQueryString')->with("5")->andReturn(new IntegerNode(5));
+    Queries::shouldReceive('parseQueryString')->with("'5'")->andReturn(new StringNode("5"));
+    
     $test = new Query();
-    $test->limit("5+3");
+    $test->limit($input);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))
-    ->toBe('select,fields:[],where:[],order:[],group:[],offset:[],limit:[(5)+(3)]');
-});
+    $expect = str_replace('*',$expect,'select,fields:[],where:[],order:[],group:[],offset:[],limit:[*]');
+    
+    expect($executor->execute($test->getQueryNode()))->toBe($expect);
+})->with(
+    [
+        'simple integer'=>[5,'5'],
+        'callback'=>[function() { return 5; },'5'],
+        'expression'=>['5+3', '(5)+(3)'],
+        'integer expression'=>["5", '5'] ,
+        'string'=>["'5'", '"5"']
+        ]);
 
-test('limit: An string expression', function()
-{
-    Queries::shouldReceive('parseQueryString')->with("'5'")->once()->andReturn(new StringNode("5"));
-    $test = new Query();
-    $test->limit("'5'");
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))
-    ->toBe('select,fields:[],where:[],order:[],group:[],offset:[],limit:["5"]');
-});
-
-test('limit: A node', function()
+test('Limit: A node', function()
 {
     $test = new Query();
-    $test->limit(new IntegerNode(5));
+    $test->offset(new IntegerNode(5));
     
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))
-    ->toBe('select,fields:[],where:[],order:[],group:[],offset:[],limit:[5]');
+    $ast = $test->getQueryNode();
+    expect($ast->offset()->getType())->toBe('integer');
+    expect($ast->offset()->getValue())->toBe(5);
 });
 
 // ============================ Order ===================================
@@ -373,174 +329,100 @@ test('Fields: multiple fields passed as collection', function()
 });
 
 // ===================================== Where ========================================================
-test('Where: simple relation', function()
+test('Simple where signatures', function($where, $input, $expect)
 {
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));    
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
+    $expression1 = new BinaryNode('>');
+    $expression1->left(new IdentifierNode('a'));
+    $expression1->right(new IntegerNode(5));
+    Queries::shouldReceive('parseQueryString')->with('a>5')->andReturn($expression1);
+    $expression2 = new BinaryNode('+');
+    $function = new FunctionNode('sin');
+    $function->arguments(new IdentifierNode('a'));
+    $expression2->left($function);
+    $expression2->right(new IntegerNode(2));
+    Queries::shouldReceive('parseQueryString')->with('sin(a)+2')->andReturn($expression2);
+    Queries::shouldReceive('parseQueryString')->with('a')->andReturn(new IdentifierNode('a'));
+    Queries::shouldReceive('parseQueryString')->with('abc')->andReturn(new StringNode('abc'));
     
     $test = new Query();
-    $test->where('a','=','abc');
+    $test->$where(...$input);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=("abc")],order:[],group:[],offset:[],limit:[]');    
-});
+    $expect = str_replace('*',$expect, 'select,fields:[],where:[*],order:[],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe($expect);    
+})->with(
+    [
+        'where with 3 strings'=>['where',['a','=','abc'],'(a)=("abc")'],
+        'where with 2 string and 1 integer'=>['where',['a','=',1],'(a)=(1)'],
+        'where with 2 string and 1 float'=>['where',['a','=',1.23],'(a)=(1.23)'],
+        'where with 2 string and 1 boolean'=>['where',['a','=',true],'(a)=(true)'],
+        'where with 2 strings'=>['where',['a','abc'],'(a)=("abc")'],
+        'where with 1 string and 1 integer'=>['where',['a',1],'(a)=(1)'],
+        'where with 1 string and 1 float'=>['where',['a',1.23],'(a)=(1.23)'],
+        'where with 1 string and 1 boolean'=>['where',['a',true],'(a)=(true)'],
+        'where with 1 string (implicit boolean)'=>['where',['a'],'a'],
+        'where with 1 string (expression)'=>['where',['sin(a)+2'],'(sin({a}))+(2)'],
+        'where with 1 string (boolean expression)'=>['where',['a>5'],'(a)>(5)'],
+        'where with 3 callbacks'=>['where',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'(a)=("abc")'],
+        
+        'orWhere with 3 strings'=>['orWhere',['a','=','abc'],'(a)=("abc")'],
+        'orWhere with 2 string and 1 integer'=>['orWhere',['a','=',1],'(a)=(1)'],
+        'orWhere with 2 string and 1 float'=>['orWhere',['a','=',1.23],'(a)=(1.23)'],
+        'orWhere with 2 string and 1 boolean'=>['orWhere',['a','=',true],'(a)=(true)'],
+        'orWhere with 2 strings'=>['orWhere',['a','abc'],'(a)=("abc")'],
+        'orWhere with 1 string and 1 integer'=>['orWhere',['a',1],'(a)=(1)'],
+        'orWhere with 1 string and 1 float'=>['orWhere',['a',1.23],'(a)=(1.23)'],
+        'orWhere with 1 string and 1 boolean'=>['orWhere',['a',true],'(a)=(true)'],
+        'orWhere with 1 string (implicit boolean)'=>['orWhere',['a'],'a'],
+        'orWhere with 1 string (expression)'=>['orWhere',['sin(a)+2'],'(sin({a}))+(2)'],
+        'orWhere with 1 string (boolean expression)'=>['orWhere',['a>5'],'(a)>(5)'],
+        'orWhere with 3 callbacks'=>['orWhere',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'(a)=("abc")'],
+        
+        'whereNot with 3 string'=>['whereNot',['a','=','abc'],'!((a)=("abc"))'],
+        'whereNot with 2 strings and 1 integer'=>['whereNot',['a','=',1],'!((a)=(1))'],
+        'whereNot with 2 strings and 1 float'=>['whereNot',['a','=',1.23],'!((a)=(1.23))'],
+        'whereNot with 2 strings and 1 boolean'=>['whereNot',['a','=',true],'!((a)=(true))'],
+        'whereNot with 2 string'=>['whereNot',['a','abc'],'!((a)=("abc"))'],
+        'whereNot with 1 strings and 1 integer'=>['whereNot',['a',1],'!((a)=(1))'],
+        'whereNot with 1 strings and 1 float'=>['whereNot',['a',1.23],'!((a)=(1.23))'],
+        'whereNot with 1 strings and 1 boolean'=>['whereNot',['a',true],'!((a)=(true))'],
+        'whereNot with 1 string (implicit boolean)'=>['whereNot',['a'],'!(a)'],
+        'whereNot with 1 string (expression)'=>['whereNot',['sin(a)+2'],'!((sin({a}))+(2))'],
+        'whereNot with 1 string (boolean expression)'=>['whereNot',['a>5'],'!((a)>(5))'],
+        'whereNot with 3 callbacks'=>['whereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'!((a)=("abc"))'],
+        
+        'orWhereNot with 3 strings'=>['orWhereNot',['a','=','abc'],'!((a)=("abc"))'],
+        'orWhereNot with 2 strings and 1 integer'=>['orWhereNot',['a','=',1],'!((a)=(1))'],
+        'orWhereNot with 2 strings and 1 float'=>['orWhereNot',['a','=',1.23],'!((a)=(1.23))'],
+        'orWhereNot with 2 strings and 1 boolean'=>['orWhereNot',['a','=',true],'!((a)=(true))'],
+        'orWhereNot with 2 strings'=>['orWhereNot',['a','abc'],'!((a)=("abc"))'],
+        'orWhereNot with 1 strings and 1 integer'=>['orWhereNot',['a',1],'!((a)=(1))'],
+        'orWhereNot with 1 strings and 1 float'=>['orWhereNot',['a',1.23],'!((a)=(1.23))'],
+        'orWhereNot with 1 strings and 1 boolean'=>['orWhereNot',['a',true],'!((a)=(true))'],
+        'orWhereNot with 1 string (implicit boolean)'=>['orWhereNot',['a'],'!(a)'],
+        'orWhereNot with 1 string (expression)'=>['orWhereNot',['sin(a)+2'],'!((sin({a}))+(2))'],
+        'orWhereNot with 1 string (boolean expression)'=>['orWhereNot',['a>5'],'!((a)>(5))'],
+        'orWhereNot with 3 callbacks'=>['orWhereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'!((a)=("abc"))'],
+        ]
+    );
 
-test('Where: simple relation with integer', function()
+test('combined where signatures', function($where, $input, $expect)
 {
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
+    Queries::shouldReceive('parseQueryString')->with('a')->andReturn(new IdentifierNode('a'));
+    Queries::shouldReceive('parseQueryString')->with('abc')->andReturn(new StringNode('abc'));
+    Queries::shouldReceive('parseQueryString')->with('b')->andReturn(new IdentifierNode('b'));
+    Queries::shouldReceive('parseQueryString')->with('def')->andReturn(new StringNode('def'));
     
     $test = new Query();
-    $test->where('a','=',123);
+    $test->where('a','=','abc')->$where(...$input);
     
     $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=(123)],order:[],group:[],offset:[],limit:[]');
-});
-
-
-test('Where: simple relation with float', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    
-    $test = new Query();
-    $test->where('a','=',1.23);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=(1.23)],order:[],group:[],offset:[],limit:[]');
-});
-
-
-test('Where: simple relation with boolean', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    
-    $test = new Query();
-    $test->where('a','=',true);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=(true)],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: orwhere simple relation', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    
-    $test = new Query();
-    $test->orWhere('a','=','abc');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=("abc")],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: orwhere simple relation with integer', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    
-    $test = new Query();
-    $test->orWhere('a','=',123);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=(123)],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: orwhere simple relation with float', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    
-    $test = new Query();
-    $test->orWhere('a','=',1.23);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=(1.23)],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: orwhere simple relation with boolean', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    
-    $test = new Query();
-    $test->orWhere('a','=',true);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[(a)=(true)],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: whereNot simple relation', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    
-    $test = new Query();
-    $test->whereNot('a','=','abc');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[!((a)=("abc"))],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: orWhereNot simple relation', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    
-    $test = new Query();
-    $test->orWhereNot('a','=','abc');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[!((a)=("abc"))],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: two where relations', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    Queries::shouldReceive('parseQueryString')->with('b')->once()->andReturn(new IdentifierNode('b'));
-    Queries::shouldReceive('parseQueryString')->with('def')->once()->andReturn(new StringNode('def'));
-    
-    $test = new Query();
-    $test->where('a','=','abc')->where('b','>','def');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[((a)=("abc"))&&((b)>("def"))],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: where and orWhere (simple condition)', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    Queries::shouldReceive('parseQueryString')->with('b')->once()->andReturn(new IdentifierNode('b'));
-    Queries::shouldReceive('parseQueryString')->with('def')->once()->andReturn(new StringNode('def'));
-    
-    $test = new Query();
-    $test->where('a','=','abc')->orWhere('b','>','def');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[((a)=("abc"))||((b)>("def"))],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: where and notWhere (simple condition)', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    Queries::shouldReceive('parseQueryString')->with('b')->once()->andReturn(new IdentifierNode('b'));
-    Queries::shouldReceive('parseQueryString')->with('def')->once()->andReturn(new StringNode('def'));
-    
-    $test = new Query();
-    $test->where('a','=','abc')->whereNot('b','>','def');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[((a)=("abc"))&&(!((b)>("def")))],order:[],group:[],offset:[],limit:[]');
-});
-
-test('Where: where and orNotWhere (simple condition)', function()
-{
-    Queries::shouldReceive('parseQueryString')->with('a')->once()->andReturn(new IdentifierNode('a'));
-    Queries::shouldReceive('parseQueryString')->with('abc')->once()->andReturn(new StringNode('abc'));
-    Queries::shouldReceive('parseQueryString')->with('b')->once()->andReturn(new IdentifierNode('b'));
-    Queries::shouldReceive('parseQueryString')->with('def')->once()->andReturn(new StringNode('def'));
-    
-    $test = new Query();
-    $test->where('a','=','abc')->orWhereNot('b','>','def');
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[],where:[((a)=("abc"))||(!((b)>("def")))],order:[],group:[],offset:[],limit:[]');
-});
+    $expect = str_replace('*',$expect, 'select,fields:[],where:[((a)=("abc"))*],order:[],group:[],offset:[],limit:[]');
+    expect($executor->execute($test->getQueryNode()))->toBe($expect);    
+})->with(
+    [
+        'where'=>['where',['b','=','def'],'&&((b)=("def"))'],
+        'orWhere'=>['orWhere',['b','=','def'],'||((b)=("def"))'],
+        'whereNot'=>['whereNot',['b','=','def'],'&&(!((b)=("def")))'],
+        'orWhereNot'=>['orWhereNot',['b','=','def'],'||(!((b)=("def")))'],
+    ]);
