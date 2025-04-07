@@ -408,21 +408,78 @@ test('Simple where signatures', function($where, $input, $expect)
 
 test('combined where signatures', function($where, $input, $expect)
 {
+    $expression1 = new BinaryNode('>');
+    $expression1->left(new IdentifierNode('a'));
+    $expression1->right(new IntegerNode(5));
+    Queries::shouldReceive('parseQueryString')->with('a>5')->andReturn($expression1);
+    $expression2 = new BinaryNode('+');
+    $function = new FunctionNode('sin');
+    $function->arguments(new IdentifierNode('a'));
+    $expression2->left($function);
+    $expression2->right(new IntegerNode(2));
+    Queries::shouldReceive('parseQueryString')->with('sin(a)+2')->andReturn($expression2);
     Queries::shouldReceive('parseQueryString')->with('a')->andReturn(new IdentifierNode('a'));
     Queries::shouldReceive('parseQueryString')->with('abc')->andReturn(new StringNode('abc'));
     Queries::shouldReceive('parseQueryString')->with('b')->andReturn(new IdentifierNode('b'));
     Queries::shouldReceive('parseQueryString')->with('def')->andReturn(new StringNode('def'));
     
     $test = new Query();
-    $test->where('a','=','abc')->$where(...$input);
+    $test->where('b','=','def')->$where(...$input);
     
     $executor = new DummyExecutor();
-    $expect = str_replace('*',$expect, 'select,fields:[],where:[((a)=("abc"))*],order:[],group:[],offset:[],limit:[]');
+    $expect = str_replace('*',$expect, 'select,fields:[],where:[((b)=("def"))*],order:[],group:[],offset:[],limit:[]');
     expect($executor->execute($test->getQueryNode()))->toBe($expect);    
 })->with(
     [
-        'where'=>['where',['b','=','def'],'&&((b)=("def"))'],
-        'orWhere'=>['orWhere',['b','=','def'],'||((b)=("def"))'],
-        'whereNot'=>['whereNot',['b','=','def'],'&&(!((b)=("def")))'],
-        'orWhereNot'=>['orWhereNot',['b','=','def'],'||(!((b)=("def")))'],
-    ]);
+        'where with 3 strings'=>['where',['a','=','abc'],'&&((a)=("abc"))'],
+        'where with 2 string and 1 integer'=>['where',['a','=',1],'&&((a)=(1))'],
+        'where with 2 string and 1 float'=>['where',['a','=',1.23],'&&((a)=(1.23))'],
+        'where with 2 string and 1 boolean'=>['where',['a','=',true],'&&((a)=(true))'],
+        'where with 2 strings'=>['where',['a','abc'],'&&((a)=("abc"))'],
+        'where with 1 string and 1 integer'=>['where',['a',1],'&&((a)=(1))'],
+        'where with 1 string and 1 float'=>['where',['a',1.23],'&&((a)=(1.23))'],
+        'where with 1 string and 1 boolean'=>['where',['a',true],'&&((a)=(true))'],
+        'where with 1 string (implicit boolean)'=>['where',['a'],'&&(a)'],
+        'where with 1 string (expression)'=>['where',['sin(a)+2'],'&&((sin({a}))+(2))'],
+        'where with 1 string (boolean expression)'=>['where',['a>5'],'&&((a)>(5))'],
+        'where with 3 callbacks'=>['where',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'&&((a)=("abc"))'],
+        
+        'orWhere with 3 strings'=>['orWhere',['a','=','abc'],'||((a)=("abc"))'],
+        'orWhere with 2 string and 1 integer'=>['orWhere',['a','=',1],'||((a)=(1))'],
+        'orWhere with 2 string and 1 float'=>['orWhere',['a','=',1.23],'||((a)=(1.23))'],
+        'orWhere with 2 string and 1 boolean'=>['orWhere',['a','=',true],'||((a)=(true))'],
+        'orWhere with 2 strings'=>['orWhere',['a','abc'],'||((a)=("abc"))'],
+        'orWhere with 1 string and 1 integer'=>['orWhere',['a',1],'||((a)=(1))'],
+        'orWhere with 1 string and 1 float'=>['orWhere',['a',1.23],'||((a)=(1.23))'],
+        'orWhere with 1 string and 1 boolean'=>['orWhere',['a',true],'||((a)=(true))'],
+        'orWhere with 1 string (implicit boolean)'=>['orWhere',['a'],'||(a)'],
+        'orWhere with 1 string (expression)'=>['orWhere',['sin(a)+2'],'||((sin({a}))+(2))'],
+        'orWhere with 1 string (boolean expression)'=>['orWhere',['a>5'],'||((a)>(5))'],
+        'orWhere with 3 callbacks'=>['orWhere',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'||((a)=("abc"))'],
+        
+        'whereNot with 3 string'=>['whereNot',['a','=','abc'],'&&(!((a)=("abc")))'],
+        'whereNot with 2 strings and 1 integer'=>['whereNot',['a','=',1],'&&(!((a)=(1)))'],
+        'whereNot with 2 strings and 1 float'=>['whereNot',['a','=',1.23],'&&(!((a)=(1.23)))'],
+        'whereNot with 2 strings and 1 boolean'=>['whereNot',['a','=',true],'&&(!((a)=(true)))'],
+        'whereNot with 2 string'=>['whereNot',['a','abc'],'&&(!((a)=("abc")))'],
+        'whereNot with 1 strings and 1 integer'=>['whereNot',['a',1],'&&(!((a)=(1)))'],
+        'whereNot with 1 strings and 1 float'=>['whereNot',['a',1.23],'&&(!((a)=(1.23)))'],
+        'whereNot with 1 strings and 1 boolean'=>['whereNot',['a',true],'&&(!((a)=(true)))'],
+        'whereNot with 1 string (implicit boolean)'=>['whereNot',['a'],'&&(!(a))'],
+        'whereNot with 1 string (expression)'=>['whereNot',['sin(a)+2'],'&&(!((sin({a}))+(2)))'],
+        'whereNot with 1 string (boolean expression)'=>['whereNot',['a>5'],'&&(!((a)>(5)))'],
+        'whereNot with 3 callbacks'=>['whereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'&&(!((a)=("abc")))'],
+        
+        'orWhereNot with 3 strings'=>['orWhereNot',['a','=','abc'],'||(!((a)=("abc")))'],
+        'orWhereNot with 2 strings and 1 integer'=>['orWhereNot',['a','=',1],'||(!((a)=(1)))'],
+        'orWhereNot with 2 strings and 1 float'=>['orWhereNot',['a','=',1.23],'||(!((a)=(1.23)))'],
+        'orWhereNot with 2 strings and 1 boolean'=>['orWhereNot',['a','=',true],'||(!((a)=(true)))'],
+        'orWhereNot with 2 strings'=>['orWhereNot',['a','abc'],'||(!((a)=("abc")))'],
+        'orWhereNot with 1 strings and 1 integer'=>['orWhereNot',['a',1],'||(!((a)=(1)))'],
+        'orWhereNot with 1 strings and 1 float'=>['orWhereNot',['a',1.23],'||(!((a)=(1.23)))'],
+        'orWhereNot with 1 strings and 1 boolean'=>['orWhereNot',['a',true],'||(!((a)=(true)))'],
+        'orWhereNot with 1 string (implicit boolean)'=>['orWhereNot',['a'],'||(!(a))'],
+        'orWhereNot with 1 string (expression)'=>['orWhereNot',['sin(a)+2'],'||(!((sin({a}))+(2)))'],
+        'orWhereNot with 1 string (boolean expression)'=>['orWhereNot',['a>5'],'||(!((a)>(5)))'],
+        'orWhereNot with 3 callbacks'=>['orWhereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'||(!((a)=("abc")))'],
+        ]);
