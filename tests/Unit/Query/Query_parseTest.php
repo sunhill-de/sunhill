@@ -445,7 +445,8 @@ test('combined where signatures', function($where, $input, $expect)
         'where with 1 string (expression)'=>['where',['sin(a)+2'],'&&((sin({a}))+(2))'],
         'where with 1 string (boolean expression)'=>['where',['a>5'],'&&((a)>(5))'],
         'where with 3 callbacks'=>['where',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'&&((a)=("abc"))'],
-
+        'where with 1 callback'=>['where',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '&&(((a)=(1))&&((b)=(2)))'],
+        
         'orWhere with 3 strings'=>['orWhere',['a','=','abc'],'||((a)=("abc"))'],
         'orWhere with 2 string and 1 integer'=>['orWhere',['a','=',1],'||((a)=(1))'],
         'orWhere with 2 string and 1 float'=>['orWhere',['a','=',1.23],'||((a)=(1.23))'],
@@ -460,6 +461,7 @@ test('combined where signatures', function($where, $input, $expect)
         'orWhere with 1 string (expression)'=>['orWhere',['sin(a)+2'],'||((sin({a}))+(2))'],
         'orWhere with 1 string (boolean expression)'=>['orWhere',['a>5'],'||((a)>(5))'],
         'orWhere with 3 callbacks'=>['orWhere',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'||((a)=("abc"))'],
+        'orWhere with 1 callback'=>['orWhere',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '||(((a)=(1))&&((b)=(2)))'],
         
         'whereNot with 3 string'=>['whereNot',['a','=','abc'],'&&(!((a)=("abc")))'],
         'whereNot with 2 strings and 1 integer'=>['whereNot',['a','=',1],'&&(!((a)=(1)))'],
@@ -475,6 +477,7 @@ test('combined where signatures', function($where, $input, $expect)
         'whereNot with 1 string (expression)'=>['whereNot',['sin(a)+2'],'&&(!((sin({a}))+(2)))'],
         'whereNot with 1 string (boolean expression)'=>['whereNot',['a>5'],'&&(!((a)>(5)))'],
         'whereNot with 3 callbacks'=>['whereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'&&(!((a)=("abc")))'],
+        'whereNot with 1 callback'=>['whereNot',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '&&(!(((a)=(1))&&((b)=(2))))'],
         
         'orWhereNot with 3 strings'=>['orWhereNot',['a','=','abc'],'||(!((a)=("abc")))'],
         'orWhereNot with 2 strings and 1 integer'=>['orWhereNot',['a','=',1],'||(!((a)=(1)))'],
@@ -490,6 +493,7 @@ test('combined where signatures', function($where, $input, $expect)
         'orWhereNot with 1 string (expression)'=>['orWhereNot',['sin(a)+2'],'||(!((sin({a}))+(2)))'],
         'orWhereNot with 1 string (boolean expression)'=>['orWhereNot',['a>5'],'||(!((a)>(5)))'],
         'orWhereNot with 3 callbacks'=>['orWhereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'||(!((a)=("abc")))'],
+        'orWhereNot with 1 callback'=>['orWhereNot',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '||(!(((a)=(1))&&((b)=(2))))'],
         
         'whereIn with one string and one array'=>['whereIn',['a',[1,2,3]], '&&((a)in([{1},{2},{3}]))'],
         'whereIn with one string and one array'=>['orWhereIn',['a',[1,2,3]], '||((a)in([{1},{2},{3}]))'],

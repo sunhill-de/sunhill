@@ -247,6 +247,13 @@ class Query extends Base
         $expression = Queries::parseQueryString($parameter);
         $this->addWhereCondition($node, $connection, $expression, $not);
     }
+
+    private function whereWithOneCallback(Node &$node, string $connection, callable $callback, bool $not)
+    {
+        $subquery = new Query();
+        $callback($subquery);
+        $this->addWhereCondition($node, $connection, $subquery->getQueryNode()->getWhere(), $not);        
+    }
     
     private function initializeWhereSignatures()
     {
@@ -309,6 +316,10 @@ class Query extends Base
             {
                 $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array);
             });
+        $this->addMethod('where')->addParameter('callback')->setAction(function(&$node, $callback)
+            {
+                $this->whereWithOneCallback($node, '&&', $callback, false);
+            });
         
         // Signatures for orWhere()
         $this->addMethod('orWhere')
@@ -368,6 +379,10 @@ class Query extends Base
         $this->addMethod('orWhere')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
             {
                 $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array);
+            });
+        $this->addMethod('orWhere')->addParameter('callback')->setAction(function(&$node, $callback)
+            {
+                $this->whereWithOneCallback($node, '||', $callback, false);
             });
         
         // Signatures for whereNot()
@@ -429,6 +444,10 @@ class Query extends Base
             {
                 $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array, true);
             });
+        $this->addMethod('whereNot')->addParameter('callback')->setAction(function(&$node, $callback)
+            {
+                $this->whereWithOneCallback($node, '&&', $callback, true);
+            });
         
         // Signatures for orWhereNot()
         $this->addMethod('orWhereNot')
@@ -488,6 +507,10 @@ class Query extends Base
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
             {
                 $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array, true);
+        });
+        $this->addMethod('orWhereNot')->addParameter('callback')->setAction(function(&$node, $callback)
+            {
+                $this->whereWithOneCallback($node, '||', $callback, true);
             });
         
         $this->addMethod('whereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
