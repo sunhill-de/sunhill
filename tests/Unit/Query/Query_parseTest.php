@@ -446,6 +446,7 @@ test('combined where signatures', function($where, $input, $expect)
         'where with 1 string (boolean expression)'=>['where',['a>5'],'&&((a)>(5))'],
         'where with 3 callbacks'=>['where',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'&&((a)=("abc"))'],
         'where with 1 callback'=>['where',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '&&(((a)=(1))&&((b)=(2)))'],
+        'where with 1 array'=>['where',[['a','=',1],['b','=',2]], '&&(((a)=(1))&&((b)=(2)))'],
         
         'orWhere with 3 strings'=>['orWhere',['a','=','abc'],'||((a)=("abc"))'],
         'orWhere with 2 string and 1 integer'=>['orWhere',['a','=',1],'||((a)=(1))'],
@@ -462,6 +463,7 @@ test('combined where signatures', function($where, $input, $expect)
         'orWhere with 1 string (boolean expression)'=>['orWhere',['a>5'],'||((a)>(5))'],
         'orWhere with 3 callbacks'=>['orWhere',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'||((a)=("abc"))'],
         'orWhere with 1 callback'=>['orWhere',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '||(((a)=(1))&&((b)=(2)))'],
+        'orWhere with 1 array'=>['orWhere',[['a','=',1],['b','=',2]], '||(((a)=(1))||((b)=(2)))'],
         
         'whereNot with 3 string'=>['whereNot',['a','=','abc'],'&&(!((a)=("abc")))'],
         'whereNot with 2 strings and 1 integer'=>['whereNot',['a','=',1],'&&(!((a)=(1)))'],
@@ -478,6 +480,7 @@ test('combined where signatures', function($where, $input, $expect)
         'whereNot with 1 string (boolean expression)'=>['whereNot',['a>5'],'&&(!((a)>(5)))'],
         'whereNot with 3 callbacks'=>['whereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'&&(!((a)=("abc")))'],
         'whereNot with 1 callback'=>['whereNot',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '&&(!(((a)=(1))&&((b)=(2))))'],
+        'whereNot with 1 array'=>['whereNot',[['a','=',1],['b','=',2]], '&&((!((a)=(1)))&&(!((b)=(2))))'],
         
         'orWhereNot with 3 strings'=>['orWhereNot',['a','=','abc'],'||(!((a)=("abc")))'],
         'orWhereNot with 2 strings and 1 integer'=>['orWhereNot',['a','=',1],'||(!((a)=(1)))'],
@@ -494,9 +497,24 @@ test('combined where signatures', function($where, $input, $expect)
         'orWhereNot with 1 string (boolean expression)'=>['orWhereNot',['a>5'],'||(!((a)>(5)))'],
         'orWhereNot with 3 callbacks'=>['orWhereNot',[function() { return 'a'; },function() { return '='; },function() { return 'abc'; }],'||(!((a)=("abc")))'],
         'orWhereNot with 1 callback'=>['orWhereNot',[function($query) { $query->where('a','=',1)->where('b','=',2); }], '||(!(((a)=(1))&&((b)=(2))))'],
+        'orWhereNot with 1 array'=>['orWhereNot',[['a','=',1],['b','=',2]], '||((!((a)=(1)))||(!((b)=(2))))'],
         
         'whereIn with one string and one array'=>['whereIn',['a',[1,2,3]], '&&((a)in([{1},{2},{3}]))'],
-        'whereIn with one string and one array'=>['orWhereIn',['a',[1,2,3]], '||((a)in([{1},{2},{3}]))'],
+        'orWhereIn with one string and one array'=>['orWhereIn',['a',[1,2,3]], '||((a)in([{1},{2},{3}]))'],
         'whereNotIn with one string and one array'=>['whereNotIn',['a',[1,2,3]], '&&(!((a)in([{1},{2},{3}])))'],
-        'orWhereNotIn with one string and one array'=>['orWhereNotIn',['a',[1,2,3]], '||(!((a)in([{1},{2},{3}])))'],
+        'orWhereNotIn with one string and one array'=>['orWhereNotIn',['a',[1,2,3]], '||(!((a)in([{1},{2},{3}])))'],,
+        
+        'whereLike with one string and one string'=>['whereLike',['a','abc%'], '&&((a)like("abc%"))'],
+        'orWhereLike with one string and one string'=>['orWhereLike',['a','abc%'], '||((a)like("abc%))'],
+        'whereNotLike with one string and one string'=>['whereNotLike',['a',"'abc%'"], '&&(!((a)like("abc%"])))'],
+        'orWhereNotLike with one string and one string'=>['orWhereNotLike',['a','abc%'], '||(!((a)like(["abc%"])))'],,
+        
+        'whereBetween with one string and one array'=>['whereBetween',['a',[1,2]], '&&(((a)>(1)&&(a)<(2))'],
+        'orWhereBetween with one stringg and one array'=>['orWhereBetween',['a',[1,2]], '||(((a)>(1)&&(a)<(2))'],
+        'whereNotBetween with one stringg and one array'=>['whereNotBetween',['a',[1,2]], '&&(!(((a)>(1)&&(a)<(2)))'],
+        'orWhereNotBetween with one strinng and one array'=>['orWhereNotBetween',['a',[1,2]], '||(!(((a)>(1)&&(a)<(2)))'],,
+        
+        'whereAny with array and two string'=>['whereAny',[['a','b'],'=',1],'&&(((a)=(1))||((b)=(2)))'],
+        'whereAll with array and two string'=>['whereAll',[['a','b'],'=',1],'&&(((a)=(1))&&((b)=(2)))'],
+        'whereNone with array and two string'=>['whereNone',[['a','b'],'=',1],'&&(!(((a)=(1))||((b)=(2))))'],
         ]);

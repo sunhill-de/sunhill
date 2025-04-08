@@ -8,6 +8,8 @@
  * Documentation: complete
  * Tests: Unit/Query/QueryTest.php
  * Coverage: 
+ * 
+ * @todo implement where with array as parameter (repeat the where statement)
  */
 
 namespace Sunhill\Query;
@@ -154,6 +156,10 @@ class Query extends Base
             foreach ($fields as $field) {
                 $this->fields($field);
             }
+        });
+        // alias to be compatible to laravel query builder
+        $this->addMethod('select')->addParameter('*')->setAction(function(&$node, $fields) {
+            $this->fields($fields);    
         });
     }
     
@@ -320,6 +326,12 @@ class Query extends Base
             {
                 $this->whereWithOneCallback($node, '&&', $callback, false);
             });
+        $this->addMethod('where')->addParameter('array')->setAction(function(&$node, $array)
+            {
+                foreach ($array as $row) {
+                    $this->where(...$row);
+                }
+            });
         
         // Signatures for orWhere()
         $this->addMethod('orWhere')
@@ -384,6 +396,12 @@ class Query extends Base
             {
                 $this->whereWithOneCallback($node, '||', $callback, false);
             });
+        $this->addMethod('orWhere')->addParameter('array')->setAction(function(&$node, $array)
+            {
+                foreach ($array as $row) {
+                    $this->orWhere(...$row);
+                }
+        });
         
         // Signatures for whereNot()
         $this->addMethod('whereNot')
@@ -448,6 +466,12 @@ class Query extends Base
             {
                 $this->whereWithOneCallback($node, '&&', $callback, true);
             });
+        $this->addMethod('whereNot')->addParameter('array')->setAction(function(&$node, $array)
+            {
+                foreach ($array as $row) {
+                    $this->whereNot(...$row);
+                }
+        });
         
         // Signatures for orWhereNot()
         $this->addMethod('orWhereNot')
@@ -512,6 +536,12 @@ class Query extends Base
             {
                 $this->whereWithOneCallback($node, '||', $callback, true);
             });
+        $this->addMethod('orWhereNot')->addParameter('array')->setAction(function(&$node, $array)
+            {
+                foreach ($array as $row) {
+                    $this->orWhereNot(...$row);
+                }
+        });
         
         $this->addMethod('whereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
             {
@@ -614,6 +644,16 @@ class Query extends Base
      */
     protected function executeQuery(string $finalizer, array $params = [])
     {
+    }
+ 
+    public function union($other_query): static
+    {
+        
+    }
+    
+    public function unionAll($other_query): static
+    {
+        
     }
     
 // ============================================ Finalizing methods =============================================================    
