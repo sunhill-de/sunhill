@@ -29,6 +29,7 @@ use Sunhill\Parser\Nodes\UnaryNode;
 use Sunhill\Parser\Nodes\BooleanNode;
 use Sunhill\Parser\Nodes\FloatNode;
 use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\Nodes\ArrayNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -156,8 +157,13 @@ class Query extends Base
         });
     }
     
-    private function addWhereCondition(QueryNode &$node, string $connection, $subnode)
+    private function addWhereCondition(QueryNode &$node, string $connection, $subnode, bool $not = false)
     {
+        if ($not) {
+            $not_node = new UnaryNode('!');
+            $not_node->child($subnode);
+            $subnode = $not_node;
+        }
         if ($where_node = $node->getWhere()) {
             $connect_node = new BinaryNode($connection);
             $connect_node->left($where_node);
@@ -173,13 +179,7 @@ class Query extends Base
         $condition = new BinaryNode($operator);
         $condition->left(Queries::parseQueryString($field));
         $condition->right(Queries::parseQueryString($relation));
-        if ($not) {
-            $not_condition = new UnaryNode('!');
-            $not_condition->child($condition);
-            $this->addWhereCondition($node, $connection, $not_condition);            
-        } else {
-            $this->addWhereCondition($node, $connection, $condition);
-        }
+        $this->addWhereCondition($node, $connection, $condition, $not);
     }
     
     private function whereWithTwoStringsAndInteger(Node &$node, string $connection, string $field, string $operator, string $relation, bool $not = false)
@@ -187,13 +187,7 @@ class Query extends Base
         $condition = new BinaryNode($operator);
         $condition->left(Queries::parseQueryString($field));
         $condition->right(new IntegerNode($relation));
-        if ($not) {
-            $not_condition = new UnaryNode('!');
-            $not_condition->child($condition);
-            $this->addWhereCondition($node, $connection, $not_condition);
-        } else {
-            $this->addWhereCondition($node, $connection, $condition);
-        }
+        $this->addWhereCondition($node, $connection, $condition, $not);
     }
     
     private function whereWithTwoStringsAndFloat(Node &$node, string $connection, string $field, string $operator, float $relation, bool $not = false)
@@ -201,13 +195,7 @@ class Query extends Base
         $condition = new BinaryNode($operator);
         $condition->left(Queries::parseQueryString($field));
         $condition->right(new FloatNode($relation));
-        if ($not) {
-            $not_condition = new UnaryNode('!');
-            $not_condition->child($condition);
-            $this->addWhereCondition($node, $connection, $not_condition);
-        } else {
-            $this->addWhereCondition($node, $connection, $condition);
-        }
+        $this->addWhereCondition($node, $connection, $condition, $not);
     }
     
     private function whereWithTwoStringsAndBoolean(Node &$node, string $connection, string $field, string $operator, float $relation, bool $not = false)
@@ -215,25 +203,49 @@ class Query extends Base
         $condition = new BinaryNode($operator);
         $condition->left(Queries::parseQueryString($field));
         $condition->right(new BooleanNode($relation));
-        if ($not) {
-            $not_condition = new UnaryNode('!');
-            $not_condition->child($condition);
-            $this->addWhereCondition($node, $connection, $not_condition);
-        } else {
-            $this->addWhereCondition($node, $connection, $condition);
+        $this->addWhereCondition($node, $connection, $condition, $not);
+    }
+    
+    private function createElementNode($element): Node
+    {
+        if (is_integer($element)) {
+            return new IntegerNode($element);
         }
+        if (is_float($element)) {
+            return new FloatNode($element);
+        }
+        if (is_string($element)) {
+            return Queries::parseQueryString($element);
+        }
+        if (is_boolean($element)) {
+            return new BooleanNode($element);
+        }
+    }
+    
+    private function buildArrayNodeFromArray(\Traversable|array $array)
+    {
+        foreach ($array as $element) {
+            if (isset($list_node)) {
+                $list_node->addElement($this->createElementNode($element));
+            } else {
+                $list_node = new ArrayNode($this->createElementNode($element));
+            }
+        }
+        return $list_node;
+    }
+    
+    private function whereWithTwoStringsAndArray(Node &$node, string $connection, string $field, string $operator, \Traversable|array $array, bool $not = false)
+    {
+        $condition = new BinaryNode($operator);
+        $condition->left(Queries::parseQueryString($field));
+        $condition->right($this->buildArrayNodeFromArray($array));
+        $this->addWhereCondition($node, $connection, $condition, $not);
     }
     
     private function whereWithOneString(Node &$node, string $connection, string $parameter, bool $not)
     {
         $expression = Queries::parseQueryString($parameter);
-        if ($not) {
-            $not_condition = new UnaryNode('!');
-            $not_condition->child($expression);
-            $this->addWhereCondition($node, $connection, $not_condition);
-        } else {
-            $this->addWhereCondition($node, $connection, $expression);
-        }
+        $this->addWhereCondition($node, $connection, $expression, $not);
     }
     
     private function initializeWhereSignatures()
@@ -289,6 +301,14 @@ class Query extends Base
             {
                 $this->where($field, $operator, $callback());
             });
+        $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '&&', $field, $operator, $array);
+            });
+        $this->addMethod('where')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array);
+            });
         
         // Signatures for orWhere()
         $this->addMethod('orWhere')
@@ -340,6 +360,14 @@ class Query extends Base
         $this->addMethod('orWhere')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
             {
                 $this->orWhere($field, $operator, $callback());
+            });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '||', $field, $operator, $array);
+            });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array);
             });
         
         // Signatures for whereNot()
@@ -393,6 +421,14 @@ class Query extends Base
             {
                 $this->whereNot($field, $operator, $callback());
             });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '&&', $field, $operator, $array, true);
+            });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array, true);
+            });
         
         // Signatures for orWhereNot()
         $this->addMethod('orWhereNot')
@@ -444,6 +480,31 @@ class Query extends Base
         $this->addMethod('orWhereNot')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
             {
                 $this->orWhereNot($field, $operator, $callback());
+            });
+        $this->addMethod('orWhereNot')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '||', $field, $operator, $array, true);
+            });
+        $this->addMethod('orWhereNot')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array, true);
+            });
+        
+        $this->addMethod('whereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->where($field, 'in', $array);
+            });
+        $this->addMethod('orWhereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+            $this->orWhere($field, 'in', $array);
+            });
+        $this->addMethod('whereNotIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->whereNot($field, 'in', $array);
+            });
+        $this->addMethod('orWhereNotIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+            {
+                $this->orWhereNot($field, 'in', $array);
             });
     }
     
