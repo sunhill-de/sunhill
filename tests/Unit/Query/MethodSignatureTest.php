@@ -120,6 +120,11 @@ test('matches', function($callback, $params, $expect)
     {
         $signature->addParameter('ineteger');
         $signature->addParameter('*');
-    },['ABC',10],false
+    },['ABC',10],false,
     ],
+    [function($signature)
+    {
+        $signature->addParameter('array'); 
+    },[[1,2,3]], true,1
+    ]
     ]);

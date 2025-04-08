@@ -49,6 +49,9 @@ class MethodSignature extends Base
             switch ($test1) {
                 default:
                     if ($test2 == "*") { return true; }
+                    if ($test2 == 'array') {
+                        return (substr($test1, 0,5) == 'array');
+                    }
                     if ($test1 == $item) { return true; }                
             }
         }
