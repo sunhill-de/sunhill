@@ -261,218 +261,227 @@ class Query extends Base
         $this->addWhereCondition($node, $connection, $subquery->getQueryNode()->getWhere(), $not);        
     }
     
-    private function initializeWhereSignatures()
+    private function initializeWhereXXXSignatures()
     {
         // Signatures for where()
         $this->addMethod('where')
-            ->addParameter('string')->addParameter('string')->addParameter('string')
-            ->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithThreeStrings($node, '&&', $field, $operator, $relation);
-            }); 
+        ->addParameter('string')->addParameter('string')->addParameter('string')
+        ->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $this->whereWithThreeStrings($node, '&&', $field, $operator, $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '&&', $field, $operator, $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndInteger($node, '&&', $field, $operator, $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '&&', $field, $operator, $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndFloat($node, '&&', $field, $operator, $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '&&', $field, $operator, $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '&&', $field, $operator, $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithThreeStrings($node, '&&', $field, '=', $relation);
-            });
+        {
+            $this->whereWithThreeStrings($node, '&&', $field, '=', $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '&&', $field, '=', $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndInteger($node, '&&', $field, '=', $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '&&', $field, '=', $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndFloat($node, '&&', $field, '=', $relation);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '&&', $field, '=', $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '&&', $field, '=', $relation);
+        });
         $this->addMethod('where')->addParameter('string')->setAction(function(&$node, $parameter)
-            {
-                $this->whereWithOneString($node, '&&', $parameter, false);
-            });
+        {
+            $this->whereWithOneString($node, '&&', $parameter, false);
+        });
         $this->addMethod('where')->addParameter('callback')->addParameter('*')->addParameter('*')->setAction(function(&$node, $callback, $operator, $relation)
-            {
-                $this->where($callback(),$operator,$relation);
-            });
+        {
+            $this->where($callback(),$operator,$relation);
+        });
         $this->addMethod('where')->addParameter('*')->addParameter('callback')->addParameter('*')->setAction(function(&$node, $field, $callback, $relation)
-            {
-                $this->where($field, $callback(), $relation);
-            });
+        {
+            $this->where($field, $callback(), $relation);
+        });
         $this->addMethod('where')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
-            {
-                $this->where($field, $operator, $callback());
-            });
+        {
+            $this->where($field, $operator, $callback());
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '&&', $field, $operator, $array);
-            });
+        {
+            $this->whereWithTwoStringsAndArray($node, '&&', $field, $operator, $array);
+        });
         $this->addMethod('where')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array);
-            });
+        {
+            $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array);
+        });
         $this->addMethod('where')->addParameter('callback')->setAction(function(&$node, $callback)
-            {
-                $this->whereWithOneCallback($node, '&&', $callback, false);
-            });
+        {
+            $this->whereWithOneCallback($node, '&&', $callback, false);
+        });
         $this->addMethod('where')->addParameter('array')->setAction(function(&$node, $array)
-            {
-                foreach ($array as $row) {
-                    $this->where(...$row);
-                }
-            });
-        
+        {
+            foreach ($array as $row) {
+                $this->where(...$row);
+            }
+        });        
+    }
+    
+    private function initializeOrWhereXXXSignatures()
+    {
         // Signatures for orWhere()
         $this->addMethod('orWhere')
-            ->addParameter('string')->addParameter('string')->addParameter('string')
-            ->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithThreeStrings($node, '||', $field, $operator, $relation);
-            });
+        ->addParameter('string')->addParameter('string')->addParameter('string')
+        ->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $this->whereWithThreeStrings($node, '||', $field, $operator, $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '||', $field, $operator, $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndInteger($node, '||', $field, $operator, $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '||', $field, $operator, $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndFloat($node, '||', $field, $operator, $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '||', $field, $operator, $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '||', $field, $operator, $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithThreeStrings($node, '||', $field, '=', $relation);
-            });
+        {
+            $this->whereWithThreeStrings($node, '||', $field, '=', $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '||', $field, '=', $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndInteger($node, '||', $field, '=', $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '||', $field, '=', $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndFloat($node, '||', $field, '=', $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '||', $field, '=', $relation);
-            });
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '||', $field, '=', $relation);
+        });
         $this->addMethod('orWhere')->addParameter('string')->setAction(function(&$node, $parameter)
-            {
-                $this->whereWithOneString($node, '||', $parameter, false);
+        {
+            $this->whereWithOneString($node, '||', $parameter, false);
         });
         $this->addMethod('orWhere')->addParameter('callback')->addParameter('*')->addParameter('*')->setAction(function(&$node, $callback, $operator, $relation)
-            {
-                $this->orWhere($callback(),$operator,$relation);
-            });
-        $this->addMethod('orWhere')->addParameter('*')->addParameter('callback')->addParameter('*')->setAction(function(&$node, $field, $callback, $relation)
-            {
-                $this->orWhere($field, $callback(), $relation);
-            });
-        $this->addMethod('orWhere')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
-            {
-                $this->orWhere($field, $operator, $callback());
-            });
-        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '||', $field, $operator, $array);
-            });
-        $this->addMethod('orWhere')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array);
-            });
-        $this->addMethod('orWhere')->addParameter('callback')->setAction(function(&$node, $callback)
-            {
-                $this->whereWithOneCallback($node, '||', $callback, false);
-            });
-        $this->addMethod('orWhere')->addParameter('array')->setAction(function(&$node, $array)
-            {
-                foreach ($array as $row) {
-                    $this->orWhere(...$row);
-                }
+        {
+            $this->orWhere($callback(),$operator,$relation);
         });
-        
+        $this->addMethod('orWhere')->addParameter('*')->addParameter('callback')->addParameter('*')->setAction(function(&$node, $field, $callback, $relation)
+        {
+            $this->orWhere($field, $callback(), $relation);
+        });
+        $this->addMethod('orWhere')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
+        {
+            $this->orWhere($field, $operator, $callback());
+        });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
+        {
+            $this->whereWithTwoStringsAndArray($node, '||', $field, $operator, $array);
+        });
+        $this->addMethod('orWhere')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+        {
+            $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array);
+        });
+        $this->addMethod('orWhere')->addParameter('callback')->setAction(function(&$node, $callback)
+        {
+            $this->whereWithOneCallback($node, '||', $callback, false);
+        });
+        $this->addMethod('orWhere')->addParameter('array')->setAction(function(&$node, $array)
+        {
+            foreach ($array as $row) {
+                $this->orWhere(...$row);
+            }
+        });        
+    }
+
+    private function initializeWhereNotXXXSignatures()
+    {
         // Signatures for whereNot()
         $this->addMethod('whereNot')
-            ->addParameter('string')->addParameter('string')->addParameter('string')
-            ->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithThreeStrings($node, '&&', $field, $operator, $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '&&', $field, $operator, $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '&&', $field, $operator, $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '&&', $field, $operator, $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithThreeStrings($node, '&&', $field, '=', $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '&&', $field, '=', $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '&&', $field, '=', $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '&&', $field, '=', $relation, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->setAction(function(&$node, $parameter)
-            {
-                $this->whereWithOneString($node, '&&', $parameter, true);
-            });
-        $this->addMethod('whereNot')->addParameter('callback')->addParameter('*')->addParameter('*')->setAction(function(&$node, $callback, $operator, $relation)
-            {
-                $this->whereNot($callback(),$operator,$relation);
-            });
-        $this->addMethod('whereNot')->addParameter('*')->addParameter('callback')->addParameter('*')->setAction(function(&$node, $field, $callback, $relation)
-            {
-                $this->whereNot($field, $callback(), $relation);
-            });
-        $this->addMethod('whereNot')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
-            {
-                $this->whereNot($field, $operator, $callback());
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '&&', $field, $operator, $array, true);
-            });
-        $this->addMethod('whereNot')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array, true);
-            });
-        $this->addMethod('whereNot')->addParameter('callback')->setAction(function(&$node, $callback)
-            {
-                $this->whereWithOneCallback($node, '&&', $callback, true);
-            });
-        $this->addMethod('whereNot')->addParameter('array')->setAction(function(&$node, $array)
-            {
-                foreach ($array as $row) {
-                    $this->whereNot(...$row);
-                }
+        ->addParameter('string')->addParameter('string')->addParameter('string')
+        ->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $this->whereWithThreeStrings($node, '&&', $field, $operator, $relation, true);
         });
-        
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $this->whereWithTwoStringsAndInteger($node, '&&', $field, $operator, $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $this->whereWithTwoStringsAndFloat($node, '&&', $field, $operator, $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $operator, $relation)
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '&&', $field, $operator, $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $relation)
+        {
+            $this->whereWithThreeStrings($node, '&&', $field, '=', $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $relation)
+        {
+            $this->whereWithTwoStringsAndInteger($node, '&&', $field, '=', $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $relation)
+        {
+            $this->whereWithTwoStringsAndFloat($node, '&&', $field, '=', $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $relation)
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '&&', $field, '=', $relation, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->setAction(function(&$node, $parameter)
+        {
+            $this->whereWithOneString($node, '&&', $parameter, true);
+        });
+        $this->addMethod('whereNot')->addParameter('callback')->addParameter('*')->addParameter('*')->setAction(function(&$node, $callback, $operator, $relation)
+        {
+            $this->whereNot($callback(),$operator,$relation);
+        });
+        $this->addMethod('whereNot')->addParameter('*')->addParameter('callback')->addParameter('*')->setAction(function(&$node, $field, $callback, $relation)
+        {
+            $this->whereNot($field, $callback(), $relation);
+        });
+        $this->addMethod('whereNot')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
+        {
+            $this->whereNot($field, $operator, $callback());
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
+        {
+            $this->whereWithTwoStringsAndArray($node, '&&', $field, $operator, $array, true);
+        });
+        $this->addMethod('whereNot')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+        {
+            $this->whereWithTwoStringsAndArray($node, '&&', $field, '=', $array, true);
+        });
+        $this->addMethod('whereNot')->addParameter('callback')->setAction(function(&$node, $callback)
+        {
+            $this->whereWithOneCallback($node, '&&', $callback, true);
+        });
+        $this->addMethod('whereNot')->addParameter('array')->setAction(function(&$node, $array)
+        {
+            foreach ($array as $row) {
+                $this->whereNot(...$row);
+            }
+        });                
+    }
+    
+    private function initializeOrWhereNotXXXSignatures()
+    {
         // Signatures for orWhereNot()
         $this->addMethod('orWhereNot')
         ->addParameter('string')->addParameter('string')->addParameter('string')
@@ -493,72 +502,497 @@ class Query extends Base
             $this->whereWithTwoStringsAndBoolean($node, '||', $field, $operator, $relation, true);
         });
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('string')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithThreeStrings($node, '||', $field, '=', $relation, true);
-            });
+        {
+            $this->whereWithThreeStrings($node, '||', $field, '=', $relation, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('integer')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndInteger($node, '||', $field, '=', $relation, true);
-            });
+        {
+            $this->whereWithTwoStringsAndInteger($node, '||', $field, '=', $relation, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('float')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndFloat($node, '||', $field, '=', $relation, true);
-            });
+        {
+            $this->whereWithTwoStringsAndFloat($node, '||', $field, '=', $relation, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('boolean')->setAction(function(&$node, $field, $relation)
-            {
-                $this->whereWithTwoStringsAndBoolean($node, '||', $field, '=', $relation, true);
-            });
+        {
+            $this->whereWithTwoStringsAndBoolean($node, '||', $field, '=', $relation, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('string')->setAction(function(&$node, $parameter)
-            {
-                $this->whereWithOneString($node, '||', $parameter, true);
-            });
+        {
+            $this->whereWithOneString($node, '||', $parameter, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('callback')->addParameter('*')->addParameter('*')->setAction(function(&$node, $callback, $operator, $relation)
-            {
-                $this->orWhereNot($callback(),$operator,$relation);
-            });
+        {
+            $this->orWhereNot($callback(),$operator,$relation);
+        });
         $this->addMethod('orWhereNot')->addParameter('*')->addParameter('callback')->addParameter('*')->setAction(function(&$node, $field, $callback, $relation)
-            {
-                $this->orWhereNot($field, $callback(), $relation);
-            });
+        {
+            $this->orWhereNot($field, $callback(), $relation);
+        });
         $this->addMethod('orWhereNot')->addParameter('*')->addParameter('*')->addParameter('callback')->setAction(function(&$node, $field, $operator, $callback)
-            {
-                $this->orWhereNot($field, $operator, $callback());
-            });
+        {
+            $this->orWhereNot($field, $operator, $callback());
+        });
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $operator, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '||', $field, $operator, $array, true);
-            });
+        {
+            $this->whereWithTwoStringsAndArray($node, '||', $field, $operator, $array, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array, true);
+        {
+            $this->whereWithTwoStringsAndArray($node, '||', $field, '=', $array, true);
         });
         $this->addMethod('orWhereNot')->addParameter('callback')->setAction(function(&$node, $callback)
-            {
-                $this->whereWithOneCallback($node, '||', $callback, true);
-            });
+        {
+            $this->whereWithOneCallback($node, '||', $callback, true);
+        });
         $this->addMethod('orWhereNot')->addParameter('array')->setAction(function(&$node, $array)
-            {
-                foreach ($array as $row) {
-                    $this->orWhereNot(...$row);
-                }
+        {
+            foreach ($array as $row) {
+                $this->orWhereNot(...$row);
+            }
+        });
+               
+    }
+    
+    private function initializeWhereInSignatures()
+    {
+        $this->addMethod('whereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+        {
+            $this->where($field, 'in', $array);
+        });
+        $this->addMethod('orWhereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+        {
+            $this->orWhere($field, 'in', $array);
+        });
+        $this->addMethod('whereNotIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+        {
+            $this->whereNot($field, 'in', $array);
+        });
+        $this->addMethod('orWhereNotIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
+        {
+            $this->orWhereNot($field, 'in', $array);
+        });        
+    }
+    
+    private function initializeWhereAnyAllNoneSignatures()
+    {
+        $this->addMethod('whereAny')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->where($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), false);
+        });
+        $this->addMethod('orWhereAny')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->where($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), false);
+        });
+        $this->addMethod('whereNotAny')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->where($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), true);
+        });
+        $this->addMethod('orWhereNotAny')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->where($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), true);
         });
         
-        $this->addMethod('whereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->where($field, 'in', $array);
-            });
-        $this->addMethod('orWhereIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-            $this->orWhere($field, 'in', $array);
-            });
-        $this->addMethod('whereNotIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->whereNot($field, 'in', $array);
-            });
-        $this->addMethod('orWhereNotIn')->addParameter('string')->addParameter('array')->setAction(function(&$node, $field, $array)
-            {
-                $this->orWhereNot($field, 'in', $array);
-            });
+        $this->addMethod('whereAll')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->orWhere($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), false);
+        });
+        $this->addMethod('orWhereAll')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->orWhere($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), false);
+        });
+        $this->addMethod('whereNotAll')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->orWhere($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), true);
+        });
+        $this->addMethod('orWhereNotAll')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->orWhere($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), true);
+        });
+        
+        $this->addMethod('whereNone')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->whereNot($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), false);
+        });
+        $this->addMethod('orWherNonel')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->whereNot($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), false);
+        });
+        $this->addMethod('whereNotNone')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->whereNot($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), true);
+        });
+        $this->addMethod('orWhereNotNone')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        {
+            $query = new static();
+            foreach ($fields as $field) {
+                $query->whereNot($field, $operator, $relation);
+            }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), true);
+        });
+        
+    }
+    
+    private function initializeWhereHasSignatures()
+    {
+        $this->addMethod('whereHasAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->where($field, 'has_any', $values);
+        });    
+        $this->addMethod('orWhereHasAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->orWhere($field, 'has_any', $values);
+        });
+        $this->addMethod('whereHasNotAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->whereNot($field, 'has_any', $values);
+        });
+        $this->addMethod('orWhereHasNotAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->orWhereNot($field, 'has_any', $values);
+        });
+    
+        $this->addMethod('whereHasAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->where($field, 'has_all', $values);
+        });
+        $this->addMethod('orWhereHasAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->orWhere($field, 'has_all', $values);
+        });
+        $this->addMethod('whereHasNotAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->whereNot($field, 'has_all', $values);
+        });
+        $this->addMethod('orWhereHasNotAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->orWhereNot($field, 'has_all', $values);
+        });
+
+        $this->addMethod('whereHasNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->where($field, 'has_none', $values);
+        });
+        $this->addMethod('orWhereHasNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->orWhere($field, 'has_none', $values);
+        });
+        $this->addMethod('whereHasNotNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->whereNot($field, 'has_none', $values);
+        });
+        $this->addMethod('orWhereHasNotNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        {
+            $this->orWhereNot($field, 'has_none', $values);
+        });
+    }
+    
+    private function initializeWhereColumnSignatures()
+    {
+        $this->addMethod('whereColumn')->addParameters(['string','string'])->setAction(function(&$node, $field1, $field2)
+        {
+            $this->where($field1, '=', $field2); 
+        });    
+        $this->addMethod('orWhereColumn')->addParameters(['string','string'])->setAction(function(&$node, $field1, $field2)
+        {
+            $this->orWhere($field1, '=', $field2);
+        });
+        $this->addMethod('whereNotColumn')->addParameters(['string','string'])->setAction(function(&$node, $field1, $field2)
+        {
+            $this->whereNot($field1, '=', $field2);
+        });
+        $this->addMethod('orWhereNotColumn')->addParameters(['string','string'])->setAction(function(&$node, $field1, $field2)
+        {
+            $this->orWhereNot($field1, '=', $field2);
+        });
+    }
+    
+    private function initializeWhereDateSignatures()
+    {
+        $this->addMethod('whereDate')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+           $this->where("date($field)",'=',$date); 
+        });
+        $this->addMethod('orWhereDate')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhere("date($field)",'=',$date);
+        });
+        $this->addMethod('whereNotDate')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->whereNot("date($field)",'=',$date);
+        });
+        $this->addMethod('orWhereNotDate')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhereNot("date($field)",'=',$date);
+        });
+        $this->addMethod('whereMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->where("month($field)",'=',$date);
+        });
+        $this->addMethod('orWhereMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhere("month($field)",'=',$date);
+        });
+        $this->addMethod('whereNotMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->whereNot("month($field)",'=',$date);
+        });
+        $this->addMethod('orWhereNotMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhereNot("month($field)",'=',$date);
+        });
+        $this->addMethod('whereDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->where("day($field)",'=',$date);
+        });
+        $this->addMethod('orWhereDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhere("day($field)",'=',$date);
+        });
+        $this->addMethod('whereNotDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->whereNot("day($field)",'=',$date);
+        });
+        $this->addMethod('orWhereNotDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhereNot("day($field)",'=',$date);
+        });
+        $this->addMethod('whereYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->where("year($field)",'=',$date);
+        });
+        $this->addMethod('orWhereYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhere("year($field)",'=',$date);
+        });
+        $this->addMethod('whereNotYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->whereNot("year($field)",'=',$date);
+        });
+        $this->addMethod('orWhereNotYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhereNot("year($field)",'=',$date);
+        });
+        $this->addMethod('whereTime')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->where("time($field)",'=',$date);
+        });
+        $this->addMethod('orWhereTime')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhere("time($field)",'=',$date);
+        });
+        $this->addMethod('whereNotTime')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->whereNot("time($field)",'=',$date);
+        });
+        $this->addMethod('orWhereNotTime')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhereNot("time($field)",'=',$date);
+        });
+
+        $this->addMethod('wherePast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->where($field,'<','now()');
+        });
+        $this->addMethod('orWherePast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhere($field,'<','now()');
+        });
+        $this->addMethod('whereNotPast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->whereNot($field,'<','now()');
+        });
+        $this->addMethod('orWhereNotPast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        {
+            $this->orWhereNot($field,'<','now()');
+        });
+
+        $this->addMethod('whereFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where($field,'>','now()');
+        });
+        $this->addMethod('orWhereFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere($field,'>','now()');
+        });
+        $this->addMethod('whereNotFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot($field,'>','now()');
+        });
+        $this->addMethod('orWhereNotFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot($field,'>','now()');
+        });
+        $this->addMethod('whereNowOrPast')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where($field,'<=','now()');
+        });
+        $this->addMethod('orWhereNowOrPast')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere($field,'<=','now()');
+        });
+        $this->addMethod('whereNotNowOrPast')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot($field,'<=','now()');
+        });
+        $this->addMethod('orWhereNotNowOrPast')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot($field,'<=','now()');
+        });
+        $this->addMethod('whereNowOrFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where($field,'>=','now()');
+        });
+        $this->addMethod('orWhereNowOrFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere($field,'>=','now()');
+        });
+        $this->addMethod('whereNotNowOrFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot($field,'>=','now()');
+        });
+        $this->addMethod('orWhereNotNowOrFuture')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot($field,'>=','now()');
+        });
+        $this->addMethod('whereToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where("date($field)",'=','date(now())');
+        });
+        $this->addMethod('orWhereToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere("date($field)",'=','date(now())');
+        });
+        $this->addMethod('whereNotToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot("date($field)",'=','date(now())');
+        });
+        $this->addMethod('orWhereNotToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot("date($field)",'=','date(now())');
+        });
+        $this->addMethod('whereBeforeToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where("date($field)",'<','date(now())');
+        });
+        $this->addMethod('orWhereBeforeToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere("date($field)",'<','date(now())');
+        });
+        $this->addMethod('whereNotBeforeToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot("date($field)",'<','date(now())');
+        });
+        $this->addMethod('orWhereNotBeforeToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot("date($field)",'<','date(now())');
+        });
+        $this->addMethod('whereAfterToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where("date($field)",'>','date(now())');
+        });
+        $this->addMethod('orWhereAfterToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere("date($field)",'>','date(now())');
+        });
+        $this->addMethod('whereNotAfterToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot("date($field)",'>','date(now())');
+        });
+        $this->addMethod('orWhereNotAfterToday')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot("date($field)",'>','date(now())');
+        });
+        $this->addMethod('whereTodayOrBefore')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where("date($field)",'<=','date(now())');
+        });
+        $this->addMethod('orWhereTodayOrBefore')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere("date($field)",'<=','date(now())');
+        });
+        $this->addMethod('whereNotTodayOrBefore')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot("date($field)",'<=','date(now())');
+        });
+        $this->addMethod('orWhereNotTodayOrBefore')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot("date($field)",'<=','date(now())');
+        });
+        $this->addMethod('whereTodayOrAfter')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->where("date($field)",'>=','date(now())');
+        });
+        $this->addMethod('orWhereTodayOrAfter')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhere("date($field)",'>=','date(now())');
+        });
+        $this->addMethod('whereNotTodayOrAfter')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->whereNot("date($field)",'>=','date(now())');
+        });
+        $this->addMethod('orWhereNotTodayOrAfter')->addParameters(['string'])->setAction(function(&$node, $field)
+        {
+            $this->orWhereNot("date($field)",'>=','date(now())');
+        });
+        
+    }
+            
+    private function initializeWhereSignatures()
+    {
+        $this->initializeWhereXXXSignatures();
+        $this->initializeOrWhereXXXSignatures();
+        $this->initializeWhereNotXXXSignatures();
+        $this->initializeOrWhereNotXXXSignatures();
+        $this->initializeWhereInSignatures();
+        $this->initializeWhereAnyAllNoneSignatures();
+        $this->initializeWhereHasSignatures();
+        $this->initializeWhereColumnSignatures();
+        $this->initializeWhereDateSignatures();
     }
     
     public function __construct()
