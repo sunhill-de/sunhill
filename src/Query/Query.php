@@ -32,6 +32,7 @@ use Sunhill\Parser\Nodes\BooleanNode;
 use Sunhill\Parser\Nodes\FloatNode;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\ArrayNode;
+use Sunhill\Parser\Nodes\FunctionNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -580,7 +581,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->where($field, $operator, $relation);
+                $query->orWhere($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), false);
         });
@@ -588,7 +589,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->where($field, $operator, $relation);
+                $query->orWhere($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), false);
         });
@@ -596,7 +597,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->where($field, $operator, $relation);
+                $query->orWhere($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), true);
         });
@@ -604,7 +605,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->where($field, $operator, $relation);
+                $query->orWhere($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), true);
         });
@@ -613,7 +614,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->orWhere($field, $operator, $relation);
+                $query->where($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), false);
         });
@@ -621,7 +622,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->orWhere($field, $operator, $relation);
+                $query->where($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), false);
         });
@@ -629,7 +630,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->orWhere($field, $operator, $relation);
+                $query->where($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), true);
         });
@@ -637,7 +638,7 @@ class Query extends Base
         {
             $query = new static();
             foreach ($fields as $field) {
-                $query->orWhere($field, $operator, $relation);
+                $query->where($field, $operator, $relation);
             }
             $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(), true);
         });
@@ -650,7 +651,7 @@ class Query extends Base
             }
             $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(), false);
         });
-        $this->addMethod('orWherNonel')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
+        $this->addMethod('orWhereNone')->addParameters(['array','string','*'])->setAction(function(&$node, $fields, $operator, $relation)
         {
             $query = new static();
             foreach ($fields as $field) {
@@ -687,11 +688,11 @@ class Query extends Base
         {
             $this->orWhere($field, 'has_any', $values);
         });
-        $this->addMethod('whereHasNotAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        $this->addMethod('whereNotHasAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
         {
             $this->whereNot($field, 'has_any', $values);
         });
-        $this->addMethod('orWhereHasNotAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        $this->addMethod('orWhereNotHasAny')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
         {
             $this->orWhereNot($field, 'has_any', $values);
         });
@@ -704,11 +705,11 @@ class Query extends Base
         {
             $this->orWhere($field, 'has_all', $values);
         });
-        $this->addMethod('whereHasNotAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        $this->addMethod('whereNotHasAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
         {
             $this->whereNot($field, 'has_all', $values);
         });
-        $this->addMethod('orWhereHasNotAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        $this->addMethod('orWhereNotHasAll')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
         {
             $this->orWhereNot($field, 'has_all', $values);
         });
@@ -721,11 +722,11 @@ class Query extends Base
         {
             $this->orWhere($field, 'has_none', $values);
         });
-        $this->addMethod('whereHasNotNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        $this->addMethod('whereNotHasNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
         {
             $this->whereNot($field, 'has_none', $values);
         });
-        $this->addMethod('orWhereHasNotNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
+        $this->addMethod('orWhereNotHasNone')->addParameters(['string','array'])->setAction(function(&$node, $field, $values)
         {
             $this->orWhereNot($field, 'has_none', $values);
         });
@@ -751,6 +752,14 @@ class Query extends Base
         });
     }
     
+    private function createFunctionWithArgument(string $function_name, $argument): Node
+    {
+        $function_node = new FunctionNode($function_name);
+        $function_node->arguments($this->createElementNode($argument));
+        
+        return $function_node;
+    }
+    
     private function initializeWhereDateSignatures()
     {
         $this->addMethod('whereDate')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
@@ -769,51 +778,51 @@ class Query extends Base
         {
             $this->orWhereNot("date($field)",'=',$date);
         });
-        $this->addMethod('whereMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereMonth')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->where("month($field)",'=',$date);
         });
-        $this->addMethod('orWhereMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereMonth')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->orWhere("month($field)",'=',$date);
         });
-        $this->addMethod('whereNotMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereNotMonth')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->whereNot("month($field)",'=',$date);
         });
-        $this->addMethod('orWhereNotMonth')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereNotMonth')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->orWhereNot("month($field)",'=',$date);
         });
-        $this->addMethod('whereDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereDay')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->where("day($field)",'=',$date);
         });
-        $this->addMethod('orWhereDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereDay')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->orWhere("day($field)",'=',$date);
         });
-        $this->addMethod('whereNotDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereNotDay')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->whereNot("day($field)",'=',$date);
         });
-        $this->addMethod('orWhereNotDay')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereNotDay')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->orWhereNot("day($field)",'=',$date);
         });
-        $this->addMethod('whereYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereYear')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->where("year($field)",'=',$date);
         });
-        $this->addMethod('orWhereYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereYear')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->orWhere("year($field)",'=',$date);
         });
-        $this->addMethod('whereNotYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereNotYear')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->whereNot("year($field)",'=',$date);
         });
-        $this->addMethod('orWhereNotYear')->addParameters(['string','string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereNotYear')->addParameters(['string','string|integer'])->setAction(function(&$node, $field, $date)
         {
             $this->orWhereNot("year($field)",'=',$date);
         });
@@ -834,19 +843,19 @@ class Query extends Base
             $this->orWhereNot("time($field)",'=',$date);
         });
 
-        $this->addMethod('wherePast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('wherePast')->addParameters(['string'])->setAction(function(&$node, $field)
         {
             $this->where($field,'<','now()');
         });
-        $this->addMethod('orWherePast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWherePast')->addParameters(['string'])->setAction(function(&$node, $field)
         {
             $this->orWhere($field,'<','now()');
         });
-        $this->addMethod('whereNotPast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('whereNotPast')->addParameters(['string'])->setAction(function(&$node, $field)
         {
             $this->whereNot($field,'<','now()');
         });
-        $this->addMethod('orWhereNotPast')->addParameters(['string'])->setAction(function(&$node, $field, $date)
+        $this->addMethod('orWhereNotPast')->addParameters(['string'])->setAction(function(&$node, $field)
         {
             $this->orWhereNot($field,'<','now()');
         });
@@ -982,6 +991,66 @@ class Query extends Base
         
     }
             
+    private function initializeOtherWheres()
+    {
+        $this->addMethod("whereNull")->addParameter('*')->setAction(function(&$node, $field)
+        {
+            $this->where($field,'is_null',0); 
+        });    
+        $this->addMethod("orWhereNull")->addParameter('*')->setAction(function(&$node, $field)
+        {
+            $this->orWhere($field,'is_null',0);
+        });
+        $this->addMethod("whereNotNull")->addParameter('*')->setAction(function(&$node, $field)
+        {
+            $this->where($field,'is_not_null',0);
+        });
+        $this->addMethod("orWhereNotNull")->addParameter('*')->setAction(function(&$node, $field)
+        {
+            $this->orWhere($field,'is_not_null',0);
+        });
+        $this->addMethod("whereBetween")->addParameters(['string|integer|float','array'])->setAction(function(&$node, $field, $range)
+        {
+            $subquery = new Query();
+            $subquery->where($field,'>',$range[0])->where($field,'<',$range[1]);
+            $this->addWhereCondition($node, '&&', $subquery->getQueryNode()->getWhere());
+        });
+        $this->addMethod("orWhereBetween")->addParameters(['string|integer|float','array'])->setAction(function(&$node, $field, $range)
+        {
+            $subquery = new Query();
+            $subquery->where($field,'>',$range[0])->where($field,'<',$range[1]);
+            $this->addWhereCondition($node, '||', $subquery->getQueryNode()->getWhere());
+        });
+        $this->addMethod("whereNotBetween")->addParameters(['string|integer|float','array'])->setAction(function(&$node, $field, $range)
+        {
+            $subquery = new Query();
+            $subquery->where($field,'>',$range[0])->where($field,'<',$range[1]);
+            $this->addWhereCondition($node, '&&', $subquery->getQueryNode()->getWhere(),true);
+        });
+        $this->addMethod("orWhereNotBetween")->addParameters(['string|integer|float','array'])->setAction(function(&$node, $field, $range)
+        {
+            $subquery = new Query();
+            $subquery->where($field,'>',$range[0])->where($field,'<',$range[1]);
+            $this->addWhereCondition($node, '||', $subquery->getQueryNode()->getWhere(),true);
+        });
+        $this->addMethod("whereLike")->addParameters(['string','string'])->setAction(function(&$node, $field, $pattern)
+        {
+            $this->where($field,'like',$pattern);
+        });
+        $this->addMethod("orWhereLike")->addParameters(['string','string'])->setAction(function(&$node, $field, $pattern)
+        {
+            $this->orWhere($field,'like',$pattern);
+        });
+        $this->addMethod("whereNotLike")->addParameters(['string','string'])->setAction(function(&$node, $field, $pattern)
+        {
+            $this->whereNot($field,'like',$pattern);
+        });
+        $this->addMethod("orWhereNotLike")->addParameters(['string','string'])->setAction(function(&$node, $field, $pattern)
+        {
+            $this->orWhereNot($field,'like',$pattern);
+        });
+    }
+    
     private function initializeWhereSignatures()
     {
         $this->initializeWhereXXXSignatures();
@@ -993,6 +1062,7 @@ class Query extends Base
         $this->initializeWhereHasSignatures();
         $this->initializeWhereColumnSignatures();
         $this->initializeWhereDateSignatures();
+        $this->initializeOtherWheres();
     }
     
     public function __construct()

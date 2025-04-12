@@ -16,6 +16,9 @@ use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Query\QueryParser\OrderNode;
 use Sunhill\Query\QueryParser\AliasNode;
+use Sunhill\Parser\Nodes\TimeNode;
+use Sunhill\Parser\Nodes\DateTimeNode;
+use Sunhill\Parser\Nodes\DateNode;
 
 class DummyExecutor extends Executor
 {
@@ -60,6 +63,9 @@ class DummyExecutor extends Executor
                        "offset:[".$this->doExecute($ast->offset())."],".
                        "limit:[".$this->doExecute($ast->limit())."]";
             case StringNode::class:
+            case DateNode::class:
+            case DateTimeNode::class:
+            case TimeNode::class:
                 return '"'.$ast->getValue().'"';
             case UnaryNode::class:    
                 return $ast->getType().'('.$this->doExecute($ast->child()).')';

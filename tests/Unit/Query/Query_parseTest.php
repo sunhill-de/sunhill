@@ -12,6 +12,8 @@ use Sunhill\Query\QueryParser\OrderNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\FunctionNode;
+use Sunhill\Parser\Nodes\DateNode;
+use Sunhill\Parser\Nodes\TimeNode;
 
 uses(SunhillTestCase::class);
 
@@ -418,8 +420,22 @@ test('combined where signatures', function($where, $input, $expect)
     $expression2->left($function);
     $expression2->right(new IntegerNode(2));
     Queries::shouldReceive('parseQueryString')->with('sin(a)+2')->andReturn($expression2);
+    
+    $date2 = new FunctionNode('date');
+    $date2->arguments(new FunctionNode('now'));
+    Queries::shouldReceive('parseQueryString')->with('date(now())')->andReturn($date2);
+    
+    Queries::shouldReceive('parseQueryString')->with('year(a)')->andReturn((new FunctionNode('year'))->arguments(new IdentifierNode('a')));
+    Queries::shouldReceive('parseQueryString')->with('month(a)')->andReturn((new FunctionNode('month'))->arguments(new IdentifierNode('a')));
+    Queries::shouldReceive('parseQueryString')->with('day(a)')->andReturn((new FunctionNode('day'))->arguments(new IdentifierNode('a')));
+    Queries::shouldReceive('parseQueryString')->with('time(a)')->andReturn((new FunctionNode('time'))->arguments(new IdentifierNode('a')));
+    Queries::shouldReceive('parseQueryString')->with('date(a)')->andReturn((new FunctionNode('date'))->arguments(new IdentifierNode('a')));
+    Queries::shouldReceive('parseQueryString')->with('2024-12-24')->andReturn((new DateNode('2024-12-24')));
+    Queries::shouldReceive('parseQueryString')->with('11:12:13')->andReturn((new TimeNode('11:12:13')));
+    Queries::shouldReceive('parseQueryString')->with('now()')->andReturn(new FunctionNode('now'));
     Queries::shouldReceive('parseQueryString')->with('a')->andReturn(new IdentifierNode('a'));
     Queries::shouldReceive('parseQueryString')->with('abc')->andReturn(new StringNode('abc'));
+    Queries::shouldReceive('parseQueryString')->with('abc%')->andReturn(new StringNode('abc%'));
     Queries::shouldReceive('parseQueryString')->with('b')->andReturn(new IdentifierNode('b'));
     Queries::shouldReceive('parseQueryString')->with('def')->andReturn(new StringNode('def'));
     
@@ -505,122 +521,122 @@ test('combined where signatures', function($where, $input, $expect)
         'orWhereNotIn with one string and one array'=>['orWhereNotIn',['a',[1,2,3]], '||(!((a)in([{1},{2},{3}])))'],
         
         'whereLike with one string and one string'=>['whereLike',['a','abc%'], '&&((a)like("abc%"))'],
-        'orWhereLike with one string and one string'=>['orWhereLike',['a','abc%'], '||((a)like("abc%))'],
-        'whereNotLike with one string and one string'=>['whereNotLike',['a',"'abc%'"], '&&(!((a)like("abc%"])))'],
-        'orWhereNotLike with one string and one string'=>['orWhereNotLike',['a','abc%'], '||(!((a)like(["abc%"])))'],
+        'orWhereLike with one string and one string'=>['orWhereLike',['a','abc%'], '||((a)like("abc%"))'],
+        'whereNotLike with one string and one string'=>['whereNotLike',['a',"abc%"], '&&(!((a)like("abc%")))'],
+        'orWhereNotLike with one string and one string'=>['orWhereNotLike',['a','abc%'], '||(!((a)like("abc%")))'],
         
-        'whereBetween with one string and one array'=>['whereBetween',['a',[1,2]], '&&(((a)>(1)&&(a)<(2))'],
-        'orWhereBetween with one stringg and one array'=>['orWhereBetween',['a',[1,2]], '||(((a)>(1)&&(a)<(2))'],
-        'whereNotBetween with one stringg and one array'=>['whereNotBetween',['a',[1,2]], '&&(!(((a)>(1)&&(a)<(2)))'],
-        'orWhereNotBetween with one strinng and one array'=>['orWhereNotBetween',['a',[1,2]], '||(!(((a)>(1)&&(a)<(2)))'],
+        'whereBetween with one string and one array'=>['whereBetween',['a',[1,2]],            '&&(((a)>(1))&&((a)<(2)))'],
+        'orWhereBetween with one stringg and one array'=>['orWhereBetween',['a',[1,2]],       '||(((a)>(1))&&((a)<(2)))'],
+        'whereNotBetween with one stringg and one array'=>['whereNotBetween',['a',[1,2]],     '&&(!(((a)>(1))&&((a)<(2))))'],
+        'orWhereNotBetween with one strinng and one array'=>['orWhereNotBetween',['a',[1,2]], '||(!(((a)>(1))&&((a)<(2))))'],
         
-        'whereNull with string'=>['whereNull',['a'],'&&((a)=(null))'],
-        'orWhereNull with string'=>['orWhereNull',['a'],'||((a)=(null))'],
-        'whereNotNull with string'=>['whereNotNull',['a'],'&&((a)<>>(null))'],
-        'orWhereNotNull with string'=>['orWhereNotNull',['a'],'||((a)<>(null))'],
+        'whereNull with string'=>['whereNull',['a'],'&&((a)is_null(0))'],
+        'orWhereNull with string'=>['orWhereNull',['a'],'||((a)is_null(0))'],
+        'whereNotNull with string'=>['whereNotNull',['a'],'&&((a)is_not_null(0))'],
+        'orWhereNotNull with string'=>['orWhereNotNull',['a'],'||((a)is_not_null(0))'],
         
-        'whereDate with string'=>['whereDate',['a','2024-12-24'],'&&((date(a))=("2024-12-24"))'],
-        'orWhereDate with string'=>['orWhereDate',['a','2024-12-24'],'||((date(a))=("2024-12-24"))'],
-        'whereNotDate with string'=>['whereNotDate',['a','2024-12-24'],'&&((date(a))<>("2024-12-24"))'],
-        'orWhereNotDate with string'=>['orWhereNotDate',['a','2024-12-24'],'||((date(a))<>("2024-12-24"))'],
+        'whereDate with string'=>['whereDate',['a','2024-12-24'],'&&((date({a}))=("2024-12-24"))'],
+        'orWhereDate with string'=>['orWhereDate',['a','2024-12-24'],'||((date({a}))=("2024-12-24"))'],
+        'whereNotDate with string'=>['whereNotDate',['a','2024-12-24'],'&&(!((date({a}))=("2024-12-24")))'],
+        'orWhereNotDate with string'=>['orWhereNotDate',['a','2024-12-24'],'||(!((date({a}))=("2024-12-24")))'],
         
-        'whereMonth with string'=>['whereMonth',['a',12],'&&((month(a))=(12))'],
-        'orWhereMonth'=>['whereMonth',['a',12],'||((month(a))=(12))'],
-        'whereNotMonth'=>['whereMonth',['a',12],'&&((month(a))<>(12))'],
-        'orWhereNotMonth'=>['whereMonth',['a',12],'||((month(a))<>(12))'],
+        'whereMonth with string'=>['whereMonth',['a',12],'&&((month({a}))=(12))'],
+        'orWhereMonth'=>['orWhereMonth',['a',12],'||((month({a}))=(12))'],
+        'whereNotMonth'=>['whereNotMonth',['a',12],'&&(!((month({a}))=(12)))'],
+        'orWhereNotMonth'=>['orWhereNotMonth',['a',12],'||(!((month({a}))=(12)))'],
         
-        'whereDay with string'=>['whereDay',['a',12],'&&((day(a))=(12))'],
-        'orWhereDay'=>['whereDay',['a',12],'||((day(a))=(12))'],
-        'whereNotDay'=>['whereDay',['a',12],'&&((day(a))<>(12))'],
-        'orWhereNotDay'=>['whereDay',['a',12],'||((day(a))<>(12))'],
+        'whereDay with string'=>['whereDay',['a',12],'&&((day({a}))=(12))'],
+        'orWhereDay'=>['orWhereDay',['a',12],'||((day({a}))=(12))'],
+        'whereNotDay'=>['whereNotDay',['a',12],'&&(!((day({a}))=(12)))'],
+        'orWhereNotDay'=>['orWhereNotDay',['a',12],'||(!((day({a}))=(12)))'],
         
-        'whereYear with string'=>['whereYear',['a',2024],'&&((year(a))=(2024))'],
-        'orWhereYear'=>['whereYear',['a',2024],'||((year(a))=(2024))'],
-        'whereNotYear'=>['whereYear',['a',2024],'&&((year(a))<>(2024))'],
-        'orWhereNotYear'=>['whereYear',['a',2024],'||((year(a))<>(2024))'],
+        'whereYear with string'=>['whereYear',['a',2024],'&&((year({a}))=(2024))'],
+        'orWhereYear'=>['orWhereYear',['a',2024],        '||((year({a}))=(2024))'],
+        'whereNotYear'=>['whereNotYear',['a',2024],      '&&(!((year({a}))=(2024)))'],
+        'orWhereNotYear'=>['orWhereNotYear',['a',2024],  '||(!((year({a}))=(2024)))'],
         
-        'whereTime with string'=>['whereTime',['a','11:12:13'],'&&((time(a))=("11:12:13"))'],
-        'orWhereTime'=>['whereTime',['a','11:12:13'],'||((time(a))=("11:12:13"))'],
-        'whereNotTime'=>['whereTime',['a','11:12:13'],'&&((time(a))<>("11:12:13"))'],
-        'orWhereNotTime'=>['whereTime',['a','11:12:13'],'||((time(a))<>("11:12:13"))'],
+        'whereTime with string'=>['whereTime',['a','11:12:13'],'&&((time({a}))=("11:12:13"))'],
+        'orWhereTime'=>['orWhereTime',['a','11:12:13'],        '||((time({a}))=("11:12:13"))'],
+        'whereNotTime'=>['whereNotTime',['a','11:12:13'],      '&&(!((time({a}))=("11:12:13")))'],
+        'orWhereNotTime'=>['orWhereNotTime',['a','11:12:13'],  '||(!((time({a}))=("11:12:13")))'],
         
-        'wherePast with string'=>['wherePast',['a'],'&&((a)<(now()))'],
-        'orWherePast'=>['wherePast',['a'],'||((a)<(now()))'],
-        'whereNotPast'=>['wherePast',['a'],'&&((a)>=(now()))'],
-        'orWhereNotPast'=>['wherePast',['a'],'||((a)>=(now()))'],
+        'wherePast with string'=>['wherePast',['a'],'&&((a)<(now({})))'],
+        'orWherePast'=>['orWherePast',['a'],        '||((a)<(now({})))'],
+        'whereNotPast'=>['whereNotPast',['a'],      '&&(!((a)<(now({}))))'],
+        'orWhereNotPast'=>['orWhereNotPast',['a'],  '||(!((a)<(now({}))))'],
         
-        'whereFuture with string'=>['whereFuture',['a'],'&&((a)>(now()))'],
-        'orWhereFuture with string'=>['whereFuture',['a'],'||((a)>(now()))'],
-        'whereNotFuture with string'=>['whereFuture',['a'],'&&((a)<=(now()))'],
-        'orWhereNotFuture with string'=>['whereFuture',['a'],'||((a)<=(now()))'],
+        'whereFuture with string'=>['whereFuture',['a'],          '&&((a)>(now({})))'],
+        'orWhereFuture with string'=>['orWhereFuture',['a'],      '||((a)>(now({})))'],
+        'whereNotFuture with string'=>['whereNotFuture',['a'],    '&&(!((a)>(now({}))))'],
+        'orWhereNotFuture with string'=>['orWhereNotFuture',['a'],'||(!((a)>(now({}))))'],
         
-        'whereNowOrPast with string'=>['whereNowOrPast',['a'],'&&((a)<=(now()))'],
-        'orWhereNowOrPast'=>['whereNowOrPast',['a'],'||((a)<=(now()))'],
-        'whereNotNowOrPast'=>['whereNowOrPast',['a'],'&&((a)>(now()))'],
-        'orWhereNotNowOrPast'=>['whereNowOrPast',['a'],'||((a)>(now()))'],
+        'whereNowOrPast with string'=>['whereNowOrPast',['a'],'&&((a)<=(now({})))'],
+        'orWhereNowOrPast'=>['orWhereNowOrPast',['a'],        '||((a)<=(now({})))'],
+        'whereNotNowOrPast'=>['whereNotNowOrPast',['a'],      '&&(!((a)<=(now({}))))'],
+        'orWhereNotNowOrPast'=>['orWhereNotNowOrPast',['a'],  '||(!((a)<=(now({}))))'],
         
-        'whereNowOrFuture with string'=>['whereNowOrFuture',['a'],'&&((a)>=(now()))'],
-        'orWhereNowOrFuture with string'=>['whereNowOrFuture',['a'],'||((a)>=(now()))'],
-        'whereNotNowOrFuture with string'=>['whereNowOrFuture',['a'],'&&((a)<(now()))'],
-        'orWhereNotNowOrFuture with string'=>['whereNowOrFuture',['a'],'||((a)<(now()))'],
+        'whereNowOrFuture with string'=>['whereNowOrFuture',['a'],          '&&((a)>=(now({})))'],
+        'orWhereNowOrFuture with string'=>['orWhereNowOrFuture',['a'],      '||((a)>=(now({})))'],
+        'whereNotNowOrFuture with string'=>['whereNotNowOrFuture',['a'],    '&&(!((a)>=(now({}))))'],
+        'orWhereNotNowOrFuture with string'=>['orWhereNotNowOrFuture',['a'],'||(!((a)>=(now({}))))'],
 
-        'whereToday with string'=>['whereToday',['a'],'&&((date(a))=(date(now())))'],
-        'orWhereToday with string'=>['whereToday',['a'],'||((date(a))=(date(now())))'],
-        'whereNotToday with string'=>['whereToday',['a'],'&&((date(a))<>(date(now())))'],
-        'orWhereNotToday with string'=>['whereToday',['a'],'||((date(a))<>(date(now())))'],
+        'whereToday with string'=>['whereToday',['a'],          '&&((date({a}))=(date({now({})})))'],
+        'orWhereToday with string'=>['orWhereToday',['a'],      '||((date({a}))=(date({now({})})))'],
+        'whereNotToday with string'=>['whereNotToday',['a'],    '&&(!((date({a}))=(date({now({})}))))'],
+        'orWhereNotToday with string'=>['orWhereNotToday',['a'],'||(!((date({a}))=(date({now({})}))))'],
         
-        'whereBeforeToday with string'=>['whereBeforeToday',['a'],'&&((date(a))<(date(now())))'],
-        'orWhereBeforeToday with string'=>['whereBeforeToday',['a'],'||((date(a))<(date(now())))'],
-        'whereNotBeforeToday with string'=>['whereBeforeToday',['a'],'&&((date(a))>=(date(now())))'],
-        'orWhereNotBeforeToday with string'=>['whereBeforeToday',['a'],'||((date(a))>=(date(now())))'],
+        'whereBeforeToday with string'=>['whereBeforeToday',['a'],          '&&((date({a}))<(date({now({})})))'],
+        'orWhereBeforeToday with string'=>['orWhereBeforeToday',['a'],      '||((date({a}))<(date({now({})})))'],
+        'whereNotBeforeToday with string'=>['whereNotBeforeToday',['a'],    '&&(!((date({a}))<(date({now({})}))))'],
+        'orWhereNotBeforeToday with string'=>['orWhereNotBeforeToday',['a'],'||(!((date({a}))<(date({now({})}))))'],
         
-        'whereAfterToday with string'=>['whereAfterToday',['a'],'&&((date(a))>(date(now())))'],
-        'orWhereAfterToday with string'=>['whereAfterToday',['a'],'||((date(a))>(date(now())))'],
-        'whereNotAfterToday with string'=>['whereAfterToday',['a'],'&&((date(a))<=(date(now())))'],
-        'orWhereNotAfterToday with string'=>['whereAfterToday',['a'],'||((date(a))<=(date(now())))'],
+        'whereAfterToday with string'=>['whereAfterToday',['a'],          '&&((date({a}))>(date({now({})})))'],
+        'orWhereAfterToday with string'=>['orWhereAfterToday',['a'],      '||((date({a}))>(date({now({})})))'],
+        'whereNotAfterToday with string'=>['whereNotAfterToday',['a'],    '&&(!((date({a}))>(date({now({})}))))'],
+        'orWhereNotAfterToday with string'=>['orWhereNotAfterToday',['a'],'||(!((date({a}))>(date({now({})}))))'],
 
-        'whereTodayOrBefore with string'=>['whereTodayOrBefore',['a'],'&&((date(a))<=(date(now())))'],
-        'orWhereTodayOrBefore with string'=>['whereTodayOrBefore',['a'],'||((date(a))<=(date(now())))'],
-        'whereNotTodayOrBefore with string'=>['whereTodayOrBefore',['a'],'&&((date(a))>(date(now())))'],
-        'orWhereNotTodayOrBefore with string'=>['whereTodayOrBefore',['a'],'||((date(a))>(date(now())))'],
+        'whereTodayOrBefore with string'=>['whereTodayOrBefore',['a'],          '&&((date({a}))<=(date({now({})})))'],
+        'orWhereTodayOrBefore with string'=>['orWhereTodayOrBefore',['a'],      '||((date({a}))<=(date({now({})})))'],
+        'whereNotTodayOrBefore with string'=>['whereNotTodayOrBefore',['a'],    '&&(!((date({a}))<=(date({now({})}))))'],
+        'orWhereNotTodayOrBefore with string'=>['orWhereNotTodayOrBefore',['a'],'||(!((date({a}))<=(date({now({})}))))'],
         
-        'whereTodayOrAfter with string'=>['whereTodayOrAfter',['a'],'&&((date(a))>=(date(now())))'],
-        'orWhereTodayOrAfter with string'=>['whereTodayOrAfter',['a'],'||((date(a))>=(date(now())))'],
-        'whereNotTodayOrAfter with string'=>['whereTodayOrAfter',['a'],'&&((date(a))<(date(now())))'],
-        'orWhereNotTodayOrAfter with string'=>['whereTodayOrAfter',['a'],'||((date(a))<(date(now())))'],
+        'whereTodayOrAfter with string'=>['whereTodayOrAfter',['a'],          '&&((date({a}))>=(date({now({})})))'],
+        'orWhereTodayOrAfter with string'=>['orWhereTodayOrAfter',['a'],      '||((date({a}))>=(date({now({})})))'],
+        'whereNotTodayOrAfter with string'=>['whereNotTodayOrAfter',['a'],    '&&(!((date({a}))>=(date({now({})}))))'],
+        'orWhereNotTodayOrAfter with string'=>['orWhereNotTodayOrAfter',['a'],'||(!((date({a}))>=(date({now({})}))))'],
 
-        'whereColumn with string'=>['whereColumn',['a','b'],'&&(((a)=(b))'],
-        'orWhereColumn with string'=>['whereColumn',['a','b'],'||((a)=(b))'],
-        'whereNotColumn with string'=>['whereColumn',['a','b'],'&&(!((a)=(b)))'],
-        'orWhereNotColumn with string'=>['whereColumn',['a','b'],'||(!((a)=(b)))'],
+        'whereColumn with string'=>['whereColumn',['a','b'],'&&((a)=(b))'],
+        'orWhereColumn with string'=>['orWhereColumn',['a','b'],'||((a)=(b))'],
+        'whereNotColumn with string'=>['whereNotColumn',['a','b'],'&&(!((a)=(b)))'],
+        'orWhereNotColumn with string'=>['orWhereNotColumn',['a','b'],'||(!((a)=(b)))'],
 
-        'whereHasAny'=>['whereHasAny',['a',[1,2,3]],'&&((a)has_any([1,2,3]))'],
-        'orWhereHasAny'=>['orWhereHasAny',['a',[1,2,3]],'||((a)has_any([1,2,3]))'],
-        'whereNotHasAny'=>['whereNotHasAny',['a',[1,2,3]],'&&(!((a)has_any([1,2,3])))'],
-        'orWhereNotHasAny'=>['orWhereNotHasAny',['a',[1,2,3]],'||(!((a)has_any([1,2,3])))'],
+        'whereHasAny'=>['whereHasAny',['a',[1,2,3]],'&&((a)has_any([{1},{2},{3}]))'],
+        'orWhereHasAny'=>['orWhereHasAny',['a',[1,2,3]],'||((a)has_any([{1},{2},{3}]))'],
+        'whereNotHasAny'=>['whereNotHasAny',['a',[1,2,3]],'&&(!((a)has_any([{1},{2},{3}])))'],
+        'orWhereNotHasAny'=>['orWhereNotHasAny',['a',[1,2,3]],'||(!((a)has_any([{1},{2},{3}])))'],
         
-        'whereHasAll'=>['whereHasAll',['a',[1,2,3]],'&&((a)has_any([1,2,3]))'],
-        'orWhereHasAll'=>['orWhereHasAll',['a',[1,2,3]],'||((a)has_any([1,2,3]))'],
-        'whereNotHasAll'=>['whereNotHasAll',['a',[1,2,3]],'&&(!((a)has_any([1,2,3])))'],
-        'orWhereNotHasAll'=>['orWhereNotHasAll',['a',[1,2,3]],'||(!((a)has_any([1,2,3])))'],
+        'whereHasAll'=>['whereHasAll',['a',[1,2,3]],'&&((a)has_all([{1},{2},{3}]))'],
+        'orWhereHasAll'=>['orWhereHasAll',['a',[1,2,3]],'||((a)has_all([{1},{2},{3}]))'],
+        'whereNotHasAll'=>['whereNotHasAll',['a',[1,2,3]],'&&(!((a)has_all([{1},{2},{3}])))'],
+        'orWhereNotHasAll'=>['orWhereNotHasAll',['a',[1,2,3]],'||(!((a)has_all([{1},{2},{3}])))'],
         
-        'whereHasNone'=>['whereHasNone',['a',[1,2,3]],'&&((a)has_any([1,2,3]))'],
-        'orWhereHasNone'=>['orWhereHasNone',['a',[1,2,3]],'||((a)has_any([1,2,3]))'],
-        'whereNotHasNone'=>['whereNotHasNone',['a',[1,2,3]],'&&(!((a)has_any([1,2,3])))'],
-        'orWhereNotHasNone'=>['orWhereNotHasNone',['a',[1,2,3]],'||(!((a)has_any([1,2,3])))'],
+        'whereHasNone'=>['whereHasNone',['a',[1,2,3]],'&&((a)has_none([{1},{2},{3}]))'],
+        'orWhereHasNone'=>['orWhereHasNone',['a',[1,2,3]],'||((a)has_none([{1},{2},{3}]))'],
+        'whereNotHasNone'=>['whereNotHasNone',['a',[1,2,3]],'&&(!((a)has_none([{1},{2},{3}])))'],
+        'orWhereNotHasNone'=>['orWhereNotHasNone',['a',[1,2,3]],'||(!((a)has_none([{1},{2},{3}])))'],
         
-        'whereAny with array and two string'=>['whereAny',[['a','b'],'=',1],'&&(((a)=(1))||((b)=(2)))'],
-        'orWhereAny with array and two string'=>['orWhereAny',[['a','b'],'=',1],'||(((a)=(1))||((b)=(2)))'],
-        'whereNotAny with array and two string'=>['whereNotAny',[['a','b'],'=',1],'&&(!(((a)=(1))||((b)=(2))))'],
-        'orWhereNotAny with array and two string'=>['orWherNoteAny',[['a','b'],'=',1],'||(!(((a)=(1))||((b)=(2))))'],
+        'whereAny with array and two string'=>['whereAny',[['a','b'],'=',1],          '&&(((a)=(1))||((b)=(1)))'],
+        'orWhereAny with array and two string'=>['orWhereAny',[['a','b'],'=',1],      '||(((a)=(1))||((b)=(1)))'],
+        'whereNotAny with array and two string'=>['whereNotAny',[['a','b'],'=',1],    '&&(!(((a)=(1))||((b)=(1))))'],
+        'orWhereNotAny with array and two string'=>['orWhereNotAny',[['a','b'],'=',1],'||(!(((a)=(1))||((b)=(1))))'],
         
-        'whereAll with array and two string'=>['whereAll',[['a','b'],'=',1],'&&(((a)=(1))&&((b)=(2)))'],
-        'orWhereAll with array and two string'=>['orWhereAll',[['a','b'],'=',1],'||(((a)=(1))&&((b)=(2)))'],
-        'whereNotAll with array and two string'=>['whereNotAll',[['a','b'],'=',1],'&&(!(((a)=(1))&&((b)=(2))))'],
-        'orWhereNotAll with array and two string'=>['orWhereNotAll',[['a','b'],'=',1],'|(!(((a)=(1))&&((b)=(2))))'],
+        'whereAll with array and two string'=>['whereAll',[['a','b'],'=',1],          '&&(((a)=(1))&&((b)=(1)))'],
+        'orWhereAll with array and two string'=>['orWhereAll',[['a','b'],'=',1],      '||(((a)=(1))&&((b)=(1)))'],
+        'whereNotAll with array and two string'=>['whereNotAll',[['a','b'],'=',1],    '&&(!(((a)=(1))&&((b)=(1))))'],
+        'orWhereNotAll with array and two string'=>['orWhereNotAll',[['a','b'],'=',1],'||(!(((a)=(1))&&((b)=(1))))'],
         
-        'whereNone with array and two string'=>['whereNone',[['a','b'],'=',1],'&&(!(((a)=(1))||((b)=(2))))'],
-        'orWhereNone with array and two string'=>['orWhereNone',[['a','b'],'=',1],'||(!(((a)=(1))||((b)=(2))))'],
-        'whereNotNone with array and two string'=>['whereNotNone',[['a','b'],'=',1],'&&(!(!(((a)=(1))||((b)=(2)))))'],
-        'orWhereNotNone with array and two string'=>['orWhereNotNone',[['a','b'],'=',1],'||(!(!(((a)=(1))||((b)=(2)))))'],
+        'whereNone with array and two string'=>['whereNone',[['a','b'],'=',1]          ,'&&((!((a)=(1)))&&(!((b)=(1))))'],
+        'orWhereNone with array and two string'=>['orWhereNone',[['a','b'],'=',1]      ,'||((!((a)=(1)))&&(!((b)=(1))))'],
+        'whereNotNone with array and two string'=>['whereNotNone',[['a','b'],'=',1]    ,'&&(!((!((a)=(1)))&&(!((b)=(1)))))'],
+        'orWhereNotNone with array and two string'=>['orWhereNotNone',[['a','b'],'=',1],'||(!((!((a)=(1)))&&(!((b)=(1)))))'],
         ]);
