@@ -125,5 +125,6 @@ class MethodSignature extends Base
         if (is_object($param)) {
             return 'object';
         }
+        throw new \Exception("Can't get signature of parameter");
     }    
 }  
