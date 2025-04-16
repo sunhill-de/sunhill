@@ -157,5 +157,20 @@ test('analyze', function($tree, $expect, $expected_result)
             $result->right(new FloatNode(3.14));
             return $result;
         }, 'string', 'type'],
+    'deep binary node with wrong types'=>[ function()
+        {
+            $left = new BinaryNode('+');
+            $left->left(new StringNode('ABC'));
+            $left->right(new StringNode('DEF'));
+            
+            $right = new BinaryNode('+');
+            $right->left(new IntegerNode(10));
+            $right->right(new IntegerNode(20));
+            
+            $result = new BinaryNode('+');
+            $result->left($left);
+            $result->right($right);
+            return $result;
+        }, 'string', 'type'],
         
     ]);
