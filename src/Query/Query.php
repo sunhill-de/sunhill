@@ -329,9 +329,11 @@ class Query extends Base
         });
         $this->addMethod('where')->addParameter('array')->setAction(function(&$node, $array)
         {
+            $query = new static();
             foreach ($array as $row) {
-                $this->where(...$row);
+                $query->where(...$row);
             }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere());
         });        
     }
     
@@ -402,9 +404,11 @@ class Query extends Base
         });
         $this->addMethod('orWhere')->addParameter('array')->setAction(function(&$node, $array)
         {
+            $query = new static();
             foreach ($array as $row) {
-                $this->orWhere(...$row);
+                $query->where(...$row);
             }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere());
         });        
     }
 
@@ -475,9 +479,11 @@ class Query extends Base
         });
         $this->addMethod('whereNot')->addParameter('array')->setAction(function(&$node, $array)
         {
+            $query = new static();
             foreach ($array as $row) {
-                $this->whereNot(...$row);
+                $query->where(...$row);
             }
+            $this->addWhereCondition($node, '&&', $query->getQueryNode()->getWhere(),true);
         });                
     }
     
@@ -548,9 +554,11 @@ class Query extends Base
         });
         $this->addMethod('orWhereNot')->addParameter('array')->setAction(function(&$node, $array)
         {
+            $query = new static();
             foreach ($array as $row) {
-                $this->orWhereNot(...$row);
+                $query->where(...$row);
             }
+            $this->addWhereCondition($node, '||', $query->getQueryNode()->getWhere(),true);
         });
                
     }
