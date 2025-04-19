@@ -13,6 +13,7 @@ function getTestStorage()
     Properties::shouldReceive('loadAttribute')->with(1,1)->andReturn(['attribute1'=>'value1']);
     Properties::shouldReceive('loadAttribute')->with(1,2)->andReturn(['attribute2'=>'value2']);
     $test = new DummyAbstractObjectStorage();
+    $test::$DataPool = $test::$Data;
     $test->setStructure(ChildObject::getExpectedStructure());
     $test->load(1);
     

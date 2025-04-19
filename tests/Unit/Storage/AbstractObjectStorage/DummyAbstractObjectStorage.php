@@ -7,8 +7,9 @@ use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
 class DummyAbstractObjectStorage extends AbstractObjectStorage
 {
+    public static $DataPool;
     
-    public static $DataPool = [
+    public static $Data = [
         'objects'=>[
             [
                 'id'=>1,
@@ -127,6 +128,14 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
         }
     }
     
+    protected function insertObjects(array $values): int
+    {
+        $this->setID(count(static::$DataPool['objects'])+1);
+        $values['id'] = $this->getID();
+        $this->insertStorageSubid('objects', $values);
+        return $this->getID();
+    }
+    
     /**
      * Inserts into the given storage subid the given values. If value is a array of arrays then insert every entry as a separate record
      *
@@ -135,7 +144,13 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
      */
     protected function insertStorageSubid(string $subid, array $values)
     {
-        
+        if (isset($values[0])) {
+            foreach ($values as $value) {
+                $this->insertStorageSubid($subid, $value);
+            }
+        } else {
+            static::$DataPool[$subid][] = $values;
+        }
     }
     
     /**

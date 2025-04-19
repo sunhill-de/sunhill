@@ -53,6 +53,66 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         }
         return $result;
     }
+
+    /**
+     * Returns all field that belong to the given subid
+     * 
+     * @param string $name
+     * @return unknown[]
+     */
+    protected function getFieldsOf(string $name)
+    {
+        $result = [];
+        foreach ($this->structure->elements as $entry) {
+            if ($entry->storage_subid == $name) {
+                $result[] = $entry;
+            }
+        }
+        return $result;
+    }
+    
+    /**
+     * Returns alls fields that belong to the given subid and are not arrays
+     * 
+     * @param string $name
+     * @return unknown[]
+     */
+    protected function getSimpleFieldsOf(string $name)
+    {
+        $result = [];
+        foreach ($this->structure->elements as $entry) {
+            if (($entry->storage_subid == $name) && ($entry->type !== 'array')) {
+                $result[] = $entry;
+            }
+        }
+        return $result;        
+    }
+
+    protected function assembleValues(array $fields): array
+    {
+        $result = [];
+        foreach ($fields as $field) {
+            $result[$field->name] = $this->values[$field->name];
+        }
+        return $result;
+    }
+    
+    /**
+     * Returns all array fields that belong to the given subid
+     * 
+     * @param string $table
+     * @return array
+     */
+    protected function getArraysOf(string $table): array
+    {
+        $result = [];
+        foreach ($this->structure->elements as $entry) {
+            if (($entry->storage_subid == $table) && ($entry->type == 'array')) {
+                $result[] = $entry;
+            }
+        }
+        return $result;
+    }
         
     /**
      * Checks if the given id is a valid type (in this case an integer)
@@ -88,6 +148,8 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      */
     abstract protected function insertStorageSubid(string $subid, array $values);
 
+    abstract protected function insertObjects(array $values): int;
+    
     /**
      * Loads from the given storage subif the values with the given key
      * 
@@ -137,29 +199,62 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->commitLoadedAttributes();
     }
     
-    private function commitNewObjects()
+    private function commitNewObject()
     {
-        
+        $this->insertObjects($this->assembleValues($this->getSimpleFieldsOf('objects')));        
     }
     
     private function commitNewClasses()
     {
-        
+        $subids = $this->getStorageSubids();
+        foreach ($subids as $subid) {
+            if ($subid == 'objects') {
+                continue;
+            }
+            $values = $this->assembleValues($this->getSimpleFieldsOf($subid));
+            $values['id'] = $this->getID();
+            $this->insertStorageSubid($subid, $values);
+        }
+    }
+    
+    private function assmbleArrayValues(array $values)
+    {
+        $result = [];
+        foreach ($values as $key => $value) {
+            $result[] = ['container_id'=>$this->getID(),'index'=>$key,'element'=>$value];
+        }
+        return $result;
     }
     
     private function commitNewArrays()
     {
-        
+        $array_fields = $this->getArrays();
+        foreach ($array_fields as $field) {
+            $table_name = $field->storage_subid.'_'.$field->name;
+            if (!empty($this->values[$field->name])) {
+                $this->insertStorageSubid($table_name, $this->assmbleArrayValues($this->values[$field->name]));
+            }
+        }
     }
     
     private function commitNewTags()
     {
-        
+        $tags = [];
+        foreach ($this->values['_tags'] as $tag) {
+            $tags[] = ['container_id'=>$this->getID(),'tag_id'=>$tag];
+        }
+        $this->insertStorageSubid('tagobjectassigns',$tags);
     }
     
     private function commitNewAttributes()
     {
-        
+         $attributes = [];
+         foreach ($this->values['_attributes'] as $name => $value) {
+             $attribute_id = Properties::getAttributeID($name);
+             $attributes[] = ['container_id'=>$this->getID(), 'attribute_id'=>$attribute_id];
+             Properties::storeAttribute($attribute_id, $this->getID(), $value);
+         }
+         $this->insertStorageSubid('attributeobjectassigns', $attributes);
     }
 
     /**
@@ -170,7 +265,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      */
     protected function doCommitNew()
     {
-        $this->commitNewObjects();
+        $this->commitNewObject();
         $this->commitNewClasses();
         $this->commitNewArrays();
         $this->commitNewTags();
