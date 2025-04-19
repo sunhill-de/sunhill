@@ -9,6 +9,7 @@
  * ----------------------------------------------------------------------
  * Lang en
  * Reviewstatus: 2024-19-22
+ * Creation date: 2024-19-22
  * Localization: unknown
  * Documentation: all public
  * Tests: Unit/Managers/ManagerPropertiesTest.php
@@ -30,6 +31,7 @@ use Sunhill\Objects\Mysql\MysqlStorage;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\CallbackStorage;
+use Sunhill\Tags\Tag;
 
 /**
  * The PropertiesManager is accessed via the Properties facade. It's a singelton class
@@ -348,5 +350,15 @@ class PropertiesManager
             return $value;
         }
         return $calc($value);
+    }
+    
+    public function loadTag(int $id): Tag
+    {
+        
+    }
+    
+    public function loadAttribute(int $id, int $object_id): array
+    {
+        
     }
 }
