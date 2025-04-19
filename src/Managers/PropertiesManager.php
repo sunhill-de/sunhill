@@ -361,4 +361,14 @@ class PropertiesManager
     {
         
     }
+    
+    public function getAttributeID(string $name): ?int
+    {
+        
+    }
+    
+    public function storeAttribute(int $id, int $object_id, $value)
+    {
+        
+    }
 }
