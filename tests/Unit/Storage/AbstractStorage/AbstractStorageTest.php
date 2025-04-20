@@ -96,6 +96,14 @@ test('array append', function () {
     expect($test->getIndexedValue('array_val',2))->toEqual('XYZ');
 });
 
+test('array unset', function() 
+{
+    $test = new TestAbstractStorage();
+    $test->unsetIndexedValue('array_val',0);
+    expect($test->getIndexedValue('array_val',0))->toEqual('DEF');
+    expect($test->getElementCount('array_val'))->toEqual(1);
+});
+
 test('array count', function () {
     $test = new TestAbstractStorage();
     expect($test->getElementCount('array_val'))->toEqual(2);

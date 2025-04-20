@@ -250,6 +250,14 @@ abstract class AbstractStorage extends Base
     abstract protected function doSetIndexedValue(string $name, $index, $value);
     
     /**
+     * Removed the item with the index $index from the given array
+     * 
+     * @param string $name
+     * @param unknown $index
+     */
+    abstract protected function doUnsetIndexedValue(string $name, $index);
+    
+    /**
      * Perfoms action after setting the value
      * 
      * @param string $name
@@ -298,6 +306,15 @@ abstract class AbstractStorage extends Base
         $this->doSetIndexedValue($name, $index, $value);
         if ($this->isCachable()) {
             Cache::put($this->getCacheID().'.'.$name.'.'.$index, $value, $this->cache_time);            
+        }
+    }
+    
+    public function unsetIndexedValue(string $name, $index)
+    {
+        $this->checkAccess();
+        $this->doUnsetIndexedValue($name, $index);
+        if ($this->isCachable()) {
+            Cache::forget($this->getCacheID().'.'.$name.'.'.$index);
         }
     }
     
