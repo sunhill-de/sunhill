@@ -101,6 +101,17 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
         $this->setStructure(ChildObject::getExpectedStructure());    
     }
     
+    public static function getRecords(string $storage_id, string $key, $value)
+    {
+        $result = [];
+        foreach (static::$DataPool[$storage_id] as $data_set) {
+            if ($data_set[$key] == $value) {
+                $result[] = $data_set;
+            }
+        }
+        return $result;
+    }
+    
     /**
      * Updates the storage with the subid. It uses $key to identiy the record(s) and sets the givenvalues
      *
@@ -110,7 +121,7 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
     protected function updateStorageSubid(string $subid, int $key, array $values, string $key_field = 'id')
     {         
         foreach ($values as $value_key=>$value) {
-            static::$DataPool[$subid][$key][$value_key] = $value;
+            static::$DataPool[$subid][$key-1][$value_key] = $value;
         }
     }
     

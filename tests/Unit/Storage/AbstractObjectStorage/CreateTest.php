@@ -8,7 +8,7 @@ use Sunhill\Facades\Properties;
 
 uses(SunhillTestCase::class);
 
-function getTestStorage()
+function getTestStorageForCreation()
 {
     Properties::shouldReceive('getAttributeID')->with('attribute1')->andReturn(1);
     Properties::shouldReceive('getAttributeID')->with('attribute3')->andReturn(3);
@@ -44,7 +44,7 @@ function getTestStorage()
 
 test('Create a ChildObject creates the object', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
     
     expect($test::$DataPool['objects'][4]['id'])->toBe(5);
     expect($test::$DataPool['objects'][4]['_classname'])->toBe('ChildObject');
@@ -53,7 +53,7 @@ test('Create a ChildObject creates the object', function()
 
 test('Create a ChildObject creates the ParentObject simple field', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
     
     expect($test::$DataPool['parentobjects'][4]['id'])->toBe(5);
     expect($test::$DataPool['parentobjects'][4]['parent_int'])->toBe(666);
@@ -62,7 +62,7 @@ test('Create a ChildObject creates the ParentObject simple field', function()
 
 test('Create a ChildObject creates the ParentObject array', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
     
     expect($test::$DataPool['parentobjects_parent_sarray'][6]['container_id'])->toBe(5);
     expect($test::$DataPool['parentobjects_parent_sarray'][6]['index'])->toBe(0);
@@ -74,7 +74,7 @@ test('Create a ChildObject creates the ParentObject array', function()
 
 test('Create a ChildObject creates the ChildObject simple field', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
     
     expect($test::$DataPool['childobjects'][4]['id'])->toBe(5);
     expect($test::$DataPool['childobjects'][4]['child_int'])->toBe(777);
@@ -83,7 +83,7 @@ test('Create a ChildObject creates the ChildObject simple field', function()
 
 test('Create a ChildObject create the ChildObject array', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
     
     expect($test::$DataPool['childobjects_child_sarray'][6]['container_id'])->toBe(5);
     expect($test::$DataPool['childobjects_child_sarray'][6]['index'])->toBe(0);
@@ -95,7 +95,7 @@ test('Create a ChildObject create the ChildObject array', function()
 
 test('Create a ChildObject creates the tags', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
 
     expect($test::$DataPool['tagobjectassigns'][5]['container_id'])->toBe(5);
     expect($test::$DataPool['tagobjectassigns'][5]['tag_id'])->toBe(1);
@@ -106,7 +106,7 @@ test('Create a ChildObject creates the tags', function()
 
 test('Read a ChildObject reads the attributes', function()
 {
-    $test = getTestStorage();
+    $test = getTestStorageForCreation();
     
     expect($test::$DataPool['attributeobjectassigns'][5]['container_id'])->toBe(5);
     expect($test::$DataPool['attributeobjectassigns'][5]['attribute_id'])->toBe(1);

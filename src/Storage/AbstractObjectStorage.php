@@ -159,29 +159,88 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      */
     abstract protected function loadStorageSubid(string $subid, int $key, string $key_field = 'id'): array|\stdClass;
     
+    private function getDirtyFieldsOf(string $storage_subid)
+    {
+        $result = [];
+        $fields = $this->getFieldsOf($storage_subid);
+        foreach ($fields as $field) {
+            if ($this->isDirty($field->name)) {
+                $result[$field->name] = $this->values[$field->name];
+            }
+        }
+        return $result;
+    }
+    
     private function commitLoadedObjects()
     {
-        
+        $dirty = $this->getDirtyFieldsOf('objects');
+        if (!empty($dirty)) {
+            $this->updateStorageSubid('objects', $this->getID(), $dirty);
+        }
     }
     
     private function commitLoadedClasses()
     {
-        
+        $subids = $this->getStorageSubids();
+        foreach ($subids as $subid) {
+            if ($subid == 'objects') {
+                continue;
+            }
+            $values = $this->getDirtyFieldsOf($subid);
+            if (!empty($values)) {
+                $this->updateStorageSubid($subid, $this->getID(), $values);
+            }
+        }        
+    }
+    
+    private function updateArray($field)
+    {
+        $table_name = $field->storage_subid.'_'.$field->name;
+        $this->deleteStorageSubid($table_name, $this->getID(),'container_id');
+        if (!empty($this->values[$field->name])) {
+            $this->insertStorageSubid($table_name, $this->assmbleArrayValues($this->values[$field->name]));
+        }        
     }
     
     private function commitLoadedArrays()
     {
-        
+        $array_fields = $this->getArrays();
+        foreach ($array_fields as $array)
+        {
+            if ($this->isDirty($array->name)) {
+                $this->updateArray($array);
+            }
+        }
     }
     
     private function commitLoadedTags()
     {
-        
+        if ($this->isDirty('_tags')) {
+            $this->deleteStorageSubid('tagobjectassigns',$this->getID(),'container_id');
+            if (!empty($this->values['_tags'])) {
+                $this->commitNewTags();
+            }
+        }
+    }
+    
+    private function commitAttribute(string $attribute, $value)
+    {
+        $attribute_id = Properties::getAttributeID($attribute);
+        $attributes = ['container_id'=>$this->getID(), 'attribute_id'=>$attribute_id];
+        Properties::storeAttribute($attribute_id, $this->getID(), $value);
+        $this->insertStorageSubid('attributeobjectassigns', $attributes);
     }
     
     private function commitLoadedAttributes()
     {
-        
+        if ($this->isDirty('_attributes')) {
+            $this->deleteStorageSubid('attributeobjectassigns',$this->getID(),'container_id');
+            if (!empty($this->values['_attributes'])) {
+                foreach ($this->values['_attributes'] as $attribute => $value) {
+                    $this->commitAttribute($attribute, $value);
+                }
+            }
+        }
     }
     
     /**
