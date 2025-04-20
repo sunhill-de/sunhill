@@ -40,7 +40,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
         if (empty($name)) {
             return !empty($this->shadow); // The storage is dirty when there is any entry in shadow
         }
-        if (!isset($this->values[$name])) { // Is this field known?
+        if (!array_key_exists($name, $this->values)) { // Is this field known?
             throw new FieldNotAvaiableException("The field '$name' is not defined.");
         }
         return isset($this->shadow[$name]);
@@ -126,8 +126,17 @@ abstract class AbstractPersistentStorage extends CommonStorage
     {
         $this->checkShadow($name);
         unset($this->values[$name][$index]);
+        if ((count($this->values[$name]) && is_int(array_keys($this->values[$name])[0]))) {
+            $this->values[$name] = array_values($this->values[$name]);
+        }
     }
-        
+    
+    public function clearArray(string $name)
+    {
+        $this->checkShadow($name);
+        $this->values[$name] = [];
+    }
+    
     /**
      * Returns the values that where modified in an already loaded storage
      * 
