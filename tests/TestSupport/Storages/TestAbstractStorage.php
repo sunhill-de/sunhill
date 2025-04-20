@@ -75,6 +75,12 @@ class TestAbstractStorage extends AbstractStorage
             $this->values[$name][$index] = $value;
         }
     }
+   
+    protected function doUnsetIndexedValue(string $name, $index)
+    {
+        unset($this->values[$name][$index]);
+        $this->values[$name] = array_values($this->values[$name]); // Reindex!
+    }
     
 }
 

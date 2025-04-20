@@ -47,6 +47,11 @@ abstract class SimpleStorage extends CommonStorage
         // Should not be called
     }
     
+    protected function doUnsetIndexedValue(string $name, $index)
+    {
+        // Should not be called        
+    }
+    
     protected function doGetIsInitialized(string $name): bool
     {
         return true;

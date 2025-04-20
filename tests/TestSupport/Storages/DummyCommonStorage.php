@@ -24,5 +24,11 @@ class DummyCommonStorage extends CommonStorage
         
     }
     
+    protected function doUnsetIndexedValue(string $name, $index)
+    {
+        // Should not be called
+    }
+    
+    
 }
     

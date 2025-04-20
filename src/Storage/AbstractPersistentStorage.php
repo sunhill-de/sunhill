@@ -121,7 +121,13 @@ abstract class AbstractPersistentStorage extends CommonStorage
             }
         }
     }
-            
+ 
+    protected function doUnsetIndexedValue(string $name, $index)
+    {
+        $this->checkShadow($name);
+        unset($this->values[$name][$index]);
+    }
+        
     /**
      * Returns the values that where modified in an already loaded storage
      * 
