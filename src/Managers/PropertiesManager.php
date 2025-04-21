@@ -357,18 +357,50 @@ class PropertiesManager
         
     }
     
+    /**
+     * Loads the attribute with the attribute_id $id that belongs to the object identified by $object_id
+     * 
+     * @param int $id The id of the attribute
+     * @param int $object_id The id of the object
+     * @return array associative array with one row. The key is the name of the attribute the value is the value of the attribute
+     */
     public function loadAttribute(int $id, int $object_id): array
     {
         
     }
     
+    /**
+     * Returns the id of the attribute with the given name of null if no attribute with this name exists
+     * 
+     * @param string $name The name of the attribute to search for
+     * @return int|NULL the id of the attribute or null if none exists
+     */
     public function getAttributeID(string $name): ?int
     {
         
     }
     
+    /**
+     * Stores the value $value for the attribute $id and the object $object_id in the attribute storage
+     * 
+     * @param int $id
+     * @param int $object_id
+     * @param unknown $value
+     */
     public function storeAttribute(int $id, int $object_id, $value)
     {
         
     }
+    
+    /**
+     * Deletes the attribute with the id $id for the object identified by $object_id
+     * 
+     * @param int $id
+     * @param int $object_id
+     */
+    public function unsetAttribute(int $id, int $object_id)
+    {
+        
+    }
+    
 }
