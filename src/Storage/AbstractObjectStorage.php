@@ -387,38 +387,49 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->loadAttributes();        
     }
     
-    private function deleteObjects()
+    private function deleteObjects(int $id)
     {
-        
+        $this->deleteStorageSubid('objects',$id); 
     }
     
-    private function deleteClasses()
+    private function deleteClasses(int $id)
     {
-        
+        $subids = $this->getStorageSubids();
+        foreach ($subids as $subid) {
+            $this->deleteStorageSubid($subid, $id);
+        }        
     }
     
-    private function deleteArrays()
+    private function deleteArrays(int $id)
     {
-        
+        $array_fields = $this->getArrays();
+        foreach ($array_fields as $field) {
+            $table_name = $field->storage_subid.'_'.$field->name;
+            $this->deleteStorageSubid($table_name, $id, 'container_id');
+        }        
     }
     
-    private function deleteTags()
+    private function deleteTags(int $id)
     {
-        
+        $this->deleteStorageSubid('tagobjectassigns', $id, 'container_id');
     }
     
-    private function deleteAttributes()
+    private function deleteAttributes(int $id)
     {
-        
+        $data = $this->loadStorageSubid('attributeobjectassigns', $id, 'container_id');
+        foreach ($data as $entry) {
+            Properties::unsetAttribute($entry->attribute_id,$id);
+        }
+        $this->deleteStorageSubid('attributeobjectassigns', $id, 'container_id');
     }
     
     protected function doDelete(mixed $id)
     {
-        $this->deleteObjects();
-        $this->deleteClasses();
-        $this->deleteArrays();
-        $this->deleteTags();
-        $this->deleteAttributes();        
+        $this->deleteObjects($id);
+        $this->deleteClasses($id);
+        $this->deleteArrays($id);
+        $this->deleteTags($id);
+        $this->deleteAttributes($id);        
     }
     
 }

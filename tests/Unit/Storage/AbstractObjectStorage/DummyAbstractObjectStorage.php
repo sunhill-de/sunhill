@@ -137,6 +137,7 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 unset(static::$DataPool[$subid][$i]);
             }
         }
+        static::$DataPool[$subid] = array_values(static::$DataPool[$subid]); // Reindex
     }
     
     protected function insertObjects(array $values): int
