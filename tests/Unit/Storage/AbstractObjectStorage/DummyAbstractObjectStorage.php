@@ -4,6 +4,13 @@ namespace Sunhill\Tests\Unit\Storage\AbstractObjectStorage;
 
 use Sunhill\Storage\AbstractObjectStorage;
 use Sunhill\Tests\TestSupport\Objects\ChildObject;
+use Sunhill\Query\QueryParser\QueryNode;
+use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\IdentifierNode;
+use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Parser\Nodes\FloatNode;
+use Sunhill\Parser\Nodes\StringNode;
 
 class DummyAbstractObjectStorage extends AbstractObjectStorage
 {
@@ -180,10 +187,90 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 $result[] = makeStdClass($record);
             }
         }
+        return $result;
         if (count($result) == 1) {
             return $result[0];
         } else {
             return $result;
+        }
+    }
+    
+    private function getBinaryResult(\stdClass $record, BinaryNode $node)
+    {
+        $left = $this->getNodeResult($record, $node->left());
+        $right = $this->getNodeResult($record, $node->right());
+        switch ($node->getType()) {
+            case '<':
+                return $left < $right;
+            case '<=':
+                return $left <= $right;
+            case '>':
+                return $left > $right;
+            case '>=':
+                return $left >= $right;
+            case '=':
+                return $left == $right;
+            case '<>':
+                return $left <> $right;
+        }
+    }
+    
+    private function getNodeResult(\stdClass $record, ?Node $node)
+    {
+        if (is_null($node)) {
+            return true;
+        }
+        switch ($node::class) {
+            case BinaryNode::class:
+                return $this->getBinaryResult($record, $node);
+            case IdentifierNode::class:
+                $name = $node->getName();
+                return $record->$name;
+            case IntegerNode::class:    
+            case FloatNode::class:
+            case StringNode::class:
+                return $node->getValue();                
+        }
+    }
+    
+    private function assembleRecord(array $main_record_storage): \stdClass
+    {
+        $this->setID(null);
+        $this->loaded = false;
+        $this->load($main_record_storage['id']);
+        return makeStdClass($this->values);
+    }
+    
+    private function filterDatasets(string $main_storage_id, QueryNode $node)
+    {
+        $data_set = [];
+        foreach (static::$DataPool[$main_storage_id] as $main_storage_record) {
+            $record = $this->assembleRecord($main_storage_record);
+            if ($this->getNodeResult($record, $node->getWhere())) {
+                $data_set[] = $record;
+            }
+        }        
+        return $data_set;
+    }
+    
+    private function sortDataset(array $data_set, QueryNode $node)
+    {
+            
+    }
+    
+    private function doExecuteSelect(QueryNode $node)
+    {
+        $data_set = $this->filterDatasets($this->structure->options['storage_id']->value, $node);
+        $this->sortDataset($data_set, $node);
+        
+        return $data_set;
+    }
+    
+    protected function doExecuteQuery(QueryNode $node)
+    {
+        switch ($node->verb()) {
+            case 'select':
+                return $this->doExecuteSelect($node);
         }
     }
     
