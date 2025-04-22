@@ -336,7 +336,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $subids = $this->getStorageSubids();
         foreach ($subids as $subid) {
             $data = $this->loadStorageSubid($subid, $this->getID());
-            foreach ($data as $key => $value) {
+            foreach ($data[0] as $key => $value) { // We expect excactly one entry
                 $this->values[$key] = $value;
             }
         }
@@ -368,7 +368,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $data = $this->loadStorageSubid('attributeobjectassigns', $this->getID(), 'container_id');
         $this->values['_attributes'] = [];
         foreach ($data as $entry) {
-            $attribute = Properties::loadAttribute($this->getID(), $entry->attribute_id);
+            $attribute = Properties::loadAttribute($entry->attribute_id, $this->getID());
             $key = array_keys($attribute)[0];
             $value = array_values($attribute)[0];
             $this->values['_attributes'][$key] = $value;
