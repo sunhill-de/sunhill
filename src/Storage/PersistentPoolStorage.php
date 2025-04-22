@@ -19,6 +19,7 @@ namespace Sunhill\Storage;
 
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
+use Sunhill\Query\QueryParser\QueryNode;
 
 abstract class PersistentPoolStorage extends AbstractPersistentStorage
 {
@@ -145,6 +146,13 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
     public function getID(): mixed
     {
         return $this->id;
+    }
+    
+    abstract protected function doExecuteQuery(QueryNode $node);
+    
+    public function executeQuery(QueryNode $node)
+    {
+        return $this->doExecuteQuery($node);    
     }
     
 }
