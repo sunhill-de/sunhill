@@ -247,7 +247,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
         return false;
     }
     
-    final public function migrate()
+    public function migrate()
     {
         if (!$this->isAlreadyMigrated()) {
             $this->doMigrateNew();
