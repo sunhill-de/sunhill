@@ -431,5 +431,57 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->deleteTags($id);
         $this->deleteAttributes($id);        
     }
+
+    public function getStructureDiff($given_structure, $expected_structure)
+    {
+        
+    }
+
+    protected function assembleStructure(string $storage_subid)
+    {
+        
+    }
     
+    protected function getCurrentStructure(string $storage_subid)
+    {
+        
+    }
+    
+    private function migrateStorageObjectSubid(string $storage_subid)
+    {
+        if ($this->storageSubidExists($storage_subid)) {
+            $this->migrateUpdateStorageSubid($storage_subid, $this->getStructureDiff($this->getCurrentStructure($storage_subid),$this->assembleStructure($storage_subid)));
+        } else {
+            $this->migrateFreshStorageSubid($storage_subid, $this->assembleStructure($storage_subid));
+        }
+    }
+    
+    private function migrateStorageArraySubid(string $storage_subid)
+    {
+        
+    }
+    
+    private function migrateClasses()
+    {
+        $subids = $this->getStorageSubids();
+        foreach ($subids as $subid) {
+            if ($subid !== 'objects') {
+                $this->migrateStorageObjectSubid($subid);
+            }
+        }
+    }
+    
+    private function migrateArrays()
+    {
+        $array_fields = $this->getArrays();
+        foreach ($array_fields as $field) {
+            $table_name = $field->storage_subid.'_'.$field->name;
+            $this->migrateStorageSubid($table_name);
+        }
+    }
+    public function migrate()
+    {
+        $this->migrateClasses();
+        $this->migrateArrays();
+    }
 }
