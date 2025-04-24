@@ -434,12 +434,28 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
 
     public function getStructureDiff($given_structure, $expected_structure)
     {
-        
     }
 
-    protected function assembleStructure(string $storage_subid)
+    public function assembleStructure(string $storage_subid)
     {
-        
+        $result = new \stdClass();
+        foreach ($this->structure->elements as $name => $field) {
+            if ($field->storage_subid !== $storage_subid) {
+                continue;
+            }
+            $result->$name = new \stdClass();
+            $result->$name->type = $field->type;
+            switch ($field->type) {
+                case 'string':
+                    $result->$name->max_len = $field->max_length;
+                    break;
+                case 'array':
+                    $result->$name->index_type = $field->index_type;
+                    $result->$name->element_type = $field->element_type;
+                    break;
+            }
+        }
+        return $result;
     }
     
     protected function getCurrentStructure(string $storage_subid)
