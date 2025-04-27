@@ -42,7 +42,7 @@ test('assembleStructure', function($class, $storage_id, $structure)
 test('getStructureDiff()', function($new, $old, $expected)
 {
     $test = new DummyAbstractObjectStorage();
-    $result = $test->getStructureDiff(convertStructure($new), convertStructure($old));
+    $result = $test->getStructureDiff(convertStructure($old), convertStructure($new));
 
     expect($result == convertStructure($expected))->toBe(true);
 })->with([
@@ -56,6 +56,23 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_int'=>['type'=>'integer'],
             'test_string'=>['type'=>'string','max_len'=>3],
             'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        ],
+        [
+            'test_int'=>['given'=>[],'new'=>[]],
+            'test_string'=>['given'=>[],'new'=>[]],
+            'test_array'=>['given'=>[],'new'=>[]],
+        ]
+    ],
+    'both the same with joker'=>[
+        [
+            'test_int'=>['type'=>'integer'],
+            'test_string'=>['type'=>'string','max_len'=>3],
+            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        ],
+        [
+            'test_int'=>['*'],
+            'test_string'=>['*'],
+            'test_array'=>['*']
         ],
         [
             'test_int'=>['given'=>[],'new'=>[]],
@@ -79,6 +96,22 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_array'=>['given'=>[],'new'=>[]],
         ]
     ],
+    'Standard field appended with given as joker'=>[
+        [
+            'test_int'=>['type'=>'integer'],
+            'test_string'=>['type'=>'string','max_len'=>3],
+            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        ],
+        [
+            'test_string'=>['*'],
+            'test_array'=>['*']
+        ],
+        [
+            'test_int'=>['given'=>[],'new'=>['type'=>'integer']],
+            'test_string'=>['given'=>[],'new'=>[]],
+            'test_array'=>['given'=>[],'new'=>[]],
+        ]
+    ],
     'Standard field dropped'=>[
         [
             'test_string'=>['type'=>'string','max_len'=>3],
@@ -91,6 +124,22 @@ test('getStructureDiff()', function($new, $old, $expected)
         ],
         [
             'test_int'=>['given'=>['type'=>'integer'],'new'=>[]],
+            'test_string'=>['given'=>[],'new'=>[]],
+            'test_array'=>['given'=>[],'new'=>[]],
+        ]
+    ],
+    'Standard field dropped with given as joker'=>[
+        [
+            'test_string'=>['type'=>'string','max_len'=>3],
+            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        ],
+        [
+            'test_int'=>['*'],
+            'test_string'=>['*'],
+            'test_array'=>['*']
+        ],
+        [
+            'test_int'=>['given'=>['*'],'new'=>[]],
             'test_string'=>['given'=>[],'new'=>[]],
             'test_array'=>['given'=>[],'new'=>[]],
         ]
@@ -139,7 +188,7 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
         ],
         [
-            'test_int'=>['given'=>['type'=>'integer'],'new'=>['type'=>'string']],
+            'test_int'=>['given'=>['type'=>'string'],'new'=>['type'=>'integer']],
             'test_string'=>['given'=>[],'new'=>[]],
             'test_array'=>['given'=>[],'new'=>[]],
         ]
@@ -204,14 +253,14 @@ test('getStructureDiff()', function($new, $old, $expected)
         [
             'test_int'=>['type'=>'integer'],
             'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'index','element_type'=>'string']
+            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'string']
         ],
         [
             'test_int'=>['given'=>[],'new'=>[]],
             'test_string'=>['given'=>[],'new'=>[]],
             'test_array'=>['given'=>['element_type'=>'string'],'new'=>['element_type'=>'integer']],
         ]
-    ],
+    ], 
     'Complete table appended'=>[
         [
             'test_int'=>['type'=>'integer'],
@@ -227,6 +276,21 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_array'=>['given'=>['€'],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
         ]
     ],
+    'Complete table with joker'=>[
+        [
+            'test_int'=>['type'=>'integer'],
+            'test_string'=>['type'=>'string','max_len'=>3],
+            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        ],
+        [
+            '*'
+        ],
+        [
+            'test_int'=>['given'=>[],'new'=>[]],
+            'test_string'=>['given'=>[],'new'=>[]],
+            'test_array'=>['given'=>[],'new'=>[]],
+        ]
+    ]
 ]);
 
 test('Migrate just the parent', function()
