@@ -488,6 +488,14 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         }        
     }
     
+    /**
+     * Creates a diff object between the given_structure (e.g. the structure of the database, etc) and the expecte_structure
+     * (The structure that is defined by the current objects). This "diff" can then be used to apply a "patch".
+     * 
+     * @param unknown $given_structure
+     * @param unknown $expected_structure
+     * @return \stdClass
+     */
     public function getStructureDiff($given_structure, $expected_structure)
     {
         $result = new \stdClass();
