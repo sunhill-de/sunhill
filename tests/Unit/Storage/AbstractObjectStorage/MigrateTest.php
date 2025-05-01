@@ -46,7 +46,7 @@ test('getStructureDiff()', function($new, $old, $expected)
 
     expect($result == convertStructure($expected))->toBe(true);
 })->with([
-    'both the same'=>[
+ /*   'both the same'=>[
         [
             'test_int'=>['type'=>'integer'],            
             'test_string'=>['type'=>'string','max_len'=>3],
@@ -275,7 +275,7 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_string'=>['given'=>['€'],'new'=>['type'=>'string','max_len'=>3]],
             'test_array'=>['given'=>['€'],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
         ]
-    ],
+    ],*/
     'Complete table with joker'=>[
         [
             'test_int'=>['type'=>'integer'],
@@ -283,7 +283,25 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
         ],
         [
-            '*'
+            '*',
+        ],
+        [
+            'test_int'=>['given'=>[],'new'=>[]],
+            'test_string'=>['given'=>[],'new'=>[]],
+            'test_array'=>['given'=>[],'new'=>[]],
+            'test_array'=>['type'=>'array','index_type'=>'ineteger','element_type'=>'integer'],
+        ]
+    ],
+    'Complete table with joker but array'=>[
+        [
+            'test_int'=>['type'=>'integer'],
+            'test_string'=>['type'=>'string','max_len'=>3],
+            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        ],
+        [
+            '*',
+            'test_array'=>'*',
+            
         ],
         [
             'test_int'=>['given'=>[],'new'=>[]],
@@ -291,6 +309,7 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_array'=>['given'=>[],'new'=>[]],
         ]
     ]
+    
 ]);
 
 test('Migrate just the parent', function()

@@ -3,6 +3,7 @@
 namespace Sunhill\Tests\Unit\Storage\AbstractObjectStorage;
 
 use Sunhill\Storage\AbstractObjectStorage;
+use Sunhill\Storage\stdClass;
 use Sunhill\Tests\TestSupport\Objects\ChildObject;
 use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Parser\Nodes\Node;
@@ -273,5 +274,22 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 return $this->doExecuteSelect($node);
         }
     }
+    protected function getCurrentStructure(string $storage_subid): \stdClass
+    {
+        $return = new \stdClass();
+        foreach (static::$DataPool as $subid => $values) {
+            if ($subid == $storage_subid) {
+
+            } else if (str_starts_with($subid, $storage_subid)) {
+                
+            }
+        }
+    }
+
+    protected function patchStructure(\stdClass $diff)
+    {
+        // do nothing
+    }
+
     
 }

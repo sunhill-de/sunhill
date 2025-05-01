@@ -468,11 +468,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         }
     }
     
-    private function checkGivenStructure(&$result, $given_structure, $expected_structure)
+    private function checkGivenStructure(&$result, &$given_structure, $expected_structure)
     {
         foreach ($given_structure as $key => $value) {
-            if ((!isset($expected_structure->$key))) {
-                $result->$key->given = $value;
+            if ($value == '*') {
+                $given_structure
+            } else if ((!isset($expected_structure->$key))) {
+                $result->$key->given = $value;                
             } else {
                 $this->checkAttributes($result->$key, $given_structure->$key, $expected_structure->$key);
             }
@@ -501,9 +503,6 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $result = new \stdClass();
         $this->traverseStructure($result, $given_structure);
         $this->traverseStructure($result, $expected_structure);
-        if (isset($given_structure->{0}) && ($given_structure->{0} == '*')) {
-            return $result; // We have a joker just return
-        }
         if (!isset($given_structure->{0}) || ($given_structure->{0} !== '€')) {            
             $this->checkGivenStructure($result, $given_structure, $expected_structure);
         } else {
@@ -516,6 +515,12 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         return $result;
     }
 
+    /**
+     * Builds a structure descriptor for a diff
+     * 
+     * @param string $storage_subid
+     * @return \stdClass
+     */
     public function assembleStructure(string $storage_subid)
     {
         $result = new \stdClass();
@@ -537,47 +542,88 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         }
         return $result;
     }
-    
-    protected function getCurrentStructure(string $storage_subid)
+
+    protected function returnAsterik(): \stdClass
     {
+        $result = new \stdClass();
+        $result->{0} = '*';
+        return $result;        
+    }
+    /**
+     * Helper to mark a storage sub_id that doesn't exist
+     */
+    protected function returnEmptyStructure(): \stdClass
+    {
+        $result = new \stdClass();
+        $result->{0} = '€';
+        return $result;
+    }
+    
+    protected function returnField(string $type, array $attributes = []): \stdClass
+    {
+        $return = new \stdClass();
+        $return->type = $type;
+        foreach ($attributes as $key => $value) {
+            $return->$key = $value;
+        }
         
+        return $return;
     }
     
-    private function migrateStorageObjectSubid(string $storage_subid)
+    /**
+     * This method returns the current structure as implemented in the storage. All fields and attributes that
+     * are not defined explicitly in the storage can be marked with *. With the given parameter it is possible
+     * for the storage to test if there is any table at all for this storage_subid. If not the function can just
+     * return €
+     * 
+     * @param string $storage_subid The subid to search for. 
+     * @example
+     * A storage that includes the asked table and one array table can return:
+     * $return = new \stdClass();
+     * $return->storage_subid = new \stdClass();
+     * $return->storage_subid->field = new \stdClass();
+     * $return->storage_subid->field->type = 'string';
+     * $return->storage_subid->field->max_len = 10;
+     * $return->storage_subid_arrayfield = new \stdClass();
+     * $return->storage_subid_arrayfield->index_type = 'integer';
+     * $return->storage_subid_arrayfield->element_type = 'string';
+     * $return->storage_subid_arrayfield->type = 'array';
+     * 
+     * or
+     * 
+     * $return = new\stdClass();
+     * $return->storage_subid = $this->returnField('string',['max_len'=>10);
+     * $return->storage_subid_arrayfield = $this->returnField('array',['index_type'=>'integer','element_type'=>'string']);
+     *
+     * When the storage doesn't care about stringlength it can just set an asterik in the above code
+     * ...
+     * $return->storage_subid->field->max_len = "*";
+     * ...
+     * 
+     * When there is no storage at all with this id just return a stdclass with '€'
+     * 
+     * return returnEmptyStructure();
+     * or
+     * $return = new \stdClass();
+     * $return->{0} = '€';
+     */
+    abstract protected function getCurrentStructure(string $storage_subid): \stdClass;
+    
+    /**
+     * This methos performs the  actual patching of the storage.
+     * 
+     * @param unknown $diff
+     */
+    abstract protected function patchStructure(\stdClass $diff);
+    
+    public function migrate(?\stdClass $structure = null)
     {
-        if ($this->storageSubidExists($storage_subid)) {
-            $this->migrateUpdateStorageSubid($storage_subid, $this->getStructureDiff($this->getCurrentStructure($storage_subid),$this->assembleStructure($storage_subid)));
-        } else {
-            $this->migrateFreshStorageSubid($storage_subid, $this->assembleStructure($storage_subid));
+        if (!is_null($structure)) {
+            $this->setStructure($structure);
         }
-    }
-    
-    private function migrateStorageArraySubid(string $storage_subid)
-    {
-        
-    }
-    
-    private function migrateClasses()
-    {
-        $subids = $this->getStorageSubids();
-        foreach ($subids as $subid) {
-            if ($subid !== 'objects') {
-                $this->migrateStorageObjectSubid($subid);
-            }
-        }
-    }
-    
-    private function migrateArrays()
-    {
-        $array_fields = $this->getArrays();
-        foreach ($array_fields as $field) {
-            $table_name = $field->storage_subid.'_'.$field->name;
-            $this->migrateStorageSubid($table_name);
-        }
-    }
-    public function migrate()
-    {
-        $this->migrateClasses();
-        $this->migrateArrays();
+        $current  = $this->getCurrentStructure($this->structure->name);
+        $expected = $this->assembleStructure($this->structure->name);
+        $diff = $this->getStructureDiff($current, $expected);
+        $this->patchStructure($diff);
     }
 }
