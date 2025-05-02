@@ -18,6 +18,7 @@ namespace Sunhill\Storage\MysqlStorage;
 use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
+use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlLoader;
 use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlDeleter;
 use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlUpdater;
@@ -144,4 +145,9 @@ class MysqlObjectStorage extends PersistentPoolStorage
     {
         return new PoolMysqlQuery($this->target_subid, $this->structure);
     }
+    protected function doExecuteQuery(QueryNode $node)
+    {
+        
+    }
+
 }

@@ -65,5 +65,10 @@ class DummyStorage extends AbstractStorage
             $this->values[$name][$index] = $value;
         }
     }
+    protected function doUnsetIndexedValue(string $name, $index)
+    {
+        unsset($this->values[$name][$index]);
+    }
+
     
 }
