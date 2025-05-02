@@ -472,7 +472,6 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         foreach ($given_structure as $key => $value) {
             if ($value == '*') {
-                $given_structure
             } else if ((!isset($expected_structure->$key))) {
                 $result->$key->given = $value;                
             } else {
