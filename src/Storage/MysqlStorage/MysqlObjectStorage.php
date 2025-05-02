@@ -15,139 +15,88 @@
 
 namespace Sunhill\Storage\MysqlStorage;
 
-use Sunhill\Storage\PersistentPoolStorage;
-use Sunhill\Storage\Exceptions\IDNotFoundException;
-use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\AbstractObjectStorage;
 use Sunhill\Query\QueryParser\QueryNode;
-use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlLoader;
-use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlDeleter;
-use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlUpdater;
-use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlCreator;
-use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlMigrator;
-use Sunhill\Storage\MysqlStorage\ObjectUtils\PoolMysqlQuery;
+use Illuminate\Support\Facades\Schema;
+use Sunhill\Storage\Exceptions\StorageTableMissingException;
+use Illuminate\Support\Facades\DB;
 
-class MysqlObjectStorage extends PersistentPoolStorage
+class MysqlObjectStorage extends AbstractObjectStorage
 {
 
     /**
-     * Loads the record with id '$id' from database
-     * 
-     * {@inheritDoc}
-     * @see \Sunhill\Storage\PersistentPoolStorage::doLoad()
+     * Updates the storage with the subid. It uses $key to identiy the record(s) and sets the givenvalues
+     *
+     * @param unknown $key
+     * @param unknown $values
      */
-    protected function doLoad(mixed $id)
+    protected function updateStorageSubid(string $subid, int $key, array $values, string $key_field = 'id')
     {
-        $loader = new PoolMysqlLoader($this->structure);
-        if (is_null($this->values = $loader->load($id))) {
-            throw new IDNotFoundException("The id '$id' was not found.");
-        }
     }
     
     /**
-     * Deleted the record with id '$id'
-     * 
-     * {@inheritDoc}
-     * @see \Sunhill\Storage\PersistentPoolStorage::doDelete()
+     * Deletes all references to key from the given
+     *
+     * @param unknown $key
      */
-    protected function doDelete(mixed $id)
+    protected function deleteStorageSubid(string $subid, int $key, string $key_field = 'id')
     {
-        $deleter = new PoolMysqlDeleter($this->structure);
-        if (!$deleter->delete($id)) {
-            throw new IDNotFoundException("The id '$id' was not found.");            
-        }
+        $this->tableNeeded($subid);
+        DB::table($subid)->where($key_field,$key)->delete();
     }
     
-    /**
-     * Mysql database table expect integer as id
-     * 
-     * @param mixed $id
-     * @return bool
-     */
-    protected function isValidID(mixed $id): bool
+    protected function insertObjects(array $values): int
     {
-        return is_int($id);
-    }
-    
-    /**
-     * Updates the already stored record into the database
-     * 
-     * {@inheritDoc}
-     * @see \Sunhill\Storage\PersistentPoolStorage::doCommitLoaded()
-     */
-    protected function doCommitLoaded()
-    {
-       $updater = new PoolMysqlUpdater($this->structure);
-       $updater->update($this->getID(),$this->getModifiedValues());
-    }
-    
-    /**
-     * Writes a new record into the database and returns its id
-     * 
-     * {@inheritDoc}
-     * @see \Sunhill\Storage\PersistentPoolStorage::doCommitNew()
-     */
-    protected function doCommitNew()
-    {
-        $creator = new PoolMysqlCreator($this->structure);
-        if (!($id = $creator->create($this->values))) {
-            throw new IDNotFoundException("The id '$id' was not found.");            
-        }
+        $this->tableNeeded('objects');
+        $id = DB::table('objects')->insertGetId($this->getObjectFields($values));
+        $this->setID($id);
         return $id;
     }
     
     /**
-     * Creates all table that belong to the given structure
-     * 
-     * {@inheritDoc}
-     * @see \Sunhill\Storage\AbstractPersistentStorage::doMigrateNew()
+     * Inserts into the given storage subid the given values. If value is a array of arrays then insert every entry as a separate record
+     *
+     * @param string $subid
+     * @param array $values
      */
-    protected function doMigrateNew()
+    protected function insertStorageSubid(string $subid, array $values)
     {
-    }
-
-    protected $migrator;
-    
-    protected function doMigrateUpdate($info)
-    {
-        $this->migrator->migrate($info);
+        $this->tableNeeded($subid);
+        DB::table($subid)->insert($values);
     }
     
-    protected function getStorageSubids(): array
+    /**
+     * Loads from the given storage subif the values with the given key
+     *
+     * @param string $subid
+     * @param int $key
+     * @return array
+     */
+    protected function loadStorageSubid(string $subid, int $key, string $key_field = 'id'): array|\Traversable|\stdClass
     {
-        $result = [];
-        foreach ($this->structure as $entry) {
-            if (!in_array($entry->storage_subid,$result)) {
-                $result[] = $entry->storage_subid;
-            }
-        }
-        return $result;
-    }
-        
-    protected function isAlreadyMigrated(): bool
-    {
-        return true;
+        $this->tableNeeded($subid);
+        return DB::table($subid)->where($key_field, $key)->get();
     }
     
-    protected function migrationDirty()
-    {
-        $this->migrator = new PoolMysqlMigrator($this->structure);
-        return $this->migrator->migrationDirty();
-    }
-    
-    protected $target_subid;
-    
-    public function setTargetSubID(string $target_subid)
-    {
-        $this->target_subid = $target_subid;    
-    }
-    
-    protected function doQuery(): BasicQuery
-    {
-        return new PoolMysqlQuery($this->target_subid, $this->structure);
-    }
     protected function doExecuteQuery(QueryNode $node)
     {
-        
     }
 
+    protected function getCurrentStructure(string $storage_subid): \stdClass
+    {
+    }
+    
+    protected function patchStructure(\stdClass $diff)
+    {
+    }
+    
+    protected function tableNeeded(string $name)
+    {
+        if (!Schema::hasTable($name)) {
+            throw new StorageTableMissingException("The table '$name' is expected but missing.");
+        }
+    }
+    
+    
+    
 }
