@@ -157,7 +157,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      * @param int $key
      * @return array
      */
-    abstract protected function loadStorageSubid(string $subid, int $key, string $key_field = 'id'): array|\stdClass;
+    abstract protected function loadStorageSubid(string $subid, int $key, string $key_field = 'id'): array|\Traversable|\stdClass;
     
     private function getDirtyFieldsOf(string $storage_subid)
     {
