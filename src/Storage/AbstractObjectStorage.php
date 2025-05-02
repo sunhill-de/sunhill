@@ -432,6 +432,18 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->deleteAttributes($id);        
     }
 
+    private function testForSymbol($test, ?string $symbol = null): bool
+    {
+        if (!isset($test->{0})) {
+            return false;
+        }
+        if (is_null($symbol) || ($test->{0} == $symbol)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Tests if the structure only exists of '*' or '€'- If yes, it returns. If not it traverses all keys of structure and 
      * creates an empty array for it.
@@ -441,10 +453,10 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      */
     private function traverseStructure(&$result, $structure)
     {
-        if (isset($structure->{0})) {
-            return;
-        }
         foreach ($structure as $key => $value) {
+            if ($key == 0) {
+                continue;
+            }
             if (!isset($result->key)) {
                 $result->$key = new \stdClass();
                 $result->$key->given = new \stdClass();
@@ -455,7 +467,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     
     private function checkAttributes(&$key, $given_key, $expected_key)
     {
-        if (isset($given_key->{0}) && ($given_key->{0} == '*')) {
+        if ($this->testForSymbol($given_key, '*')) {
             return; // Do nothing
         }
         foreach ($given_key as $attribute_key => $attribute_value) {
@@ -471,9 +483,10 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     private function checkGivenStructure(&$result, &$given_structure, $expected_structure)
     {
         foreach ($given_structure as $key => $value) {
-            if ($value == '*') {
+            if (($key == 0) && ($value == '*')) {
+                continue;
             } else if ((!isset($expected_structure->$key))) {
-                $result->$key->given = $value;                
+                $result->$key->given = $this->returnAsterik();                
             } else {
                 $this->checkAttributes($result->$key, $given_structure->$key, $expected_structure->$key);
             }
@@ -483,9 +496,15 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     private function checkExpectedStructure(&$result, $given_structure, $expected_structure)
     {
         foreach ($expected_structure as $key => $value) {
-            if (($given_structure == ['€']) || (!isset($given_structure->$key))) {
+            if ($this->testForSymbol($given_structure,'*')) {
+                if ($value->type === 'array') {
+                    if (!isset($given_structure->$key)) {
+                        $result->$key->new = $value;
+                    } 
+                } 
+            } else if (($this->testForSymbol($given_structure,'€')) || (!isset($given_structure->$key))) {
                 $result->$key->new = $value;
-            }
+            } 
         }        
     }
     

@@ -43,10 +43,11 @@ test('getStructureDiff()', function($new, $old, $expected)
 {
     $test = new DummyAbstractObjectStorage();
     $result = $test->getStructureDiff(convertStructure($old), convertStructure($new));
-
-    expect($result == convertStructure($expected))->toBe(true);
+    $expected = convertStructure($expected);
+//    expect($result == convertStructure($expected))->toBe(true);
+    expect($result)->toEqual($expected);
 })->with([
- /*   'both the same'=>[
+    'both the same'=>[
         [
             'test_int'=>['type'=>'integer'],            
             'test_string'=>['type'=>'string','max_len'=>3],
@@ -275,7 +276,7 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_string'=>['given'=>['€'],'new'=>['type'=>'string','max_len'=>3]],
             'test_array'=>['given'=>['€'],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
         ]
-    ],*/
+    ],
     'Complete table with joker'=>[
         [
             'test_int'=>['type'=>'integer'],
@@ -288,8 +289,7 @@ test('getStructureDiff()', function($new, $old, $expected)
         [
             'test_int'=>['given'=>[],'new'=>[]],
             'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
-            'test_array'=>['type'=>'array','index_type'=>'ineteger','element_type'=>'integer'],
+            'test_array'=>['given'=>[],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
         ]
     ],
     'Complete table with joker but array'=>[
@@ -307,6 +307,22 @@ test('getStructureDiff()', function($new, $old, $expected)
             'test_int'=>['given'=>[],'new'=>[]],
             'test_string'=>['given'=>[],'new'=>[]],
             'test_array'=>['given'=>[],'new'=>[]],
+        ]
+    ],
+    'Complete table with joker but dropped array'=>[
+        [
+            'test_int'=>['type'=>'integer'],
+            'test_string'=>['type'=>'string','max_len'=>3],
+        ],
+        [
+            '*',
+            'test_array'=>'*',
+            
+        ],
+        [
+            'test_int'=>['given'=>[],'new'=>[]],
+            'test_string'=>['given'=>[],'new'=>[]],
+            'test_array'=>['given'=>['*'],'new'=>[]],
         ]
     ]
     
