@@ -47,7 +47,7 @@ test('getStructureDiff()', function($new, $old, $expected)
 //    expect($result == convertStructure($expected))->toBe(true);
     expect($result)->toEqual($expected);
 })->with([
-    'both the same'=>[
+   'both the same'=>[
         [
             'test_int'=>['type'=>'integer'],            
             'test_string'=>['type'=>'string','max_len'=>3],
@@ -300,7 +300,7 @@ test('getStructureDiff()', function($new, $old, $expected)
         ],
         [
             '*',
-            'test_array'=>'*',
+            'test_array'=>['*'],
             
         ],
         [
@@ -316,7 +316,7 @@ test('getStructureDiff()', function($new, $old, $expected)
         ],
         [
             '*',
-            'test_array'=>'*',
+            'test_array'=>['*'],
             
         ],
         [

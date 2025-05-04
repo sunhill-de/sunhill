@@ -486,7 +486,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             if (($key == 0) && ($value == '*')) {
                 continue;
             } else if ((!isset($expected_structure->$key))) {
-                $result->$key->given = $this->returnAsterik();                
+                $result->$key->given = $value;                
             } else {
                 $this->checkAttributes($result->$key, $given_structure->$key, $expected_structure->$key);
             }
