@@ -279,16 +279,32 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
         $return = new \stdClass();
         foreach (static::$DataPool as $subid => $values) {
             if ($subid == $storage_subid) {
-
+                $return->{0} = '*';
             } else if (str_starts_with($subid, $storage_subid)) {
-                
+                $return->$subid = $this->returnAsterik();                
             }
         }
+        return $return;
     }
 
     protected function patchStructure(\stdClass $diff)
     {
-        // do nothing
+        $new_arrays = [];
+        foreach ($diff as $field => $change) {
+            if (!empty($change->new)) {
+                if ($change->new->type == 'array') {
+                    $array_storage = $this->structure->elements[$field]->storage_subid.'_'.$field;
+                    if (!in_array($array_storage, $new_arrays)) {
+                        $new_arrays[] = $array_storage;
+                    }
+                } else if (!in_array($this->structure->elements[$field]->storage_subid, $new_arrays)) {
+                    $new_arrays[] = $this->structure->elements[$field]->storage_subid;
+                } 
+            }
+        }
+        foreach ($new_arrays as $array) {
+            static::$DataPool[$array] = [];
+        }
     }
 
     

@@ -340,8 +340,8 @@ test('Migrate just the parent', function()
     
     $test->migrate();
     
-    expect(array_key_exists($test::$DataPool['parentobjects']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['parentobjects_parent_sarray']))->toBe(true);
+    expect(array_key_exists('parentobjects',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('parentobjects_parent_sarray',$test::$DataPool))->toBe(true);
 });
 
 test('Migrate the child with existing parent', function()
@@ -354,10 +354,10 @@ test('Migrate the child with existing parent', function()
     
     $test->migrate();
     
-    expect(array_key_exists($test::$DataPool['parentobjects']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['parentobjects_parent_sarray']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['childobjects']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['childobjects_child_sarray']))->toBe(true);
+    expect(array_key_exists('parentobjects',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('parentobjects_parent_sarray',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('childobjects',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('childobjects_child_sarray',$test::$DataPool))->toBe(true);
 });
 
 test('Migrate the child without existing parent', function()
@@ -372,8 +372,8 @@ test('Migrate the child without existing parent', function()
     
     $test->migrate();
     
-    expect(array_key_exists($test::$DataPool['parentobjects']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['parentobjects_parent_sarray']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['childobjects']))->toBe(true);
-    expect(array_key_exists($test::$DataPool['childobjects_child_sarray']))->toBe(true);
+    expect(array_key_exists('parentobjects',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('parentobjects_parent_sarray',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('childobjects',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('childobjects_child_sarray',$test::$DataPool))->toBe(true);
 });
