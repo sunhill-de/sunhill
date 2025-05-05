@@ -34,7 +34,7 @@ class ParentObject extends ORMObject
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "parentobjects";
         $result->type = "record";
         $result->elements = [];
         

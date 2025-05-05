@@ -35,7 +35,7 @@ class ChildObject extends ParentObject
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "childobjects";
         $result->type = "record";
         $result->elements = [];
         
