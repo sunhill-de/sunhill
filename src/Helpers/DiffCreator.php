@@ -15,6 +15,9 @@ class DiffCreator extends Base
                 $result->$key = $entry;
             } else {
                 if ($this->isTraversable($entry)) {
+                    if (($new->$key == '*') && ($accept_new_asterik)) {
+                        continue;
+                    }
                     $subdiff = $this->traverseGiven($given->$key, $new->$key, $accept_given_asterik, $accept_new_asterik);
                     if (!empty((array)$subdiff)) {
                         $result->$key = $subdiff;
@@ -37,6 +40,9 @@ class DiffCreator extends Base
                 $result->$key = $entry;
             } else {
                 if ($this->isTraversable($entry)) {
+                    if (($given->$key == '*') && ($accept_given_asterik)) {
+                        continue;
+                    }
                     $subdiff = $this->traverseNew($given->$key, $new->$key, $accept_given_asterik, $accept_new_asterik);
                     if (!empty((array)$subdiff)) {
                         $result->$key = $subdiff;

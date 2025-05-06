@@ -99,6 +99,58 @@ test('get_diff() works', function($given, $new, $expected)
         ],
         ['given'=>[],'new'=>[]]
     ],
+    'nested both same with asterik in element in given'=>[
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>['subkey3'=>'value3','subkey4'=>'*'],
+            
+        ],
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>['subkey3'=>'value3','subkey4'=>'value4'],
+            
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'nested both same with asterik in element in new'=>[
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>['subkey3'=>'value3','subkey4'=>'value4'],
+            
+        ],
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>['subkey3'=>'value3','subkey4'=>'*'],
+            
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'nested both same with asterik in tree in given'=>[
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>'*',
+            
+        ],
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>['subkey3'=>'value3','subkey4'=>'value4'],
+            
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'nested both same with asterik in tree in new'=>[
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>['subkey3'=>'value3','subkey4'=>'value4'],
+            
+        ],
+        [
+            'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
+            'key2'=>'*',
+            
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
     'nested tree dropped'=>[
         [
             'key1'=>['subkey1'=>'value1','subkey2'=>'value2'],
