@@ -39,7 +39,7 @@ test('getScalarMessage works with non-scalar and replacement', function()
 
 test('get_diff() works', function($given, $new, $expected)
 {
-    expect(get_diff(makeStdClass($given), makeStdClass($new)))->toEqual(makeStdClass($expected));
+    expect(get_diff(makeStdClass($given), makeStdClass($new),true,true))->toEqual(makeStdClass($expected));
 })->with([
     'simple both same'=>[
         ['key'=>'value'],
@@ -65,6 +65,26 @@ test('get_diff() works', function($given, $new, $expected)
         ['key'=>'oldvalue'],
         ['key'=>'newvalue'],
         ['given'=>['key'=>'oldvalue'],'new'=>['key'=>'newvalue']]
+    ],
+    'simple entry value with asterik for given'=>[
+        ['key'=>'*'],
+        ['key'=>'newvalue'],
+        ['given'=>[],'new'=>[]]
+    ],
+    'simple entry dropped value with asterik for given'=>[
+        ['key'=>'*'],
+        [],
+        ['given'=>['key'=>'*'],'new'=>[]]
+    ],
+    'simple entry value with asterik for new'=>[
+        ['key'=>'oldvalue'],
+        ['key'=>'*'],
+        ['given'=>[],'new'=>[]]
+    ],
+    'simple entry add value with asterik for new'=>[
+        [],
+        ['key'=>'*'],
+        ['given'=>[],'new'=>['key'=>'*']]
     ],
     'nested both same'=>[
         [

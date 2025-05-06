@@ -20,7 +20,7 @@ class DiffCreator extends Base
                         $result->$key = $subdiff;
                     }
                 } else {
-                    if ($given->$key !== $new->$key) {
+                    if (($entry !== '*') && !(($new->$key == '*') && ($accept_new_asterik)) && ($given->$key !== $new->$key)) {
                         $result->$key = $given->$key;
                     }
                 }
@@ -42,7 +42,7 @@ class DiffCreator extends Base
                         $result->$key = $subdiff;
                     }
                 } else {
-                    if ($given->$key !== $new->$key) {
+                    if (($entry !== '*') && !(($given->$key == '*') && ($accept_given_asterik)) && ($given->$key !== $new->$key)) {
                         $result->$key = $new->$key;
                     }
                 }
