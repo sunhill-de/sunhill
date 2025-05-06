@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Database\MySqlConnection;
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
+use Sunhill\Helpers\DiffCreator;
 
 /**
  * @file sunhill_helpers.php
@@ -31,11 +32,15 @@ use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
  */
 function makeStdclass(array $values): \StdClass
 {
-    $result = new \StdClass();
-    foreach ($values as $key => $value) {
-        $result->$key = $value;
+    $expected = new \stdClass();
+    foreach ($values as $field=>$info) {
+        if (is_array($info)) {
+            $expected->$field = makeStdClass($info);
+        } else {
+            $expected->$field = $info;
+        }
     }
-    return $result;
+    return $expected;
 }
 
 function getScalarMessage(string $message, mixed $variable,string $replace = ""): string
@@ -89,4 +94,10 @@ function DBTableColumnAdditional(string $table_name, string $column_name): \stdC
     }
     
     return $result;
+}
+
+function get_diff($given, $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false): \stdClass
+{
+    $result = new DiffCreator();
+    return $result->getDiff($given, $new, $accept_given_asterik, $accept_new_asterik);
 }
