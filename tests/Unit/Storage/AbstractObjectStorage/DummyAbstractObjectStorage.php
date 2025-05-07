@@ -279,32 +279,36 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
         $return = new \stdClass();
         foreach (static::$DataPool as $subid => $values) {
             if ($subid == $storage_subid) {
-                $return->{0} = '*';
+                $return->$subid = '*';
             } else if (str_starts_with($subid, $storage_subid)) {
-                $return->$subid = $this->returnAsterik();                
+                $return->$subid = '*';                
             }
         }
         return $return;
     }
 
-    protected function patchStructure(\stdClass $diff)
+    private function patchGiven(\stdClass $diff)
     {
-        $new_arrays = [];
-        foreach ($diff as $field => $change) {
-            if (!empty($change->new)) {
-                if ($change->new->type == 'array') {
-                    $array_storage = $this->structure->elements[$field]->storage_subid.'_'.$field;
-                    if (!in_array($array_storage, $new_arrays)) {
-                        $new_arrays[] = $array_storage;
-                    }
-                } else if (!in_array($this->structure->elements[$field]->storage_subid, $new_arrays)) {
-                    $new_arrays[] = $this->structure->elements[$field]->storage_subid;
-                } 
+        foreach ($diff->given as $key => $value) {
+            if (!isset($diff->new->$key)) {
+                unsset(static::$DataPool[$key]);
             }
         }
-        foreach ($new_arrays as $array) {
-            static::$DataPool[$array] = [];
-        }
+    }
+    
+    private function patchNew(\stdClass $diff)
+    {
+        foreach ($diff->new as $key => $value) {
+            if (!isset($diff->given->$key)) {
+                static::$DataPool[$key] = [];
+            }
+        }        
+    }
+    
+    protected function patchStructure(\stdClass $diff)
+    {
+        $this->patchGiven($diff);
+        $this->patchNew($diff);
     }
 
     
