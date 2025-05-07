@@ -25,17 +25,33 @@ test('assembleStructure', function($class, $storage_id, $structure)
     $test = new DummyAbstractObjectStorage();
     $test->setStructure($class::getExpectedStructure());
     $expected = convertStructure($structure);
-    expect($test->assembleStructure($storage_id) == $expected)->toBe(true);
+    expect($test->assembleStructure($storage_id))->toEqual($expected);
 })->with([
     [ParentObject::class,'parentobjects',[
-        'parent_int'=>['type'=>'integer'],
-        'parent_string'=>['type'=>'string','max_len'=>3],
-        'parent_sarray'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        'parentobjects'=>[
+            'parent_int'=>['type'=>'integer'],
+            'parent_string'=>['type'=>'string','max_len'=>3],
+        ],
+        'parentobjects_parent_sarray'=>[
+            'type'=>'array','index_type'=>'integer','element_type'=>'integer'
+        ]
     ]],
     [ChildObject::class,'childobjects',[
-        'child_int'=>['type'=>'integer'],
-        'child_string'=>['type'=>'string','max_len'=>3],
-        'child_sarray'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+        'parentobjects'=>[
+            'parent_int'=>['type'=>'integer'],
+            'parent_string'=>['type'=>'string','max_len'=>3],
+        ],
+        'parentobjects_parent_sarray'=>[
+            'type'=>'array','index_type'=>'integer','element_type'=>'integer'
+        ],
+        'childobjects'=>[
+            'child_int'=>['type'=>'integer'],
+            'child_string'=>['type'=>'string','max_len'=>3],            
+        ],        
+        'childobjects_child_sarray'=>[
+            'type'=>'array',
+            'index_type'=>'integer',
+            'element_type'=>'integer']
     ]],
 ]);
 
@@ -49,283 +65,351 @@ test('getStructureDiff()', function($new, $old, $expected)
 })->with([
    'both the same'=>[
         [
-            'test_int'=>['type'=>'integer'],            
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],                
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'                
+            ]
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>[],
+            'new'=>[]
         ]
     ],
     'both the same with joker'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>
+            [
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>
+            [
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_int'=>['*'],
-            'test_string'=>['*'],
-            'test_array'=>['*']
+            'someobject'=>'*',
+            'someobject_test_array'=>'*'
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>[],
+            'new'=>[]
         ]
     ],
     'Standard field appended'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_int'=>['given'=>[],'new'=>['type'=>'integer']],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>[],
+            'new'=>['someobject'=>['test_string'=>['type'=>'string','max_len'=>3]]]
         ]
     ],
+    
     'Standard field appended with given as joker'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_string'=>['*'],
-            'test_array'=>['*']
+            'someobject_test_array'=>'*'
         ],
         [
-            'test_int'=>['given'=>[],'new'=>['type'=>'integer']],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>[],
+            'new'=>['someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ]]            
         ]
     ],
     'Standard field dropped'=>[
         [
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_int'=>['given'=>['type'=>'integer'],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>['someobject'=>['test_int'=>['type'=>'integer']]],
+            'new'=>[],
         ]
     ],
     'Standard field dropped with given as joker'=>[
         [
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject_test_array'=>[
+                'type'=>'array',
+                'index_type'=>'integer',
+                'element_type'=>'integer'
+            ]
         ],
         [
-            'test_int'=>['*'],
-            'test_string'=>['*'],
-            'test_array'=>['*']
+            'someobject'=>'*',
+            'someobject_test_array'=>'*'
         ],
         [
-            'test_int'=>['given'=>['*'],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>['someobject'=>'*'],
+            'new'=>[]
         ]
     ],
     'Array field appended'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],                
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
+            'given'=>[],
+            'new'=>[
+                'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],                
+            ]            
         ]
     ],
     'Array field dropped'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],'new'=>[]],
+            'given'=>['someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],],
+            'new'=>[]
         ]
     ],
-    'Standard field type changed'=>[
+    'Standard field type changed (int)'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['type'=>'string'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'string','max_len'=>3],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['given'=>['type'=>'string'],'new'=>['type'=>'integer']],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>['someobject'=>['test_int'=>['type'=>'string','max_len'=>3]]],
+            'new'=>['someobject'=>['test_int'=>['type'=>'integer']]],
         ]
     ],
-    'Standard field attribute changed'=>[
+    'Standard field type changed (string)'=>[
+                [
+                    'someobject'=>[
+                        'test_int'=>['type'=>'integer'],
+                        'test_string'=>['type'=>'string','max_len'=>3],
+                    ],
+                    'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
+                ],
+                [
+                    'someobject'=>[
+                        'test_int'=>['type'=>'integer'],
+                        'test_string'=>['type'=>'integer'],
+                    ],
+                    'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
+                ],
+                [
+                    'given'=>['someobject'=>['test_string'=>['type'=>'integer']]],
+                    'new'=>['someobject'=>['test_string'=>['type'=>'string','max_len'=>3]]]
+                ],
+   ],                 
+   'Standard field attribute changed'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>30],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>30],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>['max_len'=>30],'new'=>['max_len'=>3]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>['someobject'=>['test_string'=>['max_len'=>30]]],
+            'new'=>['someobject'=>['test_string'=>['max_len'=>3]]]
         ]
     ],
     'Standard field attribute changed with joker'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>'*'],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>'*'],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
+            'given'=>[],
+            'new'=>[]
         ]
     ],
     'Array field index type changed'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'string','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'string','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>['index_type'=>'string'],'new'=>['index_type'=>'integer']],
+            'given'=>['someobject_test_array'=>['index_type'=>'string']],
+            'new'=>['someobject_test_array'=>['index_type'=>'integer']],            
         ]
     ],
     'Array field element type changed'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'string']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'string'],
         ],
         [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>['element_type'=>'string'],'new'=>['element_type'=>'integer']],
+            'given'=>['someobject_test_array'=>['element_type'=>'string']],
+            'new'=>['someobject_test_array'=>['element_type'=>'integer']],
         ]
     ], 
+    'Array field with asterik in given'=>[
+        [
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
+        ],
+        [
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'*','element_type'=>'*'],
+        ],
+        [
+            'given'=>[],
+            'new'=>[],
+        ]
+    ],
     'Complete table appended'=>[
         [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
+            'someobject'=>[
+                'test_int'=>['type'=>'integer'],
+                'test_string'=>['type'=>'string','max_len'=>3],
+            ],
+            'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
         ],
         [
-            '€'            
         ],
         [
-            'test_int'=>['given'=>['€'],'new'=>['type'=>'integer']],
-            'test_string'=>['given'=>['€'],'new'=>['type'=>'string','max_len'=>3]],
-            'test_array'=>['given'=>['€'],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
+            'given'=>[],
+            'new'=>[
+                'someobject'=>[
+                    'test_int'=>['type'=>'integer'],
+                    'test_string'=>['type'=>'string','max_len'=>3],
+                ],
+                'someobject_test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer'],
+            ],                        
         ]
-    ],
-    'Complete table with joker'=>[
-        [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
-        ],
-        [
-            '*',
-        ],
-        [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']],
-        ]
-    ],
-    'Complete table with joker but array'=>[
-        [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-            'test_array'=>['type'=>'array','index_type'=>'integer','element_type'=>'integer']
-        ],
-        [
-            '*',
-            'test_array'=>['*'],
-            
-        ],
-        [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>[],'new'=>[]],
-        ]
-    ],
-    'Complete table with joker but dropped array'=>[
-        [
-            'test_int'=>['type'=>'integer'],
-            'test_string'=>['type'=>'string','max_len'=>3],
-        ],
-        [
-            '*',
-            'test_array'=>['*'],
-            
-        ],
-        [
-            'test_int'=>['given'=>[],'new'=>[]],
-            'test_string'=>['given'=>[],'new'=>[]],
-            'test_array'=>['given'=>['*'],'new'=>[]],
-        ]
-    ]
-    
+    ],    
 ]);
 
 test('Migrate just the parent', function()

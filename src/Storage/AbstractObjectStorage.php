@@ -518,7 +518,8 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      */
     public function getStructureDiff($given_structure, $expected_structure)
     {
-        $result = new \stdClass();
+        return get_diff($given_structure, $expected_structure, true, false);
+/*        $result = new \stdClass();
         $this->traverseStructure($result, $given_structure);
         $this->traverseStructure($result, $expected_structure);
         if (!isset($given_structure->{0}) || ($given_structure->{0} !== '€')) {            
@@ -530,7 +531,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             }
         }
         $this->checkExpectedStructure($result, $given_structure, $expected_structure);
-        return $result;
+        return $result; */
     }
 
     /**
@@ -543,18 +544,26 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         $result = new \stdClass();
         foreach ($this->structure->elements as $name => $field) {
-            if ($field->storage_subid !== $storage_subid) {
+            $subid = $field->storage_subid;
+            if ($subid === 'objects') {
                 continue;
             }
-            $result->$name = new \stdClass();
-            $result->$name->type = $field->type;
+            $field_info = new \stdClass();
+            $field_info->type = $field->type;
             switch ($field->type) {
-                case 'string':
-                    $result->$name->max_len = $field->max_length;
-                    break;
                 case 'array':
-                    $result->$name->index_type = $field->index_type;
-                    $result->$name->element_type = $field->element_type;
+                    $subid = $subid.'_'.$name;
+                    $field_info->index_type   = $field->index_type;
+                    $field_info->element_type = $field->element_type;
+                    $result->$subid = $field_info;
+                    break;
+                case 'string':
+                    $field_info->max_len = $field->max_length;
+                default:
+                    if (!isset($result->$subid)) {
+                        $result->$subid = new \stdClass();
+                    } 
+                    $result->$subid->$name = $field_info;
                     break;
             }
         }
