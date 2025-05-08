@@ -82,12 +82,60 @@ class MysqlObjectStorage extends AbstractObjectStorage
     {
     }
 
-    protected function getCurrentStructure(string $storage_subid): \stdClass
+    private function getStringMaxLen(string $storage_subid, string $column_name): string|int
+    {
+        
+    }
+    
+    private function getDescriptorForColumn(string $storage_subid, string $column_name): \stdClass
+    {
+        $result = new \stdClass();
+        switch ($result->type = DBTableColumnType($storage_subid, $column_name)) {
+            case 'string':
+                $result->max_len = $this->getStringMaxLen($storage_subid, $column_name);
+                break;
+        }
+        return $result;
+    }
+    
+    protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string
+    {
+        $result = new \stdClass();
+        foreach (Schema::getColumnListing($storage_subid) as $column) {
+            $result->$column = $this->getDescriptorForColumn($storage_subid, $column):
+        }
+        return $result;
+    }
+    
+    /**
+     * Returns the tables that belong to the given storage subid.
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractObjectStorage::getStoragesFor()
+     */
+    protected function getStoragesFor(string $storage_subid): array
+    {
+        $result = [];
+        foreach (DB::connection()->getSchemaBuilder()->getTables() as $db_table) {
+            if (str_starts_with($db_table['name'], $storage_subid)) {
+                $result[] = $db_table;
+            }
+        }        
+        return $result;
+    }
+    
+    protected function dropStorage(string $storage_name)
+    {
+        Schema::drop($storage_name);        
+    }
+    
+    protected function createStorage(string $storage_name, $info)
     {
     }
     
-    protected function patchStructure(\stdClass $diff)
+    protected function alterStorage(string $storage_name, $from, $to)
     {
+        // Do nothing here
     }
     
     protected function tableNeeded(string $name)

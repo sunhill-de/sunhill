@@ -114,6 +114,22 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         return $result;
     }
         
+    protected function getObjectFields(array $values)
+    {
+        $object_fields = ['_classname','_uuid','_read_cap','_modify_cap','_delete_cap','_created_at','_updated_at'];
+        $result = [];
+        
+        foreach ($object_fields as $field) {
+            if (array_key_exists($field, $values)) {
+                $result[$field] = $values[$field];
+            }
+        }
+        if (!isset($result['_classname'])) {
+            $result['_classname'] = $this->structure->options['name']->value;
+        }
+        return $result;
+    }
+    
     /**
      * Checks if the given id is a valid type (in this case an integer)
      * 
@@ -634,14 +650,60 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      * $return = new \stdClass();
      * $return->{0} = '€';
      */
-    abstract protected function getCurrentStructure(string $storage_subid): \stdClass;
+    protected function getCurrentStructure(string $storage_subid): \stdClass
+    {
+        $result = new \stdClass();
+        foreach ($this->getStoragesFor($storage_subid) as $storage) {
+            $result->$storage_subid = $this->getCurrentStorageStructure($storage);            
+        }
+        return $result;
+    }
+    
+    /**
+     * 
+     * @param string $storage_subid
+     * @return \stdClass
+     */
+    abstract protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string;
+    
+    abstract protected function getStoragesFor(string $storage_subid): array;
+    
+    abstract protected function dropStorage(string $storage_name);
+    
+    abstract protected function createStorage(string $storage_name, $info);
+    
+    abstract protected function alterStorage(string $storage_name, $from, $to);
     
     /**
      * This methos performs the  actual patching of the storage.
      * 
      * @param unknown $diff
      */
-    abstract protected function patchStructure(\stdClass $diff);
+    private function patchGiven(\stdClass $diff)
+    {
+        foreach ($diff->given as $key => $value) {
+            if (!isset($diff->new->$key)) {
+                $this->dropStorage($key);
+            } else {
+                $this->alterStorage($key, $diff->given->$key, $diff->new->$key);
+            }
+        }
+    }
+    
+    private function patchNew(\stdClass $diff)
+    {
+        foreach ($diff->new as $key => $value) {
+            if (!isset($diff->given->$key)) {
+                $this->createStorage($key, $value);
+            }
+        }
+    }
+    
+    protected function patchStructure(\stdClass $diff)
+    {
+        $this->patchGiven($diff);
+        $this->patchNew($diff);
+    }
     
     public function migrate(?\stdClass $structure = null)
     {

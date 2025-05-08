@@ -274,42 +274,36 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 return $this->doExecuteSelect($node);
         }
     }
-    protected function getCurrentStructure(string $storage_subid): \stdClass
+ 
+    protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string
     {
-        $return = new \stdClass();
+        return '*';
+    }
+    
+    protected function getStoragesFor(string $storage_subid): array
+    {
+        $result = [];
         foreach (static::$DataPool as $subid => $values) {
-            if ($subid == $storage_subid) {
-                $return->$subid = '*';
-            } else if (str_starts_with($subid, $storage_subid)) {
-                $return->$subid = '*';                
+            if (str_starts_with($subid, $storage_subid)) {
+                $result[] = $subid;
             }
         }
-        return $return;
-    }
-
-    private function patchGiven(\stdClass $diff)
-    {
-        foreach ($diff->given as $key => $value) {
-            if (!isset($diff->new->$key)) {
-                unsset(static::$DataPool[$key]);
-            }
-        }
+        return $result;
     }
     
-    private function patchNew(\stdClass $diff)
+    protected function dropStorage(string $storage_name)
     {
-        foreach ($diff->new as $key => $value) {
-            if (!isset($diff->given->$key)) {
-                static::$DataPool[$key] = [];
-            }
-        }        
+        unsset(static::$DataPool[$storage_name]);        
     }
     
-    protected function patchStructure(\stdClass $diff)
+    protected function createStorage(string $storage_name, $info)
     {
-        $this->patchGiven($diff);
-        $this->patchNew($diff);
+        static::$DataPool[$storage_name] = [];        
     }
-
     
+    protected function alterStorage(string $storage_name, $from, $to)
+    {
+        // Do nothing here    
+    }
+        
 }

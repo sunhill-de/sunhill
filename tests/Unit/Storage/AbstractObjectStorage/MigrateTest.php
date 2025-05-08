@@ -412,6 +412,18 @@ test('getStructureDiff()', function($new, $old, $expected)
     ],    
 ]);
 
+test('Migrate with nothing to do', function()
+{
+    $test = new DummyAbstractObjectStorage();
+    $test::$DataPool = $test::$Data;
+    $test->setStructure(ParentObject::getExpectedStructure());
+    
+    $test->migrate();
+    
+    expect(array_key_exists('parentobjects',$test::$DataPool))->toBe(true);
+    expect(array_key_exists('parentobjects_parent_sarray',$test::$DataPool))->toBe(true);    
+});
+
 test('Migrate just the parent', function()
 {
     $test = new DummyAbstractObjectStorage();
