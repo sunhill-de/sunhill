@@ -199,28 +199,7 @@ class PoolMysqlMigrator extends PoolMysqlUtility
         }        
     }
     
-    private function getTableMatrices(string $prefix, Matrix &$matrix)
-    {
-        foreach (DB::connection()->getSchemaBuilder()->getTables() as $db_table) {
-            if (str_starts_with($db_table['name'], $prefix)) {
-                $this->getTableMatrix($db_table['name'], $matrix);
-            }
-        }
-    }
-    
-    private function getDatabaseMatrix()
-    {
-        $result = new Matrix();
-                
-        $table_prefixes = $this->getStorageSubids();
-        foreach ($table_prefixes as $prefix) {
-            if ($prefix !== 'objects') {
-                $this->getTableMatrices($prefix, $result);
-            }
-        }
-        return $result;        
-    }
-    
+        
     /**
      * Checks if there are any changes that have to be applied to the database
      * 
