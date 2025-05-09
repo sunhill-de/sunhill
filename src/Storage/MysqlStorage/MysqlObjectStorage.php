@@ -20,10 +20,18 @@ use Sunhill\Query\QueryParser\QueryNode;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Sunhill\Storage\Exceptions\InvalidTypeException;
 
 class MysqlObjectStorage extends AbstractObjectStorage
 {
 
+    public function IDExists($id): bool
+    {
+        $result = DB::table('objects')->where('id',$id)->first();
+        return !empty($result);
+    }
+    
     /**
      * Updates the storage with the subid. It uses $key to identiy the record(s) and sets the givenvalues
      *
@@ -32,6 +40,8 @@ class MysqlObjectStorage extends AbstractObjectStorage
      */
     protected function updateStorageSubid(string $subid, int $key, array $values, string $key_field = 'id')
     {
+        $this->tableNeeded($subid);
+        DB::table($subid)->where($key_field,'=',$key)->update($values);
     }
     
     /**
@@ -84,7 +94,7 @@ class MysqlObjectStorage extends AbstractObjectStorage
 
     private function getStringMaxLen(string $storage_subid, string $column_name): string|int
     {
-        
+        return '*'; // @todo This is only true for sqlite
     }
     
     private function getDescriptorForColumn(string $storage_subid, string $column_name): \stdClass
@@ -102,7 +112,7 @@ class MysqlObjectStorage extends AbstractObjectStorage
     {
         $result = new \stdClass();
         foreach (Schema::getColumnListing($storage_subid) as $column) {
-            $result->$column = $this->getDescriptorForColumn($storage_subid, $column):
+            $result->$column = $this->getDescriptorForColumn($storage_subid, $column);
         }
         return $result;
     }
@@ -117,8 +127,8 @@ class MysqlObjectStorage extends AbstractObjectStorage
     {
         $result = [];
         foreach (DB::connection()->getSchemaBuilder()->getTables() as $db_table) {
-            if (str_starts_with($db_table['name'], $storage_subid)) {
-                $result[] = $db_table;
+            if (Str::startsWith($db_table['name'], $storage_subid)) {
+                $result[] = $db_table['name'];
             }
         }        
         return $result;
@@ -129,8 +139,58 @@ class MysqlObjectStorage extends AbstractObjectStorage
         Schema::drop($storage_name);        
     }
     
+    private function createField($schema, string $name, string $type, $additional = null)
+    {
+        switch (strtolower($type)) {
+            case 'string':
+                if (!is_null($additional)) {
+                    $table_field = $schema->string($name, $additional);
+                } else {
+                    $table_field = $schema->string($name);
+                }
+                break;
+            case 'array':
+                break;
+            case 'record':
+                $table_field = $schema->text($name);
+                break;
+            case 'boolean':
+                $table_field = $schema->bool($name);
+                break;
+            case 'integer':
+            case 'text':
+            case 'date':
+            case 'time':
+            case 'datetime':
+            case 'float':
+                $table_field = $schema->$type($name);
+                break;
+            default:
+                throw new InvalidTypeException("The type '$type' is unknown.");
+        }
+        return $table_field;
+    }
+    
+    private function addFieldToSchema($schema, string $name, \stdClass $field)
+    {
+        $table_field = $this->createField($schema, $name, $field->type, isset($field->max_length)?$field->max_length:null);
+        if (isset($field->default)) {
+            $table_field->default($field->default);
+        }
+        if (isset($field->nullable)) {
+            $table_field->nullable();
+        }
+        return $table_field;
+    }
+    
     protected function createStorage(string $storage_name, $info)
     {
+        Schema::create($storage_name, function($table) use ($info)
+        {
+            foreach ($info as $name => $field_info) {
+                $this->addFieldToSchema($table, $name, $field_info);
+            }
+        });        
     }
     
     protected function alterStorage(string $storage_name, $from, $to)
@@ -144,7 +204,5 @@ class MysqlObjectStorage extends AbstractObjectStorage
             throw new StorageTableMissingException("The table '$name' is expected but missing.");
         }
     }
-    
-    
-    
+            
 }
