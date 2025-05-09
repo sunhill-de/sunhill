@@ -584,6 +584,10 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                     break;
             }
         }
+        if ($field->type !== 'array') {
+            $result->$storage_subid->id = new \stdClass();
+            $result->$storage_subid->type = 'integer';            
+        }
         return $result;
     }
 
