@@ -35,7 +35,7 @@ class Dummy extends ORMObject
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "dummies";
         $result->type = "record";
         $result->elements = [];
         
