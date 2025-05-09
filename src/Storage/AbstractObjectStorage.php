@@ -1,6 +1,6 @@
-<?php
+<?php 
 /**
- * @file PersistentSubPooledStorage.php
+ * @file AbstractObjectStorage.php
  * This class defines the standard expected behavior of a PersistentPoolStorage:
  * - ID is always an integer
  * - arrays are stores in subpools named like storage_id + _ + field_name
@@ -9,7 +9,7 @@
  * 
  * @author Klaus Dimde
  * Lang en
- * Reviewstatus: 2025-04-17
+ * Reviewstatus: 2025-05-09
  * Creation date: 2025-04-17
  * Localization: none
  * Documentation: unknown
@@ -344,7 +344,8 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->commitNewClasses();
         $this->commitNewArrays();
         $this->commitNewTags();
-        $this->commitNewAttributes();        
+        $this->commitNewAttributes();
+        return $this->getID();
     }
         
     private function loadClasses()
@@ -390,7 +391,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             $this->values['_attributes'][$key] = $value;
         }
     }
-
+    
     /**
      * Performs the load of data from the persitent
      * @param mixed $id
