@@ -11,12 +11,15 @@ test('Append a skippingdummygrandchild from database', function()
     $test = new MysqlObjectStorage();
     $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
     SkippingDummyGrandChild::prepareDatabase($this);
+    $test->setValue('_classname','SkippingDummyGrandchild');
+    $test->setValue('_attributes',[]);
+    $test->setValue('_tags',[]);
     $test->setValue('_uuid','ABCD');
     $test->setValue('_read_cap',null);
     $test->setValue('_modify_cap',null);
     $test->setValue('_delete_cap',null);
     $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_modified_at','2025-02-05 17:54:10');
+    $test->setValue('_updated_at','2025-02-05 17:54:10');
     
     $test->setValue('dummyint',1999);
     $test->setValue('dummygrandchildint',1997);

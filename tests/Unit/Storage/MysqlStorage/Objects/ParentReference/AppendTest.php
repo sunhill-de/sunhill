@@ -13,12 +13,15 @@ test('Append a parentreference with reference and array', function()
     $test = new MysqlObjectStorage();
     $test->setStructure(ParentReference::getExpectedStructure());
     ParentReference::prepareDatabase($this);
+    $test->setValue('_classname','ParentReference');
+    $test->setValue('_attributes',[]);
+    $test->setValue('_tags',[]);
     $test->setValue('_uuid','ABCD');
     $test->setValue('_read_cap',null);
     $test->setValue('_modify_cap',null);
     $test->setValue('_delete_cap',null);
     $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_modified_at','2025-02-05 17:54:10');
+    $test->setValue('_updated_at','2025-02-05 17:54:10');
     
     $test->setValue('parent_int',1213);
     $test->setValue('parent_reference',1);
@@ -35,12 +38,15 @@ test('Append a parentreference only with array', function()
     $test = new MysqlObjectStorage();
     $test->setStructure(ParentReference::getExpectedStructure());
     ParentReference::prepareDatabase($this);
+    $test->setValue('_classname','ParentReference');
+    $test->setValue('_attributes',[]);
+    $test->setValue('_tags',[]);
     $test->setValue('_uuid','ABCD');
     $test->setValue('_read_cap',null);
     $test->setValue('_modify_cap',null);
     $test->setValue('_delete_cap',null);
     $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_modified_at','2025-02-05 17:54:10');
+    $test->setValue('_updated_at','2025-02-05 17:54:10');
     
     $test->setValue('parent_int',1213);
     $test->setValue('parent_reference',null);
@@ -57,12 +63,15 @@ test('Append a parentreference with no references', function()
     $test = new MysqlObjectStorage();
     $test->setStructure(ParentReference::getExpectedStructure());
     ParentReference::prepareDatabase($this);
+    $test->setValue('_classname','ParentReference');
+    $test->setValue('_attributes',[]);
+    $test->setValue('_tags',[]);
     $test->setValue('_uuid','ABCD');
     $test->setValue('_read_cap',null);
     $test->setValue('_modify_cap',null);
     $test->setValue('_delete_cap',null);
     $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_modified_at','2025-02-05 17:54:10');
+    $test->setValue('_updated_at','2025-02-05 17:54:10');
     
     $test->setValue('parent_int',1213);
     $test->setValue('parent_reference',null);

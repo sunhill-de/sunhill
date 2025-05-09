@@ -13,12 +13,15 @@ test('Append a parentobject with array', function()
     $test->setStructure(ParentObject::getExpectedStructure());
     ParentObject::prepareDatabase($this);
     
+    $test->setValue('_classname','ParentObject');
+    $test->setValue('_attributes',[]);
+    $test->setValue('_tags',[]);
     $test->setValue('_uuid','ABCD');
     $test->setValue('_read_cap',null);
     $test->setValue('_modify_cap',null);
     $test->setValue('_delete_cap',null);
     $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_modified_at','2025-02-05 17:54:10');
+    $test->setValue('_updated_at','2025-02-05 17:54:10');
     
     $test->setValue('parent_int',1509);
     $test->setValue('parent_string','APA');
@@ -35,12 +38,15 @@ test('Append a parentobject with empty array', function()
     $test->setStructure(ParentObject::getExpectedStructure());
     ParentObject::prepareDatabase($this);
     
+    $test->setValue('_classname','ParentObject');
+    $test->setValue('_attributes',[]);
+    $test->setValue('_tags',[]);
     $test->setValue('_uuid','ABCD');
     $test->setValue('_read_cap',null);
     $test->setValue('_modify_cap',null);
     $test->setValue('_delete_cap',null);
     $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_modified_at','2025-02-05 17:54:10');
+    $test->setValue('_updated_at','2025-02-05 17:54:10');
     
     $test->setValue('parent_int',1509);
     $test->setValue('parent_string','APA');

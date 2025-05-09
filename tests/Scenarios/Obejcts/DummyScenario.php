@@ -105,7 +105,7 @@ class DummyScenario extends BasicScenario
             '_modify_cap'=>makeStdclass(['name'=>'_modify_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
             '_delete_cap'=>makeStdclass(['name'=>'_delete_cap','type'=>'string','max_length'=>20,'storage_subid'=>'objects']),
             '_created_at'=>makeStdclass(['name'=>'_created_at','type'=>'datetime','storage_subid'=>'objects']),
-            '_modified_at'=>makeStdclass(['name'=>'_modified_at','type'=>'datetime','storage_subid'=>'objects']),
+            '_updated_at'=>makeStdclass(['name'=>'_updated_at','type'=>'datetime','storage_subid'=>'objects']),
             'dummyint'=>makeStdclass(['name'=>'dummyint','type'=>'integer','storage_subid'=>'dummies']),
         ];        
     }
