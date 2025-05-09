@@ -184,7 +184,7 @@ test('get_diff() works', function($given, $new, $expected)
             'key2'=>['subkey3'=>'value3'],
             
         ],
-        ['given'=>['key2'=>['subkey4'=>'value4']],'new'=>[]]
+        ['given'=>['key2'=>['subkey4'=>'value4']],'new'=>['key2'=>[]]]
     ],
     'nested entry added'=>[
         [
@@ -197,7 +197,7 @@ test('get_diff() works', function($given, $new, $expected)
             'key2'=>['subkey3'=>'value3','subkey4'=>'value4'],
             
         ],
-        ['given'=>[],'new'=>['key2'=>['subkey4'=>'value4']]]
+        ['given'=>['key2'=>[]],'new'=>['key2'=>['subkey4'=>'value4']]]
     ],
     'nested entry changed'=>[
         [
@@ -211,6 +211,149 @@ test('get_diff() works', function($given, $new, $expected)
             
         ],
         ['given'=>['key2'=>['subkey4'=>'value4']],'new'=>['key2'=>['subkey4'=>'newvalue4']]]
+    ],
+
+    'super nested both same'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],            
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],            
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested both same with asterik in element in given'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'*'],'subkey4'=>'value6'],            
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+            
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested both same with asterik in element in new'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'*'],'subkey4'=>'value6'],
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested both same with asterik in tree in given'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>'*',
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested both same with asterik in tree in new'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>'*',
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested both same with asterik in sub tree in given'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>'*','subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested both same with asterik in sub tree in new'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>'*','subkey4'=>'value6'],
+        ],
+        ['given'=>[],'new'=>[]]
+    ],
+    'super nested tree dropped'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+        ],
+        ['given'=>['key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6']],'new'=>[]]
+    ],
+    'super nested tree added'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        ['given'=>[],'new'=>['key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6']]]
+    ],
+    'super nested sub tree dropped'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey4'=>'value6'],
+        ],
+        ['given'=>['key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4']]],'new'=>['key2'=>[]]]
+    ],
+    'super nested sub tree added'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        ['given'=>['key2'=>[]],'new'=>['key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4']]]]
+    ],
+    'super nested sub tree entry dropped'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        ['given'=>['key2'=>['subkey3'=>[]]],'new'=>['key2'=>['subkey3'=>['subsub3'=>'value3']]]]
+    ],
+    'super nested sub tree entry added'=>[
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub3'=>'value3','subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        [
+            'key1'=>['subkey1'=>['subsub1'=>'value1','subsub2'=>'value2'],'subkey2'=>'value5'],
+            'key2'=>['subkey3'=>['subsub4'=>'value4'],'subkey4'=>'value6'],
+        ],
+        ['new'=>['key2'=>['subkey3'=>[]]],'given'=>['key2'=>['subkey3'=>['subsub3'=>'value3']]]]
     ],
     
 ]);

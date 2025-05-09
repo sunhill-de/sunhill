@@ -57,11 +57,37 @@ class DiffCreator extends Base
         return $result;
     }
     
+    private function retraverseGiven($given, &$new, $new_array)
+    {
+        foreach ($given as $key => $entry) {
+            if (!isset($new->$key) && (isset($new_array->$key))) {
+                $new->$key = new \stdClass();
+                if ($this->isTraversable($given->$key)) {
+                    $this->retraverseGiven($given->$key, $new->$key, $new_array->$key);
+                }
+            }
+        }
+    }
+    
+    private function retraverseNew(&$given, $new, $given_array)
+    {
+        foreach ($new as $key => $entry) {
+            if (!isset($given->$key) && (isset($given_array->$key))) {
+                $given->$key = new \stdClass();
+                if ($this->isTraversable($new->$key)) {
+                    $this->retraverseNew($given->$key, $new->$key, $given_array->$key);
+                }
+            }
+        }
+    }
+    
     private function getTraversableDiff(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
         $result = new \stdClass();
         $result->given = $this->traverseGiven($given, $new, $accept_given_asterik, $accept_new_asterik);
         $result->new = $this->traverseNew($given, $new, $accept_given_asterik, $accept_new_asterik);
+        $this->retraverseGiven($result->given, $result->new, $new);
+        $this->retraverseNew($result->given, $result->new, $given);
         return $result;
     }
     
