@@ -20,6 +20,7 @@ namespace Sunhill\Storage;
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
 use Sunhill\Query\QueryParser\QueryNode;
+use Sunhill\Storage\Exceptions\IDNotFoundException;
 
 abstract class PersistentPoolStorage extends AbstractPersistentStorage
 {
@@ -63,6 +64,9 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
         if (!$this->isValidID($id)) {
             throw new InvalidIDException(getScalarMessage("The given id :variable is not valid for this storage",$id));
         }
+        if (!$this->IDExists($id)) {
+            throw new IDNotFoundException("The id '$id' was not found.");
+        }
         $this->setId($id);
         $this->doLoad($id);
         $this->loaded = true;
@@ -92,6 +96,9 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
         }
         if ($this->isLoaded() and is_null($id)) {
             $id = $this->getID();
+        }
+        if (!$this->IDExists($id)) {
+            throw new IDNotFoundException("The id '$id' was not found.");
         }
         $this->doDelete($id);
         $this->setID(null);
