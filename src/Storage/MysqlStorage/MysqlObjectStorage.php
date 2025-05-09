@@ -26,6 +26,12 @@ use Sunhill\Storage\Exceptions\InvalidTypeException;
 class MysqlObjectStorage extends AbstractObjectStorage
 {
 
+    /**
+     * Tests if the given id is stored in objects. Every object has to to stored there so this is the best place to look for it
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\PersistentPoolStorage::IDExists()
+     */
     public function IDExists($id): bool
     {
         $result = DB::table('objects')->where('id',$id)->first();
@@ -190,12 +196,47 @@ class MysqlObjectStorage extends AbstractObjectStorage
             foreach ($info as $name => $field_info) {
                 $this->addFieldToSchema($table, $name, $field_info);
             }
+            $table->primary('id');
         });        
+    }
+    
+    private function alterField(string $storage_name, string $name, \stdClass $from, \stdClass $to)
+    {
+        Schema::table($storage_name, function($table) use ($name, $to)
+        {
+            if (isset($to->type)) {
+                $this->createField($table, $name, $to->type)->change();                
+            }
+        });
+    }
+    
+    private function dropField(string $storage_name, string $name)
+    {
+        Schema::dropColumns($storage_name, $name);        
+    }
+    
+    private function addField(string $storage_name, string $name, \stdClass $descriptor)
+    {
+        Schema::table($storage_name, function($table) use ($name, $descriptor)
+        {
+            $this->addFieldToSchema($table, $name, $descriptor);
+        });
     }
     
     protected function alterStorage(string $storage_name, $from, $to)
     {
-        // Do nothing here
+        foreach ($from as $field => $descriptor) {
+            if (isset($to->$field)) {
+                $this->alterField($storage_name, $field, $descriptor, $to->$field);
+            } else {
+                $this->dropField($storage_name, $field);
+            }
+        }
+        foreach ($to as $field => $descriptor) {
+            if (!isset($from->$field)) {
+                $this->addField($storage_name, $field, $descriptor);
+            }
+        }
     }
     
     protected function tableNeeded(string $name)
