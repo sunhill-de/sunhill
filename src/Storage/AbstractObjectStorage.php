@@ -580,13 +580,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                     if (!isset($result->$subid)) {
                         $result->$subid = new \stdClass();
                     } 
+                    if (!isset($result->$subid->id)) {
+                        $result->$subid->id = new \stdClass();
+                        $result->$subid->id->type = 'integer';
+                    }
                     $result->$subid->$name = $field_info;
                     break;
             }
-        }
-        if ($field->type !== 'array') {
-            $result->$storage_subid->id = new \stdClass();
-            $result->$storage_subid->type = 'integer';            
         }
         return $result;
     }
