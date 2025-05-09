@@ -29,6 +29,7 @@ test('assembleStructure', function($class, $storage_id, $structure)
 })->with([
     [ParentObject::class,'parentobjects',[
         'parentobjects'=>[
+            'id'=>['type'=>'integer'],
             'parent_int'=>['type'=>'integer'],
             'parent_string'=>['type'=>'string','max_len'=>3],
         ],
@@ -38,6 +39,7 @@ test('assembleStructure', function($class, $storage_id, $structure)
     ]],
     [ChildObject::class,'childobjects',[
         'parentobjects'=>[
+            'id'=>['type'=>'integer'],
             'parent_int'=>['type'=>'integer'],
             'parent_string'=>['type'=>'string','max_len'=>3],
         ],
@@ -45,6 +47,7 @@ test('assembleStructure', function($class, $storage_id, $structure)
             'type'=>'array','index_type'=>'integer','element_type'=>'integer'
         ],
         'childobjects'=>[
+            'id'=>['type'=>'integer'],
             'child_int'=>['type'=>'integer'],
             'child_string'=>['type'=>'string','max_len'=>3],            
         ],        
@@ -137,7 +140,7 @@ test('getStructureDiff()', function($new, $old, $expected)
             ]
         ],
         [
-            'given'=>[],
+            'given'=>['someobject'=>[]],
             'new'=>['someobject'=>['test_string'=>['type'=>'string','max_len'=>3]]]
         ]
     ],
@@ -189,7 +192,7 @@ test('getStructureDiff()', function($new, $old, $expected)
         ],
         [
             'given'=>['someobject'=>['test_int'=>['type'=>'integer']]],
-            'new'=>[],
+            'new'=>['someobject'=>[]],
         ]
     ],
     'Standard field dropped with given as joker'=>[
