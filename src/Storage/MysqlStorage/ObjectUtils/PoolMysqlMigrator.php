@@ -24,16 +24,6 @@ use Sunhill\Helpers\Matrix;
 class PoolMysqlMigrator extends PoolMysqlUtility
 {
         
-    /**
-     * Deletes the given columns in table $table
-     * 
-     * @param string $table
-     * @param array $drop_columns
-     */
-    private function dropColumns(string $table, \stdClass $drop_columns)
-    {
-        Schema::dropColumns($table, array_keys((array)$drop_columns));
-    }
     
     /**
      * Adds the previously not existing columns
