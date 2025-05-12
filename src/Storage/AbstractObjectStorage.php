@@ -570,8 +570,10 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             switch ($field->type) {
                 case 'array':
                     $subid = $subid.'_'.$name;
-                    $field_info->index_type   = $field->index_type;
-                    $field_info->element_type = $field->element_type;
+                    $field_info->index_type   = new \stdClass();
+                    $field_info->index_type->type = $field->index_type;
+                    $field_info->element_type = new \stdClass();
+                    $field_info->element_type->type = $field->element_type;
                     $result->$subid = $field_info;
                     break;
                 case 'string':
@@ -659,7 +661,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         $result = new \stdClass();
         foreach ($this->getStoragesFor($storage_subid) as $storage) {
-            $result->$storage_subid = $this->getCurrentStorageStructure($storage);            
+            $result->$storage = $this->getCurrentStorageStructure($storage);            
         }
         return $result;
     }

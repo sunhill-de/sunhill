@@ -14,6 +14,7 @@ test('Migrate fresh for parentobject', function()
     ParentObject::prepareDatabase($this);
     
     Schema::drop('parentobjects');
+    Schema::drop('parentobjects_parent_sarray');
     
     $test->migrate();
     
@@ -202,14 +203,6 @@ test('column array type changed', function()
     $test->setStructure(ParentObject::getExpectedStructure());
     ParentObject::prepareDatabase($this);
     
-    Schema::dropIfExists('parentobjects');
-    Schema::create('parentobjects', function($table)
-    {
-        $table->integer('id');
-        $table->integer('parent_int');
-        $table->string('parent_string');
-        $table->primary('id');
-    });
     Schema::dropIfExists('parentobjects_parent_sarray');
     Schema::create('parentobjects_parent_sarray', function($table)
     {
@@ -230,14 +223,6 @@ test('column array index type changed', function()
     $test->setStructure(ParentObject::getExpectedStructure());
     ParentObject::prepareDatabase($this);
     
-    Schema::dropIfExists('parentobjects');
-    Schema::create('parentobjects', function($table)
-    {
-        $table->integer('id');
-        $table->integer('parent_int');
-        $table->string('parent_string');
-        $table->primary('id');
-    });
     Schema::dropIfExists('parentobjects_parent_sarray');
     Schema::create('parentobjects_parent_sarray', function($table)
     {

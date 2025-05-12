@@ -114,13 +114,42 @@ class MysqlObjectStorage extends AbstractObjectStorage
         return $result;
     }
     
-    protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string
+    private function tableIsArray(array|string $columns_or_tablename): bool
+    {
+        if (is_array($columns_or_tablename)) {
+            return !in_array('id', $columns_or_tablename);
+        }
+        return !in_array('id',Schema::getColumnListing($columns_or_tablename));
+    }
+    
+    private function getCurrentArrayStructure(string $storage_subid): \stdClass
     {
         $result = new \stdClass();
-        foreach (Schema::getColumnListing($storage_subid) as $column) {
+        $result->index_type =  $this->getDescriptorForColumn($storage_subid, 'index');
+        $result->element_type = $this->getDescriptorForColumn($storage_subid, 'element');
+        $result->type = 'array';        
+        return $result;
+    }
+    
+    private function getCurrentObjectStructure(string $storage_subid, array $columns): \stdClass
+    {
+        $result = new \stdClass();
+        
+        foreach ($columns as $column) {
             $result->$column = $this->getDescriptorForColumn($storage_subid, $column);
         }
+        
         return $result;
+    }
+    
+    protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string
+    {
+        $columns = Schema::getColumnListing($storage_subid);
+        if ($this->tableIsArray($columns)) {
+            return $this->getCurrentArrayStructure($storage_subid);
+        } else {
+            return $this->getCurrentObjectStructure($storage_subid, $columns);
+        }
     }
     
     /**
@@ -177,7 +206,7 @@ class MysqlObjectStorage extends AbstractObjectStorage
         return $table_field;
     }
     
-    private function addFieldToSchema($schema, string $name, \stdClass $field)
+    private function addFieldToSchema($schema, string $name, string|\stdClass $field)
     {
         $table_field = $this->createField($schema, $name, $field->type, isset($field->max_length)?$field->max_length:null);
         if (isset($field->default)) {
@@ -189,7 +218,45 @@ class MysqlObjectStorage extends AbstractObjectStorage
         return $table_field;
     }
     
-    protected function createStorage(string $storage_name, $info)
+    /**
+     * Helper function to determine if a storage description refers to an array or an object
+     * 
+     * @param \stdClass $info
+     * @return bool
+     */
+    private function isArray(\stdClass $info): bool
+    {
+        return (isset($info->type) && ($info->type == 'array'));
+    }
+    
+    /**
+     * This created an array storage. Index could be integer or string and the lement type could
+     * be any scalar
+     * 
+     * @param string $storage_name
+     * @param \stdClass $info
+     */
+    private function createArray(string $storage_name, \stdClass $info)
+    {
+        Schema::create($storage_name, function($table) use ($info)
+        {
+            $table->integer('container_id');
+            if ($info->index_type->type == 'integer') {
+                $table->integer('index');
+            } else {
+                $table->string('index');
+            }
+            $this->createField($table, 'element', $info->element_type->type);
+        });
+    }
+    
+    /**
+     * This creates an object storage by traversing the single elements and adding them to a schema
+     * 
+     * @param string $storage_name
+     * @param \stdClass $info
+     */
+    private function createObjectTable(string $storage_name, \stdClass $info)
     {
         Schema::create($storage_name, function($table) use ($info)
         {
@@ -200,14 +267,54 @@ class MysqlObjectStorage extends AbstractObjectStorage
         });        
     }
     
-    private function alterField(string $storage_name, string $name, \stdClass $from, \stdClass $to)
+    /**
+     * Whenever a storage is not existing (could be an object or an array storage) it has to be created freshly
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Storage\AbstractObjectStorage::createStorage()
+     */
+    protected function createStorage(string $storage_name, $info)
+    {
+        if ($this->isArray($info)) {
+            $this->createArray($storage_name, $info);
+        } else {
+            $this->createObjectTable($storage_name, $info);
+        };        
+    }
+        
+    private function alterArrayField(string $storage_name, string $name, \stdClass $from, \stdClass $to)
+    {
+        if ($name == 'index_type') {
+            $name = 'index';
+        } else if ($name == 'element_type') {
+            $name = 'element';
+        }
+        Schema::table($storage_name, function($table) use ($name, $to)
+        {            
+            if (isset($to->type)) {
+                $this->createField($table, $name, $to->type)->change();
+            }
+        });        
+    }
+    
+    private function alterObjectField(string $storage_name, string $name, \stdClass $from, \stdClass $to)
     {
         Schema::table($storage_name, function($table) use ($name, $to)
         {
+            
             if (isset($to->type)) {
-                $this->createField($table, $name, $to->type)->change();                
+                $this->createField($table, $name, $to->type)->change();
             }
-        });
+        });        
+    }
+    
+    private function alterField(string $storage_name, string $name, \stdClass $from, \stdClass $to)
+    {
+        if ($this->tableIsArray($storage_name)) {
+            $this->alterArrayField($storage_name, $name, $from, $to);
+        } else {
+            $this->alterObjectField($storage_name, $name, $from, $to);
+        }
     }
     
     private function dropField(string $storage_name, string $name)
