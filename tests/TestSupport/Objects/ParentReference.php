@@ -38,7 +38,7 @@ class ParentReference extends ORMObject
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "parentreferences";
         $result->type = "record";
         $result->elements = [];
         

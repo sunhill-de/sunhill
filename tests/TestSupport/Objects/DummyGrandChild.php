@@ -36,7 +36,7 @@ class DummyGrandChild extends DummyChild
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "dummygrandchildren";
         $result->type = "record";
         $result->elements = [];
         

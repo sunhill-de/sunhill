@@ -33,7 +33,7 @@ class SkippingDummyChild extends Dummy
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "skippingdummychildren";
         $result->type = "record";
         $result->elements = [];
         

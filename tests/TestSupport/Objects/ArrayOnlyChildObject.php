@@ -35,7 +35,7 @@ class ArrayOnlyChildObject extends ParentObject
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "";
+        $result->name = "arrayonlychildobjects";
         $result->type = "record";
         $result->elements = [];
         
