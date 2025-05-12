@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\DB;
 class SkippingDummyChildrenSeeder extends Seeder
 {
     
+    const DATA = [
+        ['id'=>14],
+        ['id'=>16],
+    ];
+    
     public function run(): void
     {
-        DB::table('skippingdummychildren')->insert([
-            ['id'=>14],
-            ['id'=>16],
-        ]);    
+        DB::table('skippingdummychildren')->insert(SkippingDummyChildrenSeeder::DATA);    
     }
     
 }

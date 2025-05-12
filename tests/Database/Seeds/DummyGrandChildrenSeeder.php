@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\DB;
 class DummyGrandChildrenSeeder extends Seeder
 {
     
+    const DATA = [
+        ['id'=>15,'dummygrandchildint'=>911],
+    ];
+    
     public function run(): void
     {
-        DB::table('dummygrandchildren')->insert([
-            ['id'=>15,'dummygrandchildint'=>911],
-        ]);    
+        DB::table('dummygrandchildren')->insert(DummyGrandChildrenSeeder::DATA);    
     }
     
 }

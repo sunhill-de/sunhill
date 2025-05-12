@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\DB;
 class ArrayOnlyChildObjectsSeeder extends Seeder
 {
     
+    const DATA = [
+        ['id'=>20],
+        ['id'=>21],
+    ];
+    
     public function run(): void
     {
-        DB::table('arrayonlychildobjects')->insert([
-            ['id'=>20],
-            ['id'=>21],
-        ]);    
+        DB::table('arrayonlychildobjects')->insert(ArrayOnlyChildObjectsSeeder::DATA);    
     }
     
 }

@@ -8,13 +8,15 @@ use Illuminate\Support\Facades\DB;
 class ArrayOnlyChildObjects_child_sarraySeeder extends Seeder
 {
     
+    const DATA = [
+        ['container_id'=>20,'index'=>0,'element'=>2000],
+        ['container_id'=>20,'index'=>1,'element'=>2100],
+        ['container_id'=>20,'index'=>2,'element'=>2200],
+    ];
+    
     public function run(): void
     {
-        DB::table('arrayonlychildobjects_child_sarray')->insert([
-            ['container_id'=>20,'index'=>0,'element'=>2000],
-            ['container_id'=>20,'index'=>1,'element'=>2100],
-            ['container_id'=>20,'index'=>2,'element'=>2200],
-        ]);    
+        DB::table('arrayonlychildobjects_child_sarray')->insert(ArrayOnlyChildObjects_child_sarraySeeder::DATA);    
     }
     
 }
