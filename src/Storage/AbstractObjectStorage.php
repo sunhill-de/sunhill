@@ -536,19 +536,6 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     public function getStructureDiff($given_structure, $expected_structure)
     {
         return get_diff($given_structure, $expected_structure, true, false);
-/*        $result = new \stdClass();
-        $this->traverseStructure($result, $given_structure);
-        $this->traverseStructure($result, $expected_structure);
-        if (!isset($given_structure->{0}) || ($given_structure->{0} !== '€')) {            
-            $this->checkGivenStructure($result, $given_structure, $expected_structure);
-        } else {
-            foreach ($result as $key => $value) {
-                $result->$key->given = new \stdClass();
-                $result->$key->given->{0} = '€';
-            }
-        }
-        $this->checkExpectedStructure($result, $given_structure, $expected_structure);
-        return $result; */
     }
 
     /**
@@ -569,6 +556,12 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             $field_info->type = $field->type;
             switch ($field->type) {
                 case 'array':
+                    // This is for objects that only define arrays
+                    if (!isset($result->$subid)) {
+                        $result->$subid = new \stdClass();
+                        $result->$subid->id = new \stdClass();
+                        $result->$subid->id->type = 'integer';
+                    }
                     $subid = $subid.'_'.$name;
                     $field_info->index_type   = new \stdClass();
                     $field_info->index_type->type = $field->index_type;
@@ -660,8 +653,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     protected function getCurrentStructure(string $storage_subid): \stdClass
     {
         $result = new \stdClass();
-        foreach ($this->getStoragesFor($storage_subid) as $storage) {
-            $result->$storage = $this->getCurrentStorageStructure($storage);            
+        foreach ($this->getStorageSubids() as $subid) {
+            if ($subid == 'objects') {
+                continue;
+            }
+            foreach ($this->getStoragesFor($subid) as $storage) {
+                $result->$storage = $this->getCurrentStorageStructure($storage);
+            }
         }
         return $result;
     }
