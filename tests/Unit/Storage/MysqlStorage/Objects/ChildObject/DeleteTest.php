@@ -18,7 +18,7 @@ test('Delete a childobject with both arrays', function()
     $this->assertDatabaseMissing('childobjects',['id'=>9]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>9]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>9]);
-});
+})->group('delete');
 
 test('Delete a childobject with parent array', function()
 {
@@ -32,7 +32,7 @@ test('Delete a childobject with parent array', function()
     $this->assertDatabaseMissing('childobjects',['id'=>10]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>10]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>10]);
-});
+})->group('delete');
 
 test('Read a childobject with child array', function()
 {
@@ -46,7 +46,7 @@ test('Read a childobject with child array', function()
     $this->assertDatabaseMissing('childobjects',['id'=>11]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>11]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>11]);
-});
+})->group('delete');
 
 test('Read a childobject with both arrays empty', function()
 {
@@ -60,4 +60,4 @@ test('Read a childobject with both arrays empty', function()
     $this->assertDatabaseMissing('childobjects',['id'=>12]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>12]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>12]);
-});
+})->group('delete');

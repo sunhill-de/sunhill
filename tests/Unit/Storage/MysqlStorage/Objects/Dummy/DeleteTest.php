@@ -21,7 +21,7 @@ test('delete a dummy with tags', function()
     
     $this->assertDatabaseMissing('dummies',['id'=>1]);
     $this->assertDatabaseMissing('tagobjectassigns',['container_id'=>1]);
-});
+})->group('delete');
 
 test('delete a dummy without tags', function()
 {
@@ -38,4 +38,4 @@ test('delete a dummy without tags', function()
     
     $this->assertDatabaseMissing('dummies',['id'=>5]);
     $this->assertDatabaseMissing('tagobjectassigns',['container_id'=>5]);
-});
+})->group('delete');

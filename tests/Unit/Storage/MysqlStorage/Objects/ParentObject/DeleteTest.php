@@ -16,7 +16,7 @@ test('Delete a parentobject with array', function()
     
     $this->assertDatabaseMissing('parentobjects',['id'=>7]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>7]);
-});
+})->group('delete');
 
 test('Delete a parentobject with empty array', function()
 {
@@ -28,5 +28,5 @@ test('Delete a parentobject with empty array', function()
     
     $this->assertDatabaseMissing('parentobjects',['id'=>8]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>8]);
-});
+})->group('delete');
 
