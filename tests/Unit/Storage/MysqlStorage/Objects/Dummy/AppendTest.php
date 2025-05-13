@@ -29,7 +29,7 @@ test('Append a Dummy', function()
     
     $this->assertDatabaseHas('dummies',['dummyint'=>1999]);
     $this->assertDatabaseHas('objects', ['_classname'=>'Dummy','_uuid'=>'ABCD','_created_at'=>'2025-02-05 17:54:10']);
-});
+})->group('append');
 
 test('Append a Dummy with tags', function()
 {
@@ -50,4 +50,4 @@ test('Append a Dummy with tags', function()
     
     $this->assertDatabaseHas('tagobjectassigns',['container_id'=>$test->getID(),'tag_id'=>1]);
     $this->assertDatabaseHas('tagobjectassigns',['container_id'=>$test->getID(),'tag_id'=>2]);
-});
+})->group('append');

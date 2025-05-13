@@ -32,5 +32,5 @@ test('Append a dummygrandchild from database', function()
     $this->assertDatabaseHas('dummies',['id'=>$test->getID(),'dummyint'=>1999]);
     $this->assertDatabaseHas('dummychildren',['id'=>$test->getID(),'dummychildint'=>1998]);    
     $this->assertDatabaseHas('dummygrandchildren',['id'=>$test->getID(),'dummygrandchildint'=>1997]);
-});
+})->group('append');
 

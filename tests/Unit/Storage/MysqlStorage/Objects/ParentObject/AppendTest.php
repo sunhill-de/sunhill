@@ -30,7 +30,7 @@ test('Append a parentobject with array', function()
     
     $this->assertDatabaseHas('parentobjects',['id'=>$test->getID(),'parent_int'=>1509,'parent_string'=>'APA']);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>$test->getID(),'index'=>0,'element'=>11]);
-});
+})->group('append');
 
 test('Append a parentobject with empty array', function()
 {
@@ -56,4 +56,4 @@ test('Append a parentobject with empty array', function()
     $this->assertDatabaseHas('parentobjects',['id'=>$test->getID(),'parent_int'=>1509,'parent_string'=>'APA']);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>$test->getID()]);
     
-});
+})->group('append');

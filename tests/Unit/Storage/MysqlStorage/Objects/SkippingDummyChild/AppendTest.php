@@ -29,5 +29,5 @@ test('Append a skippingdummychild from database', function()
     
     $this->assertDatabaseHas('dummies',['id'=>$test->getID(),'dummyint'=>1999]);
     $this->assertDatabaseHas('skippingdummychildren',['id'=>$test->getID()]);
-});
+})->group('append');
 
