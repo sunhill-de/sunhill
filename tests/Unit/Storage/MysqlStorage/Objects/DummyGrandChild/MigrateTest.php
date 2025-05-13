@@ -20,7 +20,7 @@ test('Migrate with nothing to do', function()
     $this->assertDatabaseTableColumnIsType('dummychildren', 'id', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'dummygrandchildint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with all missing', function()
 {
@@ -40,7 +40,7 @@ test('Migrate with all missing', function()
     $this->assertDatabaseTableColumnIsType('dummychildren', 'id', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'dummygrandchildint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with grand child missing', function()
 {
@@ -57,7 +57,7 @@ test('Migrate with grand child missing', function()
     $this->assertDatabaseTableColumnIsType('dummychildren', 'id', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'dummygrandchildint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with child missing', function()
 {
@@ -74,7 +74,7 @@ test('Migrate with child missing', function()
     $this->assertDatabaseTableColumnIsType('dummychildren', 'id', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'dummygrandchildint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with parent missing', function()
 {
@@ -91,4 +91,4 @@ test('Migrate with parent missing', function()
     $this->assertDatabaseTableColumnIsType('dummychildren', 'id', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'dummygrandchildint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummygrandchildren', 'id', 'integer');
-});
+})->group('migrate');

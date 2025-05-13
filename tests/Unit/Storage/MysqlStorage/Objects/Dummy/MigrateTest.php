@@ -19,7 +19,7 @@ test('Migrate with nothing to do', function()
     $this->assertDatabaseTableHasColumn('dummies','id');
     $this->assertDatabaseTableColumnIsType('dummies', 'dummyint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummies', 'id', 'integer');    
-});
+})->group('migrate');
 
 test('Migrate fresh for dummy', function()
 {
@@ -36,7 +36,7 @@ test('Migrate fresh for dummy', function()
     $this->assertDatabaseTableHasColumn('dummies','id');
     $this->assertDatabaseTableColumnIsType('dummies', 'dummyint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummies', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with a field dropped', function()
 {
@@ -58,7 +58,7 @@ test('Migrate with a field dropped', function()
     $this->assertDatabaseTableHasColumn('dummies','id');
     $this->assertDatabaseTableColumnIsType('dummies', 'dummyint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummies', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with a field added', function()
 {
@@ -78,7 +78,7 @@ test('Migrate with a field added', function()
     $this->assertDatabaseTableHasColumn('dummies','id');
     $this->assertDatabaseTableColumnIsType('dummies', 'dummyint', 'integer');
     $this->assertDatabaseTableColumnIsType('dummies', 'id', 'integer');
-});
+})->group('migrate');
 
 test('Migrate with a field type changed', function()
 {
@@ -97,4 +97,4 @@ test('Migrate with a field type changed', function()
         $this->assertDatabaseTableHasColumn('dummies','id');
         $this->assertDatabaseTableColumnIsType('dummies', 'dummyint', 'integer');
         $this->assertDatabaseTableColumnIsType('dummies', 'id', 'integer');
-});
+})->group('migrate');

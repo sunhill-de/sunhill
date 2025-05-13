@@ -25,7 +25,7 @@ test('Migrate with nothing to to', function()
     $this->assertDatabaseTableColumnIsType('arrayonlychildobjects_child_sarray','index','integer');
     $this->assertDatabaseTableHasColumn('arrayonlychildobjects_child_sarray','element');
     $this->assertDatabaseTableColumnIsType('arrayonlychildobjects_child_sarray','element','integer');
-});
+})->group('migrate');
 
 
 test('Migrate fresh', function()
@@ -48,5 +48,5 @@ test('Migrate fresh', function()
     $this->assertDatabaseTableColumnIsType('arrayonlychildobjects_child_sarray','index','integer');
     $this->assertDatabaseTableHasColumn('arrayonlychildobjects_child_sarray','element');
     $this->assertDatabaseTableColumnIsType('arrayonlychildobjects_child_sarray','element','integer');
-});
+})->group('migrate');
 

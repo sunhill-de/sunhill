@@ -27,7 +27,7 @@ test('Migrate fresh for parentobject', function()
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','element','integer');
-});
+})->group('migrate');
 
 test('column was dropped', function()
 {
@@ -56,7 +56,7 @@ test('column was dropped', function()
     
     $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
     $this->assertDatabaseTableHasNotColumn('parentobjects','dropped');
-});
+})->group('migrate');
 
 test('two columns were dropped', function()
 {
@@ -86,7 +86,7 @@ test('two columns were dropped', function()
     
     $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
     $this->assertDatabaseTableHasNotColumn('parentobjects','dropped');
-});
+})->group('migrate');
 
 test('column was added', function()
 {
@@ -112,7 +112,7 @@ test('column was added', function()
     $test->migrate();
     
     $this->assertDatabaseTableHasColumn('parentobjects','parent_string');
-});
+})->group('migrate');
 
 test('array column was dropped', function()
 {
@@ -147,7 +147,7 @@ test('array column was dropped', function()
     
     $this->assertDatabaseHasTable('parentobjects_parent_sarray');
     $this->assertDatabaseHasNotTable('parentobjects_droparray');
-});
+})->group('migrate');
 
 test('array column was added', function()
 {
@@ -168,7 +168,7 @@ test('array column was added', function()
     $test->migrate();
     
     $this->assertDatabaseHasTable('parentobjects_parent_sarray');
-});
+})->group('migrate');
 
 test('column type changed', function()
 {
@@ -195,7 +195,7 @@ test('column type changed', function()
     $test->migrate();
     
     $this->assertDatabaseTableColumnIsType('parentobjects','parent_int','integer');
-});
+})->group('migrate');
 
 test('column array type changed', function()
 {
@@ -215,7 +215,7 @@ test('column array type changed', function()
     
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','index','integer');
     
-});
+})->group('migrate');
 
 test('column array index type changed', function()
 {
@@ -235,5 +235,5 @@ test('column array index type changed', function()
     
     $this->assertDatabaseTableColumnIsType('parentobjects_parent_sarray','element','integer');
     
-});
+})->group('migrate');
 

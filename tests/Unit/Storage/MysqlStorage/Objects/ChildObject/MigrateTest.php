@@ -30,7 +30,7 @@ test('Migrate for childobject with nothing to do', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');
     
-});
+})->group('migrate');
 
 test('Migrate fresh for childobject (both not existant)', function()
 {
@@ -59,7 +59,7 @@ test('Migrate fresh for childobject (both not existant)', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');    
-});
+})->group('migrate');
 
 test('Migrate fresh for childobject (child not existant)', function()
 {
@@ -86,7 +86,7 @@ test('Migrate fresh for childobject (child not existant)', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');    
-});
+})->group('migrate');
 
 test('Migrate fresh for childobject (parent not existant)', function()
 {
@@ -113,7 +113,7 @@ test('Migrate fresh for childobject (parent not existant)', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');   
-});
+})->group('migrate');
 
 test('Migrate fresh for childobject (child array not existant)', function()
 {
@@ -139,7 +139,7 @@ test('Migrate fresh for childobject (child array not existant)', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');
-});
+})->group('migrate');
 
 test('Migrate fresh for childobject (parent array not existant)', function()
 {
@@ -165,7 +165,7 @@ test('Migrate fresh for childobject (parent array not existant)', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');
-});
+})->group('migrate');
 
 test('Migrate fresh for childobject (both arrays not existant)', function()
 {
@@ -192,5 +192,5 @@ test('Migrate fresh for childobject (both arrays not existant)', function()
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','index','integer');
     $this->assertDatabaseTableColumnIsType('childobjects_child_sarray','element','integer');
-});
+})->group('migrate');
 

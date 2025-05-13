@@ -20,7 +20,7 @@ test('Migrate with nothing to do', function()
     
     $this->assertDatabaseTableColumnIsType('dummies','id','integer');
     $this->assertDatabaseTableColumnIsType('dummies','dummyint','integer');
-});
+})->group('migrate');
 
 test('Migrate with both not existant', function()
 {
@@ -38,7 +38,7 @@ test('Migrate with both not existant', function()
     
     $this->assertDatabaseTableColumnIsType('dummies','id','integer');
     $this->assertDatabaseTableColumnIsType('dummies','dummyint','integer');
-});
+})->group('migrate');
 
 test('Migrate with dummy not existant', function()
 {
@@ -55,7 +55,7 @@ test('Migrate with dummy not existant', function()
     
     $this->assertDatabaseTableColumnIsType('dummies','id','integer');
     $this->assertDatabaseTableColumnIsType('dummies','dummyint','integer');
-});
+})->group('migrate');
 
 test('Migrate with dummychild not existant', function()
 {
@@ -72,4 +72,4 @@ test('Migrate with dummychild not existant', function()
     
     $this->assertDatabaseTableColumnIsType('dummies','id','integer');
     $this->assertDatabaseTableColumnIsType('dummies','dummyint','integer');
-});
+})->group('migrate');
