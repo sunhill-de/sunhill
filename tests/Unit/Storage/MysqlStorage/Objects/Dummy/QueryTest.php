@@ -3,6 +3,7 @@
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
+use Sunhill\Query\QueryParser\QueryNode;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -13,14 +14,20 @@ test('Query a dummy', function($callback, $expect, $manipulator = null)
     Dummy::prepareDatabase($this);
     
     $test->setTargetSubid('dummies');
-    $query = $test->query();
+    $query = new QueryNode();
     $result = $callback($query);
     if (is_callable($manipulator)) {
-        $result = $manipulator($result);
+        $result = $manipulator($test->executeQuery($result));
     }
     expect($result)->toBe($expect);
 })->with([
-    'simple count()'=>[function($query) { return $query->count(); }, 10],
+    'simple count()'=>
+    [
+        function(QueryNode $query) 
+        { 
+            return $query->verb('count'); 
+        }, 10
+     ],
     'simple get()'=>[function($query) { return $query->get(); }, 345, function($result) { return $result[2]->dummyint; }],
     'simple first()'=>[function($query) { return $query->first(); }, 123, function($result) { return $result->dummyint; }],
     'count() with where 1'=>[function($query) { return $query->where('dummyint',123)->count(); },2],
