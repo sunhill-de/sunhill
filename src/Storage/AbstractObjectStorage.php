@@ -291,6 +291,19 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             $this->insertStorageSubid($subid, $values);
         }
     }
+
+    /**
+     * Handles these cases where a class doesn't define own members but is needed
+     * in a form of organizing structure
+     * 
+     */
+    private function commitNewSkippingClasses()
+    {
+        foreach ($this->structure->skipping_members as $subid) {
+            $values['id'] = $this->getID();
+            $this->insertStorageSubid($subid, $values);
+        }        
+    }
     
     private function assmbleArrayValues(array $values)
     {
@@ -341,6 +354,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     protected function doCommitNew()
     {
         $this->commitNewObject();
+        $this->commitNewSkippingClasses();
         $this->commitNewClasses();
         $this->commitNewArrays();
         $this->commitNewTags();
@@ -417,6 +431,18 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         }        
     }
     
+    /**
+     * Handles these cases where a class doesn't define own members but is needed
+     * in a form of organizing structure
+     *
+     */
+    private function deleteSkippingClasses(int $id)
+    {
+        foreach ($this->structure->skipping_members as $subid) {
+            $this->deleteStorageSubid($subid, $id);
+        }
+    }
+    
     private function deleteArrays(int $id)
     {
         $array_fields = $this->getArrays();
@@ -444,6 +470,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         $this->deleteObjects($id);
         $this->deleteClasses($id);
+        $this->deleteSkippingClasses($id);
         $this->deleteArrays($id);
         $this->deleteTags($id);
         $this->deleteAttributes($id);        
@@ -665,6 +692,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     protected function getCurrentStructure(string $storage_subid): \stdClass
     {
         $result = new \stdClass();
+        $this->addNormalMembers($result);
+        $this->addSkippiongMembers($result);
+        return $result;
+    }
+    
+    private function addNormalMembers(\stdClass $result)
+    {
         foreach ($this->getStorageSubids() as $subid) {
             if ($subid == 'objects') {
                 continue;
@@ -672,13 +706,16 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             foreach ($this->getStoragesFor($subid) as $storage) {
                 $result->$storage = $this->getCurrentStorageStructure($storage);
             }
-        }
+        }        
+    }
+
+    private function addSkippiongMembers(\stdClass $result)
+    {
         foreach ($this->structure->skipping_members as $class => $storage_id) {
             foreach ($this->getStoragesFor($storage_id) as $storage) {
                 $result->$storage = $this->getCurrentStorageStructure($storage);
             }
         }
-        return $result;
     }
     
     /**
