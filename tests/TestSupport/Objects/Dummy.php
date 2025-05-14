@@ -31,6 +31,16 @@ class Dummy extends ORMObject
         static::addInfo('taggable', true);
         static::addInfo('attributable', true);
     }
+
+    public static function getExpectedData(int $id)
+    {
+        foreach (DummiesSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                return $set;
+            }
+        }
+        throw new \Exception("Invalid id given: $id");
+    }
     
     public static function getExpectedStructure()
     {

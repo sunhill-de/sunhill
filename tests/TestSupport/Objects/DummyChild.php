@@ -32,6 +32,16 @@ class DummyChild extends Dummy
         static::addInfo('attributable', true);
     }
 
+    public static function getExpectedData(int $id)
+    {
+        foreach (DummyChildrenSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                return $set;
+            }
+        }
+        throw new \Exception("Invalid id given: $id");
+    }
+    
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
