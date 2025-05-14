@@ -4,14 +4,15 @@ use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Illuminate\Support\Facades\Schema;
+use Sunhill\Tests\TestSupport\Objects\DummyGrandChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(DummyGrandChild::class, $this);
     
     $test->migrate();
     $this->assertDatabaseTableColumnIsType('dummies', 'dummyint', 'integer');
@@ -24,11 +25,8 @@ test('Migrate with nothing to do', function()
 
 test('Migrate with all missing', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
+    $test = prepareStorage(DummyGrandChild::class, $this);
     
-    
-    Dummy::prepareDatabase($this);
     Schema::drop('dummies');
     Schema::drop('dummychildren');
     Schema::drop('dummygrandchildren');
@@ -44,10 +42,8 @@ test('Migrate with all missing', function()
 
 test('Migrate with grand child missing', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-        
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(DummyGrandChild::class, $this);
+    
     Schema::drop('dummygrandchildren');
     
     $test->migrate();
@@ -61,10 +57,8 @@ test('Migrate with grand child missing', function()
 
 test('Migrate with child missing', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-        
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(DummyGrandChild::class, $this);
+    
     Schema::drop('dummychildren');
     
     $test->migrate();
@@ -78,10 +72,8 @@ test('Migrate with child missing', function()
 
 test('Migrate with parent missing', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
+    $test = prepareStorage(DummyGrandChild::class, $this);
     
-    Dummy::prepareDatabase($this);    
     Schema::drop('dummies');
     
     $test->migrate();
