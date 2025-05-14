@@ -538,6 +538,17 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         return get_diff($given_structure, $expected_structure, true, false);
     }
 
+    private function addSkippingObjects(\stdClass &$result)
+    {
+        foreach ($this->structure->skipping_members as $class => $storage_name) {
+            if (!isset($result->$storage_name)) {
+                $result->$storage_name = new \stdClass();
+                $result->$storage_name->id = new \stdClass();
+                $result->$storage_name->id->type = 'integer';
+            }
+        }
+    }
+    
     /**
      * Builds a structure descriptor for a diff
      * 
@@ -583,6 +594,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                     break;
             }
         }
+        $this->addSkippingObjects($result);
         return $result;
     }
 
@@ -658,6 +670,11 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                 continue;
             }
             foreach ($this->getStoragesFor($subid) as $storage) {
+                $result->$storage = $this->getCurrentStorageStructure($storage);
+            }
+        }
+        foreach ($this->structure->skipping_members as $class => $storage_id) {
+            foreach ($this->getStoragesFor($storage_id) as $storage) {
                 $result->$storage = $this->getCurrentStorageStructure($storage);
             }
         }
