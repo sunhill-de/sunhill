@@ -10,10 +10,8 @@ require_once(dirname(__FILE__).'/../ObjectHelpers.php');
 
 test('Update a dummy with nothing modified', function()
 {
-    $test = prepareStorage(Dummy::class, $this);
-    
-    pretendLoaded($test, 1, Dummy::class);
-    
+    $test = prepareStorage(Dummy::class, $this);    
+    pretendLoaded($test, 1, Dummy::class);    
     prepareObjectDataset($test, 'Dummy');
     
     $test->commit();
@@ -31,12 +29,11 @@ test('Update a dummy with nothing modified', function()
 
 test('Update a dummy with dummyint modified', function()
 {
-    $test = prepareStorage(Dummy::class, $this);
-   
+    $test = prepareStorage(Dummy::class, $this);   
     pretendLoaded($test, 1, Dummy::class);    
-
+    prepareObjectDataset($test, 'Dummy');    
     $test->setValue('dummyint',1509);
-    prepareObjectDataset($test, 'Dummy');
+    
     $test->commit();
     
     $this->assertDatabaseHas('objects',
