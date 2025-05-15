@@ -101,7 +101,7 @@ class ObjectsSeeder extends Seeder
         ],
         [
             'id'=>10, // A child object with only parent array
-            '_classname'=>'ParentObject',
+            '_classname'=>'ChildObject',
             '_uuid'=>'4382f710-286c-4577-baf5-b5ecb08cd99c',
             '_read_cap'=>null,
             '_modify_cap'=>null,
@@ -111,7 +111,7 @@ class ObjectsSeeder extends Seeder
         ],
         [
             'id'=>11,// A child object with only child array
-            '_classname'=>'ParentObject',
+            '_classname'=>'ChildObject',
             '_uuid'=>'b92f34f4-5f0a-4941-b359-b4fc21c3ddb6',
             '_read_cap'=>null,
             '_modify_cap'=>null,
@@ -121,7 +121,7 @@ class ObjectsSeeder extends Seeder
         ],
         [
             'id'=>12,// A child object with empty arrays
-            '_classname'=>'ParentObject',
+            '_classname'=>'ChildObject',
             '_uuid'=>'3ae0ebe5-7165-4512-aa38-8ad5da515e04',
             '_read_cap'=>null,
             '_modify_cap'=>null,
