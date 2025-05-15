@@ -180,7 +180,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $result = [];
         $fields = $this->getFieldsOf($storage_subid);
         foreach ($fields as $field) {
-            if ($this->isDirty($field->name)) {
+            if ($this->isDirty($field->name) && (!($field->type == 'array'))) {
                 $result[$field->name] = $this->values[$field->name];
             }
         }
@@ -211,6 +211,9 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     
     private function updateArray($field)
     {
+        if (!$this->isDirty($field->name)) {
+            return;
+        }
         $table_name = $field->storage_subid.'_'.$field->name;
         $this->deleteStorageSubid($table_name, $this->getID(),'container_id');
         if (!empty($this->values[$field->name])) {
