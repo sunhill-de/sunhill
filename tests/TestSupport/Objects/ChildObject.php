@@ -32,6 +32,41 @@ class ChildObject extends ParentObject
         static::addInfo('attributable', true);
     }
   
+    public static function getExpectedData(int $id)
+    {
+        foreach (ObjectsSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                $data = $set;
+            }
+        }
+        if (!isset($data)) {
+            throw new \Exception("Invalid id given: $id");
+        }
+        foreach (ParentObjectsSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                $data = array_merge($data,$set);
+            }
+        }
+        foreach (ChildObjectsSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                $data = array_merge($data,$set);
+            }
+        }
+        $data['parent_sarray'] = [];
+        $data['child_sarray'] = [];
+        foreach (ParentObjects_parent_sarraySeeder::DATA as $set) {
+            if ($set['container_id'] == $id) {
+                $data['parent_sarray'][$set['index']] = $set['element'];
+            }
+        }
+        foreach (ChildObjects_child_sarraySeeder::DATA as $set) {
+            if ($set['container_id'] == $id) {
+                $data['child_sarray'][$set['index']] = $set['element'];
+            }
+        }
+        return $data;        
+    }
+    
     public static function getExpectedStructure()
     {
         $result = new \stdClass();

@@ -34,12 +34,25 @@ class DummyChild extends Dummy
 
     public static function getExpectedData(int $id)
     {
-        foreach (DummyChildrenSeeder::DATA as $set) {
+        foreach (ObjectsSeeder::DATA as $set) {
             if ($set['id'] == $id) {
-                return $set;
+                $data = $set;
             }
         }
-        throw new \Exception("Invalid id given: $id");
+        if (!isset($data)) {
+            throw new \Exception("Invalid id given: $id");
+        }
+        foreach (DummiesSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                $data = array_merge($data,$set);
+            }
+        }
+        foreach (DummyChildrenSeeder::DATA as $set) {
+            if ($set['id'] == $id) {
+                $data = array_merge($data,$set);
+            }
+        }
+        return $data;
     }
     
     public static function getExpectedStructure()
