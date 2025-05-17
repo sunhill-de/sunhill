@@ -12,9 +12,7 @@ uses(SunhillDatabaseTestCase::class);
 
 test('Delete an DummyChild', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyChild::getExpectedStructure());
-    DummyChild::prepareDatabase($this);
+    $test = prepareStorage(DummyChild::class, $this);
     
     $test->delete(13);
     

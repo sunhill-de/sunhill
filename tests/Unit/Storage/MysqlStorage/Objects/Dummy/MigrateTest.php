@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Schema;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     $test->migrate();
     $this->assertDatabaseHasTable('dummies');
@@ -23,9 +23,7 @@ test('Migrate with nothing to do', function()
 
 test('Migrate fresh for dummy', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     Schema::drop('dummies');
     
@@ -40,9 +38,7 @@ test('Migrate fresh for dummy', function()
 
 test('Migrate with a field dropped', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     Schema::drop('dummies');
     Schema::create('dummies', function($table) {
@@ -62,9 +58,7 @@ test('Migrate with a field dropped', function()
 
 test('Migrate with a field added', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     Schema::drop('dummies');
     Schema::create('dummies', function($table) 
@@ -82,9 +76,7 @@ test('Migrate with a field added', function()
 
 test('Migrate with a field type changed', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     Schema::drop('dummies');
     Schema::create('dummies', function($table) {

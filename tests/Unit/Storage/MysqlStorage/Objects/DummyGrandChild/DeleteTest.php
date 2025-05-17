@@ -11,11 +11,11 @@ use Sunhill\Tests\TestSupport\Objects\DummyGrandChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete an DummyChild', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyGrandChild::getExpectedStructure());
-    DummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(DummyGrandChild::class, $this);
     
     $test->delete(15);
     

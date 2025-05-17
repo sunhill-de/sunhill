@@ -6,11 +6,11 @@ use Sunhill\Tests\TestSupport\Objects\Dummy;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('delete a dummy with tags', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     $test = new Dummy();
     
@@ -25,9 +25,7 @@ test('delete a dummy with tags', function()
 
 test('delete a dummy without tags', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(Dummy::getExpectedStructure());
-    Dummy::prepareDatabase($this);
+    $test = prepareStorage(Dummy::class, $this);
     
     $test = new Dummy();
     

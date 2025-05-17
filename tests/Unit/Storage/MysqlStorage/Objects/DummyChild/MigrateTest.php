@@ -7,11 +7,11 @@ use Sunhill\Tests\TestSupport\Objects\DummyChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyChild::getExpectedStructure());
-    DummyChild::prepareDatabase($this);
+    $test = prepareStorage(DummyChild::class, $this);
     
     $test->migrate();
     
@@ -24,9 +24,7 @@ test('Migrate with nothing to do', function()
 
 test('Migrate with both not existant', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyChild::getExpectedStructure());
-    DummyChild::prepareDatabase($this);
+    $test = prepareStorage(DummyChild::class, $this);
     
     Schema::drop('dummies');
     Schema::drop('dummychildren');
@@ -42,9 +40,7 @@ test('Migrate with both not existant', function()
 
 test('Migrate with dummy not existant', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyChild::getExpectedStructure());
-    DummyChild::prepareDatabase($this);
+    $test = prepareStorage(DummyChild::class, $this);
     
     Schema::drop('dummies');
     
@@ -59,9 +55,7 @@ test('Migrate with dummy not existant', function()
 
 test('Migrate with dummychild not existant', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyChild::getExpectedStructure());
-    DummyChild::prepareDatabase($this);
+    $test = prepareStorage(DummyChild::class, $this);
     
     Schema::drop('dummychildren');
     

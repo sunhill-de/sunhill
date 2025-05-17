@@ -7,11 +7,11 @@ use Sunhill\Tests\TestSupport\Objects\DummyChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Read a dummychild from database', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(DummyChild::getExpectedStructure());
-    DummyChild::prepareDatabase($this);
+    $test = prepareStorage(DummyChild::class, $this);
     $test->load(13);
     
     expect($test->getValue('dummyint'))->toBe(999);
