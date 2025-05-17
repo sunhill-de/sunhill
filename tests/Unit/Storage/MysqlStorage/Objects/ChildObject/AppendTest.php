@@ -8,21 +8,12 @@ use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Append a childobject with both arrays', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
-
-    $test->setValue('_classname','ChildObject');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ChildObject::class, $this);
+    prepareObjectDataset($test, ChildObject::class);
     
     $test->setValue('parent_int',1234);
     $test->setValue('parent_string','AIA');
@@ -41,19 +32,8 @@ test('Append a childobject with both arrays', function()
 
 test('Append a childobject with parent array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
-    
-    $test->setValue('_classname','ChildObject');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ChildObject::class, $this);
+    prepareObjectDataset($test, ChildObject::class);
     
     $test->setValue('parent_int',1234);
     $test->setValue('parent_string','AIA');
@@ -72,19 +52,8 @@ test('Append a childobject with parent array', function()
 
 test('Append a childobject with child array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
-    
-    $test->setValue('_classname','ChildObject');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ChildObject::class, $this);
+    prepareObjectDataset($test, ChildObject::class);
     
     $test->setValue('parent_int',1234);
     $test->setValue('parent_string','AIA');
@@ -103,19 +72,8 @@ test('Append a childobject with child array', function()
 
 test('Append a childobject with both arrays empty', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
-    
-    $test->setValue('_classname','ChildObject');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ChildObject::class, $this);
+    prepareObjectDataset($test, ChildObject::class);
     
     $test->setValue('parent_int',1234);
     $test->setValue('parent_string','AIA');
@@ -131,4 +89,3 @@ test('Append a childobject with both arrays empty', function()
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>$test->getID()]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>$test->getID()]);
 })->group('append');
-

@@ -8,11 +8,12 @@ use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Read a childobject with both arrays', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
+    
     $test->load(9);
     
     expect($test->getValue('parent_int'))->toBe(333);
@@ -26,9 +27,8 @@ test('Read a childobject with both arrays', function()
 
 test('Read a childobject with parent array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
+    
     $test->load(10);
     
     expect($test->getValue('parent_int'))->toBe(444);
@@ -42,9 +42,8 @@ test('Read a childobject with parent array', function()
 
 test('Read a childobject with child array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
+    
     $test->load(11);
     
     expect($test->getValue('parent_int'))->toBe(555);
@@ -58,9 +57,8 @@ test('Read a childobject with child array', function()
 
 test('Read a childobject with both arrays empty', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
+    
     $test->load(12);
     
     expect($test->getValue('parent_int'))->toBe(666);

@@ -6,11 +6,11 @@ use Sunhill\Tests\SunhillDatabaseTestCase;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete a childobject with both arrays', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     $test->delete(9);
     
@@ -22,9 +22,7 @@ test('Delete a childobject with both arrays', function()
 
 test('Delete a childobject with parent array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     $test->delete(10);
     
@@ -36,9 +34,7 @@ test('Delete a childobject with parent array', function()
 
 test('Read a childobject with child array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     $test->delete(11);
     
@@ -50,9 +46,7 @@ test('Read a childobject with child array', function()
 
 test('Read a childobject with both arrays empty', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     $test->delete(12);
     

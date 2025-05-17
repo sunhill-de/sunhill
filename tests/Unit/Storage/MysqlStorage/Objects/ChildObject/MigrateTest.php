@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Schema;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate for childobject with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     $test->migrate();
     
@@ -34,9 +34,7 @@ test('Migrate for childobject with nothing to do', function()
 
 test('Migrate fresh for childobject (both not existant)', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     Schema::drop('parentobjects');
     Schema::drop('parentobjects_parent_sarray');
@@ -63,9 +61,7 @@ test('Migrate fresh for childobject (both not existant)', function()
 
 test('Migrate fresh for childobject (child not existant)', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     Schema::drop('childobjects');
     Schema::drop('childobjects_child_sarray');
@@ -90,9 +86,7 @@ test('Migrate fresh for childobject (child not existant)', function()
 
 test('Migrate fresh for childobject (parent not existant)', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     Schema::drop('parentobjects');
     Schema::drop('parentobjects_parent_sarray');
@@ -117,9 +111,7 @@ test('Migrate fresh for childobject (parent not existant)', function()
 
 test('Migrate fresh for childobject (child array not existant)', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     Schema::drop('childobjects_child_sarray');
     
@@ -143,9 +135,7 @@ test('Migrate fresh for childobject (child array not existant)', function()
 
 test('Migrate fresh for childobject (parent array not existant)', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     Schema::drop('parentobjects_parent_sarray');
     
@@ -169,9 +159,7 @@ test('Migrate fresh for childobject (parent array not existant)', function()
 
 test('Migrate fresh for childobject (both arrays not existant)', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ChildObject::getExpectedStructure());
-    ChildObject::prepareDatabase($this);
+    $test = prepareStorage(ChildObject::class, $this);
     
     Schema::drop('parentobjects_parent_sarray');
     Schema::drop('childobjects_child_sarray');
