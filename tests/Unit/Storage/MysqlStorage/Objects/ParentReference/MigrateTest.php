@@ -8,18 +8,18 @@ use Sunhill\Tests\TestSupport\Objects\ParentReference;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     
     $test->migrate();
     
     $this->assertDatabaseHasTable('parentreferences');
     $this->assertDatabaseHasTable('parentreferences_parent_rarray');
     
-    $this->assertDatabaseTableColumnIsType('parentreferences', 'parent_int', 'integer');
+    $this->assertDatabaseTableColumnIsType('parentreferences', 'parent_reference', 'integer');
     
     $this->assertDatabaseTableColumnIsType('parentreferences_parent_rarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('parentreferences_parent_rarray','index','integer');
@@ -28,9 +28,7 @@ test('Migrate with nothing to do', function()
 
 test('Migrate fresh', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     
     Schema::drop('parentreferences');
     Schema::drop('parentreferences_parent_rarray');
@@ -40,7 +38,7 @@ test('Migrate fresh', function()
     $this->assertDatabaseHasTable('parentreferences');
     $this->assertDatabaseHasTable('parentreferences_parent_rarray');
     
-    $this->assertDatabaseTableColumnIsType('parentreferences', 'parent_int', 'integer');
+    $this->assertDatabaseTableColumnIsType('parentreferences', 'parent_reference', 'integer');
     
     $this->assertDatabaseTableColumnIsType('parentreferences_parent_rarray','container_id','integer');
     $this->assertDatabaseTableColumnIsType('parentreferences_parent_rarray','index','integer');

@@ -7,11 +7,11 @@ use Sunhill\Tests\TestSupport\Objects\ParentReference;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete a parentreference with array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     
     $test->delete(17);
     
@@ -21,9 +21,7 @@ test('Delete a parentreference with array', function()
 
 test('Delete a parentreference with empty array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     
     $test->delete(19);
     

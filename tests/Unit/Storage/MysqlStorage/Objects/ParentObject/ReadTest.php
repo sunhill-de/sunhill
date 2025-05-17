@@ -7,11 +7,11 @@ use Sunhill\Tests\TestSupport\Objects\ParentObject;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Read a parentobject with array', function()
 {    
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     $test->load(7);
     
     expect($test->getValue('parent_int'))->toBe(111);
@@ -22,9 +22,7 @@ test('Read a parentobject with array', function()
 
 test('Read a parentobject with empty array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     $test->load(8);
     
     expect($test->getValue('parent_int'))->toBe(222);

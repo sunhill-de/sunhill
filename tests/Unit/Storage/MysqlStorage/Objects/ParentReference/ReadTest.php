@@ -8,11 +8,11 @@ use Sunhill\Tests\TestSupport\Objects\ParentReference;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Read a parentreference with reference and array', function()
 {    
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     $test->load(17);
     
     expect($test->getValue('parent_int'))->toBe(1111);
@@ -23,9 +23,7 @@ test('Read a parentreference with reference and array', function()
 
 test('Read a parentreference only with array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     $test->load(18);
     
     expect($test->getValue('parent_int'))->toBe(2222);
@@ -36,9 +34,7 @@ test('Read a parentreference only with array', function()
 
 test('Read a parentreference with no references', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
+    $test = prepareStorage(ParentReference::class, $this);
     $test->load(19);
     
     expect($test->getValue('parent_int'))->toBe(3333);

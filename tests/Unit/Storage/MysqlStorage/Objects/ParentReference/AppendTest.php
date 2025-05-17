@@ -1,27 +1,16 @@
 <?php
 
 use Sunhill\Tests\SunhillDatabaseTestCase;
-use Sunhill\Tests\TestSupport\Objects\Dummy;
-use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
-use Sunhill\Tests\TestSupport\Objects\ParentObject;
 use Sunhill\Tests\TestSupport\Objects\ParentReference;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Append a parentreference with reference and array', function()
 {    
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
-    $test->setValue('_classname','ParentReference');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ParentReference::class, $this);
+    prepareObjectDataset($test, ParentReference::class);
     
     $test->setValue('parent_int',1213);
     $test->setValue('parent_reference',1);
@@ -35,18 +24,8 @@ test('Append a parentreference with reference and array', function()
 
 test('Append a parentreference only with array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
-    $test->setValue('_classname','ParentReference');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ParentReference::class, $this);
+    prepareObjectDataset($test, ParentReference::class);
     
     $test->setValue('parent_int',1213);
     $test->setValue('parent_reference',null);
@@ -60,18 +39,8 @@ test('Append a parentreference only with array', function()
 
 test('Append a parentreference with no references', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentReference::getExpectedStructure());
-    ParentReference::prepareDatabase($this);
-    $test->setValue('_classname','ParentReference');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(ParentReference::class, $this);
+    prepareObjectDataset($test, ParentReference::class);
     
     $test->setValue('parent_int',1213);
     $test->setValue('parent_reference',null);

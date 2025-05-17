@@ -9,11 +9,11 @@ use Sunhill\Tests\TestSupport\Objects\SkippingDummyChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Read a skippingdummychild from database', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyChild::class, $this);
     $test->load(14);
     
     expect($test->getValue('dummyint'))->toBe(987);

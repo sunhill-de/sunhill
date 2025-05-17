@@ -8,11 +8,11 @@ use Sunhill\Tests\TestSupport\Objects\SkippingDummyGrandChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
-    SkippingDummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyGrandChild::class, $this);
     
     $test->migrate();
     
@@ -27,9 +27,7 @@ test('Migrate with nothing to do', function()
 
 test('Migrate fresh both deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
-    SkippingDummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyGrandChild::class, $this);
     Schema::drop('dummies');
     Schema::drop('skippingdummychildren');
     Schema::drop('skippingdummygrandchildren');
@@ -47,9 +45,7 @@ test('Migrate fresh both deleted', function()
 
 test('Migrate fresh parent deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
-    SkippingDummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyGrandChild::class, $this);
     Schema::drop('dummies');
     
     $test->migrate();
@@ -65,9 +61,7 @@ test('Migrate fresh parent deleted', function()
 
 test('Migrate fresh child deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
-    SkippingDummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyGrandChild::class, $this);
     Schema::drop('skippingdummychildren');
     
     $test->migrate();
@@ -83,9 +77,7 @@ test('Migrate fresh child deleted', function()
 
 test('Migrate fresh grandchild deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
-    SkippingDummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyGrandChild::class, $this);
     Schema::drop('skippingdummygrandchildren');
     
     $test->migrate();

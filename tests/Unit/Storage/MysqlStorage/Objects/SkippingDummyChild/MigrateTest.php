@@ -8,11 +8,11 @@ use Sunhill\Tests\TestSupport\Objects\SkippingDummyChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate with nothing to do', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyChild::class, $this);
     
     $test->migrate();
     
@@ -22,9 +22,7 @@ test('Migrate with nothing to do', function()
 
 test('Migrate fresh both deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyChild::class, $this);
     Schema::drop('dummies');
     Schema::drop('skippingdummychildren');
     
@@ -38,9 +36,7 @@ test('Migrate fresh both deleted', function()
 
 test('Migrate fresh parent deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyChild::class, $this);
     Schema::drop('dummies');
     
     $test->migrate();
@@ -53,9 +49,7 @@ test('Migrate fresh parent deleted', function()
 
 test('Migrate fresh child deleted', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyChild::class, $this);
     Schema::drop('skippingdummychildren');
     
     $test->migrate();

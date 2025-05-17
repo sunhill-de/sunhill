@@ -6,11 +6,11 @@ use Sunhill\Tests\TestSupport\Objects\ParentObject;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete a parentobject with array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     $test->delete(7);
     
@@ -20,9 +20,7 @@ test('Delete a parentobject with array', function()
 
 test('Delete a parentobject with empty array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     $test->delete(8);
     

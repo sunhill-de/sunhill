@@ -8,11 +8,11 @@ use Sunhill\Tests\TestSupport\Objects\SkippingDummyGrandChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete a SkippingDummyGrandChild', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyGrandChild::getExpectedStructure());
-    SkippingDummyGrandChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyGrandChild::class, $this);
     
     $test->delete(16);
     

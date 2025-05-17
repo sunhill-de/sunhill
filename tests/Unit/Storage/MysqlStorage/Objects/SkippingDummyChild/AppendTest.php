@@ -9,21 +9,13 @@ use Sunhill\Tests\TestSupport\Objects\SkippingDummyChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Append a skippingdummychild from database', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
-
-    $test->setValue('_classname','SkippingDummyChild');
-    $test->setValue('_attributes',[]);
-    $test->setValue('_tags',[]);
-    $test->setValue('_uuid','ABCD');
-    $test->setValue('_read_cap',null);
-    $test->setValue('_modify_cap',null);
-    $test->setValue('_delete_cap',null);
-    $test->setValue('_created_at','2025-02-05 17:54:10');
-    $test->setValue('_updated_at','2025-02-05 17:54:10');
+    $test = prepareStorage(SkippingDummyChild::class, $this);
+    prepareObjectDataset($test, SkippingDummyChild::class);
+    
     $test->setValue('dummyint',1999);
     $test->commit();
     

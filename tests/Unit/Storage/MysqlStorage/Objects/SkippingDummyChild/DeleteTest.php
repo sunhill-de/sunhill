@@ -7,11 +7,11 @@ use Sunhill\Tests\TestSupport\Objects\SkippingDummyChild;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete a SkippingDummyChild', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(SkippingDummyChild::getExpectedStructure());
-    SkippingDummyChild::prepareDatabase($this);
+    $test = prepareStorage(SkippingDummyChild::class, $this);
     
     $test->delete(14);
     

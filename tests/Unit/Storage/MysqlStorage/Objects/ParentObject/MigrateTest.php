@@ -7,11 +7,11 @@ use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Migrate fresh for parentobject', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::drop('parentobjects');
     Schema::drop('parentobjects_parent_sarray');
@@ -31,9 +31,7 @@ test('Migrate fresh for parentobject', function()
 
 test('column was dropped', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
@@ -60,9 +58,7 @@ test('column was dropped', function()
 
 test('two columns were dropped', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
@@ -90,9 +86,7 @@ test('two columns were dropped', function()
 
 test('column was added', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
@@ -116,9 +110,7 @@ test('column was added', function()
 
 test('array column was dropped', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
@@ -151,9 +143,7 @@ test('array column was dropped', function()
 
 test('array column was added', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
@@ -172,9 +162,7 @@ test('array column was added', function()
 
 test('column type changed', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects');
     Schema::create('parentobjects', function($table)
@@ -199,9 +187,7 @@ test('column type changed', function()
 
 test('column array type changed', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects_parent_sarray');
     Schema::create('parentobjects_parent_sarray', function($table)
@@ -219,9 +205,7 @@ test('column array type changed', function()
 
 test('column array index type changed', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ParentObject::getExpectedStructure());
-    ParentObject::prepareDatabase($this);
+    $test = prepareStorage(ParentObject::class, $this);
     
     Schema::dropIfExists('parentobjects_parent_sarray');
     Schema::create('parentobjects_parent_sarray', function($table)
