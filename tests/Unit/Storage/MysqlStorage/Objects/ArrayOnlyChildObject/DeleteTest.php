@@ -9,11 +9,11 @@ use Sunhill\Tests\TestSupport\Objects\ArrayOnlyChildObject;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Delete an ArrayOnlyChildObject with array entries', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ArrayOnlyChildObject::getExpectedStructure());
-    ArrayOnlyChildObject::prepareDatabase($this);
+    $test = prepareStorage(ArrayOnlyChildObject::class, $this);
     
     $test->delete(20);
     
@@ -24,9 +24,7 @@ test('Delete an ArrayOnlyChildObject with array entries', function()
 
 test('Delete an ArrayOnlyChildObject without array entries', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ArrayOnlyChildObject::getExpectedStructure());
-    ArrayOnlyChildObject::prepareDatabase($this);
+    $test = prepareStorage(ArrayOnlyChildObject::class, $this);
     
     $test->delete(21);
     

@@ -9,11 +9,11 @@ use Sunhill\Tests\TestSupport\Objects\ArrayOnlyChildObject;
 
 uses(SunhillDatabaseTestCase::class);
 
+require_once(dirname(__FILE__).'/../ObjectHelpers.php');
+
 test('Read a arrayonlychildobject with child arrays', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ArrayOnlyChildObject::getExpectedStructure());
-    ArrayOnlyChildObject::prepareDatabase($this);
+    $test = prepareStorage(ArrayOnlyChildObject::class, $this);
     $test->load(20);
     
     expect($test->getValue('parent_int'))->toBe(5555);
@@ -25,9 +25,7 @@ test('Read a arrayonlychildobject with child arrays', function()
 
 test('Read a childobject with no array', function()
 {
-    $test = new MysqlObjectStorage();
-    $test->setStructure(ArrayOnlyChildObject::getExpectedStructure());
-    ArrayOnlyChildObject::prepareDatabase($this);
+    $test = prepareStorage(ArrayOnlyChildObject::class, $this);
     $test->load(21);
     
     expect($test->getValue('parent_int'))->toBe(6666);
