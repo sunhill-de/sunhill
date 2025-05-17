@@ -380,6 +380,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         $array_fields = $this->getArrays();
         foreach ($array_fields as $field) {
+           $this->values[$field->name] = [];
            $table_name = $field->storage_subid.'_'.$field->name;
            $data = $this->loadStorageSubid($table_name, $this->getID(), 'container_id');
            foreach ($data as $record) {
