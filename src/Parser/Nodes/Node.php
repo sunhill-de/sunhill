@@ -50,6 +50,11 @@ class Node extends Base
     {
         return $this->children;
     }
+
+    public function addChild(string $key, $value)
+    {
+        $this->children[$key] = $value;    
+    }
     
     protected function handleReplacingChild(string $name, $node)
     {
