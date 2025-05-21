@@ -93,9 +93,11 @@ class MysqlObjectStorage extends AbstractObjectStorage
         $this->tableNeeded($subid);
         return DB::table($subid)->where($key_field, $key)->get();
     }
-    
+
     protected function doExecuteQuery(QueryNode $node)
     {
+        $executor = new MysqlQueryExecutor();
+        return $executor->executeQuery($node);
     }
 
     private function getStringMaxLen(string $storage_subid, string $column_name): string|int
