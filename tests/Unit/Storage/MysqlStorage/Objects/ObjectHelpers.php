@@ -31,3 +31,16 @@ function pretendLoaded(MysqlObjectStorage &$storage, int $id, string $class)
         $storage->setValue($key, $value);
     }
 }
+
+function checkResultArray($result, $expected): bool
+{
+    if (count($result) <> count($expected)) {
+        return false;
+    }
+    foreach ($result as $single) {
+        if (!in_array($single->id, $expected)) {
+            return false;
+        }
+    }
+    return true;    
+}
