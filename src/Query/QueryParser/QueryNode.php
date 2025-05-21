@@ -6,6 +6,10 @@ use Sunhill\Parser\Nodes\Node;
 
 class QueryNode extends Node
 {
+    protected $storages = [];
+    
+    protected $next_storage_alias = 'b';
+    
     public function __construct()
     {
         parent::__construct('query',['fields'=>null,'verb'=>'select','offset'=>null,'limit'=>null,'order'=>null,'group'=>null,'where'=>null]);   
@@ -51,5 +55,17 @@ class QueryNode extends Node
         $this->children['where_conditions'] = $node;
         
         return $this;
+    }
+    
+    public function addStorage(string $storage_name): string
+    {
+        $alias = $this->next_storage_alias++;
+        $this->storages[$alias] = $storage_name;
+        return $alias;
+    }
+    
+    public function getStorages(): array
+    {
+        return $this->storages;
     }
 }
