@@ -57,10 +57,15 @@ class QueryNode extends Node
         return $this;
     }
     
-    public function addStorage(string $storage_name): string
+    public function addStorage(string $storage_name, string $type = 'inner', string $target_alias = 'a', string $field = 'id'): string
     {
         $alias = $this->next_storage_alias++;
-        $this->storages[$alias] = $storage_name;
+        $this->storages[$alias] = new \stdClass();
+        $this->storages[$alias]->storage = $storage_name;
+        $this->storages[$alias]->join = $type;
+        $this->storages[$alias]->alias = $target_alias;
+        $this->storages[$alias]->field = $field;
+                
         return $alias;
     }
     

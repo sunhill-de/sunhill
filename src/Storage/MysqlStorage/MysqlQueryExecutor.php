@@ -23,7 +23,14 @@ class MysqlQueryExecutor extends Base
     {
         $query = DB::table('objects as a')->select('a.id');
         foreach ($node->getStorages() as $alias => $storage) {
-            $query->join($storage.' as '.$alias, 'a.id', '=', $alias.'.id');
+            switch ($storage->join) {
+                case 'inner':
+                    $query->join($storage->storage.' as '.$alias, $storage->alias.'.'.$storage->field, '=', $alias.'.id');
+                    break;
+                case 'left':                    
+                    $query->leftJoin($storage->storage.' as '.$alias, $storage->alias.'.'.$storage->field, '=', $alias.'.id');
+                    break;
+            }
         }
         return $query;
     }
