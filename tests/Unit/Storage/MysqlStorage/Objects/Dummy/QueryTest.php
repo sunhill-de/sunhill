@@ -111,6 +111,76 @@ test('Query', function($manipulator, $expectation)
               {
                   return checkResultArray($result, [1,5]);
               }
-          ]
-//        'get all with where'=>[function($node) { $node->verb('get'); $node->},]
-    ]);
+          ],
+          'get with and'=>[
+              function($node)
+              {
+                  $condition_left = new BinaryNode('>');
+                  $condition_left->left( new AliasNode(new IdentifierNode('dummyint'), 'b') );
+                  $condition_left->right( new IntegerNode(123));
+                  
+                  $condition_right = new BinaryNode('<');
+                  $condition_right->left( new AliasNode(new IdentifierNode('dummyint'), 'b') );
+                  $condition_right->right( new IntegerNode(300));
+
+                  $condition = new BinaryNode('&&');
+                  $condition->left($condition_left);
+                  $condition->right($condition_right);
+                  $node->setWhere($condition);
+                  $node->verb('get');
+          },
+              function($result)
+              {
+                  return checkResultArray($result, [2]);
+              }
+          ],
+          'get with or'=>[
+              function($node)
+              {
+                  $condition_left = new BinaryNode('<');
+                  $condition_left->left( new AliasNode(new IdentifierNode('dummyint'), 'b') );
+                  $condition_left->right( new IntegerNode(200));
+                  
+                  $condition_right = new BinaryNode('>');
+                  $condition_right->left( new AliasNode(new IdentifierNode('dummyint'), 'b') );
+                  $condition_right->right( new IntegerNode(900));
+                  
+                  $condition = new BinaryNode('||');
+                  $condition->left($condition_left);
+                  $condition->right($condition_right);
+                  $node->setWhere($condition);
+                  $node->verb('get');
+          },
+          function($result)
+          {
+              return checkResultArray($result, [1,5,13,14,15,16]);
+          }
+          ],
+          'get and and or combined'=>[
+              function($node)
+              {
+                 // (dummyint = 123) || (( dummyint > 900) && ( dummyint < 990))
+                 $c_l = new BinaryNode('=');
+                 $c_l->left( new AliasNode( new IdentifierNode('dummyint'), 'b'));
+                 $c_l->right( new IntegerNode( 123 ));
+                 $c_r = new BinaryNode('&&');
+                 $c_r_l = new BinaryNode('>');
+                 $c_r_l->left( new AliasNode( new IdentifierNode('dummyint'), 'b'));
+                 $c_r_l->right( new IntegerNode( 900 ));
+                 $c_r_r = new BinaryNode('<');
+                 $c_r_r->left( new AliasNode( new IdentifierNode('dummyint'), 'b'));
+                 $c_r_r->right( new IntegerNode( 990 ));
+                 $c_r->left($c_r_l);
+                 $c_r->right($c_r_r);
+                 $c = new BinaryNode('||');
+                 $c->left($c_l);
+                 $c->right($c_r);
+                 $node->setWhere($c);
+                 $node->verb('get');
+          },
+              function ($result)
+              {
+                  return checkResultArray($result, [1,5,14,15,16]);                  
+              }
+          ]  
+      ]);

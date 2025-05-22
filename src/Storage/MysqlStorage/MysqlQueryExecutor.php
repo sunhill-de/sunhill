@@ -39,7 +39,20 @@ class MysqlQueryExecutor extends Base
             case '<=':
                 $query->where($this->handleSingleWhere($query, $node->left()),$node->getType(),$this->handleSingleWhere($query, $node->right()));
                 break;
-            
+            case '&&':
+                $this->handleSingleWhere($query, $node->left());
+                $query->where(function($subquery) use ($node)
+                {
+                    $this->handleSingleWhere($subquery, $node->right());
+                });
+                break;
+            case '||':
+                $this->handleSingleWhere($query, $node->left());
+                $query->orWhere(function($subquery) use ($node)
+                {
+                    $this->handleSingleWhere($subquery, $node->right());
+                });
+                break;
         }
     }
     
@@ -80,6 +93,7 @@ class MysqlQueryExecutor extends Base
     
     private function handleVerb($query, QueryNode $node)
     {
+        $str = $query->toSql();
         switch ($node->verb()) {
             case 'get':
                 return $query->get();
