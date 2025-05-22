@@ -22,11 +22,11 @@ test('Query', function($manipulator, $expectation)
     $manipulator($query_node);
     $result = $test->executeQuery($query_node);
     if (is_callable($expectation)) {
-        expect($expectation($result))->toBe(true);
+        $expectation($result);
     } else {
         expect($result)->toBe($expectation);
     }
-})->with(
+})->group('query')->with(
     [
         'simple count'=>[function($node) { $node->verb('count'); }, 10],
         'get all with nothing more'=>[
@@ -46,7 +46,8 @@ test('Query', function($manipulator, $expectation)
             }, 
             function ($result)
             {
-                return in_array($result->id, [1,2,3,4,5,6,13,14,15,16]);
+                expect($result->id)->toBeIn([1,2,3,4,5,6,13,14,15,16]);
+//                return in_array($result->id, [1,2,3,4,5,6,13,14,15,16]);
             }],
           'first with order'=>[
               function($node)
@@ -61,7 +62,7 @@ test('Query', function($manipulator, $expectation)
               },
               function ($result)
               {
-                  return $result->id == 1;
+                  expect($result->id)->toBe(1);
               }
           ],
           'first with order and offset'=>[
@@ -78,7 +79,7 @@ test('Query', function($manipulator, $expectation)
           },
           function ($result)
           {
-              return $result->id == 3;
+              expect($result->id)->toBe(3);
           }
           ],
           'get with order and limit'=>[
