@@ -34,13 +34,9 @@ function pretendLoaded(MysqlObjectStorage &$storage, int $id, string $class)
 
 function checkResultArray($result, $expected): bool
 {
-    if (count($result) <> count($expected)) {
-        return false;
-    }
+    expect(count($result))->toBe(count($expected));
     foreach ($result as $single) {
-        if (!in_array($single->id, $expected)) {
-            return false;
-        }
+        expect($single->id)->toBeIn($expected);
     }
     return true;    
 }
