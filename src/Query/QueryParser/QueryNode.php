@@ -12,7 +12,7 @@ class QueryNode extends Node
     
     public function __construct()
     {
-        parent::__construct('query',['fields'=>null,'verb'=>'select','offset'=>null,'limit'=>null,'order'=>null,'group'=>null,'where'=>null]);   
+        parent::__construct('query',['fields'=>null,'verb'=>'select','offset'=>null,'limit'=>null,'order'=>null,'group'=>null,'where_condition'=>null]);   
     }
     
     public function verb(?string $verb = null)
@@ -43,6 +43,11 @@ class QueryNode extends Node
     public function group(?Node $node = null)
     {
         return $this->handleOptionalArrayChild('group', $node);
+    }
+    
+    public function where(?Node $node = null): ?Node
+    {
+        return $this->handleReplacingChild('where_conditions', $node);
     }
     
     public function getWhere(): ?Node
