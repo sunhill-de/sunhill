@@ -28,6 +28,7 @@ use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\InvalidPropertyException;
+use Sunhill\Tags\TagList;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -36,6 +37,8 @@ use Sunhill\Properties\Exceptions\InvalidPropertyException;
  */
 class ORMObject extends PooledRecordProperty
 {
+    
+    protected $tag_list;
     
     protected static $inherited_inclusion = 'embed';
 
@@ -49,6 +52,7 @@ class ORMObject extends PooledRecordProperty
         $this->forceElement(TypeVarchar::class,'_delete_cap')->setMaxLen(20);;
         $this->forceElement(TypeDateTime::class,'_created_at');
         $this->forceElement(TypeDateTime::class,'_updated_at');
+        $this->tag_list = new TagList();
     }
     
     private function forceElement(string $class, string $name)
@@ -184,6 +188,14 @@ class ORMObject extends PooledRecordProperty
         $storage = new MysqlObjectStorage();
         $storage->setStructure($this->getStructure());
         return $storage;
+    }
+    
+    public function __get($varname): mixed
+    {
+        if ($varname == '_tags') {
+            return $this->tag_list;
+        }
+        return parent::__get($varname);
     }
     
     protected static function getStorageClass(): string
