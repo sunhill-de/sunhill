@@ -26,6 +26,7 @@ use Sunhill\Types\TypeVarchar;
 use Sunhill\Types\TypeDateTime;
 use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
+use Sunhill\Facades\Properties;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -155,7 +156,15 @@ class ORMObject extends PooledRecordProperty
     public function delete($id = null)
     {
         $id = $id ?? $this->getID();
-        parent::delete($id);    
+        $storage = $this->getStorage();
+        $stored_class = $storage->getClassOf($id);
+        if (($stored_class == '') || ($stored_class == static::getInfo('name'))) {
+            parent::delete($id);
+        } else {
+            $object_class = Properties::getNamespaceOfProperty($stored_class);
+            $object = new $object_class();
+            $object->delete($id);
+        }
         if (static::isTaggable()) {
             $this->deleteTags($id);
         }
