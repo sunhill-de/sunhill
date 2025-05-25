@@ -12,7 +12,7 @@ use Sunhill\Tests\Database\Seeds\ChildObjects_child_sarraySeeder;
 use Sunhill\Storage\PoolMysqlStorage\PoolMysqlStorage;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 
-function prepareStorage($test, string $type,bool $seed = true)
+function prepareRecordStorage($test, string $type,bool $seed = true)
 {
     $result = new \stdClass();
     switch ($type) {
