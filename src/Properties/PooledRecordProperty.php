@@ -56,11 +56,32 @@ class PooledRecordProperty extends PersistentRecordProperty
         return $storage->getID();
     }
     
-    public function delete($id)
+    /**
+     * Non-static function to delete a pooles record. When an id is given it deletes the record
+     * with the given id. If none is given, it deletes the current record
+     * 
+     * @param unknown $id
+     */
+    public function delete($id = null)
     {
         $this->checkForStorage();
         $storage = $this->getStorage();
-        $storage->delete($id);        
+        if (is_null($id)) {
+            $storage->delete($this->getID());
+        } else {
+            $storage->delete($id);
+        }
+    }
+    
+    /**
+     * Static function to delete a pooled record. The id must not be null. It deletes the record
+     * with the given id.
+     * 
+     * @param mixed $id
+     */
+    public static function erase(mixed $id)
+    {
+            
     }
     
     /**
