@@ -27,6 +27,7 @@ use Sunhill\Types\TypeDateTime;
 use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\InvalidPropertyException;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -118,6 +119,11 @@ class ORMObject extends PooledRecordProperty
     
     public function load($id)
     {
+        $storage = $this->getStorage();
+        $stored_class = $storage->getClassOf($id);
+        if (($stored_class !== '') && ($stored_class !== static::getInfo('name'))) {
+            throw new InvalidPropertyException("Expected ".static::getInfo('name')." found ".$stored_class);
+        }
         parent::load($id);
         if (static::isTaggable()) {
             $this->loadTags($id);
