@@ -347,6 +347,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     public function getStructure(): \stdClass
     {
         $return = parent::getStructure();
+        $return->name = static::getInfo('storage_id','');
         $return->elements = $this->getElements();
         $return->options = static::getAllInfos();
         $return->skipping_members = $this->skipping_members;
