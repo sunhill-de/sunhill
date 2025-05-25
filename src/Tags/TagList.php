@@ -15,14 +15,23 @@
 namespace Sunhill\Tags;
 
 use Sunhill\Basic\Base;
+use Sunhill\Storage\AbstractStorage;
 
 class TagList extends Base implements \ArrayAccess, \Countable
 {
     protected $tag_list = [];
     
+    protected $storage;
+    
+    public function __construct(AbstractStorage $storage)
+    {
+        $this->storage = $storage;
+        $this->storage->setValue('_tags',[]);
+    }
+    
     public function offsetExists(mixed $offset): bool
     {
-        return isset($tag_list[$offset]);
+        return isset($this->tag_list[$offset]);
     }
     
     public function offsetGet(mixed $offset): mixed
@@ -38,6 +47,7 @@ class TagList extends Base implements \ArrayAccess, \Countable
         } else {
             $this->tag_list[$offset] = $value;
         }
+        $this->storage->setIndexedValue('_tags', $offset, $value->getID());
     }
     
     public function offsetUnset(mixed $offset): void
