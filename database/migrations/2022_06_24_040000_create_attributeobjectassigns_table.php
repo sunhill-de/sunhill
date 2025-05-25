@@ -16,10 +16,10 @@ class CreateAttributeobjectassignsTable extends Migration
         Schema::create('attributeobjectassigns', function (Blueprint $table)
         {
             $table->integer('container_id');
-            $table->string('attribute_name');
             $table->integer('attribute_id');
+            $table->integer('attribute_index');
             
-            $table->primary(['container_id','attribute_name','attribute_id']);
+            $table->primary(['container_id','attribute_id','attribute_index']);
             
         });
     }
