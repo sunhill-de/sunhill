@@ -29,7 +29,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         $this->checkIsValidID($id);
         $data = $this->loadStorageSubid('objects', $id);
-        if ($data->empty()) {
+        if (count($data) == 0) {
             return '';
         }
         return $data[0]->_classname;
