@@ -53,20 +53,51 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
     }
     
     /**
+     * Checks if the storage is already loaded. If yes, it raises an exception (storages have to
+     * be resetted by reset() first)
+     * 
+     */
+    private function checkAlreadyLoaded()
+    {
+        if ($this->isLoaded()) {
+            throw new StorageAlreadyLoadedException("The storage was already loaded");
+        }        
+    }
+    
+    /**
+     * Checks if the if is accepted by this storage. If not throws an exception
+     * 
+     * @param unknown $id
+     */
+    protected function checkIsValidID($id)
+    {
+        if (!$this->isValidID($id)) {
+            throw new InvalidIDException(getScalarMessage("The given id :variable is not valid for this storage",$id));
+        }        
+    }
+    
+    /**
+     * Checks if the id exists. If not throws an exception
+     * 
+     * @param unknown $id
+     */
+    protected function checkIDexists($id)
+    {
+        if (!$this->IDExists($id)) {
+            throw new IDNotFoundException("The id '$id' was not found.");
+        }        
+    }
+    
+    /**
      * Loads the data
      *
      */
     public function load(mixed $id)
     {
-        if ($this->isLoaded()) {
-            throw new StorageAlreadyLoadedException("The storage was already loaded");
-        }
-        if (!$this->isValidID($id)) {
-            throw new InvalidIDException(getScalarMessage("The given id :variable is not valid for this storage",$id));
-        }
-        if (!$this->IDExists($id)) {
-            throw new IDNotFoundException("The id '$id' was not found.");
-        }
+        $this->checkAlreadyLoaded();
+        $this->checkIsValidID($id);
+        $this->checkIDexists($id);
+        
         $this->setId($id);
         $this->doLoad($id);
         $this->loaded = true;
@@ -91,15 +122,12 @@ abstract class PersistentPoolStorage extends AbstractPersistentStorage
     
     public function delete(mixed $id = null)
     {
-        if (!$this->isValidID($id)) {
-            throw new InvalidIDException("The given id is not valid for this storage");
-        }
         if ($this->isLoaded() and is_null($id)) {
             $id = $this->getID();
         }
-        if (!$this->IDExists($id)) {
-            throw new IDNotFoundException("The id '$id' was not found.");
-        }
+        $this->checkIsValidID($id);
+        $this->checkIDexists($id);
+        
         $this->doDelete($id);
         $this->setID(null);
         $this->loaded = false;
