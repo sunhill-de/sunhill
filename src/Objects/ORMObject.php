@@ -152,8 +152,9 @@ class ORMObject extends PooledRecordProperty
      * {@inheritDoc}
      * @see \Sunhill\Properties\PooledRecordProperty::delete()
      */
-    public function delete($id)
+    public function delete($id = null)
     {
+        $id = $id ?? $this->getID();
         parent::delete($id);    
         if (static::isTaggable()) {
             $this->deleteTags($id);
@@ -168,6 +169,11 @@ class ORMObject extends PooledRecordProperty
         $storage = new MysqlObjectStorage();
         $storage->setStructure($this->getStructure());
         return $storage;
+    }
+    
+    protected static function getStorageClass(): string
+    {
+        return MysqlObjectStorage::class;    
     }
     
     /**
