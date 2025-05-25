@@ -113,7 +113,7 @@ class ORMObject extends PooledRecordProperty
     
     private function loadTags(int $id)
     {
-        
+        $this->tag_list->loadFromStorage();
     }
     
     private function loadAttributes(int $id)

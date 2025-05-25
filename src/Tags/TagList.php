@@ -85,4 +85,12 @@ class TagList extends Base implements \ArrayAccess, \Countable
     {
         $this->tag_list = [];
     }
+    
+    public function loadFromStorage()
+    {
+        $this->clear();
+        foreach ($this->storage->getValue('_tags') as $tag) {
+            $this->tag_list[] = $this->createTag($tag);
+        }
+    }
 }
