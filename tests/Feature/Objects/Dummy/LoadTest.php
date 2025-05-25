@@ -25,6 +25,23 @@ test('Load a dummy loads the tags', function()
     expect($test->_tags[0]->getName())->toBe('TagA');
 })->group('load');
 
+test('Load a dummy loads with more tags', function()
+{
+    Dummy::prepareDatabase($this);
+    $test = new Dummy();
+    $test->load(2);
+    expect(count($test->_tags))->toBe(2);
+    expect($test->_tags[0]->getName())->toBe('TagA');
+})->group('load');
+
+test('Load a dummy loads with no tags', function()
+{
+    Dummy::prepareDatabase($this);
+    $test = new Dummy();
+    $test->load(5);
+    expect(count($test->_tags))->toBe(0);
+})->group('load');
+
 it('fails when id is invalid', function()
 {
     Dummy::prepareDatabase($this);
