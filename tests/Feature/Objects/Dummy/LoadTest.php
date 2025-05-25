@@ -16,6 +16,15 @@ test('Load a dummy from database', function()
     expect($test->dummyint)->toBe(123);
 })->group('load');
 
+test('Load a dummy loads the tags', function()
+{
+    Dummy::prepareDatabase($this);
+    $test = new Dummy();
+    $test->load(1);
+    expect(count($test->_tags))->toBe(1);
+    expect($test->_tags[0]->getName())->toBe('TagA');
+})->group('load');
+
 it('fails when id is invalid', function()
 {
     Dummy::prepareDatabase($this);
