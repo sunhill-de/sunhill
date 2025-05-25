@@ -96,6 +96,12 @@ abstract class AbstractProperty extends Base
     
     protected function createStorage(): ?AbstractStorage
     {
+        if (!empty(static::getStorageClass())) {
+            $class = static::getStorageClass();
+            $storage = new $class();
+            $storage->setStructure($this->getStructure());
+            return $storage;
+        }
         return null;    
     }
     
@@ -1255,6 +1261,11 @@ abstract class AbstractProperty extends Base
     }
         
     // ================================== Infos ===============================================
+    protected static function getStorageClass(): string
+    {
+        return '';    
+    }
+    
     /**
      * Stores the collection infos
      * @var unknown
