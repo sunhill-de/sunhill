@@ -19,6 +19,7 @@ use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Query\BasicQuery;
+use Sunhill\Properties\Exceptions\NoStorageSetException;
 
 class PooledRecordProperty extends PersistentRecordProperty
 {
@@ -66,11 +67,8 @@ class PooledRecordProperty extends PersistentRecordProperty
     {
         $this->checkForStorage();
         $storage = $this->getStorage();
-        if (is_null($id)) {
-            $storage->delete($this->getID());
-        } else {
-            $storage->delete($id);
-        }
+        $id = $id ?? $this->getID();
+        $storage->delete($id);
     }
     
     /**
@@ -81,7 +79,11 @@ class PooledRecordProperty extends PersistentRecordProperty
      */
     public static function erase(mixed $id)
     {
-            
+        if (empty($storage_class = static::getStorageClass())) {
+            throw new NoStorageSetException('No default storage defines while calling ::erase()');
+        }
+        $object = new static();
+        $object->delete($id);
     }
     
     /**
