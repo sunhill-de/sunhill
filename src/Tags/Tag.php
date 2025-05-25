@@ -45,6 +45,18 @@ class Tag extends Base
         }
     }
     
+    /**
+     * When a id is given to the constructor that this tag is loaded
+     * 
+     * @param int $id
+     */
+    public function __construct(?int $id = null)
+    {
+        if (!is_null($id)) {
+            $this->load($id);
+        }
+    }
+    
     public function load(int $id)
     {
         $this->state = 'preloading';
