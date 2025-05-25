@@ -21,6 +21,7 @@ namespace Sunhill\Storage;
 
 use Sunhill\Facades\Properties;
 use function PHPUnit\Framework\stringContains;
+use Sunhill\Storage\Exceptions\IDNotFoundException;
 
 abstract class AbstractObjectStorage extends PersistentPoolStorage
 {
@@ -30,7 +31,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->checkIsValidID($id);
         $data = $this->loadStorageSubid('objects', $id);
         if (count($data) == 0) {
-            return '';
+            throw new IDNotFoundException("The id '$id' was not found");
         }
         return $data[0]->_classname;
     }
