@@ -64,3 +64,4 @@ test('Clear tags',function()
     $test->_tags->clear();
     expect(count($test->_tags))->toBe(0);    
 });
+
