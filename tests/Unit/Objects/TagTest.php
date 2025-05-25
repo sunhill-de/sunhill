@@ -3,6 +3,7 @@
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Tags\Tag;
+use Sunhill\Facades\Properties;
 
 uses(SunhillTestCase::class);
 
@@ -48,6 +49,8 @@ test('Write tag by tag and index', function()
 
 test('Write tag by name', function()
 {
+   Properties::shouldReceive('searchTag')->with('TagA')->andReturn(new Tag(1));
+   Properties::shouldReceive('searchTag')->with('TagB')->andReturn(new Tag(2));
    $test = new Dummy();
    $test->_tags[] = 'TagA';
    $test->_tags[] = 'TagB';

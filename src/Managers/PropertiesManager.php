@@ -357,6 +357,10 @@ class PropertiesManager
         
     }
     
+    public function searchTag(string $tagname): ?Tag
+    {
+        
+    }
     /**
      * Loads the attribute with the attribute_id $id that belongs to the object identified by $object_id
      * 

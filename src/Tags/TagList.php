@@ -16,6 +16,7 @@ namespace Sunhill\Tags;
 
 use Sunhill\Basic\Base;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Facades\Properties;
 
 class TagList extends Base implements \ArrayAccess, \Countable
 {
@@ -74,7 +75,9 @@ class TagList extends Base implements \ArrayAccess, \Countable
             $tag = new Tag();
             $tag->load($tag_id);
             return $tag;
-        } 
+        } else if (is_string($tag_id)) {
+            return Properties::searchTag($tag_id);
+        }
         throw new \Exception("Can't handle given tag");
     }
     
