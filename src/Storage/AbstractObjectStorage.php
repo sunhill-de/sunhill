@@ -20,10 +20,21 @@
 namespace Sunhill\Storage;
 
 use Sunhill\Facades\Properties;
+use function PHPUnit\Framework\stringContains;
 
 abstract class AbstractObjectStorage extends PersistentPoolStorage
 {
   
+    public function getClassOf(mixed $id): string
+    {
+        $this->checkIsValidID($id);
+        $data = $this->loadStorageSubid('objects', $id);
+        if ($data->empty()) {
+            return '';
+        }
+        return $data[0]->_classname;
+    }
+    
     /**
      * Returns all distinct storage sub ids.
      * @return array
