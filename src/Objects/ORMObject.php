@@ -195,7 +195,21 @@ class ORMObject extends PooledRecordProperty
         if ($varname == '_tags') {
             return $this->tag_list;
         }
+        if (in_array($varname,$this->getStorage()->getValue('_attributes'))) {
+            return $this->getStorage()->getIndexedValue('_attributes',$varname);
+        }
         return parent::__get($varname);
+    }
+
+    public function __set($varname, $value)
+    {
+        if (in_array($varname,$this->getStorage()->getValue('_attributes'))) {
+        }
+    }
+    
+    public function hasAttributes(): bool
+    {
+        return count($this->getStorage()->getValue('_attributes')) > 0;    
     }
     
     protected static function getStorageClass(): string
