@@ -28,7 +28,7 @@ test('Append a childobject with both arrays', function()
     $this->assertDatabaseHas('childobjects',['id'=>$test->getID(),'child_int'=>4321,'child_string'=>'AJA']);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>$test->getID(),'element'=>22]);
     $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>$test->getID(),'element'=>333]);
-})->group('append');
+})->group('create');
 
 test('Append a childobject with parent array', function()
 {
@@ -48,7 +48,7 @@ test('Append a childobject with parent array', function()
     $this->assertDatabaseHas('childobjects',['id'=>$test->getID(),'child_int'=>4321,'child_string'=>'AJA']);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>$test->getID(),'element'=>22]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>$test->getID()]);
-})->group('append');
+})->group('create');
 
 test('Append a childobject with child array', function()
 {
@@ -68,7 +68,7 @@ test('Append a childobject with child array', function()
     $this->assertDatabaseHas('childobjects',['id'=>$test->getID(),'child_int'=>4321,'child_string'=>'AJA']);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>$test->getID()]);
     $this->assertDatabaseHas('childobjects_child_sarray',['container_id'=>$test->getID()]);
-})->group('append');
+})->group('create');
 
 test('Append a childobject with both arrays empty', function()
 {
@@ -88,4 +88,4 @@ test('Append a childobject with both arrays empty', function()
     $this->assertDatabaseHas('childobjects',['id'=>$test->getID(),'child_int'=>4321,'child_string'=>'AJA']);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>$test->getID()]);
     $this->assertDatabaseMissing('childobjects_child_sarray',['container_id'=>$test->getID()]);
-})->group('append');
+})->group('create');

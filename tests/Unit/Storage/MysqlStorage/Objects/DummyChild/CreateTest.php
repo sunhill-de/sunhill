@@ -20,5 +20,5 @@ test('Append a dummychild to database', function()
     
     $this->assertDatabaseHas('dummies',['id'=>$test->getID(),'dummyint'=>1999]);
     $this->assertDatabaseHas('dummychildren',['id'=>$test->getID(),'dummychildint'=>1998]);
-})->group('append');
+})->group('create');
 

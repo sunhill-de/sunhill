@@ -28,7 +28,7 @@ test('Append a arrayonlychildobject with parent und child array', function()
     $this->assertDatabaseHas('arrayonlychildobjects',['id'=>$test->getID()]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>$test->getID(),'element'=>111]);
     $this->assertDatabaseHas('arrayonlychildobjects_child_sarray',['container_id'=>$test->getID(),'element'=>232]);
-})->group('append');
+})->group('create');
 
 test('Append a arrayonlychildobject with parent array only', function()
 {
@@ -46,7 +46,7 @@ test('Append a arrayonlychildobject with parent array only', function()
     $this->assertDatabaseHas('arrayonlychildobjects',['id'=>$test->getID()]);
     $this->assertDatabaseHas('parentobjects_parent_sarray',['container_id'=>$test->getID(),'element'=>111]);
     $this->assertDatabaseMissing('arrayonlychildobjects_child_sarray',['container_id'=>$test->getID()]);
-})->group('append');
+})->group('create');
 
 test('Append a arrayonlychildobject with child array only', function()
 {
@@ -64,7 +64,7 @@ test('Append a arrayonlychildobject with child array only', function()
     $this->assertDatabaseHas('arrayonlychildobjects',['id'=>$test->getID()]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>$test->getID()]);
     $this->assertDatabaseHas('arrayonlychildobjects_child_sarray',['container_id'=>$test->getID(),'element'=>232]);
-})->group('append');
+})->group('create');
 
 test('Append a arrayonlychildobject with no array', function()
 {
@@ -82,5 +82,5 @@ test('Append a arrayonlychildobject with no array', function()
     $this->assertDatabaseHas('arrayonlychildobjects',['id'=>$test->getID()]);
     $this->assertDatabaseMissing('parentobjects_parent_sarray',['container_id'=>$test->getID()]);
     $this->assertDatabaseMissing('arrayonlychildobjects_child_sarray',['container_id'=>$test->getID()]);
-})->group('append');
+})->group('create');
 
