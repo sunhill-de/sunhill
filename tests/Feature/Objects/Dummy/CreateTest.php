@@ -26,4 +26,4 @@ it('fails when comitting without default value', function()
     $test = new Dummy();
     $test->create();
     $test->commit();    
-})->group('create')
+})->group('create');

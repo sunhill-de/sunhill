@@ -68,6 +68,7 @@ class ORMObject extends PooledRecordProperty
         parent::create();
         $this->_uuid = (string)Str::uuid();
         $this->_classname = static::getInfo('name');
+        $this->getStorage()->setValue('_attributes',[]);
     }
     
     private function updateTimesstamps()
