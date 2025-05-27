@@ -47,12 +47,14 @@ class ORMObject extends PooledRecordProperty
         parent::__construct($elements);
         $this->forceElement(UUID4::class, '_uuid')->setMaxLen(40);
         $this->forceElement(Name::class, '_classname')->setMaxLen(40);
-        $this->forceElement(TypeVarchar::class,'_read_cap')->setMaxLen(20);
-        $this->forceElement(TypeVarchar::class,'_modify_cap')->setMaxLen(20);;
-        $this->forceElement(TypeVarchar::class,'_delete_cap')->setMaxLen(20);;
+        $this->forceElement(TypeVarchar::class,'_read_cap')->setMaxLen(20)->nullable()->default(null);
+        $this->forceElement(TypeVarchar::class,'_modify_cap')->setMaxLen(20)->nullable()->default(null);
+        $this->forceElement(TypeVarchar::class,'_delete_cap')->setMaxLen(20)->nullable()->default(null);
         $this->forceElement(TypeDateTime::class,'_created_at');
         $this->forceElement(TypeDateTime::class,'_updated_at');
-        $this->tag_list = new TagList($this->getStorage());
+        $storage = $this->getStorage();
+        $this->tag_list = new TagList($storage);
+        $storage->setValue('_attributes',[]);
     }
     
     private function forceElement(string $class, string $name)
@@ -66,9 +68,12 @@ class ORMObject extends PooledRecordProperty
     public function create()
     {
         parent::create();
+        $storage = $this->getStorage();
+        $storage->setStructure($this->getStructure()); // @todo Why is this neccessary??
+        $storage->setValue('_attributes',[]);
         $this->_uuid = (string)Str::uuid();
         $this->_classname = static::getInfo('name');
-        $this->getStorage()->setValue('_attributes',[]);
+        
     }
     
     private function updateTimesstamps()
@@ -206,6 +211,7 @@ class ORMObject extends PooledRecordProperty
     {
         if (in_array($varname,$this->getStorage()->getValue('_attributes'))) {
         }
+        parent::__set($varname, $value);
     }
     
     public function hasAttributes(): bool
