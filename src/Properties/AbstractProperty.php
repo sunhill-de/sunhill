@@ -1053,7 +1053,6 @@ abstract class AbstractProperty extends Base
      */
     public function commit()
     {
-        $this->checkForStorage('commit');
         $this->getStorage()->commit();
     }
     
