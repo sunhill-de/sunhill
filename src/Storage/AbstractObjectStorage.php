@@ -22,6 +22,7 @@ namespace Sunhill\Storage;
 use Sunhill\Facades\Properties;
 use function PHPUnit\Framework\stringContains;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Properties\Exceptions\NoDefaultSetException;
 
 abstract class AbstractObjectStorage extends PersistentPoolStorage
 {
@@ -104,6 +105,9 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     {
         $result = [];
         foreach ($fields as $field) {
+            if (!array_key_exists($field->name,$this->values)) {
+                throw new NoDefaultSetException("For the property '".$field->name."' no default value is set");
+            }
             $result[$field->name] = $this->values[$field->name];
         }
         return $result;
