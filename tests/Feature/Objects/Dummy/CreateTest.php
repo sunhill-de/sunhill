@@ -22,6 +22,31 @@ test('create a dummy with just dummyint', function()
     expect(($query->_created_at == $query->_updated_at))->toBe(true);
 })->group('create');
 
+test('create a dummy and assign a tag to it', function()
+{
+    Dummy::prepareDatabase($this);
+    $test = new Dummy();
+    $test->create();
+    $test->dummyint = 10;
+    $test->_tags[] = 1;
+    $test->commit();    
+    $this->assertDatabaseHas('dummies',['id'=>$test->getID(),'dummyint'=>10]);
+    $this->assertDatabaseHas('tagobjectassigns',['container_id'=>$test->getID(),'tag_id'=>1]);
+})->group('create')->group('tag');
+
+test('create a dummy and assign an attribute to it', function()
+{
+    Dummy::prepareDatabase($this);
+    $test = new Dummy();
+    $test->create();
+    $test->dummyint = 10;
+    $test->_tags[] = 1;
+    $test->commit();
+    $this->assertDatabaseHas('dummies',['id'=>$test->getID(),'dummyint'=>10]);
+    $this->assertDatabaseHas('tagobjectassigns',['container_id'=>$test->getID(),'tag_id'=>1]);
+})->group('create')->group('tag');
+
+
 it('fails when assigning wrong type', function()
 {
     Dummy::prepareDatabase($this);

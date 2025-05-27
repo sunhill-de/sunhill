@@ -14,7 +14,7 @@ test('Load a dummy from database', function()
     $test = new Dummy();    
     $test->load(1);
     expect($test->dummyint)->toBe(123);
-})->group('load');
+})->group('read');
 
 test('Load a dummy loads the tags', function()
 {
@@ -23,7 +23,7 @@ test('Load a dummy loads the tags', function()
     $test->load(1);
     expect(count($test->_tags))->toBe(1);
     expect($test->_tags[0]->getName())->toBe('TagA');
-})->group('load');
+})->group('read');
 
 test('Load a dummy loads with more tags', function()
 {
@@ -32,7 +32,7 @@ test('Load a dummy loads with more tags', function()
     $test->load(2);
     expect(count($test->_tags))->toBe(2);
     expect($test->_tags[0]->getName())->toBe('TagA');
-})->group('load');
+})->group('read');
 
 test('Load a dummy loads with no tags', function()
 {
@@ -40,7 +40,7 @@ test('Load a dummy loads with no tags', function()
     $test = new Dummy();
     $test->load(5);
     expect(count($test->_tags))->toBe(0);
-})->group('load');
+})->group('read');
 
 test('Load a dummy loads attributes', function()
 {
@@ -65,18 +65,18 @@ it('fails when id is invalid', function()
     Dummy::prepareDatabase($this);
     $test = new Dummy();
     $test->load('abc');    
-})->group('load')->throws(InvalidIDException::class);
+})->group('read')->throws(InvalidIDException::class);
 
 it('fails when id does not exist', function()
 {
     Dummy::prepareDatabase($this);
     $test = new Dummy();
     $test->load(999);
-})->group('load')->throws(IDNotFoundException::class);
+})->group('read')->throws(IDNotFoundException::class);
 
 it('fails when id does not match expected class', function()
 {
     Dummy::prepareDatabase($this);
     $test = new Dummy();
     $test->load(9);
-})->group('load')->throws(InvalidPropertyException::class);
+})->group('read')->throws(InvalidPropertyException::class);
