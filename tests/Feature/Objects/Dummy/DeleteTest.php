@@ -4,6 +4,9 @@ use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
+use Sunhill\Facades\Properties;
+use Sunhill\Tests\TestSupport\Objects\DummyChild;
+use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -15,6 +18,26 @@ test('delete a dummy (not loaded by id)', function()
     $write->delete(1);
     
     $this->assertDatabaseMissing('dummies',['id'=>1]);
+});
+
+test('delete a dummy (not loaded by id, deletes tags)', function()
+{
+    Dummy::prepareDatabase($this);
+    $write = new Dummy();
+    
+    $write->delete(1);
+    
+    $this->assertDatabaseMissing('tagobjectassigns',['container_id'=>1]);
+});
+
+test('delete a dummy (not loaded by id, deletes attributes)', function()
+{
+    Dummy::prepareDatabase($this);
+    $write = new Dummy();
+    
+    $write->delete(1);
+    
+    $this->assertDatabaseMissing('attributeobjectassigns',['container_id'=>1]);
 });
 
 test('delete a dummy (not found)', function()
@@ -57,6 +80,7 @@ test('delete a dummy static (invalid id)', function()
 
 test('delete a dummy (id is a dummy child)', function()
 {
+    Properties::registerProperty(DummyChild::class);
     Dummy::prepareDatabase($this);
     Dummy::erase(13);
     
@@ -66,6 +90,7 @@ test('delete a dummy (id is a dummy child)', function()
 
 test('delete a dummy (id is a childobject)', function()
 {
+    Properties::registerProperty(ChildObject::class);
     Dummy::prepareDatabase($this);
     Dummy::erase(9);
     
