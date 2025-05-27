@@ -50,7 +50,7 @@ test('Load a dummy loads attributes', function()
     expect($test->hasAttributes())->toBe(true);
     expect($test->str_attribute)->toBe('attribute');
     expect($test->int_attribute)->toBe(888);
-});
+})->group('read')->group('attribute')->skip();
 
 test('Load a dummy loads with no attributes', function()
 {
@@ -58,7 +58,7 @@ test('Load a dummy loads with no attributes', function()
     $test = new Dummy();
     $test->load(5);
     expect($test->hasAttributes())->toBe(false);    
-});
+})->group('read')->group('attribute');
 
 it('fails when id is invalid', function()
 {

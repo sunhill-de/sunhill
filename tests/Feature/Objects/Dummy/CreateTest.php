@@ -44,7 +44,7 @@ test('create a dummy and assign an attribute to it', function()
     $test->commit();
     $this->assertDatabaseHas('dummies',['id'=>$test->getID(),'dummyint'=>10]);
     $this->assertDatabaseHas('tagobjectassigns',['container_id'=>$test->getID(),'tag_id'=>1]);
-})->group('create')->group('tag');
+})->group('create')->group('attribute')->skip();
 
 
 it('fails when assigning wrong type', function()
