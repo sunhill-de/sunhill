@@ -16,6 +16,8 @@ namespace Sunhill\Tags;
 
 use Sunhill\Basic\Base;
 use Illuminate\Support\Facades\DB;
+use Sunhill\Facades\Properties;
+use Sunhill\Tags\Exceptions\TagIDNotFoundException;
 
 class Tag extends Base
 {
@@ -59,8 +61,19 @@ class Tag extends Base
     
     public function load(int $id)
     {
-        $this->state = 'preloading';
+        $storage_class = Properties::getTagStorage();
+        $this->state = 'normal';
+        $storage = new $storage_class();
+        $data = $storage->load($id);
+        if (count($data) == 0) {
+            throw new TagIDNotFoundException("The tag id '$id' was not found.");
+        }
         $this->tag_id = $id;
+        $this->name = $data[0]->name;
+        $this->options = $data[0]->options;
+        if ($data[0]->parent_id) {
+            $this->parent = new Tag($data[0]->parent_id);
+        }
     }
     
     protected function checkLoadingState()
