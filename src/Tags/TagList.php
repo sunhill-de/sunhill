@@ -43,6 +43,10 @@ class TagList extends Base implements \ArrayAccess, \Countable
     public function offsetSet(mixed $offset, mixed $value): void
     {
         $value = $this->createTag($value);
+        $index = $this->searchIDinList($value->getID());
+        if (!is_null($index) && ($index !== $offset)) {
+            return;
+        }
         if (is_null($offset)) {
             $this->tag_list[] = $value;
         } else {
@@ -61,10 +65,32 @@ class TagList extends Base implements \ArrayAccess, \Countable
         return count($this->tag_list);
     }
     
+    private function searchIDinList(int $id): ?int
+    {
+        foreach ($this->tag_list as $index => $tag) {
+            if ($tag->getID() == $id) {
+                return $index;
+            }
+        }
+        return null;
+    }
+    
     public function add($tag)
     {
         $tag = $this->createTag($tag);
-        $this->tag_list[] = $tag;
+        if (!$this->searchIDinList($tag->getID())) {
+            $this->tag_list[] = $tag;
+            $this->storage->setIndexedValue('_tags', null, $tag->getID());
+        }
+    }
+    
+    public function remove($tag)
+    {
+        $tag = $this->createTag($tag);
+        if (!is_null($id = $this->searchIDinList($tag->id))) {
+            unset($this->tag_list[$id]);
+            $this->storage->unsetIndexedValue('_tags', $id);
+        }
     }
     
     protected function createTag($tag_id): Tag
@@ -72,9 +98,7 @@ class TagList extends Base implements \ArrayAccess, \Countable
         if (is_a($tag_id, Tag::class)) {
             return $tag_id;
         } else if (is_int($tag_id)) {
-            $tag = new Tag();
-            $tag->load($tag_id);
-            return $tag;
+            return Properties::loadTag($tag_id);
         } else if (is_string($tag_id)) {
             return Properties::searchTag($tag_id);
         }
