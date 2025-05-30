@@ -33,6 +33,7 @@ use Sunhill\Query\BasicQuery;
 use Sunhill\Storage\CallbackStorage;
 use Sunhill\Tags\Tag;
 use Sunhill\Storage\MysqlStorage\MysqlTagStorage;
+use Sunhill\Storage\MysqlStorage\MysqlAttributeStorage;
 
 /**
  * The PropertiesManager is accessed via the Properties facade. It's a singelton class
@@ -369,6 +370,12 @@ class PropertiesManager
         $tag_storage = new $tag_storage_class();
         return new Tag($tag_storage->searchName($tagname));
     }
+    
+    public function getAttributeStorage(): string
+    {
+        return MysqlAttributeStorage::class;
+    }
+    
     /**
      * Loads the attribute with the attribute_id $id that belongs to the object identified by $object_id
      * 
@@ -376,9 +383,11 @@ class PropertiesManager
      * @param int $object_id The id of the object
      * @return array associative array with one row. The key is the name of the attribute the value is the value of the attribute
      */
-    public function loadAttribute(int $id, int $object_id): array
+    public function loadAttribute(int $id, int $object_id): \stdClass
     {
-        
+        $attr_storage_class = $this->getAttributeStorage();
+        $attr_storage = new $attr_storage_class();
+        return $attr_storage->loadAttribute($object_id, $id);
     }
     
     /**

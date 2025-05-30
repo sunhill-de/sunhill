@@ -15,6 +15,11 @@ use Sunhill\Tests\Database\Seeds\DummiesSeeder;
 use Sunhill\Tests\Database\Seeds\TagsSeeder;
 use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
 use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
+use Sunhill\Tests\Database\Seeds\AttributesSeeder;
+use Sunhill\Tests\Database\Seeds\Attr_str_attributeSeeder;
+use Sunhill\Tests\Database\Seeds\AttributeObjectAssignsSeeder;
+use Sunhill\Tests\Database\Seeds\Attr_int_attributeSeeder;
+use Sunhill\Tests\Database\Seeds\Attr_float_attributeSeeder;
 
 class Dummy extends ORMObject
 {
@@ -122,7 +127,12 @@ class Dummy extends ORMObject
             DummiesSeeder::class,
             TagsSeeder::class,
             TagCacheSeeder::class,
-            TagObjectAssignsSeeder::class
+            TagObjectAssignsSeeder::class,
+            AttributesSeeder::class,
+            AttributeObjectAssignsSeeder::class,
+            Attr_str_attributeSeeder::class,
+            Attr_int_attributeSeeder::class,
+            Attr_float_attributeSeeder::class
         ]);        
     }
 }

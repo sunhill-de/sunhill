@@ -19,55 +19,25 @@ use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Query\BasicQuery;
 use Illuminate\Support\Facades\DB;
 use Sunhill\Storage\ObjectStorage\AttributeStorage;
+use Sunhill\Attributes\AbstractAttributeStorage;
 
-class MysqlAttributeStorage extends AttributeStorage
+class MysqlAttributeStorage extends AbstractAttributeStorage
 {
 
-    protected function isValidID(mixed $id): bool
+    protected function assembleStorageName(string $attribute_name): string
     {
-        return is_int($id);
+        return 'attr_'.$attribute_name;    
     }
     
-    /**
-     * Loads the attribute with id $attribute_id from the table for $attribute_name
-     *  
-     * {@inheritDoc}
-     * @see \Sunhill\Storage\AttributeStorage::doLoadAttribute()
-     */
-    protected function doLoad($attribute_id)
+    public function loadAttribute(int $container_id, int $attribute_id)
     {
-        $this->id = $attribute_id;
-        $table_name = $this->calculateAttributeStorageID($this->attribute_name);
-        $entry = DB::table($table_name)->where('id', $attribute_id)->first();
-        if (empty($entry)) {
-            throw new IDNotFoundException("The id '$attribute_id' was not found");
-        }
-        $this->setValue($this->attribute_name,$entry->value);
-    }
-    
-    protected function doCommitLoaded()
-    {
+        $attribute = DB::table('attributes')->where('id',$attribute_id)->firstOrFail();
+        $result = new \stdClass();
+        $result->name = $attribute->name;
+        $result->type = $attribute->type;
+        $result->value = DB::table($this->assembleStorageName($attribute->name))->first('value');
         
-    }
-    
-    protected function doCommitNew()
-    {
-        
-    }
-        
-    protected function doWriteAttribute(string $attribute_name,?int $attribute_id)
-    {
-        
-    }
-    
-    protected function doDelete(mixed $id)
-    {
-        
-    }
- 
-    protected function doQuery(): BasicQuery
-    {
-        
+        return $result;
     }
     
 }
