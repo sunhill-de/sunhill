@@ -3,9 +3,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttributeobjectassignsTable extends Migration
+class CreateAttrStrAttributeTable extends Migration
 {
-
+    
     /**
      * Run the migrations.
      *
@@ -13,16 +13,14 @@ class CreateAttributeobjectassignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attributeobjectassigns', function (Blueprint $table)
-        {
-            $table->integer('container_id');
-            $table->integer('attribute_id');
+        Schema::create('attr_str_attribute', function (Blueprint $table) {
+            $table->integer('container_id')->primary();
+            $table->string('value');
             
-            $table->primary(['container_id','attribute_id']);
-            
+            $table->primary('container_id');
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *
@@ -30,6 +28,6 @@ class CreateAttributeobjectassignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attributeobjectassigns');
+        Schema::dropIfExists('attr_str_attribute');
     }
 }
