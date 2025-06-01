@@ -45,9 +45,9 @@ abstract class AbstractTagStorage extends Base
     public function load(int $id)
     {
         $result = $this->searchTag(['id'=>$id]);
-        if (empty($result)) {
+        if (count($result) !== 1) {
             throw new TagIDNotFoundException("The tag with the id '$id' was not found.");
-        }
-        return $result;
+        }        
+        return $result[0];
     }
 }
