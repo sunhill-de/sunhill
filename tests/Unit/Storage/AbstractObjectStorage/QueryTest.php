@@ -12,11 +12,12 @@ uses(SunhillTestCase::class);
 
 function getStorageForQuery()
 {
-    Properties::shouldReceive('loadAttribute')->with(1,1)->andReturn(['attribute1'=>'value1']);
-    Properties::shouldReceive('loadAttribute')->with(2,1)->andReturn(['attribute2'=>'value2']);
-    Properties::shouldReceive('loadAttribute')->with(2,2)->andReturn(['attribute2'=>'value2']);
-    Properties::shouldReceive('loadAttribute')->with(3,2)->andReturn(['attribute3'=>'value3']);
-    Properties::shouldReceive('loadAttribute')->with(4,3)->andReturn(['attribute4'=>'value4']);
+    Properties::shouldReceive('loadAttribute')->with(1,1)->andReturn(makeStdclass(['name'=>'attribute1','type'=>'string','value'=>'value1']));
+    Properties::shouldReceive('loadAttribute')->with(2,1)->andReturn(makeStdclass(['name'=>'attribute2','type'=>'string','value'=>'value2']));    
+    Properties::shouldReceive('loadAttribute')->with(2,2)->andReturn(makeStdclass(['name'=>'attribute2','type'=>'string','value'=>'value2']));
+    Properties::shouldReceive('loadAttribute')->with(3,2)->andReturn(makeStdclass(['name'=>'attribute3','type'=>'string','value'=>'value4']));
+    Properties::shouldReceive('loadAttribute')->with(4,3)->andReturn(makeStdclass(['name'=>'attribute4','type'=>'string','value'=>'value4']));
+    
 
     $test = new DummyAbstractObjectStorage();
     $test::$DataPool = $test::$Data;  

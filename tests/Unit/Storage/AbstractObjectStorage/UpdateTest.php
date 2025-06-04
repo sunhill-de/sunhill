@@ -10,8 +10,8 @@ uses(SunhillTestCase::class);
 
 function getObjectStorageForUpdate()
 {
-    Properties::shouldReceive('loadAttribute')->with(1,1)->andReturn(['attribute1'=>'value1']);
-    Properties::shouldReceive('loadAttribute')->with(2,1)->andReturn(['attribute2'=>'value2']);
+    Properties::shouldReceive('loadAttribute')->with(1,1)->andReturn(makeStdclass(['name'=>'attribute1','type'=>'string','value'=>'value1']));
+    Properties::shouldReceive('loadAttribute')->with(2,1)->andReturn(makeStdclass(['name'=>'attribute2','type'=>'string','value'=>'value2']));
     $test = new DummyAbstractObjectStorage();
     $test::$DataPool = $test::$Data;
     $test->setStructure(ChildObject::getExpectedStructure());
