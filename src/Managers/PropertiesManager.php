@@ -364,6 +364,16 @@ class PropertiesManager
         return new Tag($id);
     }
     
+    public function loadTagData(int $id): \stdClass
+    {
+        $storage_class = $this->getTagStorage();
+        $this->state = 'normal';
+        $storage = new $storage_class();
+        $data = $storage->load($id);
+        
+        return $data;
+    }
+    
     public function searchTag(string $tagname): ?Tag
     {
         $tag_storage_class = $this->getTagStorage();
