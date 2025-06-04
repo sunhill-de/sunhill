@@ -58,6 +58,8 @@ class TagList extends Base implements \ArrayAccess, \Countable
     public function offsetUnset(mixed $offset): void
     {
         unset($this->tag_list[$offset]);
+        $this->tag_list = array_values($this->tag_list); // Reindex
+        $this->storage->unsetIndexedValue('_tags', $offset);
     }
     
     public function count(): int
@@ -77,19 +79,14 @@ class TagList extends Base implements \ArrayAccess, \Countable
     
     public function add($tag)
     {
-        $tag = $this->createTag($tag);
-        if (!$this->searchIDinList($tag->getID())) {
-            $this->tag_list[] = $tag;
-            $this->storage->setIndexedValue('_tags', null, $tag->getID());
-        }
+        $this->offsetSet(null, $tag);
     }
     
     public function remove($tag)
     {
         $tag = $this->createTag($tag);
         if (!is_null($id = $this->searchIDinList($tag->id))) {
-            unset($this->tag_list[$id]);
-            $this->storage->unsetIndexedValue('_tags', $id);
+            $this->offsetUnset($id);
         }
     }
     
@@ -108,6 +105,7 @@ class TagList extends Base implements \ArrayAccess, \Countable
     public function clear()
     {
         $this->tag_list = [];
+        $this->storage->clearArray('_tags');
     }
     
     public function loadFromStorage()
