@@ -24,6 +24,7 @@ test('read of Child Object value', function()
     $storage->shouldReceive('getIndexedValue')->once()->with('child_sarray',1)->andReturn(22);
     $storage->shouldReceive('getOffsetExists')->with('child_sarray',1)->andReturn(true);
     $storage->shouldReceive('getIsInitialized')->with('child_sarray')->andReturn(true);
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
     $test = new ChildObject();
     $test->setStorage($storage);
     

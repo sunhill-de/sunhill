@@ -11,6 +11,8 @@ test('Load a dummy', function()
     $storage = \Mockery::mock(PersistentPoolStorage::class);
     $storage->shouldReceive('load')->once()->with(123);
     $storage->shouldReceive('setStructure')->once();
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
+    $storage->shouldReceive('getClassOf')->with(123)->andReturn('Dummy');
     $test = new Dummy();
     $test->setStorage($storage);
     $test->load(123);

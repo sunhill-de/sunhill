@@ -12,6 +12,7 @@ test('read of Parent Reference value', function()
     $storage = \Mockery::mock(PersistentPoolStorage::class);
     $storage->shouldReceive('getValue')->with('parent_int')->andReturn(123);
     $storage->shouldReceive('getIsInitialized')->with('parent_int')->andReturn(true);
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
     $test = new ParentReference();
     $test->setStorage($storage);
     // @todo Fix this unit test for referenes

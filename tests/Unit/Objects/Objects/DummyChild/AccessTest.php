@@ -14,6 +14,7 @@ test('read of dummy child value', function()
     $storage->shouldReceive('getIsInitialized')->with('dummyint')->andReturn(true);
     $storage->shouldReceive('getValue')->with('dummychildint')->andReturn(234);
     $storage->shouldReceive('getIsInitialized')->with('dummychildint')->andReturn(true);
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
     $test = new DummyChild();
     $test->setStorage($storage);
     

@@ -17,6 +17,7 @@ test('read of dummy grand child value', function()
     $storage->shouldReceive('getIsInitialized')->with('dummychildint')->andReturn(true);
     $storage->shouldReceive('getValue')->with('dummygrandchildint')->andReturn(345);
     $storage->shouldReceive('getIsInitialized')->with('dummygrandchildint')->andReturn(true);
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
     $test = new DummyGrandChild();
     $test->setStorage($storage);
     

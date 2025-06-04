@@ -13,6 +13,7 @@ test('Commit of a non initialized dummy works', function()
     $storage->shouldReceive('getIsInitialized')->andReturn(true);
     $storage->shouldReceive('setValue'); // For the timestamps
     $storage->shouldReceive('commit')->once();
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
     $test = new Dummy();
     $test->setStorage($storage);
     
@@ -26,6 +27,7 @@ test('Commit of a initialized dummy works', function()
     $storage->shouldReceive('getIsInitialized')->andReturn(true);
     $storage->shouldReceive('setValue'); // For the timestamps
     $storage->shouldReceive('commit')->once();
+    $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
     $test = new Dummy();
     $test->setStorage($storage);
     
