@@ -30,6 +30,11 @@ abstract class SimpleStorage extends CommonStorage
             $this->values = $this->readValues();
         }
     }
+
+    protected function doClearArray($name)
+    {
+        // Should not be called    
+    }
     
     /**
      * Performs the setting of the value

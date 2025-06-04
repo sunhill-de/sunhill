@@ -46,6 +46,13 @@ abstract class CommonStorage extends AbstractStorage
             throw new FieldNotAnArrayException("The field '$name' is not an array.");
         }        
     }
+
+    protected function doClearArray(string $name)
+    {
+        $this->checkFieldExistence($name);
+        $this->checkFieldIsArray($name);
+        $this->values[$name] = [];
+    }
     
     protected function doGetIndexedValue(string $name, mixed $index): mixed
     {

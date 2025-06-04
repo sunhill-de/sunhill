@@ -69,6 +69,11 @@ class DummyStorage extends AbstractStorage
     {
         unsset($this->values[$name][$index]);
     }
+    protected function doClearArray(string $name)
+    {
+        $this->values[$name] = [];
+    }
+
 
     
 }

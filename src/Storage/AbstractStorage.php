@@ -183,9 +183,25 @@ abstract class AbstractStorage extends Base
         return $value;
     }
     
+    /**
+     * Executes the clearance of all entries from the array with the given name
+     * 
+     * @param string $name
+     */
+    abstract protected function doClearArray(string $name);
+    
+    /**
+     * Clears all entries from the given array
+     * 
+     * @param string $name
+     */
     public function clearArray(string $name)
     {
-            
+        $this->checkAccess();    
+        $this->doClearArray($name);
+        if ($this->isCachable()) {
+            Cache::put($this->getCacheID().'.'.$name, [], $this->cache_time);
+        }
     }
     
     /**

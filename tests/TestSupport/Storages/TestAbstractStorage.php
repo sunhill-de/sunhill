@@ -82,5 +82,11 @@ class TestAbstractStorage extends AbstractStorage
         $this->values[$name] = array_values($this->values[$name]); // Reindex!
     }
     
+    protected function doClearArray(string $name)
+    {
+        $this->values[$name] = [];
+    }
+
+    
 }
 
