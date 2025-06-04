@@ -3,11 +3,15 @@
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Tests\TestSupport\Objects\DummyChild;
+use Sunhill\Facades\Properties;
 
 uses(SunhillDatabaseTestCase::class);
 
 test('delete a dummychild', function()
 {
+    Properties::registerProperty(Dummy::class);
+    Properties::registerProperty(DummyChild::class);
+    
     DummyChild::prepareDatabase($this);
     $write = new DummyChild();
     
