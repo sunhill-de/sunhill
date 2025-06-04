@@ -52,9 +52,21 @@ class ORMObject extends PooledRecordProperty
         $this->forceElement(TypeVarchar::class,'_delete_cap')->setMaxLen(20)->nullable()->default(null);
         $this->forceElement(TypeDateTime::class,'_created_at');
         $this->forceElement(TypeDateTime::class,'_updated_at');
+        $this->initializeTagList();
+        $this->initializeAttributes();
+    }
+
+    private function initializeTagList()
+    {
         $storage = $this->getStorage();
-        $this->tag_list = new TagList($storage);
-        $storage->setValue('_attributes',[]);
+        $this->tag_list = new TagList($storage);        
+        
+    }
+    
+    private function initializeAttributes()
+    {
+        $storage = $this->getStorage();
+        $storage->setValue('_attributes',[]);        
     }
     
     private function forceElement(string $class, string $name)
