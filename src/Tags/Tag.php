@@ -61,10 +61,7 @@ class Tag extends Base
     
     public function load(int $id)
     {
-        $storage_class = Properties::getTagStorage();
-        $this->state = 'normal';
-        $storage = new $storage_class();
-        $data = $storage->load($id);
+        $data = Properties::loadTagData($id);
         if (empty($data)) {
             throw new TagIDNotFoundException("The tag id '$id' was not found.");
         }
