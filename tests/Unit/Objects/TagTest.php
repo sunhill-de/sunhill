@@ -72,10 +72,10 @@ test('Write tag by tag and index', function()
 
 test('Write tag by name', function()
 {
-   Properties::shouldReceive('searchTag')->with('TagA')->andReturn(new Tag(1));
+    Properties::shouldReceive('loadTagData')->with(1)->andReturn(makeStdClass(['id'=>1,'name'=>'TagA','options'=>0,'parent_id'=>null]));
+    Properties::shouldReceive('loadTagData')->with(2)->andReturn(makeStdClass(['id'=>2,'name'=>'TagB','options'=>0,'parent_id'=>null]));
+    Properties::shouldReceive('searchTag')->with('TagA')->andReturn(new Tag(1));
    Properties::shouldReceive('searchTag')->with('TagB')->andReturn(new Tag(2));
-   Properties::shouldReceive('loadTagData')->with(1)->andReturn(makeStdClass(['id'=>1,'name'=>'TagA','options'=>0,'parent_id'=>null]));
-   Properties::shouldReceive('loadTagData')->with(2)->andReturn(makeStdClass(['id'=>2,'name'=>'TagB','options'=>0,'parent_id'=>null]));
    $test = new Dummy();
    $test->_tags[] = 'TagA';
    $test->_tags[] = 'TagB';
