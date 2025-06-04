@@ -35,7 +35,7 @@ class MysqlAttributeStorage extends AbstractAttributeStorage
         $result = new \stdClass();
         $result->name = $attribute->name;
         $result->type = $attribute->type;
-        $result->value = DB::table($this->assembleStorageName($attribute->name))->first('value');
+        $result->value = DB::table($this->assembleStorageName($attribute->name))->first('value')->value;
         
         return $result;
     }
