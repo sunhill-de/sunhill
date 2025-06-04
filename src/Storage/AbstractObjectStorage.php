@@ -420,9 +420,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->values['_attributes'] = [];
         foreach ($data as $entry) {
             $attribute = Properties::loadAttribute($entry->attribute_id, $this->getID());
-            $key = array_keys($attribute)[0];
-            $value = array_values($attribute)[0];
-            $this->values['_attributes'][$key] = $value;
+            $this->values['_attributes'][$attribute->name] = $attribute->value;
         }
     }
     
