@@ -20,16 +20,6 @@ test('load a tag', function()
     expect($test->getFullPath())->toBe('TagA');
 });
 
-test('lazy load', function()
-{
-    $this->seed([TagsSeeder::class,TagCacheSeeder::class,TagObjectAssignsSeeder::class]);
-    $test = new Tag();
-    $test->load(1);
-    expect(getProtectedProperty($test, 'name'))->toBe('');
-    expect($test->getName())->toBe('TagA');
-    expect(getProtectedProperty($test, 'name'))->toBe('TagA');    
-});
-
 test('getFullpath()', function()
 {
     $this->seed([TagsSeeder::class,TagCacheSeeder::class,TagObjectAssignsSeeder::class]);

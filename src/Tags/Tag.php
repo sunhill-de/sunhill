@@ -65,14 +65,14 @@ class Tag extends Base
         $this->state = 'normal';
         $storage = new $storage_class();
         $data = $storage->load($id);
-        if (count($data) == 0) {
+        if (empty($data)) {
             throw new TagIDNotFoundException("The tag id '$id' was not found.");
         }
         $this->tag_id = $id;
-        $this->name = $data[0]->name;
-        $this->options = $data[0]->options;
-        if ($data[0]->parent_id) {
-            $this->parent = new Tag($data[0]->parent_id);
+        $this->name = $data->name;
+        $this->options = $data->options;
+        if ($data->parent_id) {
+            $this->parent = new Tag($data->parent_id);
         }
     }
     
