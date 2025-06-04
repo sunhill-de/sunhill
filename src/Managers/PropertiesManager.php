@@ -222,6 +222,55 @@ class PropertiesManager
     }
     
     /**
+     * The reimplementation of is_a() that works with class names too
+     *
+     * @param unknown $test
+     * @param unknown $class
+     * @return boolean
+     *
+     * Test: testIsA
+     */
+    public function isA($test,$class)
+    {
+        $namespace = $this->getNamespaceOfProperty($class);
+        
+        return is_a($test,$namespace, true);
+    }
+    
+    /**
+     * Returns true is $test is exactly a $class and not of its children
+     *
+     * @param unknown $test
+     * @param unknown $class
+     * @return boolean
+     *
+     * Test: isAClass
+     */
+ /*   public function isAClass($test,$class)
+    {
+        $namespace = $this->getNamespaceOfProperty($this->checkClass($this->searchClass($class)));
+        return is_a($test,$namespace, true) && !is_subclass_of($test,$namespace);
+    }
+   */ 
+    /**
+     * Naming convention compatible method
+     * The reimplementation of is_subclass_of() that works with class names too
+     *
+     * @param unknown $test
+     * @param unknown $class
+     * @return boolean
+     *
+     * Test: isSubclassOf
+     */
+/*    public function isSubclassOf($test,$class)
+    {
+        $namespace = $this->getNamespaceOfProperty(($this->checkClass($this->searchClass($class)));
+        $test_space = $this->getNamespaceOfProperty(($this->checkClass($this->searchClass($test)));
+        return is_subclass_of($test_space,$namespace);
+    }
+    
+  */  
+    /**
      * Stores the currently registered units.
      *
      * @var array
@@ -386,6 +435,14 @@ class PropertiesManager
         return MysqlAttributeStorage::class;
     }
     
+    private function getAttributeStorageObject()
+    {
+        $attr_storage_class = $this->getAttributeStorage();
+        $attr_storage = new $attr_storage_class();
+        
+        return $attr_storage;
+    }
+    
     /**
      * Loads the attribute with the attribute_id $id that belongs to the object identified by $object_id
      * 
@@ -395,8 +452,7 @@ class PropertiesManager
      */
     public function loadAttribute(int $id, int $object_id): \stdClass
     {
-        $attr_storage_class = $this->getAttributeStorage();
-        $attr_storage = new $attr_storage_class();
+        $attr_storage = $this->getAttributeStorageObject();
         return $attr_storage->loadAttribute($object_id, $id);
     }
     
@@ -408,7 +464,11 @@ class PropertiesManager
      */
     public function getAttributeID(string $name): ?int
     {
-        
+        $attr_storage = $this->getAttributeStorageObject();
+        if (is_null($attribute = $attr_storage->searchAttribute($name))) {
+            return;
+        }
+        return $attribute->id;
     }
     
     /**
