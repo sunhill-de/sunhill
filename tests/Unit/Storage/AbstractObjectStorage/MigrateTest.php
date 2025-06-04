@@ -25,6 +25,7 @@ test('assembleStructure', function($class, $storage_id, $structure)
     $test = new DummyAbstractObjectStorage();
     $test->setStructure($class::getExpectedStructure());
     $expected = convertStructure($structure);
+    $given = $test->assembleStructure($storage_id);
     expect($test->assembleStructure($storage_id))->toEqual($expected);
 })->with([
     [ParentObject::class,'parentobjects',[
@@ -34,7 +35,7 @@ test('assembleStructure', function($class, $storage_id, $structure)
             'parent_string'=>['type'=>'string','max_len'=>3],
         ],
         'parentobjects_parent_sarray'=>[
-            'type'=>'array','index_type'=>'integer','element_type'=>'integer'
+            'type'=>'array','index_type'=>['type'=>'integer'],'element_type'=>['type'=>'integer']
         ]
     ]],
     [ChildObject::class,'childobjects',[
@@ -44,17 +45,16 @@ test('assembleStructure', function($class, $storage_id, $structure)
             'parent_string'=>['type'=>'string','max_len'=>3],
         ],
         'parentobjects_parent_sarray'=>[
-            'type'=>'array','index_type'=>'integer','element_type'=>'integer'
+            'type'=>'array','index_type'=>['type'=>'integer'],'element_type'=>['type'=>'integer']
         ],
         'childobjects'=>[
             'id'=>['type'=>'integer'],
             'child_int'=>['type'=>'integer'],
             'child_string'=>['type'=>'string','max_len'=>3],            
         ],        
-        'childobjects_child_sarray'=>[
-            'type'=>'array',
-            'index_type'=>'integer',
-            'element_type'=>'integer']
+        'childobjects_child_sarray'=>[            
+            'type'=>'array','index_type'=>['type'=>'integer'],'element_type'=>['type'=>'integer'],
+        ]
     ]],
 ]);
 
