@@ -29,6 +29,7 @@ use Sunhill\Storage\MysqlStorage\MysqlObjectStorage;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\InvalidPropertyException;
 use Sunhill\Tags\TagList;
+use Sunhill\Storage\AbstractObjectStorage;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -129,8 +130,9 @@ class ORMObject extends PooledRecordProperty
         }
     }
     
-    private function loadTags(int $id)
+    private function loadTags(AbstractObjectStorage $storage, int $id)
     {
+        $this->tag_list->setStorage($storage);
         $this->tag_list->loadFromStorage();
     }
     
@@ -148,7 +150,7 @@ class ORMObject extends PooledRecordProperty
         }
         parent::load($id);
         if (static::isTaggable()) {
-            $this->loadTags($id);
+            $this->loadTags($storage, $id);
         }
         if (static::isAttributable()) {
             $this->loadAttributes($id);

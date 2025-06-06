@@ -26,8 +26,14 @@ class TagList extends Base implements \ArrayAccess, \Countable
     
     public function __construct(AbstractStorage $storage)
     {
-        $this->storage = $storage;
+        $this->setStorage($storage);
         $this->storage->setValue('_tags',[]);
+    }
+    
+    public function setStorage(AbstractStorage $storage)
+    {
+        $this->storage = $storage;
+        return $this;
     }
     
     public function offsetExists(mixed $offset): bool
@@ -110,7 +116,6 @@ class TagList extends Base implements \ArrayAccess, \Countable
     
     public function loadFromStorage()
     {
-        $this->clear();
         foreach ($this->storage->getValue('_tags') as $tag) {
             $this->tag_list[] = $this->createTag($tag);
         }
