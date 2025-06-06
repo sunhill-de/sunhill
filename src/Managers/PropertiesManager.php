@@ -232,9 +232,10 @@ class PropertiesManager
      */
     public function isA($test,$class)
     {
-        $namespace = $this->getNamespaceOfProperty($class);
+        $namespace_class = $this->getNamespaceOfProperty($class);
+        $namespace_test = $this->getNamespaceOfProperty($test);
         
-        return is_a($test,$namespace, true);
+        return is_a($namespace_test,$namespace_class, true);
     }
     
     /**
@@ -246,12 +247,12 @@ class PropertiesManager
      *
      * Test: isAClass
      */
- /*   public function isAClass($test,$class)
+    public function isAClass($test,$class)
     {
-        $namespace = $this->getNamespaceOfProperty($this->checkClass($this->searchClass($class)));
-        return is_a($test,$namespace, true) && !is_subclass_of($test,$namespace);
+        $namespace_class = $this->getNamespaceOfProperty($class);
+        $namespace_test = $this->getNamespaceOfProperty($test);
+        return is_a($namespace_test,$namespace_class, true) && !is_subclass_of($namespace_test,$namespace_class);
     }
-   */ 
     /**
      * Naming convention compatible method
      * The reimplementation of is_subclass_of() that works with class names too
@@ -262,14 +263,13 @@ class PropertiesManager
      *
      * Test: isSubclassOf
      */
-/*    public function isSubclassOf($test,$class)
+    public function isSubclassOf($test,$class)
     {
-        $namespace = $this->getNamespaceOfProperty(($this->checkClass($this->searchClass($class)));
-        $test_space = $this->getNamespaceOfProperty(($this->checkClass($this->searchClass($test)));
+        $namespace = $this->getNamespaceOfProperty($class);
+        $test_space = $this->getNamespaceOfProperty($test);
         return is_subclass_of($test_space,$namespace);
     }
     
-  */  
     /**
      * Stores the currently registered units.
      *
