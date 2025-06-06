@@ -7,7 +7,7 @@
  * Localization: incomplete
  * Documentation: complete
  * Tests: BasicTest.php
- * Coverage: 96% (2025-06-06)
+ * Coverage Unit: 96% (2025-06-06)
  */
 namespace Sunhill\Checker;
 

@@ -9,7 +9,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage: unknown
+ * Coverage Unit: unknown
  * PSR-State: completed
  */
 

@@ -8,7 +8,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage:
+ * Coverage Unit: 0% (2025-06-06)
  *
  */
 namespace Sunhill\SystemProperties;

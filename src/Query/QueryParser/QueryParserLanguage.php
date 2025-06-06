@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Query/QueryParserLanguageTest.php
- * Coverage:
+ * Coverage Unit:
  */
 
 namespace Sunhill\Query\QueryParser;

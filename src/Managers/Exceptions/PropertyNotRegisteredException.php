@@ -11,7 +11,7 @@
  * Localization: not necessary
  * Documentation: complete
  * Tests: none
- * Coverage: none
+ * Coverage Unit: none
  */
 namespace Sunhill\Managers\Exceptions;
 

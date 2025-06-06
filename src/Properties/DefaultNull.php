@@ -7,7 +7,7 @@
  * Reviewstatus: 2023-06-14
  * Localization: complete
  * Documentation: complete
- * Coverage: unknown
+ * Coverage Unit: unknown
  */
 
 namespace Sunhill\Properties;

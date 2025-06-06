@@ -10,7 +10,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage: 
+ * Coverage Unit: 100 % (2025-06-06)
  * PSR-State: completed
  */
 namespace Sunhill\Storage\MysqlStorage;

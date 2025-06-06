@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/NodeTest.php
- * Coverage: 85.71 % (2025-06-06)
+ * Coverage Unit: 85.71 % (2025-06-06)
  */
 
 namespace Sunhill\Parser\Nodes;

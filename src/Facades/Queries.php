@@ -12,7 +12,7 @@
  * Documentation: complete
  * @subpackage query
  * Tests: none
- * Coverage: unknown
+ * Coverage Unit: unknown
  */
 
 namespace Sunhill\Facades;

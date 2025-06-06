@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage: unknown
+ * Coverage Unit: 60 % (2025-06-06)
  */
 
 namespace Sunhill\Semantics;

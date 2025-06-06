@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage: 46.15 % (2025-06-06)
+ * Coverage Unit: 46.15 % (2025-06-06)
  *
  * Wiki: /PooledRecordProperties
  * tests /tests/Unit/Properties/PooledRecordProperties/*

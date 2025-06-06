@@ -8,7 +8,7 @@
  * Documentation: complete
  * Tests: not unit testable
  * @note: This class is not unit testable because it is just a simplified bundle of a parser and lexer combined with a specialized language for queries
- * Coverage:
+ * Coverage Unit:
  */
 
 namespace Sunhill\Query\QueryParser;

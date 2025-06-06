@@ -11,7 +11,7 @@
  * Localization: unknown
  * Documentation: all public
  * Tests: Unit/Modules/ModulesTest.php
- * Coverage: 93.38 (2025-06-06)
+ * Coverage Unit: 93.38 (2025-06-06)
  */
 
 namespace Sunhill\Modules;

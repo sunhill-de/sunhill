@@ -7,7 +7,7 @@
  * Localization: incomplete
  * Documentation: complete
  * Tests: BasicTest.php
- * Coverage: 0% (2025-06-06)
+ * Coverage Unit: 0% (2025-06-06)
  */
 
 namespace Sunhill\Console;

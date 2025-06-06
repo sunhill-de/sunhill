@@ -7,7 +7,7 @@
  * Localization: incomplete
  * Documentation: complete
  * Tests: BasicTest.php
- * Coverage: 97.83% (2025-06-06)
+ * Coverage Unit: 97.83% (2025-06-06)
  */
 
 namespace Sunhill\Helpers;

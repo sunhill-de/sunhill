@@ -10,7 +10,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: /tests/Unit/Storage/ArrayObjectStorage/*
- * Coverage:
+ * Coverage Unit:
  */
 
 namespace Sunhill\Storage\ArrayObjectStorage;

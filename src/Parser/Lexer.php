@@ -8,7 +8,7 @@
  * Documentation: complete
  * @subpackage parser
  * Tests: Unit/Parser/LexerTest.php
- * Coverage: 82.61% (2025-06-06)
+ * Coverage Unit: 82.61% (2025-06-06)
  */
 
 namespace Sunhill\Parser;

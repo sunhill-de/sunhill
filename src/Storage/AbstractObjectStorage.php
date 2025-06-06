@@ -14,7 +14,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: 
- * Coverage: 
+ * Coverage Unit: 80.71 % (2025-06-06)
  */
 
 namespace Sunhill\Storage;

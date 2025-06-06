@@ -1,4 +1,18 @@
 <?php
+/**
+ * @file MysqlQuerExecutor.php
+ * An executor for generalized queries in this case for mysql stored objects 
+ *
+ * @author Klaus Dimde
+ * Lang en
+ * Reviewstatus: 2025-05-28
+ * Create date: 2025-05-28
+ * Localization: none
+ * Documentation: unknown
+ * Tests: unknown
+ * Coverage Unit: 95.16 % (2025-06-06)
+ * PSR-State: completed
+ */
 
 namespace Sunhill\Storage\MysqlStorage;
 

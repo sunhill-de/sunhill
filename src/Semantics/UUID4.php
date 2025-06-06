@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Semantic/SemanticTest.php
- * Coverage: unknown
+ * Coverage Unit: 66.67% (2025-06-06)
  */
 
 namespace Sunhill\Semantics;

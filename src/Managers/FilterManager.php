@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: 
  * Tests: 
- * Coverage: 84.78% (2025-06-06)
+ * Coverage Unit: 84.78% (2025-06-06)
  */
 
 namespace Sunhill\Managers;

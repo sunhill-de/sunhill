@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage: 85.39 % (2025-06-06)
+ * Coverage Unit: 85.39 % (2025-06-06)
  *
  * Wiki: 
  */

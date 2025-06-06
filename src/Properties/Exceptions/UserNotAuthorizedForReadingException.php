@@ -8,7 +8,7 @@
  * Localization: none
  * Documentation: complete
  * Tests: none
- * Coverage: unknown
+ * Coverage Unit: unknown
  */
 
 namespace Sunhill\Properties\Exceptions;

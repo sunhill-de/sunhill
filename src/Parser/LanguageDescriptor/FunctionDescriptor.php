@@ -9,7 +9,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/AnalyzerTest.php
- * Coverage: 96.43 % (2025-06-06)
+ * Coverage Unit: 96.43 % (2025-06-06)
  */
 
 namespace Sunhill\Parser\LanguageDescriptor;

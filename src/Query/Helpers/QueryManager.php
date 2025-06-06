@@ -11,7 +11,7 @@
  * Documentation: complete
  * @subpackage query
  * Tests: 
- * Coverage: 
+ * Coverage Unit: 
  */
 
 namespace Sunhill\Query\Helpers;

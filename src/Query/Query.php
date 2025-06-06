@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Query/QueryTest.php
- * Coverage: 
+ * Coverage Unit: 
  * 
  * @todo implement where with array as parameter (repeat the where statement)
  */

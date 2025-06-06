@@ -8,7 +8,7 @@
  * Localization: nothing to translate
  * Documentation: complete
  * Tests: Unit/Checker/CheckerTest.php
- * Coverage: 100% (2025-06-06)
+ * Coverage Unit: 100% (2025-06-06)
  * PSR-State: complete
  */
 

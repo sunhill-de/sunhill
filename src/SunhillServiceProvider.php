@@ -6,6 +6,7 @@
  * Reviewstatus: 2024-10-05
  * Localization: incomplete
  * Documentation: complete
+ * Coverage Unit: 100 % (2025-06-06)
  */
 
 namespace Sunhill;

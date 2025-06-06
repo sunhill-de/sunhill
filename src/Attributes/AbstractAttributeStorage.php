@@ -9,7 +9,7 @@
  * Documentation: complete
  *
  * Tests: 
- * Coverage:
+ * Coverage Unit:
  */
 namespace Sunhill\Attributes;
 

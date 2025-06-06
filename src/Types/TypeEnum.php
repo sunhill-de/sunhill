@@ -8,7 +8,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage: unknown
+ * Coverage Unit: 87.50 % (2025-06-06)
  */
 
 namespace Sunhill\Types;

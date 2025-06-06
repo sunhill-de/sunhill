@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/PropertyTest.php, Unit/PropertyValidateTest.php
- * Coverage: 81.55 % (2025-06-06)
+ * Coverage Unit: 81.55 % (2025-06-06)
  * 
  * Wiki: /Array_properties
  */
