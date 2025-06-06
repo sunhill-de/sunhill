@@ -1,4 +1,14 @@
 <?php
+/**
+ * @file Check.php
+ * The command that executes the installed checks
+ * Lang en
+ * Reviewstatus: 2024-09-01
+ * Localization: incomplete
+ * Documentation: complete
+ * Tests: BasicTest.php
+ * Coverage: 0% (2025-06-06)
+ */
 
 namespace Sunhill\Console;
 

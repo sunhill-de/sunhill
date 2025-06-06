@@ -9,7 +9,7 @@
  * Documentation: complete
  * @subpackage parser
  * Tests: not testable
- * Coverage: 
+ * Coverage: 100 % (2025-06-06)
  */
 namespace Sunhill\Parser;
 

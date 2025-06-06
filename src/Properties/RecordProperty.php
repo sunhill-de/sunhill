@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: completeF
  * Tests: 
- * Coverage: 97.3% (2024-11-13)
+ * Coverage:96.55 % (2025-06-06)
  *
  * Wiki: /RecordProperties
  * tests /tests/Unit/Properties/RecordProperties/*

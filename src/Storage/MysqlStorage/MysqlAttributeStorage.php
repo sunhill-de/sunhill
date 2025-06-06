@@ -20,6 +20,7 @@ use Sunhill\Query\BasicQuery;
 use Illuminate\Support\Facades\DB;
 use Sunhill\Storage\ObjectStorage\AttributeStorage;
 use Sunhill\Attributes\AbstractAttributeStorage;
+use Sunhill\Attributes\stdClass;
 
 class MysqlAttributeStorage extends AbstractAttributeStorage
 {
@@ -39,5 +40,10 @@ class MysqlAttributeStorage extends AbstractAttributeStorage
         
         return $result;
     }
+    public function searchAttribute(string $name): ?\stdClass
+    {
+        
+    }
+
     
 }

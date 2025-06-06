@@ -6,7 +6,7 @@
  * Reviewstatus: 2024-10-05
  * Localization: incomplete
  * Documentation: complete
- * Coverage: 802% (2024-10-17)
+ * Coverage: 70% (2025-06-06)
  * Tests: Unit/Filter/
  * @wiki /Filters
  */

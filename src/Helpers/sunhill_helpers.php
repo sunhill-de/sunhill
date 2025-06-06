@@ -18,7 +18,7 @@ use Sunhill\Helpers\DiffCreator;
  * Documentation: all public
  * Wiki: /Little_helper
  * Tests: Unit/InfoMarket/Marketeer.php
- * Coverage: unknown
+ * Coverage: 90% (2025-06-06)
  * PSR-State: complete
  */
 

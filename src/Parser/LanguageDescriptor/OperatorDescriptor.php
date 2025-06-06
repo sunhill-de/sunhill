@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: 
- * Coverage:
+ * Coverage:72.73 % (2025-06-06)
  */
 
 namespace Sunhill\Parser\LanguageDescriptor;

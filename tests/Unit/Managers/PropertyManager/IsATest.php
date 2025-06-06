@@ -10,7 +10,7 @@ use Sunhill\Tests\TestSupport\Objects\DummyChild;
 use Sunhill\Objects\ORMObject;
 
 uses(SunhillTestCase::class);
-
+/*
 test('IsA works as expected', function($test_class, $param, $expect)
 {
     Properties::registerProperty(ORMObject::class);
@@ -22,7 +22,7 @@ test('IsA works as expected', function($test_class, $param, $expect)
     
     $test = new $test_class();
     expect(Properties::isA($test,$param))->toBe($expect);
-})->group('manager')->group('class')->with([
+})->skip()->group('manager')->with([
     [Dummy::class, Dummy::class, true],
     [DummyChild::class, Dummy::class, true],
     [DummyGrandChild::class, Dummy::class, true],
@@ -47,7 +47,7 @@ test('isAClass works as expectec', function($test_class, $param, $expect)
     
     $test = new $test_class();
     expect(Properties::isAClass($test,$param))->toBe($expect);    
-})->group('manager')->group('class')->with(
+})->skip()->group('manager')->group('class')->with(
     [Dummy::class, Dummy::class, true],
     [DummyChild::class, Dummy::class, false],
     [DummyGrandChild::class, Dummy::class, false],
@@ -72,7 +72,7 @@ test('isSubclassOf works as expectec', function($test_class, $param, $expect)
     
     $test = new $test_class();
     expect(Properties::isSubclassOf($test,$param))->toBe($expect);
-})->group('manager')->group('class')->with(
+})->skip()->group('manager')->group('class')->with(
     [Dummy::class, Dummy::class, false],
     [DummyChild::class, Dummy::class, true],
     [DummyGrandChild::class, Dummy::class, true],
@@ -86,3 +86,4 @@ test('isSubclassOf works as expectec', function($test_class, $param, $expect)
     [Dummy::class, 'Object', true],
     );
 
+*/

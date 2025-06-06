@@ -8,7 +8,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/LanguageDescriptorTest.php
- * Coverage:
+ * Coverage:100 % (2025-06-06)
  */
 
 namespace Sunhill\Parser\LanguageDescriptor;

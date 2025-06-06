@@ -1,4 +1,17 @@
 <?php
+/**
+ * @file ReferenceArrayProperty.php
+ * Defines a property that is an array of references
+ * Lang en
+ * Reviewstatus: 2024-10-24
+ * Localization: complete
+ * Documentation: completeF
+ * Tests:
+ * Coverage:66.67 % (2025-06-06)
+ *
+ * Wiki: 
+ * tests 
+ */
 
 namespace Sunhill\Properties;
 

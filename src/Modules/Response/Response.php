@@ -7,7 +7,7 @@
  * Localization: complete
  * Documentation: complete
  * Tests:
- * Coverage: unknown
+ * Coverage: 77.78 % (2025-06-06)
  * PSR-State: complete
  */
 

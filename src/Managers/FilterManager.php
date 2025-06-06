@@ -1,4 +1,14 @@
 <?php
+/**
+ * @file FilterManager.php
+ * A manager for filtes that is acceessed via a facade
+ * Lang en
+ * Reviewstatus: 2024-09-01
+ * Localization: complete
+ * Documentation: 
+ * Tests: 
+ * Coverage: 84.78% (2025-06-06)
+ */
 
 namespace Sunhill\Managers;
 
