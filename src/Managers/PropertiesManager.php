@@ -481,7 +481,7 @@ class PropertiesManager
     public function storeAttribute(int $id, int $object_id, $value)
     {
         $attr_storage = $this->getAttributeStorageObject();
-        
+        $attr_storage->storeAttribute($id, $object_id, $value);
     }
     
     /**
