@@ -9,7 +9,19 @@ use Sunhill\Tags\Exceptions\TagNameNotFoundException;
 
 uses(SunhillDatabaseTestCase::class);
 
-test('commit with nothing to do', function()
+test('commit with nothing to do (no tags or attributes)', function()
+{
+    Dummy::prepareDatabase($this);
+    
+    $test = new Dummy();
+    $test->load(5);
+    $test->commit();
+    
+    $this->assertDatabaseHas('dummies',['id'=>1,'dummyint'=>123]);
+    
+})->group('update');
+
+test('commit with nothing to do (tags and attributes)', function()
 {
     Dummy::prepareDatabase($this);
     
@@ -21,7 +33,19 @@ test('commit with nothing to do', function()
     
 })->group('update');
 
-test('modify a dummy', function()
+test('modify a dummy (no tags or attributes)', function()
+{
+    Dummy::prepareDatabase($this);
+    
+    $test = new Dummy();
+    $test->load(5);
+    $test->dummyint = 20;
+    $test->commit();
+    
+    $this->assertDatabaseHas('dummies',['id'=>5,'dummyint'=>20]);
+})->group('update');
+
+test('modify a dummy (tags and attributes)', function()
 {
     Dummy::prepareDatabase($this);
     
