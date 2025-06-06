@@ -466,7 +466,7 @@ class PropertiesManager
     {
         $attr_storage = $this->getAttributeStorageObject();
         if (is_null($attribute = $attr_storage->searchAttribute($name))) {
-            return;
+            return null;
         }
         return $attribute->id;
     }
