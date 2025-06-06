@@ -12,6 +12,7 @@ test('Load a dummy', function()
     $storage->shouldReceive('load')->once()->with(123);
     $storage->shouldReceive('setStructure')->once();
     $storage->shouldReceive('getValue')->with('_attributes')->andReturn([]);
+    $storage->shouldReceive('getValue')->with('_tags')->andReturn([]);
     $storage->shouldReceive('getClassOf')->with(123)->andReturn('Dummy');
     $test = new Dummy();
     $test->setStorage($storage);
