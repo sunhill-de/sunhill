@@ -21,4 +21,6 @@ abstract class AbstractAttributeStorage extends Base
     abstract public function loadAttribute(int $container_id, int $attribute_id);
     
     abstract public function searchAttribute(string $name): ?\stdClass;
+    
+    abstract public function storeAttribute(int $attr_id, int $object_id, $value);
 }
