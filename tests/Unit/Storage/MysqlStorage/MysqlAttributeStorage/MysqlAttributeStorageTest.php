@@ -3,7 +3,8 @@
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Storage\MysqlStorage\MysqlAttributeStorage;
-use Illuminate\Database\RecordNotFoundException;
+use Sunhill\Attributes\Exceptions\AttributeNotFoundException;
+use Sunhill\Attributes\Exceptions\AttributeNotAssignedException;
 
 uses(SunhillDatabaseTestCase::class);
 
@@ -23,7 +24,7 @@ test('loadAttribute() fail (no container)', function()
     $test = new MysqlAttributeStorage();
     
     $test->loadAttribute(1000,1)->name;
-})->throws(RecordNotFoundException::class);
+})->throws(AttributeNotAssignedException::class);
 
 test('loadAttribute() fail (no attribute)', function()
 {
@@ -31,22 +32,22 @@ test('loadAttribute() fail (no attribute)', function()
     $test = new MysqlAttributeStorage();
     
     $test->loadAttribute(1,1000)->name;
-})->throws(RecordNotFoundException::class);
+})->throws(AttributeNotFoundException::class);
 
-test('searchAttribute() pass', function()
+test('searchAttribute() with name pass', function()
 {
     Dummy::prepareDatabase($this);
     $test = new MysqlAttributeStorage();
     
-    expect($test->searchAttribute('str_attribute')->id)->toBe(1);
+    expect($test->searchAttribute(['name'=>'str_attribute'])->id)->toBe(1);
 });
 
-test('searchAttribute() fail', function()
+test('searchAttribute() with name fail', function()
 {
     Dummy::prepareDatabase($this);
     $test = new MysqlAttributeStorage();
     
-    expect($test->searchAttribute('unknown'))->toBe(null);
+    expect($test->searchAttribute(['name'=>'unknown']))->toBe(null);
 });
 
 test('storeAttribute works with new attribute', function()
@@ -73,4 +74,5 @@ test('storeAttribute works with unknown attribute', function()
     $test = new MysqlAttributeStorage();
     
     $test->storeAttribute(999,1,'bce');
-})->throws(RecordNotFoundException::class);
+})->throws(AttributeNotFoundException::class);
+

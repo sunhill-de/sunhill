@@ -25,53 +25,43 @@ use Sunhill\Attributes\stdClass;
 class MysqlAttributeStorage extends AbstractAttributeStorage
 {
 
-    protected function assembleStorageName(string $attribute_name): string
-    {
-        return 'attr_'.$attribute_name;    
-    }
-    
     /**
-     * Loads the attribute identified by $attribute_id for the object identified by $container_id
+     * Loads the attribute of the given object from the given storage
      * 
      * {@inheritDoc}
-     * @see \Sunhill\Attributes\AbstractAttributeStorage::loadAttribute()
+     * @see \Sunhill\Attributes\AbstractAttributeStorage::getAttributeValue()
      */
-    public function loadAttribute(int $container_id, int $attribute_id)
+    protected function getAttributeValue(string $attribute_storage, int $object_id)
     {
-        $attribute = DB::table('attributes')->where('id',$attribute_id)->firstOrFail();
-        $result = new \stdClass();
-        $result->name = $attribute->name;
-        $result->type = $attribute->type;
-        $result->value = DB::table($this->assembleStorageName($attribute->name))->where('container_id',$container_id)->firstOrFail('value')->value;
-        
-        return $result;
+        $result = DB::table($attribute_storage)->where('container_id',$object_id)->first('value');
+        if (is_null($result)) {
+            return $result;
+        }
+        return $result->value;
     }
-    
+        
     /**
      * Searches for an attribute with the given name
      * 
      * {@inheritDoc}
      * @see \Sunhill\Attributes\AbstractAttributeStorage::searchAttribute()
      */
-    public function searchAttribute(string $name): ?\stdClass
+    public function searchAttribute(array $criteria): ?\stdClass
     {
-        $attribute = DB::table('attributes')->where('name', $name)->first();
+        $query = DB::table('attributes');
+        foreach ($criteria as $key => $value) {
+            $query->where($key,'=',$value);
+        }
+        $attribute = $query->first();
         if (empty($attribute)) {
             return null;
         }
         return $attribute;
     }
 
-    /**
-     * Stores the attribute identified by $attr_id for object $object_id with the $value $value
-     * 
-     * {@inheritDoc}
-     * @see \Sunhill\Attributes\AbstractAttributeStorage::storeAttribute()
-     */
-    public function storeAttribute(int $attr_id, int $object_id, $value)
+    protected function storeAttributeValue(string $attribute_storage, int $object_id, mixed $value)
     {
-        $attribute = DB::table('attributes')->where('id',$attr_id)->firstOrFail();
-        DB::table($this->assembleStorageName($attribute->name))->upsert(['container_id'=>$object_id, 'value'=>$value],'container_id');
+        DB::table($attribute_storage)->upsert(['container_id'=>$object_id, 'value'=>$value],'container_id');        
     }
-    
+        
 }
