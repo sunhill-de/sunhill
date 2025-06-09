@@ -117,6 +117,42 @@ test('getSemanticKeywords()', function($type,$expect)
         [UUID4::class,['id','computer']],
     ]);
 
+test('getUnit()', function($type,$expect)
+{
+    expect($type::getUnit())->toBe($expect);
+})->with(
+    [
+        [Age::class, 'second'],
+        [Airpressure::class, 'hectopascal'],
+        [Airtemperature::class, 'degreecelsius'],
+        [Capacity::class,'byte'],
+        [Count::class,'none'],
+        [Creditcardnumber::class,'none'],
+        [Direction::class,'degree'],
+        [Domain::class,'none'],
+        [Duration::class,'second'],
+        [EMail::class,'none'],
+        [FirstName::class,'none'],
+        [IDString::class,'none'],
+        [Illuminance::class,'lux'],
+        [IPv4Address::class,'none'],
+        [IPv6Address::class,'none'],
+        [LastName::class,'none'],
+        [MACAddress::class,'none'],
+        [MD5::class,'none'],
+        [Name::class,'none'],
+        [NetworkAddress::class,'none'],
+        [PointInTime::class,'none'],
+        [Pressure::class,'pascal'],
+        [SHA1::class,'none'],
+        [Speed::class,'meterpersecond'],
+        [Temperature::class,'degreecelsius'],
+        [Timestamp::class,'none'],
+        [URL::class,'none'],
+        [UUID4::class,'none'],
+    ]
+    );
+
 test('validate semantic', function ($type, $setters, $test_input, $expect) {
     $test = new $type();
 
@@ -136,7 +172,7 @@ dataset('validateProvider', function () {
         
         [Age::class, [], 10, true],
         [Age::class, [], 'A', false],
-        
+                
         [Capacity::class, [], 10, true],
         [Capacity::class, [], 0, true],
         [Capacity::class, [], -1, false],
@@ -144,6 +180,8 @@ dataset('validateProvider', function () {
         [Count::class, [], 10, true],
         [Count::class, [], 0, true],
         [Count::class, [], -1, false],
+        
+        [Creditcardnumber::class, [], '371449635398431', true],
         
         [Direction::class, [], 0, true],
         [Direction::class, [], 12.5, true],

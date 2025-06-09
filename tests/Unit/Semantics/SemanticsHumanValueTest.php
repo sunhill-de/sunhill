@@ -69,7 +69,10 @@ dataset('convertProvider', function () {
         [Capacity::class, [], 1000*1000*1000*1000, '1 TB'],
         [Capacity::class, [], 1100*1000*1000*1000, '1.1 TB'],
         
-        [Direction::class, [], 10, 'N'],
+        [Direction::class, [], 0, 'N'],
+        [Direction::class, [], 90, 'E'],
+        [Direction::class, [], 180, 'S'],
+        [Direction::class, [], 270, 'W'],
         
         [Duration::class, [], 1, '1 seconds'],
         [Duration::class, [], 60, '1 minute 0 seconds'],
