@@ -38,6 +38,84 @@ use Sunhill\Semantics\Pressure;
 use Sunhill\Semantics\Airtemperature;
 use Sunhill\Semantics\Temperature;
 use Sunhill\Semantics\Timestamp;
+use Sunhill\Semantics\Creditcardnumber;
+use Sunhill\Semantics\FirstName;
+use Sunhill\Semantics\IDString;
+use Sunhill\Semantics\NetworkAddress;
+use Sunhill\Semantics\PointInTime;
+use Sunhill\Semantics\Name;
+use Sunhill\Semantics\LastName;
+
+test('getSemantic()', function($type,$expect)
+{
+   expect($type::getSemantic())->toBe($expect); 
+})->with(
+    [
+        [Age::class, 'age'],
+        [Airpressure::class, 'airpressure'],
+        [Airtemperature::class, 'airtemperature'],
+        [Capacity::class,'capacity'],
+        [Count::class,'count'],
+        [Creditcardnumber::class,'creditcardnumber'],
+        [Direction::class,'direction'],
+        [Domain::class,'domain'],
+        [Duration::class,'duration'],
+        [EMail::class,'email'],
+        [FirstName::class,'first_name'],
+        [IDString::class,'idstring'],
+        [Illuminance::class,'illuminance'],
+        [IPv4Address::class,'ipv4_address'],
+        [IPv6Address::class,'ipv6_address'],
+        [LastName::class,'last_name'],
+        [MACAddress::class,'mac_address'],
+        [MD5::class,'md5'],
+        [Name::class,'name'],        
+        [NetworkAddress::class,'network_address'],
+        [PointInTime::class,'pointintime'],
+        [Pressure::class,'pressure'],
+        [SHA1::class,'sha1'],
+        [Speed::class,'speed'],
+        [Temperature::class,'temperature'],
+        [Timestamp::class,'timestamp'],
+        [URL::class,'url'],
+        [UUID4::class,'uuid4'],
+    ]
+    );
+
+test('getSemanticKeywords()', function($type,$expect)
+{
+    expect($type::getSemanticKeywords())->toContain(...$expect);
+})->with(
+    [
+        [Age::class,['time']],
+        [Airpressure::class,['pressure','weather']],
+        [Airtemperature::class,['temperature','weather']],
+        [Capacity::class,['computer']],
+        [Count::class,['count']],
+        [Creditcardnumber::class,['id']],
+        [Direction::class,['weather']],
+        [Domain::class,['id','computer']],
+        [Duration::class,['time']],
+        [EMail::class,['id','computer']],
+        [FirstName::class,['name']],
+        [IDString::class,['id']],
+        [Illuminance::class,['illuminance']],
+        [IPv4Address::class,['network']],
+        [IPv6Address::class,['network']],
+        [LastName::class,['name']],
+        [MACAddress::class,['network']],
+        [MD5::class,['id','computer']],
+        [Name::class,['name']],        
+        [NetworkAddress::class,['network']],
+        [PointInTime::class,['time']],
+        [Pressure::class,['pressure']],        
+        [SHA1::class,['id','computer']],
+        [Speed::class,['speed']],
+        [Temperature::class,['temperature']],
+        [Timestamp::class,['time']],
+        [URL::class,['id','computer']],
+        [UUID4::class,['id','computer']],
+    ]);
 
 test('validate semantic', function ($type, $setters, $test_input, $expect) {
     $test = new $type();

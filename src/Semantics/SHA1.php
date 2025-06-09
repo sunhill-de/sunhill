@@ -22,7 +22,7 @@ class SHA1 extends IDString
      */
     public static function getSemantic(): string
     {
-        return 'md5';
+        return 'sha1';
     }
     
     /**

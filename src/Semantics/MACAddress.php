@@ -22,7 +22,7 @@ class MACAddress extends NetworkAddress
      */
     public static function getSemantic(): string
     {
-        return 'ipv6_address';
+        return 'mac_address';
     }
     
     /**
