@@ -1,6 +1,6 @@
 <?php
 /**
- * @fileAbstractAttributeStorage.php
+ * @file AbstractAttributeStorage.php
  * Provides the basic class for attributes
  * Lang en
  * Reviewstatus: 2024-05-29
