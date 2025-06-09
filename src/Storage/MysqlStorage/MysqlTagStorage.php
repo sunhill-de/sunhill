@@ -10,9 +10,10 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage Unit: 100 % (2025-06-06)
+ * Coverage Unit: 100.0 (2025-06-06)
  * PSR-State: completed
  */
+
 namespace Sunhill\Storage\MysqlStorage;
 
 use Sunhill\Tags\AbstractTagStorage;

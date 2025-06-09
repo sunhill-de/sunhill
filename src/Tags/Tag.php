@@ -8,7 +8,7 @@
  * Localization: none
  * Documentation: unknown
  * Tests: unknown
- * Coverage Unit: 77.27 % (2025-06-06)
+ * Coverage Unit: 77.27  (2025-06-06)
  * PSR-State: completed
  */
 

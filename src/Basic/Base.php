@@ -9,6 +9,7 @@
  * 
  * Tests: Unit/Basic/BasicTest.php
  * Coverage Unit: 100% (2025-06-06)
+ * Coverage Feature: 54.55% (2025-06-06)
  */
 
 namespace Sunhill\Basic;

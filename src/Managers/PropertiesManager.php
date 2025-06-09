@@ -13,7 +13,7 @@
  * Localization: unknown
  * Documentation: all public
  * Tests: Unit/Managers/ManagerPropertiesTest.php
- * Coverage Unit: 73.58% (2025-06-06)
+ * Coverage Unit: 73.58 (2025-06-06)
  * PSR-State: complete
  */
 namespace Sunhill\Managers;
