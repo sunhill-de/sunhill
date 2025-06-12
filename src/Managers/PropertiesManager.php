@@ -507,7 +507,8 @@ class PropertiesManager
      */
     public function unsetAttribute(int $id, int $object_id)
     {
-        
+        $attr_storage = $this->getAttributeStorageObject();
+        $attr_storage->unsetAttribute($id, $object_id);        
     }
     
 }
