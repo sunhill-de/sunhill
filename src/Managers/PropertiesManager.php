@@ -465,10 +465,25 @@ class PropertiesManager
     public function getAttributeID(string $name): ?int
     {
         $attr_storage = $this->getAttributeStorageObject();
-        if (is_null($attribute = $attr_storage->searchAttribute($name))) {
+        if (is_null($attribute = $attr_storage->searchAttribute(['name'=>$name]))) {
             return null;
         }
         return $attribute->id;
+    }
+    
+    /**
+     * Returns the type of the attribute with the given name of null if no attribute with this name exists
+     *
+     * @param string $name The name of the attribute to search for
+     * @return string|NULL the type of the attribute or null if none exists
+     */
+    public function getAttributeType(string $name): ?string
+    {
+        $attr_storage = $this->getAttributeStorageObject();
+        if (is_null($attribute = $attr_storage->searchAttribute(['name'=>$name]))) {
+            return null;
+        }
+        return $attribute->type;        
     }
     
     /**
