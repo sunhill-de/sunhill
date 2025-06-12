@@ -100,4 +100,14 @@ abstract class AbstractAttributeStorage extends Base
         }
         $this->storeAttributeValue($this->assembleStorageName($attribute->name), $object_id, $value);
     }
+    
+    abstract protected function unsetAttributeValue(string $attribute_storage, int $object_id);
+    
+    public function unsetAttribute(int $attr_id, int $object_id)
+    {
+        if (is_null($attribute = $this->searchAttribute(['id'=>$attr_id]))) {
+            throw new AttributeNotFoundException("The attribute the the id '$attr_id' was not found.");
+        }
+        $this->unsetAttributeValue($this->assembleStorageName($attribute->name), $object_id);
+    }
 }

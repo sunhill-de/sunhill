@@ -75,3 +75,20 @@ test('storeAttribute works with unknown attribute', function()
     $test->storeAttribute(999,1,'bce');
 })->throws(AttributeNotFoundException::class);
 
+test('unsetAttribute() works', function()
+{
+    $test = new DummyAttributeStorage();
+    
+    $test->unsetAttribute(1,1);
+    
+    expect(isset($test::$attributes['test_attribute']['values'][1]))->toBe(false);
+});
+
+test('unsetAttribute fails with unknown attribute', function()
+{
+    
+    $test = new DummyAttributeStorage();
+    
+    $test->unsetAttribute(999,1);
+})->throws(AttributeNotFoundException::class);
+

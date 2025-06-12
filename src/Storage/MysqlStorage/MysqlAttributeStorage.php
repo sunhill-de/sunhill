@@ -63,5 +63,11 @@ class MysqlAttributeStorage extends AbstractAttributeStorage
     {
         DB::table($attribute_storage)->upsert(['container_id'=>$object_id, 'value'=>$value],'container_id');        
     }
-        
+    
+    protected function unsetAttributeValue(string $attribute_storage, int $object_id)
+    {
+        DB::table($attribute_storage)->where(['container_id'=>$object_id])->delete();
+    }
+    
+    
 }

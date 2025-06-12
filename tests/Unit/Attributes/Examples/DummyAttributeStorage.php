@@ -54,4 +54,10 @@ class DummyAttributeStorage extends AbstractAttributeStorage
         static::$attributes[$attribute]['values'][$object_id]['value'] = $value;
     }
     
+    protected function unsetAttributeValue(string $attribute_storage, int $object_id)
+    {
+        $attribute = substr($attribute_storage,5);
+        unset(static::$attributes[$attribute]['values'][$object_id]);        
+    }
+    
 }

@@ -76,3 +76,22 @@ test('storeAttribute works with unknown attribute', function()
     $test->storeAttribute(999,1,'bce');
 })->throws(AttributeNotFoundException::class);
 
+test('unsetAttribute() works', function()
+{
+    Dummy::prepareDatabase($this);
+    $test = new MysqlAttributeStorage();
+    
+    $test->unsetAttribute(1,1);
+    
+    $this->assertDatabaseMissing('attr_str_attribute',['container_id'=>1]);
+});
+
+test('unsetAttribute() fails with unknown attribute', function()
+{
+    Dummy::prepareDatabase($this);    
+    $test = new MysqlAttributeStorage();
+    
+    $test->unsetAttribute(999,1);
+})->throws(AttributeNotFoundException::class);
+
+
