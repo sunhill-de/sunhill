@@ -30,6 +30,13 @@ use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\InvalidPropertyException;
 use Sunhill\Tags\TagList;
 use Sunhill\Storage\AbstractObjectStorage;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Types\TypeFloat;
+use Sunhill\Types\TypeDate;
+use Sunhill\Types\TypeTime;
+use Sunhill\Types\TypeBoolean;
+use Sunhill\Types\TypeText;
+use Sunhill\Properties\Exceptions\InvalidValueException;
 
 /**
  * The basic class for default storable records (in this case objects)
@@ -221,9 +228,71 @@ class ORMObject extends PooledRecordProperty
         return parent::__get($varname);
     }
 
+    private function validateAttribute(string $attribute_name, mixed $value)
+    {
+        switch (Properties::getAttributeType($attribute_name)) {
+            case 'integer':
+               $tester = new TypeInteger();
+               break;
+            case 'float':
+                $tester = new TypeFloat();
+                break;
+            case 'string':
+                $tester = new TypeVarchar();
+                break;
+            case 'date':
+                $tester = new TypeDate();
+                break;
+            case 'time':
+                $tester = new TypeTime();
+                break;
+            case 'datetime':
+                $tester = new TypeDateTime();
+                break;
+            case 'boolean':
+                $tester = new TypeBoolean();
+                break;
+            case 'text':
+                $tester = new TypeText();
+                break;
+        }
+        if (!$tester->isValid($value)) {
+            throw new InvalidValueException("Invalid value assigned to attribute");
+        }
+    }
+    
+    private function storeAttribute(String $attribute_name, mixed $value)
+    {
+        $this->getStorage()->setIndexedValue('_attributes',$attribute_name,$value);        
+    }
+    
+    private function tryToHandleNewAttribute(string $attribute_name, mixed $value): bool
+    {
+        if ($attribute_id = Properties::getAttributeID($attribute_name)) {
+            $this->validateAttribute($attribute_name, $value);
+            $this->storeAttribute($attribute_name, $value);
+            return true;
+        }
+        return false;
+    }
+    
+    private function tryToHandleAttribute(string $attribute_name, mixed $value): bool
+    {
+        if ($this->hasElement($attribute_name)) {
+            return false;
+        }
+        if (in_array($attribute_name,$this->getStorage()->getValue('_attributes'))) {
+            $this->validateAttribute($attribute_name, $value);
+            $this->storeAttribute($attribute_name, $value);
+            return true;
+        }
+        return ($this->tryToHandleNewAttribute($attribute_name, $value));
+    }
+    
     public function __set($varname, $value)
     {
-        if (in_array($varname,$this->getStorage()->getValue('_attributes'))) {
+        if ($this->tryToHandleAttribute($varname, $value)) {
+            return;
         }
         parent::__set($varname, $value);
     }
