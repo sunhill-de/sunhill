@@ -18,7 +18,7 @@ test('delete a dummy (not loaded by id)', function()
     $write->delete(1);
     
     $this->assertDatabaseMissing('dummies',['id'=>1]);
-});
+})->group('delete');
 
 test('delete a dummy (not loaded by id, deletes tags)', function()
 {
@@ -28,7 +28,7 @@ test('delete a dummy (not loaded by id, deletes tags)', function()
     $write->delete(1);
     
     $this->assertDatabaseMissing('tagobjectassigns',['container_id'=>1]);
-});
+})->group('delete');
 
 test('delete a dummy (not loaded by id, deletes attributes)', function()
 {
@@ -38,7 +38,9 @@ test('delete a dummy (not loaded by id, deletes attributes)', function()
     $write->delete(1);
     
     $this->assertDatabaseMissing('attributeobjectassigns',['container_id'=>1]);
-});
+    $this->assertDatabaseMissing('attr_int_attribute',['container_id'=>1]);
+    $this->assertDatabaseMissing('attr_str_attribute',['container_id'=>1]);
+})->group('delete')->group('attribute');
 
 test('delete a dummy (not found)', function()
 {
@@ -46,7 +48,7 @@ test('delete a dummy (not found)', function()
     $write = new Dummy();
     
     $write->delete(999);    
-})->throws(IDNotFoundException::class);
+})->group('delete')->throws(IDNotFoundException::class);
 
 test('delete a dummy (loaded)', function()
 {
