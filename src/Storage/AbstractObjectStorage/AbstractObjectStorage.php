@@ -17,12 +17,14 @@
  * Coverage Unit: 80.71  (2025-06-06)
  */
 
-namespace Sunhill\Storage;
+namespace Sunhill\Storage\AbstractObjectStorage;
 
 use Sunhill\Facades\Properties;
 use function PHPUnit\Framework\stringContains;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Properties\Exceptions\NoDefaultSetException;
+use Sunhill\Storage\PersistentPoolStorage;
+use Sunhill\Parser\Executor;
 
 abstract class AbstractObjectStorage extends PersistentPoolStorage
 {
@@ -792,4 +794,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $diff = $this->getStructureDiff($current, $expected);
         $this->patchStructure($diff);
     }
+    
+    abstract public function getQueryExecutor(): Executor;
+    
 }

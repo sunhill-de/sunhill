@@ -29,11 +29,13 @@ use Sunhill\Parser\Nodes\TimeNode;
 use Sunhill\Query\QueryParser\AliasNode;
 use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\Executor;
+use Sunhill\Storage\AbstractObjectStorage\AbstractObjectExecutor;
 
-class MysqlQueryExecutor extends Base
+class MysqlQueryExecutor extends AbstractObjectExecutor
 {
     
-    private function handleTables(QueryNode $node)
+    protected function handleTables(QueryNode $node): mixed
     {
         $query = DB::table('objects as a')->select('a.id');
         foreach ($node->getStorages() as $alias => $storage) {
@@ -99,12 +101,12 @@ class MysqlQueryExecutor extends Base
         }
     }
     
-    private function handleWhere($query, QueryNode $node)
+    protected function handleWhere($query, QueryNode $node)
     {
         $this->handleSingleWhere($query, $node->getWhere());    
     }
     
-    private function handleOrder($query, QueryNode $node)
+    protected function handleOrder($query, QueryNode $node)
     {
         $order = $node->order();
         if ($order) {
@@ -112,41 +114,34 @@ class MysqlQueryExecutor extends Base
         }
     }
     
-    private function handleVerb($query, QueryNode $node)
+    protected function handleGet($query)
     {
-        $str = $query->toSql();
-        switch ($node->verb()) {
-            case 'get':
-                return $query->get();
-            case 'first':
-                return $query->first();
-            case 'count':
-                return $query->count();
-        }
+        return $query->get();        
     }
     
-    private function handleOffset($query, QueryNode $node)
+    protected function handleFirst($query)
+    {
+        return $query->first();        
+    }
+    
+    protected function handleCount($query)
+    {
+        return $query->count();        
+    }
+    
+    protected function handleOffset($query, QueryNode $node)
     {
         if ($node->offset()) {
             $query->offset($node->offset()->getValue());
         }
     }
     
-    private function handleLimit($query, QueryNode $node)
+    protected function handleLimit($query, QueryNode $node)
     {
         if ($node->limit()) {
             $query->limit($node->limit()->getValue());
         }
         
     }
-        
-    public function executeQuery(QueryNode $node)
-    {
-        $query = $this->handleTables($node);
-        $this->handleWhere($query, $node);
-        $this->handleOrder($query, $node);
-        $this->handleOffset($query, $node);
-        $this->handleLimit($query, $node);
-        return $this->handleVerb($query, $node);        
-    }
+            
 }

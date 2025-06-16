@@ -15,13 +15,14 @@
 
 namespace Sunhill\Storage\MysqlStorage;
 
-use Sunhill\Storage\AbstractObjectStorage;
 use Sunhill\Query\QueryParser\QueryNode;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Sunhill\Storage\Exceptions\InvalidTypeException;
+use Sunhill\Storage\AbstractObjectStorage\AbstractObjectStorage;
+use Sunhill\Parser\Executor;
 
 class MysqlObjectStorage extends AbstractObjectStorage
 {
@@ -354,5 +355,10 @@ class MysqlObjectStorage extends AbstractObjectStorage
             throw new StorageTableMissingException("The table '$name' is expected but missing.");
         }
     }
-            
+ 
+    public function getQueryExecutor(): Executor
+    {
+        return new MysqlQueryExecutor();
+    }
+    
 }

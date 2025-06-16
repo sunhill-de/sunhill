@@ -20,6 +20,9 @@ use Sunhill\Properties\Exceptions\WrongStorageSetException;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Query\BasicQuery;
 use Sunhill\Properties\Exceptions\NoStorageSetException;
+use Sunhill\Query\Query;
+use Sunhill\Parser\Analyzer;
+use Sunhill\Parser\Executor;
 
 class PooledRecordProperty extends PersistentRecordProperty
 {
@@ -97,15 +100,33 @@ class PooledRecordProperty extends PersistentRecordProperty
     }
     
     /**
+     * Returns an analyzer for a query_node
+     * 
+     * @return Analyzer
+     */
+    protected static function getAnalyzer(): Analyzer
+    {
+        return new RecordPropertyAnalyzer();
+    }
+    
+    protected static function getExecutor(): Executor
+    {
+        $dummy = new static();
+        return $dummy->getStorage()->getQueryExecutor();
+    }
+    
+    /**
      * Executes a query on data of this kind of object
      *
      * @return BasicQuery
      */
-    public static function query(): BasicQuery
+    public static function query(): Query
     {
-        $dummy = new static();  // An instance of an object is necessary because the storage system works only on instances
-        $storage = $dummy->getStorage();
-        return $storage->query();
+        $query = new Query();
+        $query->setRecordProperty(static::class);
+        $query->setAnalyzer(static::getAnalyzer());
+        $query->setExecutor(static::getExecutor());
+        return $query;        
     }
         
 }

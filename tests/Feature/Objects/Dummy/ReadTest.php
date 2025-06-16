@@ -23,7 +23,7 @@ test('Load a dummy loads the tags', function()
     $test->load(1);
     expect(count($test->_tags))->toBe(1);
     expect($test->_tags[0]->getName())->toBe('TagA');
-})->group('read');
+})->group('read')->group('tag');
 
 test('Load a dummy loads with more tags', function()
 {
@@ -32,7 +32,7 @@ test('Load a dummy loads with more tags', function()
     $test->load(2);
     expect(count($test->_tags))->toBe(2);
     expect($test->_tags[0]->getName())->toBe('TagA');
-})->group('read');
+})->group('read')->group('tag');
 
 test('Load a dummy loads with no tags', function()
 {
@@ -40,7 +40,7 @@ test('Load a dummy loads with no tags', function()
     $test = new Dummy();
     $test->load(5);
     expect(count($test->_tags))->toBe(0);
-})->group('read');
+})->group('read')->group('tag');
 
 test('Load a dummy loads attributes', function()
 {
@@ -50,7 +50,7 @@ test('Load a dummy loads attributes', function()
     expect($test->hasAttributes())->toBe(true);
     expect($test->str_attribute)->toBe('attribute');
     expect($test->int_attribute)->toBe(888);
-})->group('read')->group('attribute')->skip();
+})->group('read')->group('attribute');
 
 test('Load a dummy loads with no attributes', function()
 {

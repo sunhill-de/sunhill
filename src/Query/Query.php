@@ -33,6 +33,8 @@ use Sunhill\Parser\Nodes\FloatNode;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\FunctionNode;
+use Sunhill\Parser\Analyzer;
+use Sunhill\Parser\Executor;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -44,6 +46,73 @@ use Sunhill\Parser\Nodes\FunctionNode;
  */
 class Query extends Base
 {
+   
+    protected ?string $calling_class = null;
+    
+    public function setRecordProperty(string $calling_class): static
+    {
+        $this->calling_class = $calling_class;
+        
+        return $this;
+    }
+    
+    public function getRecordProperty(): ?string
+    {
+        return $this->calling_class;    
+    }
+    
+    /**
+     * Stores the Analzyer to use for this query
+     * 
+     * @var unknown
+     */
+    protected ?Analyzer $analyzer = null;
+    
+    /**
+     * Setter for $analyzer
+     * 
+     * @param Analyzer $analyzer
+     * @return static
+     */
+    public function setAnalyzer(Analyzer $analyzer): static
+    {
+        $this->analyzer = $analyzer;
+        return $this;
+    }
+    
+    /**
+     * Getter for Analyzer
+     * 
+     * @return Analyzer|NULL
+     */
+    public function getAnalyzer(): ?Analyzer
+    {
+        return $this->analyzer;
+    }
+    
+    protected ?Executor $executor = null;
+    
+    /**
+     * Setter for $executor
+     *
+     * @param Executor $executor
+     * @return static
+     */
+    public function setExecutor(Executor $executor): static
+    {
+        $this->executor = $executor;
+        return $this;
+    }
+    
+    /**
+     * Getter for Executor
+     *
+     * @return Executor|NULL
+     */
+    public function getExecutor(): ?Executor
+    {
+        return $this->executor;
+    }
     
     protected array $methods = [];
     
@@ -1156,6 +1225,9 @@ class Query extends Base
      */
     protected function executeQuery(string $finalizer, array $params = [])
     {
+        $this->query_node->verb($finalizer);
+ //       $this->analyzer->analyze($this->query_node);
+        return $this->executor->execute($this->query_node, $params);
     }
  
     public function union($other_query): static
@@ -1169,14 +1241,25 @@ class Query extends Base
     }
     
 // ============================================ Finalizing methods =============================================================    
+    private function createRecord($id)
+    {
+        $class = $this->calling_class;
+        $result = new $class();
+        $result->load($id);
+        return $result;
+    }
+    
+    
     /**
-     * Returns the first record that matches the conditions
+     * Returns the first record that matches the conditionsgit 
      */
     public function first()
     {
-        $id = $this->firstID();
-        
-        return Properties::loadRecord($id);
+        if (empty($id = $this->firstID())) {
+            return null;
+        }
+            
+        return $this->createRecord($id);
     }
 
     /**
@@ -1184,9 +1267,9 @@ class Query extends Base
      */
     public function firstOrFail()
     {
-        $id = $this->firstIDOrFail();
+        $id = $this->firstIDOrFail(); 
         
-        return Properties::loadRecord($id);
+        return $this->createRecord($id);
     }
 
     /**
