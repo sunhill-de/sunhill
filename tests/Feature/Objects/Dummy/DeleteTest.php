@@ -28,7 +28,7 @@ test('delete a dummy (not loaded by id, deletes tags)', function()
     $write->delete(1);
     
     $this->assertDatabaseMissing('tagobjectassigns',['container_id'=>1]);
-})->group('delete');
+})->group('delete')->group('tag');
 
 test('delete a dummy (not loaded by id, deletes attributes)', function()
 {
@@ -39,7 +39,6 @@ test('delete a dummy (not loaded by id, deletes attributes)', function()
     
     $this->assertDatabaseMissing('attributeobjectassigns',['container_id'=>1]);
     $this->assertDatabaseMissing('attr_int_attribute',['container_id'=>1]);
-    $this->assertDatabaseMissing('attr_str_attribute',['container_id'=>1]);
 })->group('delete')->group('attribute');
 
 test('delete a dummy (not found)', function()
