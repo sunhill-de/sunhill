@@ -33,7 +33,7 @@ use Sunhill\Parser\Exceptions\FunctionParameterException;
 use Sunhill\Parser\Exceptions\InvalidOperatorException;
 use Sunhill\Parser\Exceptions\TypeMismatchException;
 
-class Analyzer extends Base
+class Analyzer extends AbstractAnalyzer
 {
     
     protected array $accepted_operators = [];

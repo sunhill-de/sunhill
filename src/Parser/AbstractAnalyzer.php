@@ -33,19 +33,11 @@ use Sunhill\Parser\Exceptions\FunctionNotFoundException;
 use Sunhill\Parser\Exceptions\FunctionParameterException;
 use Sunhill\Parser\Exceptions\InvalidOperatorException;
 use Sunhill\Parser\Exceptions\TypeMismatchException;
+use Sunhill\Parser\Exceptions\TypesMismatchException;
 
-class AbstractAnalyzer extends Base
+abstract class AbstractAnalyzer extends Base
 {
         
-    protected array $accepted_types = [];
-    
-    public function addAcceptedType(string $type)
-    {
-        $this->accepted_types[] = $type;
-        
-        return $this;
-    }
-    
     /**
      * Tests if the test rule $test matches the given rule $rule and takes care of pseudo 
      * types like numeric and pseudoboolean
@@ -54,7 +46,7 @@ class AbstractAnalyzer extends Base
      * @param string $rule
      * @return boolean
      */
-    private function typeMatch(string $test, string $rule)
+    protected function typeMatch(string $test, string $rule)
     {
         switch ($rule) {
             case 'pseudoboolean':
@@ -87,13 +79,48 @@ class AbstractAnalyzer extends Base
         return true;
     }
     
+    /**
+     * This method returns true when the operatopm $left_type $operator $right_type is valid
+     * 
+     * @param string $operator
+     * @param string $left_type
+     * @param string $right_type
+     * @return bool
+     */
+    abstract protected function isBinaryNodeCombinationValid(string $operator, string $left_type, string $right_type): bool;
+    
+    /**
+     * This method checks if the operation $left_type $operator $right_type is valid
+     *
+     * @param string $operator
+     * @param string $left_type
+     * @param string $right_type
+     * @throws TypesMismatchException when the combination is not valid
+     */
+    protected function checkBinarayNodeCombinationIsValid(string $operator, string $left_type, string $right_type)
+    {
+        if (!$this->isBinaryNodeCombinationValid($operator, $left_type, $right_type)) {
+            throw new TypesMismatchException("The types '$left_type' and '$right_type' does not match to operator '$operator'");
+        }
+    }
+    
+    abstract protected function isBinaryNodeOperatorValid(string $operator): bool;
+    
+    protected function checkBinaryNodeOperatorIsValid(string $operator)
+    {
+        if (!$this->isBinaryNodeOperatorIsValld($operator)) {
+            throw new InvalidOperatorException("The operator '$operator' is not a valid binary operator");
+        }
+    }
+    
     protected function analyzeBinaryNode(BinaryNode $node)
     {
+        $this->checkBinaryNodeOperatorIsValid($node->getType());
         $this->analyzeNode($node->left());
         $left_type = $this->getTypeOfNode($node->left());
         $this->analyzeNode($node->right());
         $right_type = $this->getTypeOfNode($node->right());
-        
+        $this->checkBinaryNodeCombinationIsValid($node->getType(), $left_type, $right_type);
     }
     
     private function getBinarySignature($left, $right, $operator)
@@ -308,10 +335,12 @@ class AbstractAnalyzer extends Base
     {
         
     }
+
+    abstract protected function isTypeAccepted(string $type): bool;
     
     protected function checkIsTypeAccepted(string $type)
     {
-        if (!in_array($type, $this->accepted_types)) {
+        if (!$this->isTypeAccepted()) {
             throw new TypeNotExpectedException("The type of the expression ($type) was not expected");
         }
     }
