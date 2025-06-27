@@ -12,9 +12,13 @@
 
 namespace Sunhill\Parser\Nodes;
 
+use Sunhill\Parser\Traits\UnknownDatatype;
+
 class FunctionNode extends Node
 {
 
+    use UnknownDatatype;
+    
     /**
      * Simplyfied constructor that just fills the parent with default values
      */   

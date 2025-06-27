@@ -12,9 +12,13 @@
 
 namespace Sunhill\Parser\Nodes;
 
+use Sunhill\Parser\Traits\UnknownDatatype;
+
 class IdentifierNode extends TerminalNode
 {
-        
+
+    use UnknownDatatype;
+    
     public function __construct($value)
     {
         parent::__construct('identifier',$value);

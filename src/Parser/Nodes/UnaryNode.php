@@ -3,7 +3,8 @@
  * @file UnaryNode.php
  * A basic class for a node that has only one child
  * Lang en
- * Reviewstatus: 2025-03-03
+ * Reviewstatus: 2025-06-27
+ * Create date: 2025-03-03
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/NodeTest.php
@@ -34,5 +35,16 @@ class UnaryNode extends Node
             return $this->children['child'];
         }
     }
-        
+ 
+    /**
+     * Returns the datatype of the child node
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Parser\Nodes\Node::getDatatype()
+     */
+    public function getDatatype(): ?string
+    {
+        return $this->child()->getDatatype();
+    }
+    
 }

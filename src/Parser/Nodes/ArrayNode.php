@@ -12,9 +12,13 @@
 
 namespace Sunhill\Parser\Nodes;
 
+use Sunhill\Parser\Traits\GetLowestSubtype;
+
 class ArrayNode extends Node
 {
-        
+      
+    use GetLowestSubtype;
+    
     public function __construct(?Node $first_element)
     {
         if (!is_null($first_element)) {
@@ -49,28 +53,16 @@ class ArrayNode extends Node
         return 'array';
     }
     
-    protected function getLowestSubtype(?string $first, ?string $second): ?string
-    {
-        if ($first == $second) {
-            return $first;
-        }
-        if (($first == 'mixed') || ($second == 'mixed')) {
-            return 'mixed';
-        }
-        if ((($first == 'integer') && ($second == 'float')) ||
-            (($first == 'float') && ($second == 'integer'))) {
-                return 'float';
-            }
-        if ((($first == 'date') && ($second == 'datetime')) ||
-            (($first == 'datetime') && ($second == 'date'))) {
-                    return 'datetime';
-                }
-        if (is_null($first) || is_null($second)) {
-                return null;
-            }
-        return 'mixed';    
-    }
-    
+    /**
+     * Tries to detect the type of the elements of this array.
+     * 
+     * Possible results are:
+     * integer, float, boolean, string, date, datetime, time, mixed and null
+     * mixed means that the types of the elements doesn't match (e.g. string and float)
+     * null means that at least one element is not detectable at this momenent
+     * 
+     * @return string|NULL
+     */
     public function getDataSubtype(): ?string
     {
         switch ($this->elementCount()) {

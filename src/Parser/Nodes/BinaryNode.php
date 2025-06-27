@@ -13,6 +13,7 @@
 namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
+use Sunhill\Parser\Traits\GetLowestSubtype;
 
 /**
  * A binary node consists of a right and a left subtree and a connection between those
@@ -20,6 +21,8 @@ use Sunhill\Basic\Base;
 class BinaryNode extends Node
 {
 
+    use GetLowestSubtype;
+    
     /**
      * The constructor is passed the operator for this binary node. The left and right subtree is set 
      * via left() and right()
@@ -55,4 +58,8 @@ class BinaryNode extends Node
         }
     }
     
+    public function getDatatype(): ?string
+    {
+        return $this->getLowestSubtype($this->left()->getDatatype(), $this->right()->getDatatype());        
+    }
 }
