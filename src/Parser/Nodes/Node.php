@@ -83,4 +83,9 @@ class Node extends Base
         }         
     }
     
+    public function getDatatype(): ?string
+    {
+        return null;
+    }
+    
 }

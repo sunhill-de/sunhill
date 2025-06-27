@@ -20,4 +20,10 @@ class BooleanNode extends TerminalNode
         parent::__construct('boolean',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'boolean';
+    }
+    
+    
 }

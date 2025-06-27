@@ -20,4 +20,9 @@ class IntegerNode extends TerminalNode
         parent::__construct('integer',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'integer';
+    }
+    
 }

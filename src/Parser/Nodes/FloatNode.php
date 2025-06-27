@@ -20,4 +20,9 @@ class FloatNode extends TerminalNode
         parent::__construct('float',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'float';
+    }
+    
 }

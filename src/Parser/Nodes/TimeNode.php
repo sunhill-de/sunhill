@@ -20,4 +20,9 @@ class TimeNode extends TerminalNode
         parent::__construct('time',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'time';
+    }
+        
 }

@@ -10,6 +10,9 @@ use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\UnaryNode;
 use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\DateNode;
+use Sunhill\Parser\Nodes\DateTimeNode;
+use Sunhill\Parser\Nodes\TimeNode;
 
 uses(SunhillTestCase::class);
 
@@ -17,33 +20,43 @@ test('BooleanNode', function()
 {
    $test = new BooleanNode(true);
    expect($test->getValue())->toBe(true);
+   expect($test->getDatatype())->toBe('boolean');
 });
 
 test('IntegerNode', function()
 {
     $test = new IntegerNode(123);
     expect($test->getValue())->toBe(123);
-    
+    expect($test->getDatatype())->toBe('integer');    
 });
 
 test('FloatNode', function()
 {
     $test = new FloatNode(1.23);
     expect($test->getValue())->toBe(1.23);
+    expect($test->getDatatype())->toBe('float');
 });
 
-test('StringrNode', function()
+test('StringNode', function()
 {
     $test = new StringNode('abc');
     expect($test->getValue())->toBe('abc');
-    
+    expect($test->getDatatype())->toBe('string');    
 });
 
 test('IdentifierNode', function()
 {
     $test = new IdentifierNode('testidentifier');
     expect($test->getName())->toBe('testidentifier');
-    
+    expect($test->getDatatype())->toBe(null);    
+});
+
+test('Array node (0 elements', function()
+{
+    $test = new ArrayNode(null);
+    expect($test->elementCount())->toBe(0);
+    expect($test->getDatatype())->toBe('array');
+    expect($test->getDataSubtype())->toBe('empty');    
 });
 
 test('Array node (1 Element)', function()
@@ -52,6 +65,8 @@ test('Array node (1 Element)', function()
     
     expect($test->elementCount())->toBe(1);
     expect($test->getElement(0)->getValue())->toBe(10);
+    expect($test->getDatatype())->toBe('array');
+    expect($test->getDataSubtype())->toBe('integer');
 });
 
 test('Array node (2 Element)', function()
@@ -63,6 +78,27 @@ test('Array node (2 Element)', function()
     expect($test->getElement(1)->getValue())->toBe(20);
 });
 
+test('Array getDataSubtype()', function($first, $second, $expect)
+{
+    $test = new ArrayNode($first());
+    $test->addElement($second());
+    expect($test->getDataSubtype())->toBe($expect);
+})->with(
+    [
+        [function() { return new BooleanNode(true); },function() { return new BooleanNode(false); },'boolean'],
+        [function() { return new DateNode('2025-06-27'); },function() { return new DateNode('2025-06-27'); },'date'],
+        [function() { return new DateTimeNode('2025-06-27 10:11:12'); },function() { return new DateTimeNode('2025-06-27 10:11:12'); },'datetime'],
+        [function() { return new FloatNode(10.2); },function() { return new FloatNode(0.1); },'float'],
+        [function() { return new IntegerNode(10); },function() { return new IntegerNode(10); },'integer'],
+        [function() { return new StringNode('abc'); },function() { return new StringNode('def'); },'string'],
+        [function() { return new TimeNode('10:11:12'); },function() { return new TimeNode('10:11:12'); },'time'],
+
+        [function() { return new IntegerNode(10); },function() { return new FloatNode(10.2); },'float'],
+        [function() { return new DateNode('2025-06-27'); },function() { return new DateTimeNode('2025-06-27 11:22:23'); },'datetime'],
+        [function() { return new IntegerNode(12); },function() { return new StringNode('abc'); },'mixed'],
+        [function() { return new IntegerNode(12); },function() { return new DateNode('2025-06-27'); },'mixed'],
+        [function() { return new IntegerNode(12); },function() { return new FunctionNode('abc'); },null],
+        ]);
 test('UnaryNode', function()
 {
     $test = new UnaryNode('+');

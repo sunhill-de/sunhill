@@ -20,4 +20,10 @@ class DateNode extends TerminalNode
         parent::__construct('date',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'date';
+    }
+    
+    
 }

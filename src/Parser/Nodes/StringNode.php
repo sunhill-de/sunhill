@@ -20,4 +20,9 @@ class StringNode extends TerminalNode
         parent::__construct('string',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'string';
+    }
+    
 }

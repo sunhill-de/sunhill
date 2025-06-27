@@ -20,4 +20,9 @@ class DateTimeNode extends TerminalNode
         parent::__construct('datetime',$value);
     }
 
+    public function getDatatype(): ?string
+    {
+        return 'datetime';
+    }
+        
 }
