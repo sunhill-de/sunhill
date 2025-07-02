@@ -52,9 +52,14 @@ class UnaryNode extends Node
         return '('.$this->getType().$this->child()->toString().')';
     }
         
-    
-    public function validate(): bool
+    protected function validateOperator(string $operator, string $data_type)
     {
-        return true; // @todo implement me
+        
+    }
+    
+    public function validate()
+    {
+        $this->child()->validate();
+        $this->validateOperator($this->getType(), $this->child()->getDatatype());
     }
 }

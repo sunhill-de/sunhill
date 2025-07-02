@@ -13,6 +13,7 @@ use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Nodes\DateNode;
 use Sunhill\Parser\Nodes\DateTimeNode;
 use Sunhill\Parser\Nodes\TimeNode;
+use Sunhill\Parser\Exceptions\AnalyzerException;
 
 uses(SunhillTestCase::class);
 
@@ -116,7 +117,13 @@ test('toString()', function($modifier, $expect)
 
 test('validate()', function($modifier, $expect)
 {
-    expect($modifier()->validate())->toBe($expect);
+    $result = true;
+    try {
+        $modifier()->validate();
+    } catch (AnalyzerException $e) {
+        $result = false;
+    }
+    expect($result)->toBe($expect);
 })->with(
 [
     'BooleanNode'=>[function() { return new BooleanNode(true); }, true],

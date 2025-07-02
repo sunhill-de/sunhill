@@ -102,10 +102,12 @@ abstract class Node extends Base
     abstract public function toString(): string;
     
     /**
-     * Every node must be able to validate itself. This method returns true if everything is ok otherwise 
-     * false. Then the Analyzer throws an exception.
+     * Every node must be able to validate itself. This method should throw an exception if something
+     * is wrong
      * 
-     * @return bool
      */
-    abstract public function validate(): bool;
+    public function validate()
+    {
+        // Does nothing by default         
+    }
 }

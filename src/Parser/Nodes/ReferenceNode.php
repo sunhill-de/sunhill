@@ -38,9 +38,8 @@ class ReferenceNode extends TerminalNode
         return $this->handleReplacingChild('reference', $reference);
     }    
     
-    public function validate(): bool
+    public function validate()
     {
-        return ; // @todo Implement me
     }
     
 }

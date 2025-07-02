@@ -14,6 +14,7 @@
 namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Parser\Traits\UnknownDatatype;
+use Sunhill\Parser\Exceptions\IdentifierNotFoundException;
 
 class IdentifierNode extends TerminalNode
 {
@@ -50,9 +51,11 @@ class IdentifierNode extends TerminalNode
      * {@inheritDoc}
      * @see \Sunhill\Parser\Nodes\Node::validate()
      */
-    public function validate(): bool
+    public function validate()
     {
-        return !is_null($this->datatype); // @todo Implement me
+        if (is_null($this->datatype)) {
+            throw new IdentifierNotFoundException("The identifier '".$this->getName()."' was not found.");
+        }
     }
     
 }

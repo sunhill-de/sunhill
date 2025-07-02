@@ -68,10 +68,16 @@ class BinaryNode extends Node
         return '('.$this->left()->toString().$this->getType().$this->right()->toString().')';
     }
     
-    public function validate(): bool
+    protected function validateOperator(string $operator, string $left_data_type, string $right_data_type)
     {
-        return true; // @todo Implement me
+        
     }
     
-    
+    public function validate()
+    {
+        $this->left()->validate();
+        $this->right()->validate();
+        $this->validateOperator($this->getType(), $this->left()->getDatatype(), $this->right()->getDatatype());
+    }
+        
 }
