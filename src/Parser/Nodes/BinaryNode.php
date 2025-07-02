@@ -68,4 +68,10 @@ class BinaryNode extends Node
         return '('.$this->left()->toString().$this->getType().$this->right()->toString().')';
     }
     
+    public function validate(): bool
+    {
+        return true; // @todo Implement me
+    }
+    
+    
 }

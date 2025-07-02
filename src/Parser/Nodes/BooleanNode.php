@@ -29,4 +29,10 @@ class BooleanNode extends TerminalNode
     {
         return $this->getValue()?'true':'false';        
     }
+    
+    public function validate(): bool
+    {
+        return true; // Constants are always valid
+    }    
+    
 }

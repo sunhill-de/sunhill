@@ -92,4 +92,14 @@ class ArrayNode extends Node
         return $result.']';        
     }
     
+    public function validate(): bool
+    {
+        for ($i=0;$i<$this->elementCount();$i++) {
+            if (!$this->getElement($i)->validate()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }

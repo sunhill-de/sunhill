@@ -29,4 +29,9 @@ class IntegerNode extends TerminalNode
     {
         return $this->getValue();
     }
+    
+    public function validate(): bool
+    {
+        return true; // Integer constants are always valid
+    }
 }

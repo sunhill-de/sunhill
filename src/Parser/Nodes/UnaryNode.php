@@ -52,4 +52,9 @@ class UnaryNode extends Node
         return '('.$this->getType().$this->child()->toString().')';
     }
         
+    
+    public function validate(): bool
+    {
+        return true; // @todo implement me
+    }
 }

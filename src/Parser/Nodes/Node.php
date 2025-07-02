@@ -83,10 +83,29 @@ abstract class Node extends Base
         }         
     }
     
+    /**
+     * Every Node should return a datatype. This is trivial for the terminals (like integer, float, etc). 
+     * A little bit more complex for UnaryNode, BinaryNode, FunctionNode and IdentifierNode
+     * 
+     * @return string|NULL a value of null means the datatype is not detectable yet. 
+     */
     public function getDatatype(): ?string
     {
         return null;
     }
     
+    /**
+     * Mostly for debugging purposes every node must provide this method to read it out
+     * 
+     * @return string
+     */
     abstract public function toString(): string;
+    
+    /**
+     * Every node must be able to validate itself. This method returns true if everything is ok otherwise 
+     * false. Then the Analyzer throws an exception.
+     * 
+     * @return bool
+     */
+    abstract public function validate(): bool;
 }

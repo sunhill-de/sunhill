@@ -30,4 +30,9 @@ class TimeNode extends TerminalNode
         return '"'.$this->getValue().'"';
     }
     
+    
+    public function validate(): bool
+    {
+        return true; // Constants are always valid
+    }
 }

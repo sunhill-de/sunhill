@@ -82,4 +82,9 @@ class FunctionNode extends Node
     }
     
     
+    public function validate(): bool
+    {
+        return true; // @todo implement me
+    }
+    
 }
