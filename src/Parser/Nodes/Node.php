@@ -14,7 +14,7 @@ namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 
-class Node extends Base
+abstract class Node extends Base
 {
     /**
      * The type of this node 
@@ -88,4 +88,5 @@ class Node extends Base
         return null;
     }
     
+    abstract public function toString(): string;
 }

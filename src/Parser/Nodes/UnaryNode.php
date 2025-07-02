@@ -46,5 +46,10 @@ class UnaryNode extends Node
     {
         return $this->child()->getDatatype();
     }
-    
+ 
+    public function toString(): string
+    {
+        return '('.$this->getType().$this->child()->toString().')';
+    }
+        
 }

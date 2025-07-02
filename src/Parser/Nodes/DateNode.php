@@ -25,5 +25,9 @@ class DateNode extends TerminalNode
         return 'date';
     }
     
+    public function toString(): string
+    {
+        return '"'.$this->getValue().'"';
+    }
     
 }

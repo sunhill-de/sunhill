@@ -19,7 +19,7 @@ class ArrayNode extends Node
       
     use GetLowestSubtype;
     
-    public function __construct(?Node $first_element)
+    public function __construct(?Node $first_element = null)
     {
         if (!is_null($first_element)) {
             parent::__construct('array',['values'=>[$first_element]]);
@@ -80,5 +80,16 @@ class ArrayNode extends Node
                 return $return;
         }
     }
-        
+   
+    public function toString(): string
+    {
+        $result = '[';
+        $first = true;
+        for ($i=0;$i<$this->elementCount();$i++) {
+            $result .= ($first?'':',').$this->getElement($i)->toString();
+            $first = false;
+        }
+        return $result.']';        
+    }
+    
 }

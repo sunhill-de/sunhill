@@ -62,4 +62,10 @@ class BinaryNode extends Node
     {
         return $this->getLowestSubtype($this->left()->getDatatype(), $this->right()->getDatatype());        
     }
+    
+    public function toString(): string
+    {
+        return '('.$this->left()->toString().$this->getType().$this->right()->toString().')';
+    }
+    
 }

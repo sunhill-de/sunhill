@@ -24,5 +24,10 @@ class FloatNode extends TerminalNode
     {
         return 'float';
     }
-    
+  
+    public function toString(): string
+    {
+        return $this->getValue();
+    }
+        
 }

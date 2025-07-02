@@ -1,10 +1,10 @@
 <?php
 /**
- * @file IdentifierNode.php
- * A node that represents an identifier
+ * @file ReferenceNode.php
+ * A node that represents an identifier pointing to a subfield
  * Lang en
  * Reviewstatus: 2025-06-29
- * Create date: 2025-03-17
+ * Create date: 2025-06-29
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/NodeTest.php
@@ -15,16 +15,16 @@ namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Parser\Traits\UnknownDatatype;
 
-class IdentifierNode extends TerminalNode
+class ReferenceNode extends TerminalNode
 {
-
+  
     use UnknownDatatype;
     
     public function __construct($value)
     {
-        parent::__construct('identifier',$value);
+        parent::__construct('reference',$value);
     }
-
+    
     /**
      * Alias for getValue()
      */
@@ -33,9 +33,9 @@ class IdentifierNode extends TerminalNode
         return $this->getValue();
     }
     
-    public function toString(): string
+    public function reference(?Node $reference = null)
     {
-        return $this->getName();
-    }
+        return $this->handleReplacingChild('reference', $reference);
+    }    
     
 }

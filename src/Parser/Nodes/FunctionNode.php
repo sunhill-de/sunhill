@@ -69,4 +69,17 @@ class FunctionNode extends Node
         }
         return is_a($this->children['arguments'],ArrayNode::class)?$this->children['arguments']->getElement($index):$this->children['arguments'];
     }
+    
+    public function toString(): string
+    {
+        $result = $this->name().'(';
+        $first = true;
+        for ($i=0;$i<$this->getArgumentCount();$i++) {
+            $result .= ($first?'':',').$this->getArgument($i)->toString();
+            $first = false;
+        }
+        return $result.')';
+    }
+    
+    
 }

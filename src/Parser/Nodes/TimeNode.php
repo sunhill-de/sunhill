@@ -24,5 +24,10 @@ class TimeNode extends TerminalNode
     {
         return 'time';
     }
-        
+
+    public function toString(): string
+    {
+        return '"'.$this->getValue().'"';
+    }
+    
 }

@@ -25,4 +25,8 @@ class IntegerNode extends TerminalNode
         return 'integer';
     }
     
+    public function toString(): string
+    {
+        return $this->getValue();
+    }
 }

@@ -16,11 +16,20 @@ use Sunhill\Parser\Nodes\TimeNode;
 
 uses(SunhillTestCase::class);
 
-test('BooleanNode', function()
+test('BooleanNode (true)', function()
 {
    $test = new BooleanNode(true);
    expect($test->getValue())->toBe(true);
    expect($test->getDatatype())->toBe('boolean');
+   expect($test->toString())->toBe('true');
+});
+
+test('BooleanNode (false)', function()
+{
+    $test = new BooleanNode(false);
+    expect($test->getValue())->toBe(false);
+    expect($test->getDatatype())->toBe('boolean');
+    expect($test->toString())->toBe('false');
 });
 
 test('IntegerNode', function()

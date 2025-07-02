@@ -14,7 +14,7 @@ namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 
-class TerminalNode extends Node
+abstract class TerminalNode extends Node
 {
         
     public function __construct(string $type, $value)

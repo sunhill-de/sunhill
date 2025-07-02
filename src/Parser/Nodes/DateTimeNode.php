@@ -24,5 +24,10 @@ class DateTimeNode extends TerminalNode
     {
         return 'datetime';
     }
-        
+ 
+    public function toString(): string
+    {
+        return '"'.$this->getValue().'"';
+    }
+    
 }

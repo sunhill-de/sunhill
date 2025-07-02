@@ -25,5 +25,8 @@ class BooleanNode extends TerminalNode
         return 'boolean';
     }
     
-    
+    public function toString(): string
+    {
+        return $this->getValue()?'true':'false';        
+    }
 }

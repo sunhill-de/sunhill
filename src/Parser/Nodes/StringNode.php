@@ -24,5 +24,9 @@ class StringNode extends TerminalNode
     {
         return 'string';
     }
-    
+ 
+    public function toString(): string
+    {
+        return '"'.$this->getValue().'"';
+    }
 }
