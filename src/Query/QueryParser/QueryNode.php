@@ -78,4 +78,20 @@ class QueryNode extends Node
     {
         return $this->storages;
     }
+    
+    public function toString(): string
+    {
+        switch ($this->verb()) {
+            case 'get':
+            case 'first':    
+                $result = 'SELECT';
+                break;
+        }
+    }
+
+    public function validate(): bool
+    {
+        
+    }
+
 }

@@ -20,4 +20,15 @@ class OrderNode extends Node
     {
         return $this->handleReplacingChild('direction', $direction);
     }
+    
+    public function toString(): string
+    {
+        return $this->field()->toString().' '.$this->direction()->toString();
+    }
+
+    public function validate(): bool
+    {
+        return $this->field()->validate() && ((strtolower($this->direction()) == 'asc') || (strtolower($this->direction()) == 'desc'));
+    }
+
 }

@@ -20,4 +20,14 @@ class AliasNode extends Node
     {
         return $this->handleReplacingChild('alias', $node);
     }
+    public function toString(): string
+    {
+        return $this->expression()->toString().' AS '.$this->alias()->toString();
+    }
+
+    public function validate(): bool
+    {
+        return $this->expression()->validate() && $this->alias()->validate();
+    }
+
 }
