@@ -35,6 +35,11 @@ use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Analyzer;
 use Sunhill\Parser\Executor;
+use Sunhill\Parser\Nodes\IdentifierNode;
+use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Parser\Nodes\DateNode;
+use Sunhill\Parser\Nodes\TimeNode;
+use Sunhill\Parser\Nodes\DateTimeNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -1450,6 +1455,151 @@ class Query extends Base
     public function upsert($condition, $data_set)
     {
         $this->checkForReadlnly('upsert');
+    }
+    
+    /**
+     * Creates a identifier node with the name $node. The type is optional.
+     * 
+     * @param string $name
+     * @param string $type
+     * @return IdentifierNode
+     */
+    public static function identifier(string $name, ?string $type = null): IdentifierNode
+    {
+        $result = new IdentifierNode($name);
+        if (!is_null($type)) {
+            $result->setDatatype($type);
+        }
+        
+        return $result;
+    }
+    
+    public static function funct(string $name, $arguments = null): FunctionNode
+    {
+        $result = new FunctionNode($name);
+        if (is_a($arguments, ArrayNode::class) || is_a($arguments, Node::class)) {
+            $result->arguments($arguments);
+        } else if (is_array($arguments)) {
+            $args = new ArrayNode();
+            foreach ($arguments as $argument) {
+                $args->addElement($argument);
+            }
+            $result->arguments($args);
+        }
+        return $result;
+    }
+    
+    /**
+     * Creates an integer constant node with value $value
+     * 
+     * @param int $value
+     * @return IntegerNode
+     */
+    public static function integerConstant(int $value): IntegerNode
+    {
+        $result = new IntegerNode($value);
+    
+        return $result;
+    }
+    
+    /**
+     * Creates a string constant node with the given value
+     * 
+     * @param string $value
+     * @return StringNode
+     */
+    public static function stringConstant(string $value): StringNode
+    {
+        $result = new StringNode($value);
+        
+        return $result;
+    }
+    
+    /**
+     * Creates a float constant node with the given value
+     * 
+     * @param float $value
+     * @return FloatNode
+     */
+    public static function floatConstant(float $value): FloatNode
+    {
+        $result = new FloatNode($value);
+        
+        return $result;
+    }
+    
+    public static function dateConstant(string $date): DateNode
+    {
+        $result = new DateNode($date);
+        
+        return $result;
+    }
+    
+    public static function datetimeConstant(string $datetime): DateTimeNode
+    {
+        $result = new DateTimeNode($datetime);
+        
+        return $result;
+    }
+    
+    public static function timeConstant(string $time): TimeNode
+    {
+        $result = new TimeNode($time);
+        
+        return $result;
+    }
+    
+    public static function booleanConstant(bool $value): BooleanNode
+    {
+        $result = new BooleanNode($value);
+        
+        return $result;
+    }
+    
+/**
+     * Creates an binary operator node
+     * 
+     * @param string $operator
+     * @param Node $left
+     * @param Node $right
+     * @return BinaryNode
+     */
+    public static function binaryOperator(string $operator, Node $left, Node $right): BinaryNode
+    {
+        $result = new BinaryNode($operator);
+        $result->left($left);
+        $result->right($right);
+        
+        return $result;
+    }
+    
+    /**
+     * Creates a unary operator node
+     * 
+     * @param string $operator
+     * @param Node $child
+     * @return UnaryNode
+     */
+    public static function unaryOperator(string $operator, Node $child): UnaryNode
+    {
+        $result = new UnaryNode($operator);
+        $result->child($child);
+        
+        return $result;
+    }
+
+    public static function array($elements = null): ArrayNode
+    {
+        $result = new ArrayNode(null);
+        if (is_a($elements, Node::class)) {
+            $result->addElement($elements);
+        }
+        if (is_array($elements)) {
+            foreach ($elements as $element) {
+                $result->addElement($element);
+            }
+        }
+        return $result;
     }
     
 }
