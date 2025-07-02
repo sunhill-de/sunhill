@@ -14,7 +14,6 @@
 namespace Sunhill\Parser;
 
 use Sunhill\Basic\Base;
-use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\BinaryNode;
@@ -25,7 +24,6 @@ use Sunhill\Parser\Nodes\BooleanNode;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\UnaryNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
-use Sunhill\Parser\LanguageDescriptor\OperatorDescriptor;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 use Sunhill\Parser\Exceptions\TypeNotExpectedException;
 use Sunhill\Parser\Exceptions\IdentifierNotFoundException;
@@ -270,22 +268,8 @@ abstract class AbstractAnalyzer extends Base
     }
     
 // ================================== Identifier ================================================    
-    protected function tryToLookupIdentifierType(string $identifier): string
-    {
-        return 'unknown';    
-    }
-    
-    protected function getIdentifierType(IdentifierNode $node): string
-    {
-        if (!isset($this->predefined_identifiers[$node->getName()])) {
-            $result = $this->tryToLookupIdentifierType($node->getName());
-            if ($result == 'unknown') {
-                throw new IdentifierNotFoundException("The identifier '".$node->getName()."' was not found.");                
-            }
-        }
-        return $this->predefined_identifiers[$node->getName()];
-    }
-    
+    abstract protected function getIdentifierType(string $name): string;
+
     /**
      * Returns the type of the identifer
      * 
@@ -293,13 +277,13 @@ abstract class AbstractAnalyzer extends Base
      */
     protected function getTypeOfIdentifierNode(IdentifierNode $node)
     {
-        if (isset($this->predefined_identifiers[$node->getName()])) {
-            return $this->predefined_identifiers[$node->getName()];
+        if (($type = $this->getIdentifierType($node->getName())) !== 'unknown') {
+            return $type;
         }
         throw new IdentifierNotFoundException("The identifier '".$node->getName()."' was not found.");
     }
     
-    protected function getTypeOfNode(Node $node)
+    public function getTypeOfNode(Node $node)
     {
         switch ($node::class) {
             case ArrayNode::class:
