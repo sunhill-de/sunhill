@@ -83,6 +83,14 @@ class FunctionDescriptor extends Base
         if ($this->stack_pointer >= count($this->parameters)) {
             return null;
         }
-        return $this->parameters[$this->stack_pointer++];
+        $result = $this->parameters[$this->stack_pointer++];
+        if (substr($result,0,3) == '...') {
+            $this->stack_pointer--;
+            return '?'.substr($result,3);
+        }
+        if ($result[0] !== '?') {
+            return '!'.$result;
+        }
+        return $result;
     }
 }

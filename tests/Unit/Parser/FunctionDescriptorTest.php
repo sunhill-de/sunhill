@@ -18,7 +18,7 @@ test('FunctionDescriptor with no parameters', function()
 
 test('FunctionDescriptor with one mandatory parameter', function()
 {
-    $test = new FunctionDescriptor('testfunct(integer):integer');
+    $test = new FunctionDescriptor('any:testfunct(integer):integer');
     $test->reset();
     expect($test->pop())->toBe('!integer');
     expect($test->pop())->toBe(null);
@@ -26,7 +26,7 @@ test('FunctionDescriptor with one mandatory parameter', function()
 
 test('FunctionDescriptor with two mandatory parameters', function()
 {
-    $test = new FunctionDescriptor('testfunct(integer,string):integer');
+    $test = new FunctionDescriptor('any:testfunct(integer,string):integer');
     $test->reset();
     expect($test->pop())->toBe('!integer');
     expect($test->pop())->toBe('!string');
@@ -35,7 +35,7 @@ test('FunctionDescriptor with two mandatory parameters', function()
 
 test('FunctionDescriptor with one mandatory parameter and one optional', function()
 {
-    $test = new FunctionDescriptor('testfunct(integer,?string):integer');
+    $test = new FunctionDescriptor('any:testfunct(integer,?string):integer');
     $test->reset();
     expect($test->pop())->toBe('!integer');
     expect($test->pop())->toBe('?string');
@@ -44,7 +44,7 @@ test('FunctionDescriptor with one mandatory parameter and one optional', functio
 
 test('FunctionDescriptor with two optional parameters', function()
 {
-    $test = new FunctionDescriptor('testfunct(?integer,?string):integer');
+    $test = new FunctionDescriptor('any:testfunct(?integer,?string):integer');
     $test->reset();
     expect($test->pop())->toBe('?integer');
     expect($test->pop())->toBe('?string');
@@ -53,7 +53,7 @@ test('FunctionDescriptor with two optional parameters', function()
 
 test('FunctionDescriptor with ellipsis parameters', function()
 {
-    $test = new FunctionDescriptor('testfunct(...integer):integer');
+    $test = new FunctionDescriptor('any:testfunct(...integer):integer');
     $test->reset();
     expect($test->pop())->toBe('?integer');
     expect($test->pop())->toBe('?integer');
@@ -61,7 +61,7 @@ test('FunctionDescriptor with ellipsis parameters', function()
 
 test('FunctionDescriptor with one mandatory annd ellipsis parameters', function()
 {
-    $test = new FunctionDescriptor('testfunct(integer,...integer):integer');
+    $test = new FunctionDescriptor('any:testfunct(integer,...integer):integer');
     $test->reset();
     expect($test->pop())->toBe('!integer');
     expect($test->pop())->toBe('?integer');
