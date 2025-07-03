@@ -14,6 +14,7 @@ use Sunhill\Parser\Nodes\DateNode;
 use Sunhill\Parser\Nodes\DateTimeNode;
 use Sunhill\Parser\Nodes\TimeNode;
 use Sunhill\Parser\Exceptions\AnalyzerException;
+use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 
 uses(SunhillTestCase::class);
 
@@ -52,9 +53,11 @@ test('getDatatype()', function($modifier, $expect)
         return $return;
     }, 'array'],
     'Function with type set'=>[function()
-    {
+    {   // Just returns if the FunctionNode asks the FunctionDescriptor for the return type
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('getReturnType')->andReturn('integer');
         $return = new FunctionNode('test');
-        $return->setDatatype('integer');
+        $return->setFunctionDescriptor($descriptor);
         return $return;
     },'integer'],
     'Function with type not set'=>[function()
@@ -113,6 +116,26 @@ test('toString()', function($modifier, $expect)
         $return->addElement(new IntegerNode(30));
         return $return;
     }, '[10,20,30]'],
+    'FunctionNode without arguments'=>[function()
+    {
+        return new FunctionNode('test');        
+    },'test()'],
+    'FunctionNode with one argument'=>[function()
+    {
+        $test = new FunctionNode('test');
+        $test->arguments(new IntegerNode(10));
+        return $test;
+        
+    },'test(10)'],
+    'FunctionNode with two arguments'=>[function()
+    {
+        $arguments = new ArrayNode(new IntegerNode(10));
+        $arguments->addElement(new StringNode('abc'));
+        
+        $test = new FunctionNode('testfunc');
+        $test->arguments($arguments);
+        return $test;
+    },'testfunc(10,"abc")'],
     ]);
 
 test('validate()', function($modifier, $expect)
@@ -159,6 +182,90 @@ test('validate()', function($modifier, $expect)
         $return->addElement($id2);
         return $return;
     }, false],
+    'Unknown Function'=>[function()
+    {
+       return new FunctionNode('test');   
+    }, false],
+    'Function without arguments passes'=>[function()
+    {
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn(null);
+        $funct = new FunctionNode('test');
+        $funct->setFunctionDescriptor($descriptor);
+        
+        return $funct;
+    }, true],
+    'Function with one argument passes'=>[function()
+    {
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn('!integer',null);
+        $funct = new FunctionNode('test');
+        $funct->arguments(new IntegerNode(10));
+        $funct->setFunctionDescriptor($descriptor);
+        
+        return $funct;
+    }, true],
+    'Function with one argument fails due type mismatch'=>[function()
+    {
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn('!string',null);
+        $funct = new FunctionNode('test');
+        $funct->arguments(new IntegerNode(10));
+        $funct->setFunctionDescriptor($descriptor);
+        
+        return $funct;
+    }, false],
+    'Function with one argument fails due missing argument'=>[function()
+    {
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn('!integer',null);
+        $funct = new FunctionNode('test');
+        $funct->setFunctionDescriptor($descriptor);
+        
+        return $funct;
+    }, false],
+    'Function with one mandatory and one optional argument passes (both given)'=>[function()
+    {
+        $arguments = new ArrayNode(new IntegerNode(10));
+        $arguments->addElement(new StringNode('abc'));
+        
+        
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn('!integer','?string');
+        $funct = new FunctionNode('test');
+        $funct->setFunctionDescriptor($descriptor);
+        $funct->arguments($arguments);
+        
+        return $funct;
+    }, true],
+    'Function with one mandatory and one optional argument passes (optional omitted)'=>[function()
+    {
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn('!integer','?string');
+        $funct = new FunctionNode('test');
+        $funct->setFunctionDescriptor($descriptor);
+        $funct->arguments(new IntegerNode(10));
+        
+        return $funct;
+    }, true],
+    'Function with two mandatory fails (one omitted)'=>[function()
+    {
+        $descriptor = \Mockery::mock(FunctionDescriptor::class);
+        $descriptor->shouldReceive('reset');
+        $descriptor->shouldReceive('pop')->andReturn('!integer','!string');
+        $funct = new FunctionNode('test');
+        $funct->setFunctionDescriptor($descriptor);
+        $funct->arguments(new IntegerNode(10));
+        
+        return $funct;
+    }, false],
+    
     ]);
 
 test('elementCount() for arrays', function($modifier, $expect)
@@ -282,9 +389,11 @@ test('getDataSubtype() for arrays', function($modifier, $expect)
         }, null],
         'Array with two elements (int and set function)'=>[function()
         {
+            $descriptor = \Mockery::mock(FunctionDescriptor::class);
+            $descriptor->shouldReceive('getReturnType')->andReturn('integer');
             $return = new ArrayNode(new IntegerNode(10));
             $funct = new FunctionNode('test');
-            $funct->setDatatype('integer');
+            $funct->setFunctionDescriptor($descriptor);
             $return->addElement($funct);
             return $return;
         }, 'integer'],
@@ -400,7 +509,9 @@ test('BinaryNode getDataSubtype()', function($first, $second, $expect)
         [function() { return new IntegerNode(12); },function()
         {
             $result = new FunctionNode('abc');
-            $result->setDatatype('float');
+            $descriptor = \Mockery::mock(FunctionDescriptor::class);
+            $descriptor->shouldReceive('getReturnType')->andReturn('float');
+            $result->setFunctionDescriptor($descriptor);
             return $result;
         },'float'],
         [function() { return new IntegerNode(12); },function() { return new IdentifierNode('abc'); },null],

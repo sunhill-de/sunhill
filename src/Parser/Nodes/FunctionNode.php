@@ -20,8 +20,6 @@ use Sunhill\Parser\Exceptions\FunctionNotFoundException;
 class FunctionNode extends Node
 {
 
-    use UnknownDatatype;
-    
     /**
      * Simplyfied constructor that just fills the parent with default values
      */   
@@ -44,6 +42,13 @@ class FunctionNode extends Node
         return $this->function_descriptor;    
     }
     
+    public function getDatatype(): ?string
+    {
+        if (is_null($this->getFunctionDescriptor())) {
+            return null;
+        }
+        return $this->getFunctionDescriptor()->getReturnType();
+    }
     /**
      * Simplified setter/getter for the function name. When called with parameter it acts as a setter otherwise as a getter.
      */      
@@ -96,76 +101,48 @@ class FunctionNode extends Node
         }
         return $result.')';
     }
+
+    private int $argument_ptr = 0;
     
-    private function buildExpectedParameters(FunctionDescriptor $descriptor): array
+    private function reset()
     {
-        $result = $descriptor->getParameterDescriptors();
-        if ($descriptor->getUnlimitedParameters()) {
-            for ($i=0;$i<$descriptor->getMinimumParameterCount();$i++) {
-                $entry = new \stdClass();
-                $entry->type = $descriptor->getUnlimitedType();
-                $entry->optional = false;
-                $result[] = $entry;
-            }
-            $entry = new \stdClass();
-            $entry->type = $descriptor->getUnlimitedType();
-            $entry->optional = true;
-            $entry->dontshift = true;
-            $result[] = $entry;
-        }
-        return $result;
+        $this->argument_ptr = 0;
     }
     
-    private function buildGivenParameters(FunctionNode $node): array
+    private function pop(): ?string
     {
-        $result = [];
-        for ($i=0;$i<$node->getArgumentCount();$i++) {
-            $result[] = $this->getTypeOfNode($node->getArgument($i));
+        if (is_null($argument = $this->getArgument($this->argument_ptr++))) {
+            return null;
         }
-        return $result;
+        return $argument->getDatatype();   
     }
     
-    private function getExpectedParameter(&$expected)
+    private function analyzeFunctionNode(FunctionDescriptor $descriptor)
     {
-        $parameter = array_shift($expected);
-        if (isset($parameter->dontshift)) {
-            array_unshift($expected, $parameter);
-        }
-        return $parameter;
-    }
-    
-    private function checkParameters(FunctionDescriptor $descriptor)
-    {
-        $expected = $this->buildExpectedParameters($descriptor);
-        $given = $this->buildGivenParameters($node);
-        while (!empty($given)) {
-            $given_parameter = array_shift($given);
-            $expected_parameter = $this->getExpectedParameter($expected);
-            if (is_null($expected_parameter)) {
-                throw new FunctionParameterException("Too many parameters.");
+        $descriptor->reset();
+        $actual_argument = $this->pop();
+        while (!is_null($actual_argument)) {
+            $expected_argument = $descriptor->pop();
+            $optional = $expected_argument[0];
+            $expected_type = substr($expected_argument,1);
+            if ($actual_argument !== $expected_type) {
+                throw new FunctionParameterException("Expected '$expected_type' got '$actual_argument'");
             }
-            if (!$this->typeMatch($given_parameter,$expected_parameter->type)) {
-                throw new FunctionParameterException("Parameter type mismatch. Expected '".$expected_parameter->type."', got '$given_parameter'");
-            }
+            $actual_argument = $this->pop();
         }
-        if (!empty($expected)) {
-            $expected_parameter = $this->getExpectedParameter($expected);
-            if (!$expected_parameter->optional) {
-                throw new FunctionParameterException("Too few parameters. Expected ".$expected_parameter->type);
+        if (!is_null($expected_argument = $descriptor->pop())) {
+            $optional = $expected_argument[0];
+            $expected_type = substr($expected_argument,1);
+            if ($optional !== '?') {
+                throw new FunctionParameterException("Expected '$expected_type' got nothing");
             }
         }
     }
-    
-    protected function analyzeFunctionNode($descriptor)
-    {
-        $this->checkParameters($descriptor);
-    }
-    
     
     public function validate()
     {
         if (is_null($this->getFunctionDescriptor())) {
-            throw new FunctionNotFoundException("The function '".$this->getName()."' was not found.");
+            throw new FunctionNotFoundException("The function '".$this->name()."' was not found.");
         }
         $this->analyzeFunctionNode($this->getFunctionDescriptor());
     }
