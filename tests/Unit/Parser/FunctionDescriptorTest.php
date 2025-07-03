@@ -5,69 +5,66 @@ use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 
 uses(SunhillTestCase::class);
 
-test('function with no parameters', function()
+test('FunctionDescriptor with no parameters', function()
 {
-    $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer');
-    
-    expect($test->getName())->toBe('testFunction');
+    $test = new FunctionDescriptor('any:testfunct():integer');
+    expect($test->getName())->toBe('testfunct');
     expect($test->getReturnType())->toBe('integer');
-    expect($test->getTotalParameterCount())->toBe(0);
-    expect($test->getMandatoryParameterCount())->toBe(0);
+    expect($test->getParameterCount())->toBe(0);
+    expect($test->getContext())->toBe('any');
+    $test->reset();
+    expect($test->pop())->toBe(null);
 });
 
-test('function with one mandatory parameters', function()
+test('FunctionDescriptor with one mandatory parameter', function()
 {
-    $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer');
-    $test->addParameter('integer');
-
-    expect($test->getTotalParameterCount())->toBe(1);
-    expect($test->getMandatoryParameterCount())->toBe(1);    
+    $test = new FunctionDescriptor('testfunct(integer):integer');
+    $test->reset();
+    expect($test->pop())->toBe('!integer');
+    expect($test->pop())->toBe(null);
 });
 
-test('function with one optional parameters', function()
+test('FunctionDescriptor with two mandatory parameters', function()
 {
-    $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer');
-    $test->addParameter('integer', true);
-    
-    expect($test->getTotalParameterCount())->toBe(1);
-    expect($test->getMandatoryParameterCount())->toBe(0);
+    $test = new FunctionDescriptor('testfunct(integer,string):integer');
+    $test->reset();
+    expect($test->pop())->toBe('!integer');
+    expect($test->pop())->toBe('!string');
+    expect($test->pop())->toBe(null);
 });
 
-test('function with one mandatory and one optional parameters', function()
+test('FunctionDescriptor with one mandatory parameter and one optional', function()
 {
-    $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer');
-    $test->addParameter('integer');
-    $test->addParameter('string', true);
-    
-    expect($test->getTotalParameterCount())->toBe(2);
-    expect($test->getMandatoryParameterCount())->toBe(1);
+    $test = new FunctionDescriptor('testfunct(integer,?string):integer');
+    $test->reset();
+    expect($test->pop())->toBe('!integer');
+    expect($test->pop())->toBe('?string');
+    expect($test->pop())->toBe(null);
 });
 
-test('function with unlimited parameters', function()
+test('FunctionDescriptor with two optional parameters', function()
 {
-    $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer')->setUnlimitedParameters(2,'string');
-    
-    expect($test->getUnlimitedParameters())->toBe(true);
-    expect($test->getMinimumParameterCount())->toBe(2);
-    expect($test->getUnlimitedType())->toBe('string');
-    expect($test->getTotalParameterCount())->toBe(-1);
-    expect($test->getMandatoryParameterCount())->toBe(0);
+    $test = new FunctionDescriptor('testfunct(?integer,?string):integer');
+    $test->reset();
+    expect($test->pop())->toBe('?integer');
+    expect($test->pop())->toBe('?string');
+    expect($test->pop())->toBe(null);
 });
 
-test('function with one mandatory and unlimited optional parameters', function()
+test('FunctionDescriptor with ellipsis parameters', function()
 {
-    $test = new FunctionDescriptor('testFunction');
-    $test->setReturnType('integer')->setUnlimitedParameters(2,'string');
-    $test->addParameter('integer');
-    
-    expect($test->getTotalParameterCount())->toBe(-1);
-    expect($test->getMandatoryParameterCount())->toBe(1);
+    $test = new FunctionDescriptor('testfunct(...integer):integer');
+    $test->reset();
+    expect($test->pop())->toBe('?integer');
+    expect($test->pop())->toBe('?integer');
 });
 
-
+test('FunctionDescriptor with one mandatory annd ellipsis parameters', function()
+{
+    $test = new FunctionDescriptor('testfunct(integer,...integer):integer');
+    $test->reset();
+    expect($test->pop())->toBe('!integer');
+    expect($test->pop())->toBe('?integer');
+    expect($test->pop())->toBe('?integer');
+});
 

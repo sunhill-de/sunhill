@@ -19,6 +19,7 @@ use Sunhill\Basic\Base;
 class FunctionDescriptor extends Base
 {
     
+    protected string $context;
     /**
      * The name of the function
      * 
@@ -38,26 +39,16 @@ class FunctionDescriptor extends Base
      * 
      * @var array
      */
-    protected array $parameter_descriptors = [];
+    protected array $parameters = [];
     
-    /**
-     * If true, this function can handle any count of parameters
-     * 
-     * @var boolean
-     */
-    protected bool $unlimited_parameters = false;
-    
-    protected string $unlimited_type = '';
-    
-    /**
-     * With unlimited parameters there is sometimes a mimimum number of parameters
-     * @var integer
-     */
-    protected int $mimimum_parameters = 0;
         
-    public function __construct(string $name)
+    public function __construct(string $descriptor)
     {
-        $this->name = $name;
+        preg_match('/(.*)\:([_a-zA-Z0-9]*)\((.*)\)\:(.*)/', $descriptor, $matches);
+        $this->context = $matches[1];
+        $this->name = $matches[2];
+        $this->parameters = empty($matches[3])?[]:explode(',', $matches[3]);
+        $this->return_type = $matches[4];
     }
     
     public function getName(): string
@@ -65,105 +56,33 @@ class FunctionDescriptor extends Base
         return $this->name;    
     }
     
-    public function setReturnType(string $return_type): static
-    {
-        $this->return_type = $return_type;
-        
-        return $this;
-    }
-    
     public function getReturnType(): string
     {
         return $this->return_type;
     }
-    
-    public function setUnlimitedParameters(int $minimum_count, string $type): static
+
+    public function getParameterCount(): int
     {
-        $this->unlimited_parameters = true;
-        $this->unlimited_type = $type;
-        $this->mimimum_parameters = $minimum_count;
-        
-        return $this;
+        return count($this->parameters);
     }
     
-    /**
-     * Returns if this function supports an unlimited count of parameters (true) or not (false)
-     * 
-     * @return bool
-     */
-    public function getUnlimitedParameters(): bool
+    public function getContext(): string
     {
-        return $this->unlimited_parameters;    
+        return $this->context;
     }
     
-    /**
-     * Returns how many unlimited parameters have there to be at least
-     * 
-     * @return int
-     */
-    public function getMinimumParameterCount(): int
+    private int $stack_pointer = 0;
+    
+    public function reset()
     {
-        return $this->mimimum_parameters;    
+        $this->stack_pointer = 0;
     }
     
-    /**
-     * Returns the type the unlimited parametrs have to match
-     * 
-     * @return string
-     */
-    public function getUnlimitedType(): string
+    public function pop(): ?string
     {
-        return $this->unlimited_type;    
-    }
-    
-    public function addParameter(string $type, bool $optional = false, ?string $subtype = null): static
-    {
-        $parameter = new \stdClass();
-        $parameter->type = $type;
-        $parameter->optional = $optional;
-        $parameter->subtype = $subtype;
-        $this->parameter_descriptors[] = $parameter;
-        
-        return $this;
-    }
-    
-    /**
-     * Returns the number of parameters this function need at least
-     * 
-     * @return int
-     */
-    public function getMandatoryParameterCount(): int
-    {
-        $count = 0;
-        foreach ($this->parameter_descriptors as $parameter) {
-            if (!$parameter->optional) {
-                $count++;
-            }
+        if ($this->stack_pointer >= count($this->parameters)) {
+            return null;
         }
-        
-        return $count;
-    }
-    
-    /**
-     * Returns the number of parameters this function can accept
-     * 
-     * @return int -1 if unlimited 
-     */
-    public function getTotalParameterCount(): int
-    {
-        if ($this->unlimited_parameters) {
-            return -1;
-        }
-        return count($this->parameter_descriptors);
-    }
-    
-    public function getParameter(int $index): \stdClass
-    {
-        return $this->parameter_descriptors[$index];
-    }
-    
-    public function getParameterDescriptors(): array
-    {
-        return $this->parameter_descriptors;
+        return $this->parameters[$this->stack_pointer++];
     }
 }
