@@ -14,6 +14,7 @@ namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
 use Sunhill\Parser\Traits\GetLowestSubtype;
+use Sunhill\Parser\Exceptions\TypesMismatchException;
 
 /**
  * A binary node consists of a right and a left subtree and a connection between those
@@ -22,6 +23,8 @@ class BinaryNode extends Node
 {
 
     use GetLowestSubtype;
+    
+    protected $allowed_types = [];
     
     /**
      * The constructor is passed the operator for this binary node. The left and right subtree is set 
@@ -68,16 +71,30 @@ class BinaryNode extends Node
         return '('.$this->left()->toString().$this->getType().$this->right()->toString().')';
     }
     
-    protected function validateOperator(string $operator, string $left_data_type, string $right_data_type)
+    public function addAllowedType(string $left, string $right, string $resulting)
     {
-        
+        $entry = new \stdClass();
+        $entry->left = $left;
+        $entry->right = $right;
+        $entry->resulting = $resulting;
+        $this->allowed_types[] = $entry;
+    }
+    
+    protected function validateOperator(string $left_data_type, string $right_data_type)
+    {
+        foreach ($this->allowed_types as $type) {
+            if (($this->typeMatch($left_data_type, $type->left)) && ($this->typeMatch($left_data_type, $type->left))) {
+                return;
+            }
+        }
+        throw new TypesMismatchException("The operator '".$this->getType()."' is not allowed for '$left_data_type' and '$right_data_type'");
     }
     
     public function validate()
     {
         $this->left()->validate();
         $this->right()->validate();
-        $this->validateOperator($this->getType(), $this->left()->getDatatype(), $this->right()->getDatatype());
+        $this->validateOperator($this->left()->getDatatype(), $this->right()->getDatatype());
     }
         
 }
