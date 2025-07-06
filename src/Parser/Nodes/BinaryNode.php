@@ -63,7 +63,11 @@ class BinaryNode extends Node
     
     public function getDatatype(): ?string
     {
-        return $this->getLowestSubtype($this->left()->getDatatype(), $this->right()->getDatatype());        
+        foreach ($this->allowed_types as $type) {
+            if (($this->typeMatch($this->left()->getDatatype(), $type->left)) && ($this->typeMatch($this->right()->getDatatype(), $type->left))) {
+                return $type->resulting;
+            }
+        }
     }
     
     public function toString(): string
@@ -83,7 +87,7 @@ class BinaryNode extends Node
     protected function validateOperator(string $left_data_type, string $right_data_type)
     {
         foreach ($this->allowed_types as $type) {
-            if (($this->typeMatch($left_data_type, $type->left)) && ($this->typeMatch($left_data_type, $type->left))) {
+            if (($this->typeMatch($left_data_type, $type->left)) && ($this->typeMatch($right_data_type, $type->left))) {
                 return;
             }
         }

@@ -32,309 +32,219 @@ use Sunhill\Parser\Exceptions\FunctionParameterException;
 use Sunhill\Parser\Exceptions\InvalidOperatorException;
 use Sunhill\Parser\Exceptions\TypeMismatchException;
 use Sunhill\Parser\Exceptions\TypesMismatchException;
+use Sunhill\Parser\Nodes\TimeNode;
+use Sunhill\Parser\Nodes\DateTimeNode;
+use Sunhill\Parser\Nodes\DateNode;
+use Sunhill\Parser\Nodes\ReferenceNode;
 
 abstract class AbstractAnalyzer extends Base
 {
-        
+ 
     /**
-     * Tests if the test rule $test matches the given rule $rule and takes care of pseudo 
-     * types like numeric and pseudoboolean
+     * Returns the type of the given identifier. If the identifier is not found return null.
      * 
-     * @param string $test
-     * @param string $rule
-     * @return boolean
+     * @param string $name
+     * @return string|NULL
      */
-    protected function typeMatch(string $test, string $rule)
-    {
-        switch ($rule) {
-            case 'pseudoboolean':
-                return in_array($test,['boolean','integer','float','string']);
-            case 'numeric':
-            case 'float':
-                return in_array($test,['integer','float']);
-            default:
-                return $test == $rule;
-        }
-    }
+    abstract protected function getTypeOfIdentifier(string $name): ?string;
     
     /**
-     * Checks if the given rules match the given types
+     * Returns the FunctionDescriptor for the given function. If the function is not found returns null
      * 
-     * @param array $test
-     * @param array $rule
-     * @return bool
+     * @param string $name
+     * @return FunctionDescriptor|NULL
      */
-    private function typesMatch(array $test, array $rule): bool
-    {
-        if (count($test) !== count($rule)-1) {
-            return false;
-        }
-        for ($i=0;$i<count($test);$i++) {
-            if (!$this->typeMatch($test[$i], $rule[$i])) {
-                return false;
-            }
-        }
-        return true;
-    }
+    abstract protected function getProfileOfFunction(string $name): ?FunctionDescriptor;
     
     /**
-     * This method returns true when the operatopm $left_type $operator $right_type is valid
+     * Returns the defined combination of types allowed for this operator (and only for this). 
+     * The result is an associative array with the keys "left", "right" and "resulting". The values have to be the 
+     * datatype that is accepted ("integer", "string", "float", "boolean", "date", "time", "datetime") or a pseudo 
+     * type ("numeric" or "pseudoboolean")
      * 
      * @param string $operator
-     * @param string $left_type
-     * @param string $right_type
-     * @return bool
+     * @return array|NULL
      */
-    abstract protected function isBinaryNodeCombinationValid(string $operator, string $left_type, string $right_type): bool;
-    
+    abstract protected function getProfilesOfBinaryOperator(string $operator): ?array;
+
     /**
-     * This method checks if the operation $left_type $operator $right_type is valid
+     * Returns the defined combination of types allowed for this operator (and only for this).
+     * The result is an associative array with the keys "child" and "resulting". The values have to be the
+     * datatype that is accepted ("integer", "string", "float", "boolean", "date", "time", "datetime") or a pseudo
+     * type ("numeric" or "pseudoboolean")
      *
      * @param string $operator
-     * @param string $left_type
-     * @param string $right_type
-     * @throws TypesMismatchException when the combination is not valid
+     * @return array|NULL
      */
-    protected function checkBinarayNodeCombinationIsValid(string $operator, string $left_type, string $right_type)
-    {
-        if (!$this->isBinaryNodeCombinationValid($operator, $left_type, $right_type)) {
-            throw new TypesMismatchException("The types '$left_type' and '$right_type' does not match to operator '$operator'");
-        }
-    }
+    abstract protected function getProfilesOfUnaryOperator(string $operator): ?array;
     
-    abstract protected function isBinaryNodeOperatorValid(string $operator): bool;
+    /**
+     * This method checks the resulting datatype of the node and returns the result of the check as a boolean.
+     * 
+     * @param string $type
+     * @return bool
+     */
+    abstract protected function checkAcceptedType(string $type): bool;
     
-    protected function checkBinaryNodeOperatorIsValid(string $operator)
+    /**
+     * This method is called when the Analyzer doesn't knoe the type of the node.
+     * 
+     * @param Node $node
+     */
+    protected function prepareUnknownNode(Node $node)
     {
-        if (!$this->isBinaryNodeOperatorIsValld($operator)) {
-            throw new InvalidOperatorException("The operator '$operator' is not a valid binary operator");
-        }
-    }
-    
-    protected function analyzeBinaryNode(BinaryNode $node)
-    {
-        $this->checkBinaryNodeOperatorIsValid($node->getType());
-        $this->analyzeNode($node->left());
-        $left_type = $this->getTypeOfNode($node->left());
-        $this->analyzeNode($node->right());
-        $right_type = $this->getTypeOfNode($node->right());
-        $this->checkBinaryNodeCombinationIsValid($node->getType(), $left_type, $right_type);
-    }
-    
-    private function getBinarySignature($left, $right, $operator)
-    {
-        foreach ($this->accepted_operators[$operator] as $types) {
-            if ($this->typesMatch([$left,$right],$types)) {
-                return $types[2];
-            }
-        }
-        return 'invalid';
+        // Do nothing by default    
     }
     
     /**
-     * Returns the type of the binary node
+     * Prepared the analyzation of every element of the array
+     * 
+     * @param ArrayNode $node
+     */
+    protected function prepareArrayNode(ArrayNode $node)
+    {
+        for ($i=0;$i<$node->elementCount();$i++) {
+            $this->prepareAnalyze($node->getElement($i));
+        }
+    }
+    
+    /**
+     * Prepares a binary node by preparing both branches
      * 
      * @param BinaryNode $node
-     * @return unknown
      */
-    protected function getTypeOfBinaryNode(BinaryNode $node)
+    protected function prepareBinaryNode(BinaryNode $node)
     {
-        if (!isset($this->accepted_operators[$node->getType()])) {
-            throw new InvalidOperatorException("The operator ".$node->getType()." is not expected");
-        }
-        $left = $this->getTypeOfNode($node->left());
-        $right = $this->getTypeOfNode($node->right());
-        $type = $this->getBinarySignature($left, $right, $node->getType());
-        
-        if ($type == 'invalid') {
-            throw new TypeMismatchException("The operator ".$node->getType()." does not handle '$left' and '$right'");
-        }
-        return $type;
-    }
-    
-// =================================== Function handling ============================================    
-    private function buildExpectedParameters(FunctionDescriptor $descriptor): array
-    {
-        $result = $descriptor->getParameterDescriptors();
-        if ($descriptor->getUnlimitedParameters()) {
-            for ($i=0;$i<$descriptor->getMinimumParameterCount();$i++) {
-                $entry = new \stdClass();
-                $entry->type = $descriptor->getUnlimitedType();
-                $entry->optional = false;
-                $result[] = $entry;
+        if (!is_null($profiles = $this->getProfilesOfBinaryOperator($node->getType()))) {
+            foreach ($profiles as $profile) {
+                $node->addAllowedType($profile['left'], $profile['right'], $profile['resulting']);
             }
-            $entry = new \stdClass();
-            $entry->type = $descriptor->getUnlimitedType();
-            $entry->optional = true;
-            $entry->dontshift = true;
-            $result[] = $entry;
-        }
-        return $result;
-    }
-    
-    private function buildGivenParameters(FunctionNode $node): array
-    {
-        $result = [];
-        for ($i=0;$i<$node->getArgumentCount();$i++) {
-            $result[] = $this->getTypeOfNode($node->getArgument($i));
-        }
-        return $result;        
-    }
-    
-    private function getExpectedParameter(&$expected)
-    {
-       $parameter = array_shift($expected);
-       if (isset($parameter->dontshift)) {
-           array_unshift($expected, $parameter);
-       }
-       return $parameter;
-    }
-    
-    private function checkParameters(FunctionNode $node, FunctionDescriptor $descriptor)
-    {
-        $expected = $this->buildExpectedParameters($descriptor);
-        $given = $this->buildGivenParameters($node);
-        while (!empty($given)) {
-            $given_parameter = array_shift($given);
-            $expected_parameter = $this->getExpectedParameter($expected);
-            if (is_null($expected_parameter)) {
-                throw new FunctionParameterException("Too many parameters.");
-            }
-            if (!$this->typeMatch($given_parameter,$expected_parameter->type)) {
-                throw new FunctionParameterException("Parameter type mismatch. Expected '".$expected_parameter->type."', got '$given_parameter'");
-            }            
-        }
-        if (!empty($expected)) {
-            $expected_parameter = $this->getExpectedParameter($expected);
-            if (!$expected_parameter->optional) {
-                throw new FunctionParameterException("Too few parameters. Expected ".$expected_parameter->type);
-            }
+            $this->prepareAnalyze($node->left());
+            $this->prepareAnalyze($node->right());
         }
     }
     
-    protected function analyzeFunctionNode(FunctionNode $node, $descriptor)
-    {
-        $this->checkParameters($node, $descriptor);
-    }
-    
-    private function tryToLookupFunctionDescriptor(FunctionNode $node): FunctionDescriptor|string
-    {
-        return 'unknown';    
-    }
-    
-    private function getFunctionDescriptor(FunctionNode $node): FunctionDescriptor|string
-    {
-        if (isset($this->predefined_functions[$node->name()])) {
-            return $this->predefined_functions[$node->name()];
-        } 
-        return $this->tryToLookupFunctionDescriptor($node);
-    }
-  
     /**
-     * Returns the return type of the given function
+     * Looks up the descriptor for this function. If found set it to the node and prepare every function argument.
      * 
      * @param FunctionNode $node
-     * @return unknown
      */
-    protected function getTypeOfFunctionNode(FunctionNode $node)
+    protected function prepareFunctionNode(FunctionNode $node)
     {
-        if (($func = $this->getFunctionDescriptor($node)) === 'unknown') {
-            throw new FunctionNotFoundException("The function '".$node->name()."' was not found.");
-        }
-        $this->analyzeFunctionNode($node, $func);
-        return $func->getReturnType();        
-    }
-
- // ================================ Unary node ==============================================
-    
-    /**
-     * Returns the type of the given unary node
-     * 
-     * @param UnaryNode $node
-     * @return unknown|string
-     */
-    protected function getTypeOfUnaryNode(UnaryNode $node)
-    {
-        $child = $this->getTypeOfNode($node->child());
-        if (!isset($this->accepted_operators[$node->getType()])) {
-            // Exception
-        }
-        foreach ($this->accepted_operators[$node->getType()] as $types) {
-            if ($this->typesMatch([$child],$types)) {
-                return $types[1];
+        if (!is_null($profile = $this->getProfileOfFunction($node->getName()))) {
+            $node->setFunctionDescriptor($profile);
+            for ($i=0;$i<$node->getArgumentCount();$i++) {
+                $this->prepareAnalyze($node->getArgument($i));
             }
         }
-        return 'invalid';
     }
     
-// ================================== Identifier ================================================    
-    abstract protected function getIdentifierType(string $name): string;
-
     /**
-     * Returns the type of the identifer
+     * Looks this identifier up. if found sets it type to the node
      * 
      * @param IdentifierNode $node
      */
-    protected function getTypeOfIdentifierNode(IdentifierNode $node)
+    protected function prepareIdentifierNode(IdentifierNode $node)
     {
-        if (($type = $this->getIdentifierType($node->getName())) !== 'unknown') {
-            return $type;
+        if (!is_null($type = $this->getTypeOfIdentifier($node->getName()))) {
+            $node->setDatatype($type);
         }
-        throw new IdentifierNotFoundException("The identifier '".$node->getName()."' was not found.");
     }
     
-    public function getTypeOfNode(Node $node)
+    /**
+     * First looks up the parent identifier and checks if this is a record. If yes looks up,
+     * if the underlying record defines a node of this name
+     * 
+     * @param ReferenceNode $node
+     */
+    protected function preapreReferenceNode(ReferenceNode $node)
+    {
+        if ($this->getTypeOfIdentifier($node->getName()) === 'record') {
+            
+        }
+    }
+    
+    /**
+     * Looks up the profile for this unary operator. If one exsists, set the possible rules to the node and 
+     * prepare the child node.
+     * 
+     * @param UnaryNode $node
+     */
+    protected function prepareUnaryNode(UnaryNode $node)
+    {
+        if (!is_null($profiles = $this->getProfilesOfUnaryOperator($node->getType()))) {
+            foreach ($profiles as $profile) {
+                $node->addAllowedType($profile['child'], $profile['resulting']);
+            }
+            $this->prepareAnalyze($node->child());
+        }
+    }
+    
+    /**
+     * Prepares the analyzation of the node tree. This means it looks up the profiles for operators, functions and identifiers.
+     * 
+     * @param Node $node
+     */
+    protected function prepareAnalyze(Node $node)
     {
         switch ($node::class) {
             case ArrayNode::class:
-                return 'array';
+                $this->prepareArrayNode($node);
                 break;
             case BinaryNode::class:
-                return $this->getTypeOfBinaryNode($node);
-                break;
-            case FunctionNode::class:
-                return $this->getTypeOfFunctionNode($node);
-                break;
-            case UnaryNode::class:
-                return $this->getTypeOfUnaryNode($node);
+                $this->prepareBinaryNode($node);
                 break;
             case BooleanNode::class:
-                return 'boolean';
-                break;
+            case DateNode::class:
+            case DateTimeNode::class:
             case FloatNode::class:
-                return 'float';
-                break;
             case IntegerNode::class:
-                return 'integer';
+            case StringNode::class:
+            case TimeNode::class:
+                break;
+            case FunctionNode::class:
+                $this->prepareFunctionNode($node);
                 break;
             case IdentifierNode::class:
-                return $this->getTypeOfIdentifierNode($node);
-            case StringNode::class:
-                return 'string';
+                $this->prepareIdentifierNode($node);
                 break;
-        }        
-    }
-    
-    protected function analyzeArrayNode(ArrayNode $node)
-    {
-        
-    }
-
-    abstract protected function isTypeAccepted(string $type): bool;
-    
-    protected function checkIsTypeAccepted(string $type)
-    {
-        if (!$this->isTypeAccepted()) {
-            throw new TypeNotExpectedException("The type of the expression ($type) was not expected");
+            case ReferenceNode::class:
+                $this->prepareReferenceNode($node);
+                break;
+            case UnaryNode::class:
+                $this->prepareUnaryNode($node);
+                break;
+            default:
+                $this->prepareUnknownNode($node);
         }
     }
     
-    public function analyze(Node $root_node)
+    /**
+     * Validates this node. if valid returns its resulting data type
+     * 
+     * @param Node $node
+     * @return string
+     */
+    protected function getNodeType(Node $node): string
     {
-        $type = $this->getTypeOfNode($root_node); 
-        $this->checkIsTypeAccepted($type);
-        
+        $node->validate();
+        if (is_null($type = $node->getDatatype())) {
+            
+        }
         return $type;
     }
-
+    
+    /**
+     * Analyzes a given node tree.
+     * 
+     * @param Node $node
+     */
+    public function analyze(Node $node)
+    {
+        $this->prepareAnalyze($node);
+        if (!$this->checkAcceptedType($type = $this->getNodeType($node))) {
+            throw new TypeNotExpectedException("The type '$type' for the given expression is not expected.");
+        }
+    }
+    
 }

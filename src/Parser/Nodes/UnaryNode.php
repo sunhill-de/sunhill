@@ -18,6 +18,8 @@ use Sunhill\Basic\Base;
 class UnaryNode extends Node
 {
         
+    protected $allowed_types = [];
+    
     public function __construct(string $type)
     {
         parent::__construct($type,[]);
@@ -52,6 +54,14 @@ class UnaryNode extends Node
         return '('.$this->getType().$this->child()->toString().')';
     }
         
+    public function addAllowedType(string $child, string $resulting)
+    {
+        $entry = new \stdClass();
+        $entry->child = $child;
+        $entry->resulting = $resulting;
+        $this->allowed_types[] = $entry;
+    }
+    
     protected function validateOperator(string $operator, string $data_type)
     {
         
