@@ -84,6 +84,27 @@ abstract class Node extends Base
     }
     
     /**
+     * Tests if the test rule $test matches the given rule $rule and takes care of pseudo
+     * types like numeric and pseudoboolean
+     *
+     * @param string $test
+     * @param string $rule
+     * @return boolean
+     */
+    protected function typeMatch(string $test, string $rule)
+    {
+        switch ($rule) {
+            case 'pseudoboolean':
+                return in_array($test,['boolean','integer','float','string']);
+            case 'numeric':
+            case 'float':
+                return in_array($test,['integer','float']);
+            default:
+                return $test == $rule;
+        }
+    }
+    
+    /**
      * Every Node should return a datatype. This is trivial for the terminals (like integer, float, etc). 
      * A little bit more complex for UnaryNode, BinaryNode, FunctionNode and IdentifierNode
      * 
