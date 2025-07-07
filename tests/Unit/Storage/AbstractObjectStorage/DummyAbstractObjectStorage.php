@@ -2,8 +2,7 @@
 
 namespace Sunhill\Tests\Unit\Storage\AbstractObjectStorage;
 
-use Sunhill\Storage\AbstractObjectStorage;
-use Sunhill\Storage\stdClass;
+use Sunhill\Storage\AbstractObjectStorage\AbstractObjectStorage;
 use Sunhill\Tests\TestSupport\Objects\ChildObject;
 use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Parser\Nodes\Node;
@@ -12,6 +11,8 @@ use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\FloatNode;
 use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Parser\Executor;
+use Sunhill\Storage\AbstractObjectStorage\AbstractObjectExecutor;
 
 class DummyAbstractObjectStorage extends AbstractObjectStorage
 {
@@ -306,4 +307,7 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
         // Do nothing here    
     }
         
+    public function getQueryExecutor(): Executor
+    {
+    }
 }
