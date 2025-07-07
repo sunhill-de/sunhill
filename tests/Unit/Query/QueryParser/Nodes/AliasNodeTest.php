@@ -8,15 +8,20 @@ uses(SunhillTestCase::class);
 
 test('constructor works', function()
 {
-   $test = new AliasNode(new IntegerNode(10), "integeralias"); 
+   $expression = \Mockery::mock(IntegerNode::class);
+   $expression->shouldReceive('getValue')->once()->andReturn(10);
+   $test = new AliasNode($expression, "integeralias"); 
    expect($test->expression()->getValue())->toBe(10);
    expect($test->alias())->toBe('integeralias');
 });
 
 test('setter works', function()
 {
-    $test = new AliasNode(new IntegerNode(10), "integeralias");
-    $test->expression(new IntegerNode(20));
+    $expression1 = \Mockery::mock(IntegerNode::class);
+    $test = new AliasNode($expression1, "integeralias");
+    $expression2 = \Mockery::mock(IntegerNode::class);
+    $expression2->shouldReceive('getValue')->once()->andReturn(20);
+    $test->expression($expression2);
     $test->alias('anotheralias');
     expect($test->expression()->getValue())->toBe(20);
     expect($test->alias())->toBe('anotheralias');
