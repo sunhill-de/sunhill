@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunhill\Tests\Unit\Parser\Examples;
+namespace Sunhill\Tests\TestSupport\Parser;
 
 use Sunhill\Parser\AbstractAnalyzer;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;

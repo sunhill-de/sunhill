@@ -7,11 +7,11 @@ use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\DateNode;
 use Sunhill\Parser\Nodes\DateTimeNode;
 use Sunhill\Parser\Nodes\TimeNode;
-use Sunhill\Tests\Unit\Parser\Examples\DummyAbstractAnalyzer;
 use Sunhill\Parser\Nodes\BooleanNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Exceptions\AnalyzerException;
 use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Tests\TestSupport\Parser\DummyAbstractAnalyzer;
 
 uses(SunhillTestCase::class);
 
