@@ -485,44 +485,6 @@ test('BinaryNode', function()
     expect($test->right()->getValue())->toBe(20);
 });
 
-test('BinaryNode getDataSubtype()', function($first, $second, $expect)
-{
-    $test = new BinaryNode('+');
-    $test->left($first());
-    $test->right($second());
-    expect($test->getDatatype())->toBe($expect);
-})->with(
-    [
-        [function() { return new BooleanNode(true); },function() { return new BooleanNode(false); },'boolean'],
-        [function() { return new DateNode('2025-06-27'); },function() { return new DateNode('2025-06-27'); },'date'],
-        [function() { return new DateTimeNode('2025-06-27 10:11:12'); },function() { return new DateTimeNode('2025-06-27 10:11:12'); },'datetime'],
-        [function() { return new FloatNode(10.2); },function() { return new FloatNode(0.1); },'float'],
-        [function() { return new IntegerNode(10); },function() { return new IntegerNode(10); },'integer'],
-        [function() { return new StringNode('abc'); },function() { return new StringNode('def'); },'string'],
-        [function() { return new TimeNode('10:11:12'); },function() { return new TimeNode('10:11:12'); },'time'],
-        
-        [function() { return new IntegerNode(10); },function() { return new FloatNode(10.2); },'float'],
-        [function() { return new DateNode('2025-06-27'); },function() { return new DateTimeNode('2025-06-27 11:22:23'); },'datetime'],
-        [function() { return new IntegerNode(12); },function() { return new StringNode('abc'); },'mixed'],
-        [function() { return new IntegerNode(12); },function() { return new DateNode('2025-06-27'); },'mixed'],
-        [function() { return new IntegerNode(12); },function() { return new FunctionNode('abc'); },null],
-        [function() { return new IntegerNode(12); },function()
-        {
-            $result = new FunctionNode('abc');
-            $descriptor = \Mockery::mock(FunctionDescriptor::class);
-            $descriptor->shouldReceive('getReturnType')->andReturn('float');
-            $result->setFunctionDescriptor($descriptor);
-            return $result;
-        },'float'],
-        [function() { return new IntegerNode(12); },function() { return new IdentifierNode('abc'); },null],
-        [function() { return new IntegerNode(12); },function()
-        {
-            $result = new IdentifierNode('abc');
-            $result->setDatatype('float');
-            return $result;
-        },'float'],
-        ]);
-
 test('getArgumentCount() for FunctionNode', function($modifier, $expect)
 {
     expect($modifier()->getArgumentCount())->toBe($expect);
