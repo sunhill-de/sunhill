@@ -68,6 +68,7 @@ class BinaryNode extends Node
                 return $type->resulting;
             }
         }
+        return null;
     }
     
     public function toString(): string
