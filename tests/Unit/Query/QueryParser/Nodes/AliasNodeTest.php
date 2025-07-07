@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file AliasNodeTest.php
+ * tests: /src/Query/QueryParser/AliasNode.php
+ * free of dependent units: yes
+ */
 
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\QueryParser\Nodes\AliasNode;
