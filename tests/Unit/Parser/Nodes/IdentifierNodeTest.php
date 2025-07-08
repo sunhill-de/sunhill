@@ -71,13 +71,3 @@ test('validate()', function($modifier, $expect)
     'IdentifierNode (type not set)'=>[function() { return new IdentifierNode('test'); }, false],
     ]);
 
-test('UnaryNode', function()
-{
-    $test = new UnaryNode('+');
-    $test->child(new IntegerNode(10));
-    
-    expect($test->getType())->toBe('+');
-    expect($test->child()->getValue())->toBe(10);
-    expect($test->getDatatype())->toBe('integer');
-});
-

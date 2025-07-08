@@ -14,6 +14,8 @@
 namespace Sunhill\Parser\Nodes;
 
 use Sunhill\Basic\Base;
+use Sunhill\Parser\Exceptions\TypesMismatchException;
+
 
 class UnaryNode extends Node
 {
@@ -39,6 +41,22 @@ class UnaryNode extends Node
     }
  
     /**
+     * Helper function that searches for a rule that fits to the given child datatype or null if none found.
+     * 
+     * @param string $child
+     * @return \stdClass|NULL
+     */
+    private function getOperatorDesciptor(string $child): ?\stdClass
+    {
+        foreach ($this->allowed_types as $type) {
+            if ($this->typeMatch($child, $type->child)) {
+                return $type;
+            }
+        }
+        return null;
+    }
+    
+    /**
      * Returns the datatype of the child node
      * 
      * {@inheritDoc}
@@ -46,7 +64,10 @@ class UnaryNode extends Node
      */
     public function getDatatype(): ?string
     {
-        return $this->child()->getDatatype();
+        if ($descriptor = $this->getOperatorDesciptor($this->child()->getDatatype())) {
+           return $descriptor->resulting;         
+        }
+        return null;
     }
  
     public function toString(): string
@@ -62,14 +83,16 @@ class UnaryNode extends Node
         $this->allowed_types[] = $entry;
     }
     
-    protected function validateOperator(string $operator, string $data_type)
+    protected function validateOperator(string $child_data_type)
     {
-        
+        if (!$this->getOperatorDesciptor($child_data_type)) {
+            throw new TypesMismatchException("The unary operator '".$this->getType()."' is not allowed for '$child_data_type'");
+        }
     }
     
     public function validate()
     {
         $this->child()->validate();
-        $this->validateOperator($this->getType(), $this->child()->getDatatype());
+        $this->validateOperator($this->child()->getDatatype());
     }
 }
