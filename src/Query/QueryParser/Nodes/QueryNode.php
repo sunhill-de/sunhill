@@ -117,18 +117,16 @@ class QueryNode extends Node
         return $this->handleReplacingChild('where_conditions', $node);
     }
     
+    public function having(?Node $node = null): ?Node
+    {
+        return $this->handleReplacingChild('having', $node);
+    }
+    
     public function getWhere(): ?Node
     {
         return isset($this->children['where_conditions'])?$this->children['where_conditions']:null;        
     }
 
-    public function setWhere(Node $node): static
-    {
-        $this->children['where_conditions'] = $node;
-        
-        return $this;
-    }
-    
     public function addStorage(string $storage_name, string $type = 'inner', string $target_alias = 'a', string $field = 'id'): string
     {
         $alias = $this->next_storage_alias++;
@@ -146,6 +144,12 @@ class QueryNode extends Node
         return $this->storages;
     }
     
+    /**
+     * Converts the node to a string
+     * 
+     * {@inheritDoc}
+     * @see \Sunhill\Parser\Nodes\Node::toString()
+     */
     public function toString(): string
     {
         switch ($this->verb()) {
@@ -154,27 +158,106 @@ class QueryNode extends Node
                 $result = 'SELECT';
                 break;
         }
+        return $result;
     }
 
+    /**
+     * Helper function that checks if the given node is not null. If it os not null call validate()
+     * 
+     * @param Node $node
+     */
     private function validateOptionalNull(?Node $node)
     {
-        if (!is_null($node)) {
+        if ($node) {
             $node->validate();
         }
     }
     
-    public function validate(): bool
+    /**
+     * Validates if verb is correctly
+     */
+    private function validateVerb()
     {
         if (!in_array(strtolower($this->verb()),['select','first','count','update','delete','insert'])) {
             throw new InvalidStatementException("The verb '".$this->verb()."' is not valid");
-        }
-        $this->validateOptionalNull($this->fields());
-        if ($this->offset() < 0) {
+        }        
+    }
+    
+    /**
+     * Validate if fields are correctly
+     */
+    private function validateFields()
+    {
+        $this->validateOptionalNull($this->fields());        
+    }
+    
+    /**
+     * Validate if order is correctly
+     */
+    private function validateOrder()
+    {
+        $this->validateOptionalNull($this->order());        
+    }
+    
+    /**
+     * Validate if offset is correctly
+     */
+    private function validateOffset()
+    {
+        if (!is_null($this->offset()) && ($this->offset() < 0)) {
             throw new InvalidStatementException("Offset must be a positive integer (or 0)");
-        }
-        if ($this->limit() < 1) {
+        }        
+    }
+    
+    /**
+     * Validate if limit is correctly
+     */
+    private function validateLimit()
+    {
+        if (!is_null($this->limit()) && ($this->limit() < 1)) {
             throw new InvalidStatementException("Limit must be a positiv numer greater than 0");
-        }
+        }        
+    }
+    
+    /**
+     * Validate if where is correctly
+     */
+    private function validateWhere()
+    {
+        $this->validateOptionalNull($this->where());
+    }
+    
+    /**
+     * Validate if having is correctly
+     */
+    private function validateHaving()
+    {
+        $this->validateOptionalNull($this->having());        
+    }
+    
+    /**
+     * Validate if groupBy is correctly
+     */    
+    private function validateGroupBy()
+    {
+        $this->validateOptionalNull($this->group());        
+    }
+    
+    /**
+     * Validates if the QueryNode is correctly by checking if each of the subnodes are correctly
+     * {@inheritDoc}
+     * @see \Sunhill\Parser\Nodes\Node::validate()
+     */
+    public function validate()
+    {
+        $this->validateVerb();
+        $this->validateFields();
+        $this->validateOrder();
+        $this->validateOffset();
+        $this->validateLimit();
+        $this->validateWhere();
+        $this->validateHaving();
+        $this->validateGroupBy();
     }
 
 }
