@@ -15,8 +15,8 @@ namespace Sunhill\Parser\Nodes;
 class BooleanNode extends TerminalNode
 {
         
-    public function __construct($value)
-    {
+    public function __construct(bool $value)
+    {        
         parent::__construct('boolean',$value);
     }
 
