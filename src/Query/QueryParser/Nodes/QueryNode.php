@@ -3,8 +3,10 @@
  * @file QueryNode.php
  * A node that represents all informations about a query. That includes fields, wheres, groups, havings, 
  * orders, offset and limit
+ * Note: This class should not be initiated manually but instead be created by the Query class
+ * 
  * Lang en
- * Reviewstatus: 2025-07-07
+ * Reviewstatus: 2025-07-09
  * Creation date: 2025-04-25
  * Localization: complete
  * Documentation: complete
@@ -16,6 +18,7 @@ namespace Sunhill\Query\QueryParser\Nodes;
 
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Query\Exceptions\InvalidStatementException;
+use Sunhill\Parser\Nodes\ArrayNode;
 
 /**
  * The QueryNode is a collector for all informations that is needed to execute a query
@@ -41,6 +44,9 @@ class QueryNode extends Node
      */
     private $next_storage_alias = 'b';
     
+    /**
+     * Creates an empty QueryNode
+     */
     public function __construct()
     {
         parent::__construct('query',[
@@ -69,7 +75,8 @@ class QueryNode extends Node
 
     /**
      * When omitted, the query returns only the id. With with method it is possible to return only
-     * certain fields of a record and not the whole record
+     * certain fields of a record and not the whole record. This method can be called repeatedly to
+     * add aditional fields
      * 
      * @param Node $fields
      * @return \Sunhill\Query\QueryParser\Nodes\QueryNode|NULL|mixed
@@ -82,6 +89,7 @@ class QueryNode extends Node
     /**
      * When omitted the query is executed beginning from the first record that matches the conditions.
      * When an positive integer is given the query executed beginning with the $offset-th record
+     * 
      * @param int $node
      * @return int|NULL
      */
@@ -102,46 +110,213 @@ class QueryNode extends Node
         return $this->handleReplacingChild('limit', $limit);
     }
     
+    /**
+     * When omitted the query results are not sorted at all, otherwise a sorting field could be passed with this 
+     * method. It's possible to call it repeatedly to define a secondary key if the first are the same.
+     * 
+     * @param Node $node
+     * @return \Sunhill\Query\QueryParser\Nodes\QueryNode|NULL|mixed
+     */
     public function order(?Node $node = null)
     {
         return $this->handleOptionalArrayChild('order', $node);
     }
     
+    /**
+     * When omitted the query results are not grouped otherwise this method adds a field that should be grouped
+     * be. This makes sense for aggregate functions like sum(), min(), max() and avg()
+     * 
+     * @param Node $node
+     * @return \Sunhill\Query\QueryParser\Nodes\QueryNode|NULL|mixed
+     */
     public function group(?Node $node = null)
     {
         return $this->handleOptionalArrayChild('group', $node);
     }
     
+    /**
+     * When omitted no filter coniditions are applied to the query otherwise the search results are filterd#
+     * according to this conditions. This method should olny be called once because it replaces any where
+     * statement that was applied earlier.
+     * 
+     * @param Node $node
+     * @return Node|NULL
+     */
     public function where(?Node $node = null): ?Node
     {
         return $this->handleReplacingChild('where_conditions', $node);
     }
     
+    /**
+     * When omitted no post grouping filter conditions are applied otherwise it's possible to filter the
+     * search results again after grouping.
+     * 
+     * @param Node $node
+     * @return Node|NULL
+     */
     public function having(?Node $node = null): ?Node
     {
         return $this->handleReplacingChild('having', $node);
     }
     
+    /**
+     * Additional getter for the where statement.
+     * 
+     * @todo Check if obsolete
+     * @return Node|NULL
+     */
     public function getWhere(): ?Node
     {
         return isset($this->children['where_conditions'])?$this->children['where_conditions']:null;        
     }
 
-    public function addStorage(string $storage_name, string $type = 'inner', string $target_alias = 'a', string $field = 'id'): string
+    /**
+     * Searches if there is already one reference to this storageid that matches the same condition-
+     * When found return its alias otherwise return null.
+     * 
+     * @param string $storage_name
+     * @param string $type
+     * @param string $target_alias
+     * @param string $field
+     * @return string|NULL
+     */
+    private function searchAlias(string $storage_name, string $type, string $target, string $field, string $target_field): ?string
+    {
+        foreach ($this->storages as $alias => $descriptor) {
+            if (($descriptor->storage == $storage_name) &&
+                ((($descriptor->join == $type) &&
+                  ($descriptor->target == $target) &&
+                  ($descriptor->field == $field) &&
+                  ($descriptor->target_field == $target_field))
+                 || (($type == 'inner') && ($descriptor->join == 'first')))) 
+                {
+                    return $alias;
+                }
+        }
+        return null;
+    }
+    
+    /**
+     * Adds a storageid to the storages table
+     * 
+     * @param string $storage_name
+     * @param string $type
+     * @param string $target_alias
+     * @param string $field
+     * @return string
+     */
+    private function addAlias(string $storage_name, string $type, ?string $target, string $field, string $target_field): string
     {
         $alias = $this->next_storage_alias++;
         $this->storages[$alias] = new \stdClass();
         $this->storages[$alias]->storage = $storage_name;
         $this->storages[$alias]->join = $type;
-        $this->storages[$alias]->alias = $target_alias;
+        $this->storages[$alias]->target = $target;
         $this->storages[$alias]->field = $field;
-                
+        $this->storages[$alias]->target_field = $target_field;
+        
         return $alias;
     }
+
+    private function addFirstAlias(string $storage_name)
+    {
+        $this->storages['a'] = new \stdClass();
+        $this->storages['a']->storage = $storage_name;
+        $this->storages['a']->join = 'first';
+        $this->storages['a']->target = null;
+        $this->storages['a']->field = null;
+        $this->storages['a']->target_field = null;
+        
+        return 'a';
+    }
     
+    /**
+     * Whenever the analyzer detect a reference to a storage it adds the storage to the storage table of
+     * the query node. The execute can use this stable to build the resulting query (building a join statement, etc)
+     * 
+     * @param string $storage_name
+     * @param string $type
+     * @param string $target_alias
+     * @param string $field
+     * @return string
+     */
+    public function addStorage(string $storage_name, string $type = 'inner', ?string $target = null, string $field = 'id', string $target_field = 'id'): string
+    {
+        if(empty($this->storages)) {
+            return $this->addFirstAlias($storage_name);
+        }
+        if (is_null($target)) {
+            $target = $this->storages['a']->storage; // Default refer to main table
+        }
+        if ($alias = $this->searchAlias($storage_name, $type, $target, $field, $target_field)) {
+            return $alias;
+        }
+        return $this->addAlias($storage_name, $type, $target, $field, $target_field);
+    }
+    
+    /**
+     * Returns all storages that are used
+     * 
+     * @return array
+     */
     public function getStorages(): array
     {
         return $this->storages;
+    }
+
+    private function verbToString(): string
+    {
+        switch ($this->verb()) {
+            case 'get':
+            case 'first':
+                return 'SELECT';
+                break;
+            case 'delete':    
+        }        
+    }
+    
+    private function fieldsToString(): string
+    {
+        if (!$this->fields()) {
+            return '*';
+        }
+        if (is_a($this->fields(),ArrayNode::class)) {
+            $result = '';
+            $first = true;
+            for ($i=0;$i<$this->fields()->elementCount();$i++) {
+                $result .= ($first?"":", ").$this->fields()->getElement($i)->toString();
+                $first = false;
+            }
+            return $result;
+        }
+        $ths->fields()->toString();
+    }
+    
+    private function storagesToString(): string
+    {
+        $result = 'FROM ';
+        $first = true;
+        foreach ($this->storages as $storage)
+        {
+            if (!$first) {
+                switch ($storage->join) {
+                    case 'inner':
+                        $result .= 'INNER JOIN ';
+                        break;
+                    case 'left':
+                        $result .= 'LEFT OUTER JOIN ';
+                        break;
+                    case 'right':
+                        $result .= 'RIGHT OUTER JOIN ';
+                        break;
+                }
+            }
+            $result .= $storage->storage;
+            if (!$first) {
+                $result .= ' ON ';
+            }
+        }
+        return $result;
     }
     
     /**
@@ -152,13 +327,7 @@ class QueryNode extends Node
      */
     public function toString(): string
     {
-        switch ($this->verb()) {
-            case 'get':
-            case 'first':    
-                $result = 'SELECT';
-                break;
-        }
-        return $result;
+        return $this->verbToString().$this->fieldsToString().$this->storagesToString();
     }
 
     /**

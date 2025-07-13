@@ -177,3 +177,84 @@ test('verb validate fails', function()
     $test->verb('nonexisting');
     $test->validate();
 })->throws(InvalidStatementException::class);
+
+test('addStorage() with new storage and default values', function()
+{
+    $test = new QueryNode();
+    expect($test->addStorage('teststorage'))->toBe('a');
+    $storages = $test->getStorages();
+    expect(count($storages))->toBe(1);
+    expect($storages['a']->storage)->toBe('teststorage');
+    expect($storages['a']->join)->toBe('first');
+    expect($storages['a']->target)->toBe(null);
+    expect($storages['a']->field)->toBe(null);
+    expect($storages['a']->target_field)->toBe(null);
+});
+
+test('addStorage() with known storage and default values', function()
+{
+    $test = new QueryNode();
+    $test->addStorage('teststorage');
+    expect($test->addStorage('teststorage'))->toBe('a');
+    $storages = $test->getStorages();
+    expect(count($storages))->toBe(1);
+});
+
+test('addStorage() with old and new storage and default values', function()
+{
+    $test = new QueryNode();
+    $test->addStorage('teststorage');
+    expect($test->addStorage('anotherone'))->toBe('b');
+    $storages = $test->getStorages();
+    expect(count($storages))->toBe(1);
+    expect($storages['b']->storage)->toBe('anotherone');
+    expect($storages['b']->join)->toBe('inner');
+    expect($storages['b']->target)->toBe('teststorage');
+    expect($storages['b']->field)->toBe('id');
+    expect($storages['b']->target_field)->toBe('id');
+});
+
+test('addStorage() with old and new storage with non-default target', function()
+{
+    $test = new QueryNode();
+    $test->addStorage('teststorage');
+    $test->addStorage('anotherone');
+    expect($test->addStorage('anotherone','left','anotherone'))->toBe('b');
+    $storages = $test->getStorages();
+    expect(count($storages))->toBe(3);
+    expect($storages['b']->storage)->toBe('anotherone');
+    expect($storages['b']->join)->toBe('left');
+    expect($storages['b']->target)->toBe('anotherone');
+    expect($storages['b']->field)->toBe('id');
+    expect($storages['b']->target_field)->toBe('id');
+});
+
+test('addStorage() with old and new storage with non-default target fields', function()
+{
+    $test = new QueryNode();
+    $test->addStorage('teststorage');
+    $test->addStorage('anotherone');
+    expect($test->addStorage('anotherone','left','anotherone', 'other', 'allother'))->toBe('b');
+    $storages = $test->getStorages();
+    expect(count($storages))->toBe(3);
+    expect($storages['c']->storage)->toBe('anotherone');
+    expect($storages['c']->join)->toBe('left');
+    expect($storages['c']->target)->toBe('anotherone');
+    expect($storages['c']->field)->toBe('other');
+    expect($storages['c']->target_field)->toBe('allother');
+});
+
+test('toString()', function($manipulator, $expect)
+{
+    $test = $manipulator();
+    expect($test->toString())->toBe($expect);
+})->with(
+    [
+        'empty query without storageids'=>[function() {
+            return new QueryNode();
+        },'SELECT * FROM '],
+        'empty query with one storageid'=>[function() {
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+        },'SELECT * from somestorage as a'],
+    ]);
