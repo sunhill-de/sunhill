@@ -206,7 +206,7 @@ test('addStorage() with old and new storage and default values', function()
     $test->addStorage('teststorage');
     expect($test->addStorage('anotherone'))->toBe('b');
     $storages = $test->getStorages();
-    expect(count($storages))->toBe(1);
+    expect(count($storages))->toBe(2);
     expect($storages['b']->storage)->toBe('anotherone');
     expect($storages['b']->join)->toBe('inner');
     expect($storages['b']->target)->toBe('teststorage');
@@ -219,14 +219,14 @@ test('addStorage() with old and new storage with non-default target', function()
     $test = new QueryNode();
     $test->addStorage('teststorage');
     $test->addStorage('anotherone');
-    expect($test->addStorage('anotherone','left','anotherone'))->toBe('b');
+    expect($test->addStorage('anotherone','left','anotherone'))->toBe('c');
     $storages = $test->getStorages();
     expect(count($storages))->toBe(3);
-    expect($storages['b']->storage)->toBe('anotherone');
-    expect($storages['b']->join)->toBe('left');
-    expect($storages['b']->target)->toBe('anotherone');
-    expect($storages['b']->field)->toBe('id');
-    expect($storages['b']->target_field)->toBe('id');
+    expect($storages['c']->storage)->toBe('anotherone');
+    expect($storages['c']->join)->toBe('left');
+    expect($storages['c']->target)->toBe('anotherone');
+    expect($storages['c']->field)->toBe('id');
+    expect($storages['c']->target_field)->toBe('id');
 });
 
 test('addStorage() with old and new storage with non-default target fields', function()
@@ -234,7 +234,7 @@ test('addStorage() with old and new storage with non-default target fields', fun
     $test = new QueryNode();
     $test->addStorage('teststorage');
     $test->addStorage('anotherone');
-    expect($test->addStorage('anotherone','left','anotherone', 'other', 'allother'))->toBe('b');
+    expect($test->addStorage('anotherone','left','anotherone', 'other', 'allother'))->toBe('c');
     $storages = $test->getStorages();
     expect(count($storages))->toBe(3);
     expect($storages['c']->storage)->toBe('anotherone');
@@ -242,6 +242,20 @@ test('addStorage() with old and new storage with non-default target fields', fun
     expect($storages['c']->target)->toBe('anotherone');
     expect($storages['c']->field)->toBe('other');
     expect($storages['c']->target_field)->toBe('allother');
+});
+
+test('addStorage() with a different join to the main table', function()
+{
+    $test = new QueryNode();
+    $test->addStorage('teststorage');
+    expect($test->addStorage('teststorage','left','teststorage', 'other'))->toBe('b');
+    $storages = $test->getStorages();
+    expect(count($storages))->toBe(2);
+    expect($storages['b']->storage)->toBe('teststorage');
+    expect($storages['b']->join)->toBe('left');
+    expect($storages['b']->target)->toBe('teststorage');
+    expect($storages['b']->field)->toBe('other');
+    expect($storages['b']->target_field)->toBe('id');
 });
 
 test('toString()', function($manipulator, $expect)

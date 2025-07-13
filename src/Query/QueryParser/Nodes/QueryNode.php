@@ -182,14 +182,12 @@ class QueryNode extends Node
      */
     private function searchAlias(string $storage_name, string $type, string $target, string $field, string $target_field): ?string
     {
-        foreach ($this->storages as $alias => $descriptor) {
-            if (($descriptor->storage == $storage_name) &&
-                ((($descriptor->join == $type) &&
-                  ($descriptor->target == $target) &&
-                  ($descriptor->field == $field) &&
-                  ($descriptor->target_field == $target_field))
-                 || (($type == 'inner') && ($descriptor->join == 'first')))) 
-                {
+        if (($storage_name == $this->storages['a']->storage) && ($type == 'inner')) { // Trivial, just refers to the main table
+            return 'a';
+        }
+        foreach ($this->storages as $alias => $storage) {
+            if (($storage->storage == $storage_name) && 
+                (($storage->join == $type) || (($storage->join == 'first') && ($type == 'inner')))) {
                     return $alias;
                 }
         }
