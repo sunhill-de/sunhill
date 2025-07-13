@@ -270,5 +270,6 @@ test('toString()', function($manipulator, $expect)
         'empty query with one storageid'=>[function() {
             $return = new QueryNode();
             $return->addStorage('somestorage');
-        },'SELECT * from somestorage as a'],
+            return $return;
+        },'SELECT * FROM somestorage AS a'],
     ]);

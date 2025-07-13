@@ -267,16 +267,23 @@ class QueryNode extends Node
         switch ($this->verb()) {
             case 'get':
             case 'first':
+            case 'select':    
                 return 'SELECT';
                 break;
-            case 'delete':    
-        }        
+            case 'delete':
+                return 'DELETE';
+            case 'update':
+                return 'UPDATE';
+            case 'insert':
+                return 'INSERT';                
+        }
+        throw new \Exception("Unknown verb: ".$this->verb());
     }
     
     private function fieldsToString(): string
     {
         if (!$this->fields()) {
-            return '*';
+            return ' *';
         }
         if (is_a($this->fields(),ArrayNode::class)) {
             $result = '';
@@ -292,9 +299,9 @@ class QueryNode extends Node
     
     private function storagesToString(): string
     {
-        $result = 'FROM ';
+        $result = ' FROM ';
         $first = true;
-        foreach ($this->storages as $storage)
+        foreach ($this->storages as $alias => $storage)
         {
             if (!$first) {
                 switch ($storage->join) {
@@ -310,6 +317,7 @@ class QueryNode extends Node
                 }
             }
             $result .= $storage->storage;
+            $result .= ' AS '.$alias;
             if (!$first) {
                 $result .= ' ON ';
             }
