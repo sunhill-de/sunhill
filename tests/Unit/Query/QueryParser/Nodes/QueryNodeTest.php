@@ -264,12 +264,116 @@ test('toString()', function($manipulator, $expect)
     expect($test->toString())->toBe($expect);
 })->with(
     [
-        'empty query without storageids'=>[function() {
+        'empty query without storageids'=>[function() 
+        {
             return new QueryNode();
         },'SELECT * FROM '],
-        'empty query with one storageid'=>[function() {
+        'empty query with one storageid'=>[function() 
+        {
             $return = new QueryNode();
             $return->addStorage('somestorage');
             return $return;
         },'SELECT * FROM somestorage AS a'],
-    ]);
+        'empty query with two storageid'=>[function() 
+        {
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->addStorage('anotherstorage');
+            return $return;
+        },'SELECT * FROM somestorage AS a INNER JOIN anotherstorage AS b ON b.id = a.id'],
+        'empty query with two storageid'=>[function() {
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->addStorage('anotherstorage');
+            $return->addStorage('thirdstorage');
+            return $return;
+        },'SELECT * FROM somestorage AS a INNER JOIN anotherstorage AS b ON b.id = a.id INNER JOIN thirdstorage AS c ON c.id = a.id'],
+        'empty query with one field'=>[function()
+        {
+            $field = \Mockery::mock(Node::class);
+            $field->shouldReceive('toString')->andReturn('[single field]');
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->fields($field);
+            return $return;
+        },'SELECT [single field] FROM somestorage AS a'],
+        'empty query with more field'=>[function()
+        {
+            $field1 = \Mockery::mock(Node::class);
+            $field1->shouldReceive('toString')->andReturn('[field1]');
+            $field2 = \Mockery::mock(Node::class);
+            $field2->shouldReceive('toString')->andReturn('[field2]');
+            $field3 = \Mockery::mock(Node::class);
+            $field3->shouldReceive('toString')->andReturn('[field3]');
+            $fields = \Mockery::mock(ArrayNode::class);
+            $fields->shouldReceive('elementCount')->andReturn(3);
+            $fields->shouldReceive('getElement')->andReturn($field1,$field2,$field3);
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->fields($fields);
+            return $return;
+        },'SELECT [field1], [field2], [field3] FROM somestorage AS a'],
+        'query with offset'=>[function()
+        {
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->offset(10);
+            return $return;
+        },'SELECT * FROM somestorage AS a OFFSET 10'],
+        'query with limit'=>[function()
+        {
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->limit(10);
+            return $return;
+        },'SELECT * FROM somestorage AS a LIMIT 10'],
+        'query with where'=>[function()
+        {
+            $node = \Mockery::mock(Node::class);
+            $node->shouldReceive('toString')->andReturn('[where statement]');
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->where($node);
+            return $return;
+        },'SELECT * FROM somestorage AS a WHERE [where statement]'],
+        'query with order'=>[function()
+        {
+            $node = \Mockery::mock(Node::class);
+            $node->shouldReceive('toString')->andReturn('[order statement]');
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->order($node);
+            return $return;
+        },'SELECT * FROM somestorage AS a ORDER BY [order statement]'],
+        'query with having'=>[function()
+        {
+            $node = \Mockery::mock(Node::class);
+            $node->shouldReceive('toString')->andReturn('[having statement]');
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->having($node);
+            return $return;
+        },'SELECT * FROM somestorage AS a HAVING [having statement]'],
+        'query with everything'=>[function()
+        {
+            $field1 = \Mockery::mock(Node::class);
+            $field1->shouldReceive('toString')->andReturn('[field1]');
+            $field2 = \Mockery::mock(Node::class);
+            $field2->shouldReceive('toString')->andReturn('[field2]');
+            $field3 = \Mockery::mock(Node::class);
+            $field3->shouldReceive('toString')->andReturn('[field3]');
+            $fields = \Mockery::mock(ArrayNode::class);
+            $fields->shouldReceive('elementCount')->andReturn(3);
+            $fields->shouldReceive('getElement')->andReturn($field1,$field2,$field3);
+            $where = \Mockery::mock(Node::class);
+            $where->shouldReceive('toString')->andReturn('[where statement]');
+            $group = \Mockery::mock(Node::class);
+            $group->shouldReceive('toString')->andReturn('[group statement]');
+            $return = new QueryNode();
+            $return->addStorage('somestorage');
+            $return->addStorage('anotherstorage');
+            $return->where($where);
+            $return->group($group);
+            return $return;
+        },'SELECT * FROM somestorage AS a INNER JOIN anotherstorage AS b ON a.id = b.id WHERE [where statement] GROUP BY [group stetment]'],
+        ]);

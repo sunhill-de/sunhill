@@ -286,7 +286,7 @@ class QueryNode extends Node
             return ' *';
         }
         if (is_a($this->fields(),ArrayNode::class)) {
-            $result = '';
+            $result = ' ';
             $first = true;
             for ($i=0;$i<$this->fields()->elementCount();$i++) {
                 $result .= ($first?"":", ").$this->fields()->getElement($i)->toString();
@@ -294,7 +294,7 @@ class QueryNode extends Node
             }
             return $result;
         }
-        $ths->fields()->toString();
+        return ' '.$this->fields()->toString();
     }
     
     private function storagesToString(): string
@@ -303,26 +303,73 @@ class QueryNode extends Node
         $first = true;
         foreach ($this->storages as $alias => $storage)
         {
-            if (!$first) {
-                switch ($storage->join) {
-                    case 'inner':
-                        $result .= 'INNER JOIN ';
-                        break;
-                    case 'left':
-                        $result .= 'LEFT OUTER JOIN ';
-                        break;
-                    case 'right':
-                        $result .= 'RIGHT OUTER JOIN ';
-                        break;
-                }
+            switch ($storage->join) {
+                case 'inner':
+                    $result .= ' INNER JOIN ';
+                    break;
+                case 'left':
+                    $result .= ' LEFT OUTER JOIN ';
+                    break;
+                case 'right':
+                    $result .= ' RIGHT OUTER JOIN ';
+                    break;
             }
             $result .= $storage->storage;
             $result .= ' AS '.$alias;
-            if (!$first) {
-                $result .= ' ON ';
+            if ($storage->join !== 'first') {
+                // @todo that's not always true. 
+                $result .= ' ON '.$alias.'.'.$storage->field.' = '.'a.'.$storage->target_field;
             }
         }
         return $result;
+    }
+    
+    private function whereToString(): string
+    {
+        if (empty($this->where())) {
+            return '';
+        }
+        return " WHERE ".$this->where()->toString();
+    }
+    
+    private function havingToString(): string
+    {
+        if (empty($this->having())) {
+            return '';
+        }
+        return " HAVING ".$this->having()->toString();        
+    }
+    
+    private function groupByToString(): string
+    {
+        if (empty($this->group())) {
+            return '';
+        }
+        return " GROUP BY ".$this->group()->toString();
+    }
+    
+    private function orderByToString(): string
+    {
+        if (empty($this->order())) {
+            return '';
+        }
+        return " ORDER BY ".$this->order()->toString();        
+    }
+    
+    private function offsetToString(): string
+    {
+        if (empty($this->offset())) {
+            return '';
+        }
+        return " OFFSET ".$this->offset();
+    }
+    
+    private function limitToString(): string
+    {
+        if (empty($this->limit())) {
+            return '';
+        }
+        return " LIMIT ".$this->limit();        
     }
     
     /**
@@ -333,7 +380,15 @@ class QueryNode extends Node
      */
     public function toString(): string
     {
-        return $this->verbToString().$this->fieldsToString().$this->storagesToString();
+        return $this->verbToString().
+               $this->fieldsToString().
+               $this->storagesToString().
+               $this->whereToString().
+               $this->groupByToString().
+               $this->havingToString().
+               $this->orderByToString().
+               $this->offsetToString().
+               $this->limitToString();
     }
 
     /**
