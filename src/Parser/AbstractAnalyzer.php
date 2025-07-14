@@ -187,36 +187,44 @@ abstract class AbstractAnalyzer extends Base
      */
     protected function prepareAnalyze(Node $node)
     {
-        switch ($node::class) {
-            case ArrayNode::class:
-                $this->prepareArrayNode($node);
-                break;
-            case BinaryNode::class:
-                $this->prepareBinaryNode($node);
-                break;
-            case BooleanNode::class:
-            case DateNode::class:
-            case DateTimeNode::class:
-            case FloatNode::class:
-            case IntegerNode::class:
-            case StringNode::class:
-            case TimeNode::class:
-                break;
-            case FunctionNode::class:
-                $this->prepareFunctionNode($node);
-                break;
-            case IdentifierNode::class:
-                $this->prepareIdentifierNode($node);
-                break;
-            case ReferenceNode::class:
-                $this->prepareReferenceNode($node);
-                break;
-            case UnaryNode::class:
-                $this->prepareUnaryNode($node);
-                break;
-            default:
-                $this->prepareUnknownNode($node);
+        if (is_a($node, ArrayNode::class)) {
+            $this->prepareArrayNode($node);
+            return;
         }
+        if (is_a($node, BinaryNode::class)) {
+            $this->prepareBinaryNode($node);
+            return;
+        }
+        if (is_a($node,BooleanNode::class) ||
+            is_a($node,DateNode::class) ||
+            is_a($node,DateTimeNode::class) ||
+            is_a($node,FloatNode::class) ||
+            is_a($node,IntegerNode::class) ||
+            is_a($node,StringNode::class) ||
+            is_a($node,TimeNode::class)) {
+                return;
+            }
+        if (is_a($node, FunctionNode::class)) 
+        {
+            $this->prepareFunctionNode($node);
+            return;
+        }
+        if (is_a($node, IdentifierNode::class)) 
+        {
+            $this->prepareIdentifierNode($node);
+            return;
+        }
+        if (is_a($node, ReferenceNode::class))
+        {
+            $this->prepareReferenceNode($node);
+            return;
+        }
+        if (is_a($node, UnaryNode::class))
+        {
+            $this->prepareUnaryNode($node);
+            return;
+        }
+        $this->prepareUnknownNode($node);
     }
     
     /**
