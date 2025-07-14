@@ -369,11 +369,22 @@ test('toString()', function($manipulator, $expect)
             $where->shouldReceive('toString')->andReturn('[where statement]');
             $group = \Mockery::mock(Node::class);
             $group->shouldReceive('toString')->andReturn('[group statement]');
+            $having = \Mockery::mock(Node::class);
+            $having->shouldReceive('toString')->andReturn('[having statement]');
+            $order = \Mockery::mock(Node::class);
+            $order->shouldReceive('toString')->andReturn('[order statement]');
             $return = new QueryNode();
             $return->addStorage('somestorage');
             $return->addStorage('anotherstorage');
+            $return->fields($fields);
             $return->where($where);
             $return->group($group);
+            $return->having($having);
+            $return->order($order);
+            $return->offset(10);
+            $return->limit(20);
+            
             return $return;
-        },'SELECT * FROM somestorage AS a INNER JOIN anotherstorage AS b ON a.id = b.id WHERE [where statement] GROUP BY [group stetment]'],
+        },'SELECT [field1], [field2], [field3] FROM somestorage AS a INNER JOIN anotherstorage AS b ON b.id = a.id '.
+           'WHERE [where statement] GROUP BY [group statement] HAVING [having statement] ORDER BY [order statement] OFFSET 10 LIMIT 20'],
         ]);
