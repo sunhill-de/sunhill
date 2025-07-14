@@ -262,7 +262,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
      * @param string $name
      * @return AbstractProperty|NULL
      */
-    public function getelement(string $name): ?AbstractProperty
+    public function getElement(string $name): ?AbstractProperty
     {
         if ($this->hasElement($name)) {
             return $this->elements[$name];
