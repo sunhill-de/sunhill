@@ -255,6 +255,20 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
     {
         return array_key_exists($name, $this->elements);
     }
+
+    /**
+     * When an element with this name exists, return it's property object otherwise return null
+     * 
+     * @param string $name
+     * @return AbstractProperty|NULL
+     */
+    public function getelement(string $name): ?AbstractProperty
+    {
+        if ($this->hasElement($name)) {
+            return $this->elements[$name];
+        }
+        return null;
+    }
     
     public function elementCount(): int
     {
