@@ -69,6 +69,14 @@ class LanguageDescriptor extends Base
         
         return $descriptor;
     }
+
+    public function getOperator(string $operator): ?OperatorDescriptor
+    {
+        if (!isset($this->operators[$operator])) {
+            return null;
+        }
+        return $this->operators[$operator];
+    }
     
     public function addTerminal(string $terminal, ?string $alias_for = null): static
     {
