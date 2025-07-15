@@ -16,6 +16,8 @@ use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\ArrayNode;
+use Sunhill\Query\QueryParser\Nodes\OrderNode;
+use Sunhill\Query\QueryParser\Nodes\AliasNode;
 
 class QueryParserLanguage extends LanguageDescriptor
 {
