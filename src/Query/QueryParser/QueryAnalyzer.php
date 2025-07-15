@@ -17,21 +17,66 @@ use Sunhill\Parser\AbstractAnalyzer;
 use Sunhill\Properties\RecordProperty;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 
 class QueryAnalyzer extends AbstractAnalyzer
 {
         
+    /**
+     * Stores the main RecordProperty that this query refers to
+     * 
+     * @var unknown
+     */
     protected ?RecordProperty $property = null;
     
+    /**
+     * The definition of the parser language is stored here
+     * 
+     * @var unknown
+     */
+    protected ?LanguageDescriptor $descriptor = null;
+    
+    /**
+     * Constructor. Takes the main RecordProperty as a parameter
+     * 
+     * @param RecordProperty $property
+     */
     public function __construct(RecordProperty $property)
     {
         $this->property = $property;
-        //$this->loadLanguageDescriptor(new QueryParserLanguage());    
     }
  
+    /**
+     * Getter for the property
+     * 
+     * @return RecordProperty|NULL
+     */
     protected function getProperty(): ?RecordProperty
     {
         return $this->property;        
+    }
+    
+    /**
+     * Setter for the language desciptor
+     * 
+     * @param LanguageDescriptor $descriptor
+     * @return static
+     */
+    public function setLanguageDescriptor(LanguageDescriptor $descriptor): static
+    {
+        $this->descriptor = $descriptor;
+        
+        return $this;
+    }
+    
+    /**
+     * Getter for the language descriptor
+     * 
+     * @return LanguageDescriptor
+     */
+    public function getLanguageDesciptor(): ?LanguageDescriptor
+    {
+       return $this->descriptor; 
     }
     
     /**
