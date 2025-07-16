@@ -17,6 +17,11 @@ use Sunhill\Parser\Nodes\FloatNode;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\TimeNode;
+use Sunhill\Parser\Nodes\FunctionNode;
+use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
+use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
+use Sunhill\Query\Exceptions\InvalidStatementException;
+use Sunhill\Query\Exceptions\InsufficentQueryException;
 
 uses(SunhillTestCase::class);
 
@@ -53,3 +58,44 @@ test('analyze constants', function($class, $type)
         'string'=>[StringNode::class,'string'],
         'time'=>[TimeNode::class,'time'],
     ]);
+
+test('analyze fails when no LanguageDescriptor is set', function()
+{
+    $record = \Mockery::mock(RecordProperty::class);
+    $test = new QueryAnalyzer($record);
+    $node = \Mockery::mock(FunctionNode::class);
+    $node->shouldReceive('getName')->once()->andReturn('test');
+    
+    $test->analyze($node);
+})->throws(InsufficentQueryException::class);
+
+test('analyze known function', function()
+{
+    $profile = \Mockery::mock(FunctionDescriptor::class);
+    $node = \Mockery::mock(FunctionNode::class);
+    $node->shouldReceive('getName')->once()->andReturn('test');
+    $node->shouldReceive('getArgumentCount')->once()->andReturn(0);
+    $node->shouldReceive('getDatatype')->once()->andReturn('integer');
+    $node->shouldReceive('setFunctionDescriptor')->with($profile)->once();
+    $node->shouldReceive('validate')->once();
+    $language = \Mockery::mock(LanguageDescriptor::class);
+    $language->shouldReceive('getFunctionProfile')->once()->with('test')->andReturn($profile);
+    $record = \Mockery::mock(RecordProperty::class);
+    
+    $test = new QueryAnalyzer($record);
+    $test->setLanguageDescriptor($language);
+    $test->analyze($node);
+});
+
+test('analyze unknown function', function()
+{
+    $node = \Mockery::mock(FunctionNode::class);
+    $node->shouldReceive('getName')->once()->andReturn('test');
+    $language = \Mockery::mock(LanguageDescriptor::class);
+    $language->shouldReceive('getFunctionProfile')->once()->with('test')->andReturn(null);
+    $record = \Mockery::mock(RecordProperty::class);
+    
+    $test = new QueryAnalyzer($record);
+    $test->setLanguageDescriptor($language);
+    $test->analyze($node);    
+})->throws(InvalidStatementException::class);

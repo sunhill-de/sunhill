@@ -18,6 +18,8 @@ use Sunhill\Properties\RecordProperty;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
+use Sunhill\Query\Exceptions\InsufficentQueryException;
+use Sunhill\Query\Exceptions\InvalidStatementException;
 
 class QueryAnalyzer extends AbstractAnalyzer
 {
@@ -53,6 +55,9 @@ class QueryAnalyzer extends AbstractAnalyzer
      */
     protected function getProperty(): ?RecordProperty
     {
+        if (!$this->property) {
+            throw new InsufficentQueryException("No record property set.");
+        }
         return $this->property;        
     }
     
@@ -76,7 +81,10 @@ class QueryAnalyzer extends AbstractAnalyzer
      */
     public function getLanguageDesciptor(): ?LanguageDescriptor
     {
-       return $this->descriptor; 
+        if (!$this->descriptor) {
+            throw new InsufficentQueryException("No language descriptor set");
+        }
+        return $this->descriptor; 
     }
     
     /**
@@ -96,6 +104,11 @@ class QueryAnalyzer extends AbstractAnalyzer
         return $element->getAccessType(); 
     }
     
+    private function handleUnknownFunction(string $name): ?FunctionDescriptor
+    {
+        return null;
+    }
+    
     /**
      * Returns the FunctionDescriptor for the given function. If the function is not found returns null
      *
@@ -104,7 +117,13 @@ class QueryAnalyzer extends AbstractAnalyzer
      */
     protected function getProfileOfFunction(string $name): ?FunctionDescriptor
     {
-        
+        $name = strtolower($name); // @todo should we do this?
+        if (!($profile = $this->getLanguageDesciptor()->getFunctionProfile($name))) {
+            if (!($profile = $this->handleUnknownFunction($name))) {
+                throw new InvalidStatementException("The functiion '$name' was not found.");
+            }
+        }
+        return $profile;
     }
     
     /**
@@ -118,6 +137,10 @@ class QueryAnalyzer extends AbstractAnalyzer
      */
     protected function getProfilesOfBinaryOperator(string $operator): ?array
     {
+        $name = strtolower($operator); // @todo: Should we do this?
+        if (!($profile = $this->getLanguageDesciptor()->getBinaryOperator($operator))) {
+            throw new InvalidStatementException("The operator '$operator' is not defiined.");
+        }
         
     }
     
