@@ -137,9 +137,9 @@ class QueryAnalyzer extends AbstractAnalyzer
      */
     protected function getProfilesOfBinaryOperator(string $operator): ?array
     {
-        $name = strtolower($operator); // @todo: Should we do this?
+        $operator = strtolower($operator); // @todo: Should we do this?
         if (!($profile = $this->getLanguageDesciptor()->getBinaryOperator($operator))) {
-            throw new InvalidStatementException("The operator '$operator' is not defiined.");
+            return null;
         }
         return $profile->getAcceptedTypes();  
     }
@@ -155,7 +155,11 @@ class QueryAnalyzer extends AbstractAnalyzer
      */
     protected function getProfilesOfUnaryOperator(string $operator): ?array
     {
-        
+        $operator = strtolower($operator); // @todo: Should we do this?
+        if (!($profile = $this->getLanguageDesciptor()->getUnaryOperator($operator))) {
+            return null;
+        }
+        return $profile->getAcceptedTypes();        
     }
     
     /**
