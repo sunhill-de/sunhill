@@ -22,6 +22,9 @@ use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 use Sunhill\Query\Exceptions\InvalidStatementException;
 use Sunhill\Query\Exceptions\InsufficentQueryException;
+use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\LanguageDescriptor\OperatorDescriptor;
+use Sunhill\Parser\Nodes\Node;
 
 uses(SunhillTestCase::class);
 
@@ -95,6 +98,42 @@ test('analyze unknown function', function()
     $language->shouldReceive('getFunctionProfile')->once()->with('test')->andReturn(null);
     $record = \Mockery::mock(RecordProperty::class);
     
+    $test = new QueryAnalyzer($record);
+    $test->setLanguageDescriptor($language);
+    $test->analyze($node);    
+})->throws(InvalidStatementException::class);
+
+test('analyze known operator', function()
+{
+    $left = \Mockery::mock(Node::class);
+    $right = \Mockery::mock(Node::class);
+    
+    $node = \Mockery::mock(BinaryNode::class);
+    $node->shouldReceive('validate')->once();
+    $node->shouldReceive('getType')->andReturn('+');
+    $node->shouldReceive('addAllowedType')->with('integer','integer','integer');
+    $node->shouldReceive('left')->andReturn($left);
+    $node->shouldReceive('right')->andReturn($right);
+    $node->shouldReceive('getDatatype')->andReturn('integer');
+    $descriptor = \Mockery::mock(OperatorDescriptor::class);
+    $descriptor->shouldReceive('getAcceptedTypes')->andReturn([['left'=>'integer','right'=>'integer','resulting'=>'integer']]);
+    $language = \Mockery::mock(LanguageDescriptor::class);
+    $language->shouldReceive('getBinaryOperator')->with('+')->once()->andReturn($descriptor);
+    $record = \Mockery::mock(RecordProperty::class);
+    
+    $test = new QueryAnalyzer($record);
+    $test->setLanguageDescriptor($language);
+    $test->analyze($node);
+});
+
+test('analyze unknown operator', function()
+{
+    $node = \Mockery::mock(BinaryNode::class);
+    $node->shouldReceive('getType')->andReturn('%');
+    $language = \Mockery::mock(LanguageDescriptor::class);
+    $language->shouldReceive('getBinaryOperator')->with('%')->once()->andReturn(null);
+    $record = \Mockery::mock(RecordProperty::class);
+
     $test = new QueryAnalyzer($record);
     $test->setLanguageDescriptor($language);
     $test->analyze($node);    

@@ -141,7 +141,7 @@ class QueryAnalyzer extends AbstractAnalyzer
         if (!($profile = $this->getLanguageDesciptor()->getBinaryOperator($operator))) {
             throw new InvalidStatementException("The operator '$operator' is not defiined.");
         }
-        
+        return $profile->getAcceptedTypes();  
     }
     
     /**
