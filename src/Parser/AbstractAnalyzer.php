@@ -36,6 +36,7 @@ use Sunhill\Parser\Nodes\TimeNode;
 use Sunhill\Parser\Nodes\DateTimeNode;
 use Sunhill\Parser\Nodes\DateNode;
 use Sunhill\Parser\Nodes\ReferenceNode;
+use Sunhill\Query\Exceptions\InvalidStatementException;
 
 abstract class AbstractAnalyzer extends Base
 {
@@ -121,7 +122,7 @@ abstract class AbstractAnalyzer extends Base
             }
             $this->prepareAnalyze($node->left());
             $this->prepareAnalyze($node->right());
-        }
+        } 
     }
     
     /**
