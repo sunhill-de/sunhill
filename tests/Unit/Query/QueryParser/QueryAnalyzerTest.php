@@ -25,6 +25,7 @@ use Sunhill\Query\Exceptions\InsufficentQueryException;
 use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\LanguageDescriptor\OperatorDescriptor;
 use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\Nodes\UnaryNode;
 
 uses(SunhillTestCase::class);
 
@@ -103,7 +104,7 @@ test('analyze unknown function', function()
     $test->analyze($node);    
 })->throws(InvalidStatementException::class);
 
-test('analyze known operator', function()
+test('analyze known binary operator', function()
 {
     $left = \Mockery::mock(Node::class);
     $right = \Mockery::mock(Node::class);
@@ -126,10 +127,12 @@ test('analyze known operator', function()
     $test->analyze($node);
 });
 
-test('analyze unknown operator', function()
+test('analyze unknown binary operator', function()
 {
     $node = \Mockery::mock(BinaryNode::class);
     $node->shouldReceive('getType')->andReturn('%');
+    $node->shouldReceive('validate')->once();
+    $node->shouldReceive('getDatatype')->once()->andReturn('unknown');
     $language = \Mockery::mock(LanguageDescriptor::class);
     $language->shouldReceive('getBinaryOperator')->with('%')->once()->andReturn(null);
     $record = \Mockery::mock(RecordProperty::class);
@@ -137,4 +140,40 @@ test('analyze unknown operator', function()
     $test = new QueryAnalyzer($record);
     $test->setLanguageDescriptor($language);
     $test->analyze($node);    
-})->throws(InvalidStatementException::class);
+});
+
+test('analyze known unary operator', function()
+{
+    $child = \Mockery::mock(Node::class);
+    
+    $node = \Mockery::mock(UnaryNode::class);
+    $node->shouldReceive('validate')->once();
+    $node->shouldReceive('getType')->andReturn('+');
+    $node->shouldReceive('addAllowedType')->with('integer','integer');
+    $node->shouldReceive('child')->andReturn($child);
+    $node->shouldReceive('getDatatype')->andReturn('integer');
+    $descriptor = \Mockery::mock(OperatorDescriptor::class);
+    $descriptor->shouldReceive('getAcceptedTypes')->andReturn([['child'=>'integer','resulting'=>'integer']]);
+    $language = \Mockery::mock(LanguageDescriptor::class);
+    $language->shouldReceive('getUnaryOperator')->with('+')->once()->andReturn($descriptor);
+    $record = \Mockery::mock(RecordProperty::class);
+    
+    $test = new QueryAnalyzer($record);
+    $test->setLanguageDescriptor($language);
+    $test->analyze($node);
+});
+
+test('analyze unknown unary operator', function()
+{
+    $node = \Mockery::mock(UnaryNode::class);
+    $node->shouldReceive('getType')->andReturn('%');
+    $node->shouldReceive('validate')->once();
+    $node->shouldReceive('getDatatype')->once()->andReturn('unknown');
+    $language = \Mockery::mock(LanguageDescriptor::class);
+    $language->shouldReceive('getUnaryOperator')->with('%')->once()->andReturn(null);
+    $record = \Mockery::mock(RecordProperty::class);
+    
+    $test = new QueryAnalyzer($record);
+    $test->setLanguageDescriptor($language);
+    $test->analyze($node);
+});
