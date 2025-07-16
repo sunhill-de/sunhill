@@ -3,7 +3,7 @@
  * @file AbstractAttributeStorage.php
  * Provides the basic class for attributes
  * Lang en
- * Reviewstatus: 2024-05-29
+ * Reviewstatus: 2024-07-16
  * Create date: 2025-05-29
  * Localization: complete
  * Documentation: complete
@@ -100,9 +100,21 @@ abstract class AbstractAttributeStorage extends Base
         }
         $this->storeAttributeValue($this->assembleStorageName($attribute->name), $object_id, $value);
     }
-    
+
+    /**
+     * Executes the removes the value identified by $object_id from the attribute_storage
+     * 
+     * @param string $attribute_storage
+     * @param int $object_id
+     */
     abstract protected function unsetAttributeValue(string $attribute_storage, int $object_id);
-    
+
+    /**
+     * Removed from the atttribute identified by $attr_id the valud assigned to $object_id
+     * 
+     * @param int $attr_id
+     * @param int $object_id
+     */
     public function unsetAttribute(int $attr_id, int $object_id)
     {
         if (is_null($attribute = $this->searchAttribute(['id'=>$attr_id]))) {

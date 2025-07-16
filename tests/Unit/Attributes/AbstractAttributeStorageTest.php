@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file AbstractAttributeStorageTest.php
+ * tests: /src/Attributes/AbstractAttributeStorage.php
+ * free of dependent units: yes
+ */
 
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\Unit\Attributes\Examples\DummyAttributeStorage;
