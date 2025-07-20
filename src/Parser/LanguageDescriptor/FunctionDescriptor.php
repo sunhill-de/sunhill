@@ -5,11 +5,12 @@
  * A basic class for describing a function
  * 
  * Lang en
- * Reviewstatus: 2025-02-28
+ * Reviewstatus: 2025-07-15
+ * Create date: 2025-02-28
  * Localization: complete
  * Documentation: complete
- * Tests: Unit/Parser/AnalyzerTest.php
- * Coverage Unit: 96.43 % (2025-06-06)
+ * Tests: /tests/Unit/Parser/LanguageDescriptor/FunctionDescriptorTest.php
+ * Coverage Unit: 
  */
 
 namespace Sunhill\Parser\LanguageDescriptor;

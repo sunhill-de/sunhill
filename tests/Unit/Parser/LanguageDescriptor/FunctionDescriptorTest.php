@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file OperatorDesciptorTest.php
+ * tests: /src/Parser/LanguageDescriptor/FunctionDescriptor.php
+ * free of dependent units: yes
+ */
 
 use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;

@@ -7,8 +7,8 @@
  * Creation date: 2025-03-19
  * Localization: complete
  * Documentation: complete
- * Tests: 
- * Coverage Unit:72.73 % (2025-06-06)
+ * Tests: /tests/Unit/Parser/LanguageDescriptor/OperatorDescriptorTest.php
+ * Coverage Unit:
  */
 
 namespace Sunhill\Parser\LanguageDescriptor;
