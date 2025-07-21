@@ -193,7 +193,7 @@ class MysqlObjectStorage extends AbstractObjectStorage
                 $table_field = $schema->text($name);
                 break;
             case 'boolean':
-                $table_field = $schema->bool($name);
+                $table_field = $schema->boolean($name);
                 break;
             case 'integer':
             case 'text':
