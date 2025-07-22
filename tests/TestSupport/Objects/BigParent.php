@@ -127,7 +127,8 @@ class BigParent extends ORMObject
             'name'=>'p_time',
             'type'=>'time',
             'storage_subid'=>'bigparents',
-            'nullable'=>true
+            'nullable'=>true,
+            'default'=>null
         ]);
         $result->elements['p_datetime'] = makeStdClass([
             'name'=>'p_datetime',
@@ -142,21 +143,21 @@ class BigParent extends ORMObject
         ]);
         $result->elements['p_dummy_ref'] = makeStdClass([
             'name'=>'p_dummy_ref',
-            'type'=>'integer',
+            'type'=>'record',
             'storage_subid'=>'bigparents',
             'nullable'=>true,
             'default'=>null
         ]);
         $result->elements['p_self_ref'] = makeStdClass([
             'name'=>'p_self_ref',
-            'type'=>'integer',
+            'type'=>'record',
             'storage_subid'=>'bigparents',
             'nullable'=>true,
             'default'=>null
         ]);
         $result->elements['p_mult_ref'] = makeStdClass([
             'name'=>'p_mult_ref',
-            'type'=>'integer',
+            'type'=>'record',
             'storage_subid'=>'bigparents'
         ]);
         $result->elements['p_s_array'] = makeStdClass([
@@ -205,7 +206,7 @@ class BigParent extends ORMObject
             'name'=>'p_r_array',
             'type'=>'array',
             'storage_subid'=>'bigparents',
-            'element_type'=>'integer',
+            'element_type'=>'record',
             'index_type'=>'integer'
         ]);
         

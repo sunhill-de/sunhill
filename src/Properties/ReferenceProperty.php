@@ -174,7 +174,7 @@ class ReferenceProperty extends AbstractProperty
     
     public static function getStorageType(): string
     {
-        return 'integer';
+        return 'record';
     }
     
 }
