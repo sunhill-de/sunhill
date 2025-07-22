@@ -46,6 +46,19 @@ test('Migrate fresh table', function(array $infos, bool $type_check = true)
     'text'=>[['type'=>'text']],
 ]);
 
+test('Migrate fresh table with reference', function()
+{
+    $infos = ['name'=>'field','storage_subid'=>'testtable','type'=>'record'];
+    Schema::dropIfExists('testtable');
+    $storage = new MysqlObjectStorage();
+    $storage->setStructure(makeStructure(['field'=>makeStdClass($infos)]));
+    
+    $storage->migrate();
+    $this->assertDatabaseHasTable('testtable');
+    $this->assertDatabaseTableHasColumn('testtable','field');
+    $this->assertDatabaseTableColumnIsType('testtable', 'field', 'integer');
+});
+
 test('Migrate with a default value', function()
 {
     Schema::dropIfExists('testtable');
@@ -129,6 +142,19 @@ test('Migrate an array', function($element_type, $check_type = true)
     'datetime'=>['datetime'],
     'text'=>['text'],
 ]);
+
+test('Migrate an array of references', function()
+{
+    Schema::dropIfExists('testtable');
+    $storage = new MysqlObjectStorage();
+    $storage->setStructure(makeStructure([
+        'field'=>makeStdClass(['name'=>'field','storage_subid'=>'testtable','type'=>'array','element_type'=>'record','index_type'=>'integer']),
+    ]));
+    $storage->migrate();
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'container_id', 'integer');
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'index', 'integer');
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'element', 'integer');
+});
 
 test('Migrate a map', function($element_type, $check_type = true)
 {
