@@ -9,5 +9,5 @@ uses(SimpleTestCase::class);
 test('BigParent structure is returned as expected', function()
 {
     $test = new BigParent();
-    expect(checkStdClasses(BigParent::getExpectedStructure(), $test->getStructure()))->toBe(true);    
+    expect($test->getStructure())->toEqual(BigParent::getExpectedStructure());    
 })->group('structure');

@@ -25,12 +25,12 @@ class BigParent extends ORMObject
         $builder->addProperty(TypeInteger::class,'p_int')->default(100);
         $builder->addProperty(TypeVarchar::class,'p_string')->setMaxLen(30);
         $builder->addProperty(TypeFloat::class,'p_float');
-        $builder->addProperty(TypeDate::class,'p_date')->defaultsNull();
+        $builder->addProperty(TypeDate::class,'p_date')->nullable()->default(null);
         $builder->addProperty(TypeTime::class,'p_time')->nullable();
         $builder->addProperty(TypeDateTime::class,'p_datetime');
         $builder->addProperty(TypeBoolean::class,'p_bool')->default(true);
-        $builder->referRecord(Dummy::class, 'p_dummy_ref')->defaultsNull();
-        $builder->referRecord(BigParent::class,'p_self_ref')->setAllowedProperty(BigParent::class)->DefaultsNull();
+        $builder->referRecord(Dummy::class, 'p_dummy_ref')->nullable()->default(null);
+        $builder->referRecord(BigParent::class,'p_self_ref')->setAllowedProperty(BigParent::class)->nullable()->default(null);
         $builder->referRecord(Dummy::class,'p_mult_ref')->setAllowedProperty([Dummy::class,ChildObject::class]);
         $builder->array('p_s_array')->setAllowedElementType(TypeVarchar::class);
         $builder->array('p_i_array')->setAllowedElementType(TypeInteger::class);
@@ -38,7 +38,7 @@ class BigParent extends ORMObject
         $builder->array('p_s_map')->setIndexType('string')->setAllowedElementType(TypeVarchar::class);
         $builder->array('p_i_map')->setIndexType('string')->setAllowedElementType(TypeInteger::class);
         $builder->array('p_f_map')->setIndexType('string')->setAllowedElementType(TypeFloat::class);
-        //$builder->arrayOfReferences('p_r_array')->setAllowedElementType(DummyChild::class);
+        $builder->arrayOfReferences('p_r_array')->setAllowedElementType(DummyChild::class);
     }
     
     protected static function setupInfos()
@@ -95,7 +95,7 @@ class BigParent extends ORMObject
     public static function getExpectedStructure()
     {
         $result = new \stdClass();
-        $result->name = "parentobjects";
+        $result->name = "bigparents";
         $result->type = "record";
         $result->elements = [];
         
@@ -107,9 +107,9 @@ class BigParent extends ORMObject
         ]);
         $result->elements['p_string'] = makeStdClass([
             'name'=>'p_string',
-            'type'=>'stringr',
+            'type'=>'string',
             'storage_subid'=>'bigparents',
-            'max_len'=>30
+            'max_length'=>30
         ]);
         $result->elements['p_float'] = makeStdClass([
             'name'=>'p_float',
@@ -163,14 +163,14 @@ class BigParent extends ORMObject
             'name'=>'p_s_array',
             'type'=>'array',
             'storage_subid'=>'bigparents',
-            'element_type'=>'integer',
+            'element_type'=>'string',
             'index_type'=>'integer'
         ]);
         $result->elements['p_i_array'] = makeStdClass([
             'name'=>'p_i_array',
             'type'=>'array',
             'storage_subid'=>'bigparents',
-            'element_type'=>'string',
+            'element_type'=>'integer',
             'index_type'=>'integer'
         ]);
         $result->elements['p_f_array'] = makeStdClass([
@@ -251,9 +251,9 @@ class BigParent extends ORMObject
         ]);
         
         $result->options = [
-            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'ParentObject']),
-            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with an int, string and array of int.']),
-            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'parentobjects']),
+            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'BigParent']),
+            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A more complex object for feature tests.']),
+            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'bigparents']),
             'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
             'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
         ];
