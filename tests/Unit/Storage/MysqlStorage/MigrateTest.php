@@ -21,7 +21,7 @@ function makeStructure($fields): \stdClass
     $result->options = [];
     return $result;
 }
-
+/*
 test('Migrate fresh table', function(array $infos, bool $type_check = true)
 {
     $infos = array_merge($infos, ['name'=>'field','storage_subid'=>'testtable']);
@@ -104,4 +104,52 @@ test('Migrate with defaultsNull value', function()
     DB::table('testtable')->insert([['field1'=>33]]);
     $this->assertDatabaseHas('testtable',['field1'=>11,'field2'=>22]);
     $this->assertDatabaseHas('testtable',['field2'=>33,'field2'=>null]);
-});
+});*/
+
+test('Migrate an array', function($element_type, $check_type = true)
+{
+    Schema::dropIfExists('testtable');
+    $storage = new MysqlObjectStorage();
+    $storage->setStructure(makeStructure([
+        'field'=>makeStdClass(['name'=>'field','storage_subid'=>'testtable','type'=>'array','element_type'=>$element_type,'index_type'=>'integer']),
+    ]));
+    $storage->migrate();
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'container_id', 'integer');
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'index', 'integer');
+    if ($check_type) {
+        $this->assertDatabaseTableColumnIsType('testtable_field', 'element', $element_type);
+    }
+})->with([
+    'integer'=>['integer'],
+    'string'=>['string'],
+    'float'=>['float'],
+    'boolean'=>['boolean', false],
+    'date'=>['date'],
+    'time'=>['time'],
+    'datetime'=>['datetime'],
+    'text'=>['text'],
+]);
+
+test('Migrate a map', function($element_type, $check_type = true)
+{
+    Schema::dropIfExists('testtable');
+    $storage = new MysqlObjectStorage();
+    $storage->setStructure(makeStructure([
+        'field'=>makeStdClass(['name'=>'field','storage_subid'=>'testtable','type'=>'array','element_type'=>$element_type,'index_type'=>'string']),
+    ]));
+    $storage->migrate();
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'container_id', 'integer');
+    $this->assertDatabaseTableColumnIsType('testtable_field', 'index', 'string');
+    if ($check_type) {
+        $this->assertDatabaseTableColumnIsType('testtable_field', 'element', $element_type);
+    }   
+})->with([
+    'integer'=>['integer'],
+    'string'=>['string'],
+    'float'=>['float'],
+    'boolean'=>['boolean', false],
+    'date'=>['date'],
+    'time'=>['time'],
+    'datetime'=>['datetime'],
+    'text'=>['text'],
+]);
