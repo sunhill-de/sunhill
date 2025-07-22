@@ -29,8 +29,8 @@ class BigParent extends ORMObject
         $builder->addProperty(TypeTime::class,'p_time')->nullable();
         $builder->addProperty(TypeDateTime::class,'p_datetime');
         $builder->addProperty(TypeBoolean::class,'p_bool')->default(true);
-        $builder->referRecord(Dummy::class, 'p_dummy_ref');
-        $builder->referRecord(BigParent::class,'p_self_ref')->setAllowedProperty(BigParent::class)->nullable();
+        $builder->referRecord(Dummy::class, 'p_dummy_ref')->defaultsNull();
+        $builder->referRecord(BigParent::class,'p_self_ref')->setAllowedProperty(BigParent::class)->DefaultsNull();
         $builder->referRecord(Dummy::class,'p_mult_ref')->setAllowedProperty([Dummy::class,ChildObject::class]);
         $builder->array('p_s_array')->setAllowedElementType(TypeVarchar::class);
         $builder->array('p_i_array')->setAllowedElementType(TypeInteger::class);
@@ -91,4 +91,175 @@ class BigParent extends ORMObject
         ]
         
     ];
+
+    public static function getExpectedStructure()
+    {
+        $result = new \stdClass();
+        $result->name = "parentobjects";
+        $result->type = "record";
+        $result->elements = [];
+        
+        $result->elements['p_int'] = makeStdClass([
+            'name'=>'p_int',
+            'type'=>'integer',
+            'storage_subid'=>'bigparents',
+            'default'=>100
+        ]);
+        $result->elements['p_string'] = makeStdClass([
+            'name'=>'p_string',
+            'type'=>'stringr',
+            'storage_subid'=>'bigparents',
+            'max_len'=>30
+        ]);
+        $result->elements['p_float'] = makeStdClass([
+            'name'=>'p_float',
+            'type'=>'float',
+            'storage_subid'=>'bigparents'
+        ]);
+        $result->elements['p_date'] = makeStdClass([
+            'name'=>'p_date',
+            'type'=>'date',
+            'storage_subid'=>'bigparents',
+            'nullable'=>true,
+            'default'=>null
+        ]);
+        $result->elements['p_time'] = makeStdClass([
+            'name'=>'p_time',
+            'type'=>'time',
+            'storage_subid'=>'bigparents',
+            'nullable'=>true
+        ]);
+        $result->elements['p_datetime'] = makeStdClass([
+            'name'=>'p_datetime',
+            'type'=>'datetime',
+            'storage_subid'=>'bigparents'
+        ]);
+        $result->elements['p_bool'] = makeStdClass([
+            'name'=>'p_bool',
+            'type'=>'boolean',
+            'storage_subid'=>'bigparents',
+            'default'=>true
+        ]);
+        $result->elements['p_dummy_ref'] = makeStdClass([
+            'name'=>'p_dummy_ref',
+            'type'=>'integer',
+            'storage_subid'=>'bigparents',
+            'nullable'=>true,
+            'default'=>null
+        ]);
+        $result->elements['p_self_ref'] = makeStdClass([
+            'name'=>'p_self_ref',
+            'type'=>'integer',
+            'storage_subid'=>'bigparents',
+            'nullable'=>true,
+            'default'=>null
+        ]);
+        $result->elements['p_mult_ref'] = makeStdClass([
+            'name'=>'p_mult_ref',
+            'type'=>'integer',
+            'storage_subid'=>'bigparents'
+        ]);
+        $result->elements['p_s_array'] = makeStdClass([
+            'name'=>'p_s_array',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'integer',
+            'index_type'=>'integer'
+        ]);
+        $result->elements['p_i_array'] = makeStdClass([
+            'name'=>'p_i_array',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'string',
+            'index_type'=>'integer'
+        ]);
+        $result->elements['p_f_array'] = makeStdClass([
+            'name'=>'p_f_array',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'float',
+            'index_type'=>'integer'
+        ]);
+        $result->elements['p_s_map'] = makeStdClass([
+            'name'=>'p_s_map',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'string',
+            'index_type'=>'string'
+        ]);
+        $result->elements['p_i_map'] = makeStdClass([
+            'name'=>'p_i_map',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'integer',
+            'index_type'=>'string'
+        ]);
+        $result->elements['p_f_map'] = makeStdClass([
+            'name'=>'p_f_map',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'float',
+            'index_type'=>'string'
+        ]);
+        $result->elements['p_r_array'] = makeStdClass([
+            'name'=>'p_r_array',
+            'type'=>'array',
+            'storage_subid'=>'bigparents',
+            'element_type'=>'integer',
+            'index_type'=>'integer'
+        ]);
+        
+        $result->elements['_uuid'] = makeStdClass([
+            'name'=>'_uuid',
+            'type'=>'string',
+            'max_length'=>40,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_classname'] = makeStdClass([
+            'name'=>'_classname',
+            'type'=>'string',
+            'max_length'=>40,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_read_cap'] = makeStdClass([
+            'name'=>'_read_cap',
+            'type'=>'string',
+            'max_length'=>20,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_modify_cap'] = makeStdClass([
+            'name'=>'_modify_cap',
+            'type'=>'string',
+            'max_length'=>20,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_delete_cap'] = makeStdClass([
+            'name'=>'_delete_cap',
+            'type'=>'string',
+            'max_length'=>20,
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_created_at'] = makeStdClass([
+            'name'=>'_created_at',
+            'type'=>'datetime',
+            'storage_subid'=>'objects'
+        ]);
+        $result->elements['_updated_at'] = makeStdClass([
+            'name'=>'_updated_at',
+            'type'=>'datetime',
+            'storage_subid'=>'objects'
+        ]);
+        
+        $result->options = [
+            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'ParentObject']),
+            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with an int, string and array of int.']),
+            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'parentobjects']),
+            'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
+            'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
+        ];
+        $result->skipping_members = [];
+        
+        return $result;
+    }
+    
 }
