@@ -968,7 +968,7 @@ abstract class AbstractProperty extends Base
     public function nullable(bool $value = true): self
     {
         $this->nullable = $value;
-        if (!is_a($this->default,DefaultNull::class)) {
+        if (is_null($this->default)) {
             $this->default = new DefaultNull();
         }
         return $this;
