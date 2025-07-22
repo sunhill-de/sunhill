@@ -34,5 +34,5 @@ test('Migrate and seed', function()
         }
         $object->commit();
     }
-    $this->assertDatabaseHasColumn('bigparent',['p_string'=>'Iron Maiden']);
+    $this->assertDatabaseHas('bigparents',['p_string'=>'Iron Maiden']);
 });
