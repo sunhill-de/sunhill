@@ -9,7 +9,7 @@
  * 
  * @author Klaus Dimde
  * Lang en
- * Reviewstatus: 2025-05-09
+ * Reviewstatus: 2025-07-22
  * Creation date: 2025-04-17
  * Localization: none
  * Documentation: unknown
@@ -638,6 +638,12 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                         $result->$subid->id->type = 'integer';
                     }
                     $result->$subid->$name = $field_info;
+                    if (isset($field->default)) {
+                        $result->$subid->$name->default = $field->default;
+                    }
+                    if (isset($field->nullable)) {
+                        $result->$subid->$name->nullable = $field->nullable;
+                    }
                     break;
             }
         }
