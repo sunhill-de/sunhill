@@ -129,7 +129,7 @@ class RecordProperty extends AbstractProperty implements \Countable,\Iterator
 
     public function isValid($input): bool
     {
-        
+        return true;
     }
     
     /**
