@@ -21,7 +21,7 @@ function makeStructure($fields): \stdClass
     $result->options = [];
     return $result;
 }
-/*
+
 test('Migrate fresh table', function(array $infos, bool $type_check = true)
 {
     $infos = array_merge($infos, ['name'=>'field','storage_subid'=>'testtable']);
@@ -104,7 +104,7 @@ test('Migrate with defaultsNull value', function()
     DB::table('testtable')->insert([['field1'=>33]]);
     $this->assertDatabaseHas('testtable',['field1'=>11,'field2'=>22]);
     $this->assertDatabaseHas('testtable',['field2'=>33,'field2'=>null]);
-});*/
+});
 
 test('Migrate an array', function($element_type, $check_type = true)
 {
