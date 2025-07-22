@@ -39,6 +39,9 @@ class ReferenceProperty extends AbstractProperty
      */
     public function isValid($input): bool
     {
+        if (is_int($input)) {
+            $input = $this->tryToLoadRecord($input);
+        }
         if (!is_a($input, RecordProperty::class)) {
             return false;
         }
