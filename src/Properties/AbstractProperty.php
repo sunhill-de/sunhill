@@ -1489,7 +1489,16 @@ abstract class AbstractProperty extends Base
         $result = new \stdClass();
         $result->name = $this->getName();
         $result->type = static::getStorageType();
-        
+        if ($this->default) {
+            if (is_a($this->default, DefaultNull::class)) {
+                $result->default = null;
+            } else {
+                $result->default = $this->default;
+            }
+        }
+        if ($this->nullable) {
+            $result->nullable = $this->nullable;
+        }
         return $result;
     }
     
