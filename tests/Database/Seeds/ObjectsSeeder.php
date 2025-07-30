@@ -219,6 +219,17 @@ class ObjectsSeeder extends Seeder
             '_created_at'=>'2024-10-17 13:55:00',
             '_updated_at'=>'2024-10-17 13:55:00',
         ],
+    
+        [
+            'id'=>22,// BigParent
+            '_classname'=>'BigParent',
+            '_uuid'=>'',
+            '_read_cap'=>null,
+            '_modify_cap'=>null,
+            '_delete_cap'=>null,
+            '_created_at'=>'2025-07-22 18:14:00',
+            '_updated_at'=>'2025-07-22 18:14:00',
+        ],
     ];
     
     public function run(): void

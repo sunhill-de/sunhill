@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @file /tests/Features/Objects/BigParent/BigParentTest.php
+ * Feature test
+ * Tests the interaction between objects and storages and all the helper classes
+ */
 use Sunhill\Tests\SunhillDatabaseTestCase;
 use Sunhill\Tests\TestSupport\Objects\BigParent;
 use Sunhill\Tests\Database\Seeds\ObjectsSeeder;

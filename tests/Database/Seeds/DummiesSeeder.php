@@ -23,6 +23,7 @@ class DummiesSeeder extends Seeder
     
     public function run(): void
     {
+        DB::table('dummies')->truncate();
         DB::table('dummies')->insert(DummiesSeeder::DATA);    
     }
     
