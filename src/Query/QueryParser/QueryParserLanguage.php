@@ -37,28 +37,28 @@ class QueryParserLanguage extends LanguageDescriptor
         $this->addTerminal('or', '||');
         $this->addTerminal('and', '&&');
         $this->addTerminal(')');
-        $this->addOperator('(')->setType('bracket')->setPrecedence(150);
+        $this->addBracketOperator('(')->setPrecedence(150);
         $this->addTerminal(']');
-        $this->addOperator('[')->setType('bracket')->setPrecedence(150);
+        $this->addBracketOperator('[')->setPrecedence(150);
         $this->addTerminal('asc');
         $this->addTerminal('desc');
         $this->addTerminal('.');
         $this->addTerminal(',');
 
-        $this->addOperator('||')
+        $this->addBinaryOperator('||')
             ->setType('binary')
             ->setPrecedence(5)
             ->addTypes('boolean', 'boolean', 'boolean')
             ->addTypes('boolean', 'pseudoboolean', 'boolean')
             ->addTypes('pseudoboolean', 'boolean', 'boolean')
             ->addTypes('pseudoboolean', 'pseudoboolean', 'boolean');
-        $this->addOperator('&&')
+        $this->addBinaryOperator('&&')
             ->setType('binary')
             ->setPrecedence(15)
             ->addTypes('boolean', 'boolean', 'boolean')
             ->addTypes('pseudoboolean', 'boolean', 'boolean')
             ->addTypes('pseudoboolean', 'pseudoboolean', 'boolean');
-        $this->addOperator('+')
+        $this->addBinaryOperator('+')
             ->setType('binary')
             ->setPrecedence(35)
             ->addTypes('integer', 'integer', 'integer')
@@ -66,32 +66,32 @@ class QueryParserLanguage extends LanguageDescriptor
             ->addTypes('float', 'float', 'float')
             ->addTypes('float', 'integer', 'float')
             ->addTypes('string', 'string', 'string');
-        $this->addOperator('-')
+        $this->addBinaryOperator('-')
             ->setType('binary')
             ->setPrecedence(35)
             ->addTypes('integer', 'integer', 'integer')
             ->addTypes('integer', 'float', 'float')
             ->addTypes('float', 'float', 'float')
             ->addTypes('float', 'integer', 'float');
-        $this->addOperator('/')
+        $this->addBinaryOperator('/')
             ->setType('binary')
             ->setPrecedence(40)
             ->addTypes('integer', 'float', 'float');
-        $this->addOperator('*')
+        $this->addBinaryOperator('*')
             ->setType('binary')
             ->setPrecedence(40)
             ->addTypes('integer', 'integer', 'integer')
             ->addTypes('integer', 'float', 'float')
             ->addTypes('float', 'float', 'float')
             ->addTypes('float', 'integer', 'float');
-        $this->addOperator('->')
+/*        $this->addBinaryOperator('->')
             ->setType('binary')
             ->setPrecedence(105)
             ->addTypes('identifier', 'identifier');
-        $this->addOperator('.')
+        $this->addBinaryOperator('.')
             ->setType('binary')
             ->setPrecedence(110)
-            ->addTypes('identifier', 'identifier');
+            ->addTypes('identifier', 'identifier'); */
 
         $this->addRule('EXPRESSION', ['EXPRESSION', '+', 'EXPRESSION'])->setASTCallback('twoSideOperator');
         $this->addRule('EXPRESSION', ['EXPRESSION', '-', 'EXPRESSION'])->setASTCallback('twoSideOperator');
