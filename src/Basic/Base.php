@@ -3,7 +3,8 @@
  * @file base.php
  * Provides a common basic class for all sunhill project classes
  * Lang en
- * Reviewstatus: 2024-10-05
+ * Created at: 2024-10-05
+ * Reviewstatus: 2025-08-10
  * Localization: incomplete
  * Documentation: complete
  * 

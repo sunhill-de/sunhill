@@ -6,12 +6,12 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\UnaryNode;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Exceptions\TypesMismatchException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('UnaryNode getType()', function()
 {

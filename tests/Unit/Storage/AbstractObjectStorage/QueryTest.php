@@ -1,14 +1,19 @@
 <?php
+/**
+ * @file QueryTest.php
+ * tests: /src/Storage/AbstractObjectStorage
+ * free of dependent units: no, uses makeStdClass()
+ */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Query\QueryParser\QueryNode;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\Unit\Storage\AbstractObjectStorage\DummyAbstractObjectStorage;
 use Sunhill\Facades\Properties;
 use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Query\QueryParser\Nodes\QueryNode;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 function getStorageForQuery()
 {

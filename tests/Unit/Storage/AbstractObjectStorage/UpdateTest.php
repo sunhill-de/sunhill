@@ -1,12 +1,17 @@
 <?php
+/**
+ * @file UpdateTest.php
+ * tests: /src/Storage/AbstractObjectStorage
+ * free of dependent units: no, uses makeStdClass()
+ */
 
 namespace Sunhill\Tests\Unit\Storage\AbstractObjectStorage;
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\TestSupport\Objects\ChildObject;
 use Sunhill\Facades\Properties;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 function getObjectStorageForUpdate()
 {

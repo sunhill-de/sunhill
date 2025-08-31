@@ -1,9 +1,15 @@
 <?php
-
-uses(\Sunhill\Tests\TestCase::class);
+/**
+ * @file CallbackStorageTest.php
+ * tests: /src/CallbackStorage
+ * free of dependent units: yes
+ */
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 use Sunhill\Storage\CallbackStorage;
 use Sunhill\Storage\Exceptions\CallbackMissingException;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
 
 
 test('read value', function () {

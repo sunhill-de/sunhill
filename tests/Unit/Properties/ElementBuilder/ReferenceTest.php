@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file ReferenceTest.php
+ * tests: /src/Properties/ElementBuilder.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Properties\ElementBuilder;
 use Sunhill\Properties\ReferenceProperty;
 use Sunhill\Tests\TestSupport\Properties\DummyRecordProperty;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Reference works ', function()
 {

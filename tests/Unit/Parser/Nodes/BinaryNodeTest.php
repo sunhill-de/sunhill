@@ -5,13 +5,12 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Exceptions\TypesMismatchException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getType()', function()
 {

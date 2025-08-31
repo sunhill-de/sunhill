@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file CommitTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('commit() is passed to the storage', function()
 {

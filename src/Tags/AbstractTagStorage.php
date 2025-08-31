@@ -4,7 +4,7 @@
  * A class that is the base for storages for tags
  * @author Klaus Dimde
  * Lang en
- * Reviewstatus: 2025-05-25
+ * Reviewstatus: 2025-08-12
  * Create date: 2025-05-25
  * Localization: none
  * Documentation: unknown
@@ -22,14 +22,31 @@ use Sunhill\Tags\Exceptions\TagIDNotFoundException;
 abstract class AbstractTagStorage extends Base
 {
     
+    /**
+     * The worker for the TagStorage that searches the tag with the given condition
+     * 
+     * @param array $condition
+     */
     abstract protected function searchTag(array $condition);
     
+    /**
+     * Returns true when a tag with the given id exists
+     * 
+     * @param int $id
+     * @return bool
+     */
     public function IDexists(int $id): bool
     {
         $results = $this->searchTag(['id'=>$id]);
         return count($results) == 1;
     }
     
+    /**
+     * Searches for a tag with the given name. It throws an exception when too many or none where found
+     * 
+     * @param string $name
+     * @return int
+     */
     public function searchName(string $name): int
     {
         $result = $this->searchTag(['name'=>$name]);
@@ -42,6 +59,12 @@ abstract class AbstractTagStorage extends Base
         return $result[0]->id;
     }
     
+    /**
+     * Loads the tag with the id out of the storage
+     * 
+     * @param int $id
+     * @return unknown
+     */
     public function load(int $id)
     {
         $result = $this->searchTag(['id'=>$id]);

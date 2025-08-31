@@ -1,17 +1,17 @@
 <?php
-
-/*
- * Tests src/Managers/FilterManager.php
+/**
+ * @file FiltermanagerTest.php
+ * tests: /src/Managers/FilterManager.php
+ * free of dependent units: yes
  */
 
 use Sunhill\Filter\Filter;
 use Sunhill\Filter\FilterException;
 use Sunhill\Filter\FilterContainer;
-use Sunhill\Tests\TestCase;
 use Sunhill\Managers\FilterManager;
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('get grouped filters works', function()
 {

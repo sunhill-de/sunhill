@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file TagListTest.php
+ * tests: /src/Tags/TagList.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tags\TagList;
 use Sunhill\Tags\Tag;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('adding tags and count() works', function()
 {

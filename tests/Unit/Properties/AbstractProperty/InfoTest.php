@@ -1,11 +1,17 @@
 <?php
-
-uses(\Sunhill\Tests\TestCase::class);
-
+/**
+ * @file InfoTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 use Sunhill\Properties\Exceptions\PropertyException;
 use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Properties\AbstractProperty;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
+
 
 test('unknown method', function () 
 {

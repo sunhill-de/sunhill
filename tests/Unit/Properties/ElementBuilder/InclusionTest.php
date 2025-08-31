@@ -1,12 +1,17 @@
 <?php
+/**
+ * @file InclusionTest.php
+ * tests: /src/Properties/ElementBuilder.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Properties\ElementBuilder;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Tests\TestSupport\Properties\DummyRecordProperty;
 use Sunhill\Properties\Exceptions\InvalidInclusionException;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('inclusion includes elements', function()
 {

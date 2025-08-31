@@ -18,7 +18,7 @@ class TypeInteger extends TypeNumeric
    
     protected function isNumericType($input): bool
     {
-        return (ctype_digit($input) || is_int($input));
+        return (ctype_digit((string)$input) || is_int($input));
     }
     
     public static function getAccessType(): string

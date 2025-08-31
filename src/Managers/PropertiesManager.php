@@ -8,11 +8,11 @@
  * @author Klaus Dimde
  * ----------------------------------------------------------------------
  * Lang en
- * Reviewstatus: 2024-19-22
+ * Reviewstatus: 2025-08-12
  * Creation date: 2024-19-22
  * Localization: unknown
  * Documentation: all public
- * Tests: Unit/Managers/ManagerPropertiesTest.php
+ * Tests: Unit/Managers/PropertyManager/*
  * Coverage Unit: 73.58 (2025-06-06)
  * PSR-State: complete
  */

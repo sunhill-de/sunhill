@@ -1,9 +1,14 @@
 <?php
+/**
+ * @file TokenTest.php
+ * tests: /src/Parser/Token.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Parser\Token;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Simple token', function()
 {

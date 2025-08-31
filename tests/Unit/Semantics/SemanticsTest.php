@@ -1,6 +1,10 @@
 <?php
+/**
+ * @file SemanticsTest.php
+ * tests: /src/Semantics/*
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
 use Sunhill\Types\TypeVarchar;
 use Sunhill\Exceptions\InvalidValueException;
 use Sunhill\Types\TypeInteger;
@@ -45,6 +49,9 @@ use Sunhill\Semantics\NetworkAddress;
 use Sunhill\Semantics\PointInTime;
 use Sunhill\Semantics\Name;
 use Sunhill\Semantics\LastName;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
 
 test('getSemantic()', function($type,$expect)
 {

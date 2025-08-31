@@ -1,20 +1,30 @@
 <?php
+/**
+ * @file TypesTest.php
+ * tests: /src/Types/*
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
-use Sunhill\Types\TypeVarchar;
-use Sunhill\Properties\Exceptions\InvalidValueException;
-use Sunhill\Types\TypeInteger;
-use Sunhill\Types\TypeFloat;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Types\TypeBoolean;
 use Sunhill\Types\TypeDateTime;
 use Sunhill\Types\TypeDate;
-use Sunhill\Types\TypeTime;
-use Sunhill\Types\TypeText;
 use Sunhill\Types\TypeEnum;
-use Sunhill\Tests\TestSupport\Storages\TestAbstractStorage;
-use Sunhill\Types\TypeCalculated;
+use Sunhill\Types\TypeFloat;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Types\TypeText;
+use Sunhill\Types\TypeTime;
+use Sunhill\Types\TypeVarchar;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Properties\Exceptions\InvalidValueException;
 use Sunhill\Types\TypeBlob;
+
+/**
+ * @file ModuleTest.php
+ * tests: /src/Modules/Module.php
+ * free of dependent units: yes
+ */
+uses(SunhillLaravelTestCase::class);
 
 function getTestType($type, $setters)
 {
@@ -51,7 +61,7 @@ dataset('validateProvider', function () {
         [TypeBoolean::class, [], 0, true],
         [TypeBoolean::class, [], 10, true],
             
-        [TypeDatetime::class, [], '2018-02-01 11:11:11', true],
+        [TypeDateTime::class, [], '2018-02-01 11:11:11', true],
         [TypeDatetime::class, [], '2018-02-32 11:11:11', false],
         [TypeDatetime::class, [], '01.02.2018 11:11:11', true],
         [TypeDateTime::class, [], 1686778521, true],

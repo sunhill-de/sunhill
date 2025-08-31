@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file CreateTest.php
+ * tests: /src/Properties/StorableRecordProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Properties\StorableRecordProperty;
 use Sunhill\Types\TypeInteger;
 use Sunhill\Storage\PersistentSingleStorage;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('create prefills with default values', function()
 {

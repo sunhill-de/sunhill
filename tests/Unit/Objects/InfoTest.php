@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file InfoTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Tests\TestSupport\Objects\DummyChild;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getObjectName() works on Dummy', function()
 {

@@ -3,17 +3,18 @@
  * @file Check.php
  * The command that executes the installed checks
  * Lang en
- * Reviewstatus: 2024-09-01
+ * Reviewstatus: 2025-08-10
+ * Create date: 2024-09-01
  * Localization: incomplete
  * Documentation: complete
- * Tests: BasicTest.php
+ * Tests: @todo has no test
  * Coverage Unit: 0% (2025-06-06)
  */
 
 namespace Sunhill\Console;
 
 use Illuminate\Console\Command;
-use Sunhill\Basic\Facades\Checks;
+use Sunhill\Facades\Checks;
 
 class Check extends Command
 {

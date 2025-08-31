@@ -1,10 +1,9 @@
 <?php
 
-use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Tests\TestSupport\Objects\BigParent;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('BigParent structure is returned as expected', function()
 {

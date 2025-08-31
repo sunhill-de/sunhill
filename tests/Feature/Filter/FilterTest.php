@@ -1,7 +1,9 @@
 <?php
-
-/*
- * Tests filters subsystem
+/**
+ * @file FilterTest.php
+ * type Feature
+ * tests: /src/Filter/Filter.php
+ * dependencies: Filter subsystem
  */
 
 use Sunhill\Facades\Filters;
@@ -14,9 +16,9 @@ use Sunhill\Tests\Feature\Filter\Filters\GroupB_25Filter;
 use Sunhill\Tests\Feature\Filter\Filters\GroupB_20Filter;
 use Sunhill\Tests\Feature\Filter\Filters\GroupB_10Filter;
 use Sunhill\Filter\FilterContainer;
-use Sunhill\Tests\TestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(TestCase::class);
+uses(SunhillLaravelTestCase::class);
 /**
  * Name            | Action       | Condition
  * ----------------+--------------+-----------

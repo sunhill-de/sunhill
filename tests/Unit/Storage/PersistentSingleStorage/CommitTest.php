@@ -1,9 +1,14 @@
 <?php
+/**
+ * @file CommitTest.php
+ * tests: /src/PersistentSingleStorage
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Storages\DummyPersistentSingleStorage;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Committing a modified existing storage entry', function()
 {

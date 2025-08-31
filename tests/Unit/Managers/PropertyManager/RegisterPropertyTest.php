@@ -1,14 +1,19 @@
 <?php
+/**
+ * @file RegisterPropertyTest.php
+ * tests: /src/Managers/PropertiesManagaer.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
 use Sunhill\Managers\PropertiesManager;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Managers\Exceptions\PropertyNameAlreadyRegisteredException;
 use Sunhill\Managers\Exceptions\PropertyClassDoesntExistException;
 use Sunhill\Managers\Exceptions\GivenClassNotAPropertyException;
 use Sunhill\Managers\Exceptions\PropertyNotRegisteredException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('register property', function () 
 {

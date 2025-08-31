@@ -1,14 +1,15 @@
 <?php
-
-/*
- * Tests src/Filters/Filter.php
+/**
+ * @file FilterTest.php
+ * tests: /src/Filter/Filter.php
+ * free of dependent units: yes
  */
 
 use Sunhill\Filter\FilterContainer;
-use Sunhill\Tests\TestCase;
 use Sunhill\Filter\Filter;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(TestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Filter match', function() 
 {

@@ -4,7 +4,8 @@
  * A Checker is a single entity. It contains at least one checkXXXX method. Each of which is
  * called by the Checks manager.
  * Lang en
- * Reviewstatus: 2024-09-01
+ * Reviewstatus: 2025-08-10
+ * Create date: 2024-09-01
  * Localization: nothing to translate
  * Documentation: complete
  * Tests: Unit/Checker/CheckerTest.php
@@ -15,6 +16,7 @@
 namespace Sunhill\Checker;
 
 use Sunhill\Basic\Base;
+use Sunhill\Checker\Exceptions\CheckException;
 
 class Checker extends Base
 {

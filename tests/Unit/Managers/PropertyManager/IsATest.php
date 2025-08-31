@@ -1,15 +1,19 @@
 <?php
+/**
+ * @file IsATest.php
+ * tests: /src/Managers/PropertiesManagaer.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\TestSupport\Objects\ParentObject;
 use Sunhill\Facades\Properties;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
-use Sunhill\Tests\TestSupport\Objects\ChildObject;
 use Sunhill\Tests\TestSupport\Objects\DummyGrandChild;
 use Sunhill\Tests\TestSupport\Objects\DummyChild;
 use Sunhill\Objects\ORMObject;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('IsA works as expected', function($test_class, $test_item, $expect)
 {

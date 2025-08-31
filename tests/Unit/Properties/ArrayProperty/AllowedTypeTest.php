@@ -1,12 +1,17 @@
 <?php
+/**
+ * @file AllowedTypeTest.php
+ * tests: /src/Properties/ArrayProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Types\TypeInteger;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\InvalidParameterException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('set allowed element with a class works', function()
 {

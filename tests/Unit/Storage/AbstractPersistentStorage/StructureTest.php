@@ -1,9 +1,14 @@
 <?php
-use Sunhill\Tests\SimpleTestCase;
+/**
+ * @file StructureTest.php
+ * tests: /src/Storage/AbstractPersistantStorage
+ * free of dependent units: yes
+ */
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\TestSupport\Storages\DummyAbstractPersistentStorage;
 use Sunhill\Storage\Exceptions\StructureNeededException;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 it('fails when structure is needed', function()
 {

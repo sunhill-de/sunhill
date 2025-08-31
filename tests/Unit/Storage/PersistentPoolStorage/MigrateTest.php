@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file MigrateTest.php
+ * tests: /src/PersistentSingleStorage
+ * free of dependent units: no dependent of makeStdClass()
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Types\TypeInteger;
 use Sunhill\Tests\TestSupport\Storages\DummyPersistentPoolStorage;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('Nothing to do', function()
 {

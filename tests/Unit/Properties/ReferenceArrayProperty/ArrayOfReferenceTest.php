@@ -1,14 +1,18 @@
 <?php
+/**
+ * @file ArrayOfReferenceTest.php
+ * tests: /src/Properties/ReferenceArrayProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Properties\ArrayProperty;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Properties\ReferenceProperty;
 use Sunhill\Tests\TestSupport\Properties\DummyRecordProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\PooledRecordProperty;
 use Sunhill\Properties\ReferenceArrayProperty;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Assigning standard record works', function()
 {

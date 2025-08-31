@@ -1,6 +1,11 @@
 <?php
+/**
+ * @file ReferenceTest.php
+ * tests: /src/Properties/ReferenceProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Properties\ReferenceProperty;
 use Sunhill\Tests\TestSupport\Properties\DummyRecordProperty;
 use Sunhill\Storage\AbstractStorage;
@@ -8,7 +13,7 @@ use Sunhill\Properties\RecordProperty;
 use Sunhill\Properties\Exceptions\InvalidValueException;
 use Sunhill\Properties\PooledRecordProperty;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Assigning a standard record works', function()
 {

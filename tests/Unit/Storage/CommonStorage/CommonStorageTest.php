@@ -1,12 +1,16 @@
 <?php
+/**
+ * @file CommonStorageTest.php
+ * tests: /src/CommonStorage
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
-use Sunhill\Storage\Exceptions\FieldNotAnArrayException;
 use Sunhill\Tests\TestSupport\Storages\DummyCommonStorage;
 use Sunhill\Properties\Exceptions\InvalidIndexException;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getValue works', function()
 {

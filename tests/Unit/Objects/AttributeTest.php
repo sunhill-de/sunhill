@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file AttributeTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\PropertyNotFoundException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('add an attribute', function($type, $value, $throw)
 {

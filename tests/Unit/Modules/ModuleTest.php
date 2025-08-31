@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file ModuleTest.php
+ * tests: /src/Modules/Module.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Modules\Module;
 use Sunhill\Modules\Exceptions\InvalidModuleNameException;
 use Sunhill\Modules\Exceptions\ChildNotFoundException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('name', function()
 {

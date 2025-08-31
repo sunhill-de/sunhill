@@ -1,22 +1,26 @@
 <?php
+/**
+ * @file TagTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Tags\Tag;
 use Sunhill\Facades\Properties;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('Write tag by id', function()
 {
-   $tagA = new Tag();
-   setProtectedProperty($tagA, 'name', 'TagA');
-   setProtectedProperty($tagA, 'tag_id', 1);
-    Properties::shouldReceive('loadTag')->with(1)->andReturn($tagA);
-    $tagB = new Tag();
-    setProtectedProperty($tagB, 'name', 'TagB');
-    setProtectedProperty($tagB, 'tag_id', 2);
-    Properties::shouldReceive('loadTag')->with(2)->andReturn($tagB);
+   $tagA = Mockery::mock(Tag::class);
+   $tagA->shouldReceive('getName')->andReturn('TagA');
+   $tagA->shouldReceive('getID')->andReturn(1);
+   Properties::shouldReceive('loadTag')->with(1)->andReturn($tagA);
+   $tagB = Mockery::mock(Tag::class);
+   $tagB->shouldReceive('getID')->andReturn(2);
+   Properties::shouldReceive('loadTag')->with(2)->andReturn($tagB);
    $test = new Dummy();
    $test->_tags->add(1);
    $test->_tags->add(2);
@@ -27,12 +31,14 @@ test('Write tag by id', function()
 
 test('Write tag by tag', function()
 {
-    Properties::shouldReceive('loadTagData')->with(1)->andReturn(makeStdClass(['id'=>1,'name'=>'TagA','options'=>0,'parent_id'=>null]));
-    Properties::shouldReceive('loadTagData')->with(2)->andReturn(makeStdClass(['id'=>2,'name'=>'TagB','options'=>0,'parent_id'=>null]));
+    $tagA = Mockery::mock(Tag::class);
+    $tagA->shouldReceive('getID')->andReturn(1);
+    $tagB = Mockery::mock(Tag::class);
+    $tagB->shouldReceive('getID')->andReturn(2);
     
     $test = new Dummy();
-    $test->_tags->add(new Tag(1));
-    $test->_tags->add(new Tag(2));
+    $test->_tags->add($tagA);
+    $test->_tags->add($tagB);
     expect(count($test->_tags))->toBe(2);
     expect($test->_tags->count())->toBe(2);
     expect($test->_tags[0]->getID())->toBe(1);
@@ -40,13 +46,11 @@ test('Write tag by tag', function()
 
 test('Write tag by id and index', function()
 {
-    $tagA = new Tag();
-    setProtectedProperty($tagA, 'name', 'TagA');
-    setProtectedProperty($tagA, 'tag_id', 1);
+    $tagA = Mockery::mock(Tag::class);
+    $tagA->shouldReceive('getID')->andReturn(1);
     Properties::shouldReceive('loadTag')->with(1)->andReturn($tagA);
-    $tagB = new Tag();
-    setProtectedProperty($tagB, 'name', 'TagB');
-    setProtectedProperty($tagB, 'tag_id', 2);
+    $tagB = Mockery::mock(Tag::class);
+    $tagB->shouldReceive('getID')->andReturn(2);
     Properties::shouldReceive('loadTag')->with(2)->andReturn($tagB);
     
     $test = new Dummy();
@@ -59,39 +63,44 @@ test('Write tag by id and index', function()
 
 test('Write tag by tag and index', function()
 {
-    Properties::shouldReceive('loadTagData')->with(1)->andReturn(makeStdClass(['id'=>1,'name'=>'TagA','options'=>0,'parent_id'=>null]));
-    Properties::shouldReceive('loadTagData')->with(2)->andReturn(makeStdClass(['id'=>2,'name'=>'TagB','options'=>0,'parent_id'=>null]));
+    $tagA = Mockery::mock(Tag::class);
+    $tagA->shouldReceive('getID')->andReturn(1);
+    Properties::shouldReceive('loadTag')->with(1)->andReturn($tagA);
+    $tagB = Mockery::mock(Tag::class);
+    $tagB->shouldReceive('getID')->andReturn(2);
+    Properties::shouldReceive('loadTag')->with(2)->andReturn($tagB);
     
     $test = new Dummy();
-    $test->_tags[] = new Tag(1);
-    $test->_tags[] = new Tag(2);
+    $test->_tags[] = $tagA;
+    $test->_tags[] = $tagB;
     expect(count($test->_tags))->toBe(2);
     expect($test->_tags->count())->toBe(2);
     expect($test->_tags[0]->getID())->toBe(1);
 });
 
 test('Write tag by name', function()
-{    Properties::shouldReceive('loadTagData')->with(1)->andReturn(makeStdClass(['id'=>1,'name'=>'TagA','options'=>0,'parent_id'=>null]));
-    Properties::shouldReceive('loadTagData')->with(2)->andReturn(makeStdClass(['id'=>2,'name'=>'TagB','options'=>0,'parent_id'=>null]));
-    Properties::shouldReceive('searchTag')->with('TagA')->andReturn(new Tag(1));
-   Properties::shouldReceive('searchTag')->with('TagB')->andReturn(new Tag(2));
-   $test = new Dummy();
-   $test->_tags[] = 'TagA';
-   $test->_tags[] = 'TagB';
-   expect(count($test->_tags))->toBe(2);
-   expect($test->_tags->count())->toBe(2);
-   expect($test->_tags[0]->getID())->toBe(1);
+{    
+    $tagA = Mockery::mock(Tag::class);
+    $tagA->shouldReceive('getID')->andReturn(1);
+    $tagB = Mockery::mock(Tag::class);
+    $tagB->shouldReceive('getID')->andReturn(2);
+    Properties::shouldReceive('searchTag')->with('TagA')->andReturn($tagA);
+    Properties::shouldReceive('searchTag')->with('TagB')->andReturn($tagB);
+    $test = new Dummy();
+    $test->_tags[] = 'TagA';
+    $test->_tags[] = 'TagB';
+    expect(count($test->_tags))->toBe(2);
+    expect($test->_tags->count())->toBe(2);
+    expect($test->_tags[0]->getID())->toBe(1);
 });
 
 test('Clear tags',function()
 {
-    $tagA = new Tag();
-    setProtectedProperty($tagA, 'name', 'TagA');
-    setProtectedProperty($tagA, 'tag_id', 1);
+    $tagA = Mockery::mock(Tag::class);
+    $tagA->shouldReceive('getID')->andReturn(1);
     Properties::shouldReceive('loadTag')->with(1)->andReturn($tagA);
-    $tagB = new Tag();
-    setProtectedProperty($tagB, 'name', 'TagB');
-    setProtectedProperty($tagB, 'tag_id', 2);
+    $tagB = Mockery::mock(Tag::class);
+    $tagB->shouldReceive('getID')->andReturn(2);
     Properties::shouldReceive('loadTag')->with(2)->andReturn($tagB);
     
     $test = new Dummy();

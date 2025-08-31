@@ -1,9 +1,14 @@
 <?php
+/**
+ * @file StructureTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('Get standard structure', function()
 {

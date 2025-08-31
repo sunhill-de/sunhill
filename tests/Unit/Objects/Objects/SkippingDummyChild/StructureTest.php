@@ -1,11 +1,14 @@
 <?php
+/**
+ * @file AccessTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Tests\TestSupport\Objects\Dummy;
-use Sunhill\Tests\TestSupport\Objects\SkippingDummyGrandChild;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\TestSupport\Objects\SkippingDummyChild;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('SkippingDummyGrandchild structure is returned as expected', function()
 {

@@ -5,14 +5,14 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Exceptions\AnalyzerException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getDatatype() of function with a type set', function()
 {

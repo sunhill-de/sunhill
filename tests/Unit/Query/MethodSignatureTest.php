@@ -1,12 +1,17 @@
 <?php
+/**
+ * @file MethodSignatureTest.php
+ * tests: /src/Query/MethodSignature.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Query\Helpers\MethodSignature;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
 use Sunhill\Query\Query;
 use Sunhill\Parser\Nodes\Node;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getSignature', function($parameter, $expect)
 {
@@ -43,7 +48,7 @@ test('getSignature with Query', function()
 
 test('getSignature with node', function()
 {
-    $test = new Node('something',[]);
+    $test = \Mockery::mock(Node::class);
     expect(MethodSignature::getSignature($test))->toBe('node');
 });
 

@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file ArrayTest.php
+ * tests: /src/Properties/ElementBuilder.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\TestCase;
 use Sunhill\Properties\ElementBuilder;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Properties\ReferenceArrayProperty;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(TestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Simple array', function()
 {

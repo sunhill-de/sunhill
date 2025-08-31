@@ -5,7 +5,7 @@
  * free of dependent units: 
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Properties\RecordProperty;
 use Sunhill\Query\QueryParser\QueryAnalyzer;
@@ -27,7 +27,7 @@ use Sunhill\Parser\LanguageDescriptor\OperatorDescriptor;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\UnaryNode;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('analyze identifier', function()
 {

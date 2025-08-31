@@ -1,9 +1,10 @@
 <?php
 /**
- * @file DiffCreator>.php
+ * @file DiffCreator.php
  * Provides a class that creates diffs out of two arrays
  * Lang en
  * Reviewstatus: 2024-09-01
+ * Create date: 2025-08-10
  * Localization: incomplete
  * Documentation: complete
  * Tests: BasicTest.php
@@ -14,9 +15,23 @@ namespace Sunhill\Helpers;
 
 use Sunhill\Basic\Base;
 
+/**
+ * A helper class that is used by the get_diff() function 
+ * 
+ * @author klaus
+ *
+ */
 class DiffCreator extends Base
 {
     
+    /**
+     * Traverses the given structure and searches for elements that are removed in the new structure
+     * @param \stdClass $given
+     * @param \stdClass $new
+     * @param bool $accept_given_asterik
+     * @param bool $accept_new_asterik
+     * @return \stdClass
+     */
     private function traverseGiven(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
         $result = new \stdClass();
@@ -42,6 +57,15 @@ class DiffCreator extends Base
         return $result;
     }
     
+    /**
+     * Traverses the new structures and searches for elements that are newly added
+     * 
+     * @param \stdClass $given
+     * @param \stdClass $new
+     * @param bool $accept_given_asterik
+     * @param bool $accept_new_asterik
+     * @return \stdClass
+     */
     private function traverseNew(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
         $result = new \stdClass();
@@ -67,6 +91,13 @@ class DiffCreator extends Base
         return $result;
     }
     
+    /**
+     * Retraverses the given structure and searches for changees 
+     * 
+     * @param unknown $given
+     * @param unknown $new
+     * @param unknown $new_array
+     */
     private function retraverseGiven($given, &$new, $new_array)
     {
         foreach ($given as $key => $entry) {
@@ -79,6 +110,13 @@ class DiffCreator extends Base
         }
     }
     
+    /**
+     * Retraverses the new structure and searches for changes
+     * 
+     * @param unknown $given
+     * @param unknown $new
+     * @param unknown $given_array
+     */
     private function retraverseNew(&$given, $new, $given_array)
     {
         foreach ($new as $key => $entry) {
@@ -91,6 +129,14 @@ class DiffCreator extends Base
         }
     }
     
+    /**
+     * When both given structures are "traversable" performs the diff
+     * @param \stdClass $given
+     * @param \stdClass $new
+     * @param bool $accept_given_asterik
+     * @param bool $accept_new_asterik
+     * @return \stdClass
+     */
     private function getTraversableDiff(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
         $result = new \stdClass();
@@ -100,12 +146,27 @@ class DiffCreator extends Base
         $this->retraverseNew($result->given, $result->new, $given);
         return $result;
     }
-    
+   
+    /**
+     * Returns true when an diff could be performed on the given variable
+     * 
+     * @param unknown $test
+     * @return bool
+     */
     private function isTraversable($test): bool
     {
         return is_array($test) || is_a($test, \Traversable::class) || is_a($test, \stdClass::class);    
     }
     
+    /**
+     * The main function of the DiffCreator
+     * 
+     * @param unknown $given
+     * @param unknown $new
+     * @param bool $accept_given_asterik
+     * @param bool $accept_new_asterik
+     * @return \stdClass
+     */
     public function getDiff($given, $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
         if ($this->isTraversable($given) &&  ($this->isTraversable($new))) {

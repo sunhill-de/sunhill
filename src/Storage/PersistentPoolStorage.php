@@ -19,8 +19,8 @@ namespace Sunhill\Storage;
 
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 use Sunhill\Storage\Exceptions\InvalidIDException;
-use Sunhill\Query\QueryParser\QueryNode;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Query\QueryParser\Nodes\QueryNode;
 
 abstract class PersistentPoolStorage extends AbstractPersistentStorage
 {

@@ -5,10 +5,10 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\StringNode;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getDatatype()', function()
 {

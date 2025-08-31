@@ -4,8 +4,7 @@ namespace Sunhill\Tests\TestSupport\Storages;
 
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\PersistentPoolStorage;
-use Sunhill\Query\BasicQuery;
-use Sunhill\Query\QueryParser\QueryNode;
+use Sunhill\Query\QueryParser\Nodes\QueryNode;
 
 class DummyPersistentPoolStorage extends PersistentPoolStorage
 {

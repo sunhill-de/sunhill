@@ -1,6 +1,11 @@
 <?php
+/**
+ * @file Query_parseTest.php
+ * tests: /src/Query/QueryParser.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Query\Query;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
@@ -8,14 +13,13 @@ use Sunhill\Facades\Queries;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
-use Sunhill\Query\QueryParser\OrderNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\DateNode;
 use Sunhill\Parser\Nodes\TimeNode;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Empty query', function()
 {

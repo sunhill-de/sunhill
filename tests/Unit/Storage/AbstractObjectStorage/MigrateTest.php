@@ -1,11 +1,16 @@
 <?php
+/**
+ * @file MigrateTest.php
+ * tests: /src/Storage/AbstractObjectStorage
+ * free of dependent units: no, uses makeStdClass()
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\Unit\Storage\AbstractObjectStorage\DummyAbstractObjectStorage;
 use Sunhill\Tests\TestSupport\Objects\ChildObject;
 use Sunhill\Tests\TestSupport\Objects\ParentObject;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 function convertStructure(array $input): \stdClass
 {

@@ -1,13 +1,18 @@
 <?php
+/**
+ * @file RelationsTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
-
-
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Query\Exceptions\WrongTypeException;
 use Sunhill\Properties\Exceptions\NotAllowedRelationException;
+
+uses(SunhillSimpleTestCase::class);
 
 test('::getAllowedRelations() works', function()
 {

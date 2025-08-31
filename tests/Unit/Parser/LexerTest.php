@@ -1,11 +1,15 @@
 <?php
+/**
+ * @file LexerTest.php
+ * tests: /src/Parser/Lexer.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Query\Exceptions\InvalidTokenException;
 use Sunhill\Tests\Unit\Parser\Examples\DummyLexer;
 use Sunhill\Parser\Exceptions\StringNotClosedException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Test EOL', function()
 {

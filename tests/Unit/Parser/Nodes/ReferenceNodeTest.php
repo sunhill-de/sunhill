@@ -5,16 +5,12 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Parser\Nodes\FunctionNode;
-use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\Node;
-use Sunhill\Parser\Nodes\ArrayNode;
-use Sunhill\Parser\Exceptions\AnalyzerException;
 use Sunhill\Parser\Nodes\ReferenceNode;
 use Sunhill\Query\Exceptions\InvalidStatementException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getDatatype() of reference with a type set', function()
 {

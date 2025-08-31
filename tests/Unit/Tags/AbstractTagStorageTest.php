@@ -1,12 +1,17 @@
 <?php
+/**
+ * @file AbstractTagStorageTest.php
+ * tests: /src/Tags/AbstractTagStorage.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\Unit\Tags\Examples\DummyTagStorage;
 use Sunhill\Tags\Exceptions\TagNameNotFoundException;
 use Sunhill\Tags\Exceptions\TagNameAmbiguousException;
 use Sunhill\Tags\Exceptions\TagIDNotFoundException;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('IDExists() pass', function()
 {

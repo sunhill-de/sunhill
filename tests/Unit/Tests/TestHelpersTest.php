@@ -1,35 +1,20 @@
 <?php
-
 /**
- tests /tests/Pest.php
+ * @file TestHelpersTest.php
+ * tests: /tests/Pest.php
+ * free of dependent units: yes
+ * @todo There is still some debugging output from CheckArrays, can we supress them?
  */
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\Unit\Tests\Examples\TestClass;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SimpleTestCase::class);
-
-class TestClass
-{
-    protected $protected_member = 10;
-    
-    protected function protectedMethod($param)
-    {
-        $old = $this->protected_member;
-        $this->protected_member = $param;
-        return $old;
-    }
-    
-    public function getProtectedMember(): int
-    {
-        return $this->protected_member;
-    }
-}
+uses(SunhillSimpleTestCase::class);
 
 test('getField() works', function($callback, $field, $expect)
 {
     $test = $callback();
     expect(getField($test, $field))->toBe($expect);
 })->with([
-    [function() { return 10; }, null, 10],
     [function() 
     { 
         $return = new \StdClass();

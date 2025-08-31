@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file QueryParserTest.php
+ * tests: /src/Query/QueryParser.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
 use Sunhill\Facades\Queries;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('Expression parser', function($input, $output)
 {

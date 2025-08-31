@@ -62,6 +62,8 @@ use Sunhill\Managers\FilterManager;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Query\Helpers\QueryManager;
 
+require_once(dirname(__FILE__).'/Helpers/sunhill_helpers.php');
+
 class SunhillServiceProvider extends ServiceProvider
 {
     public function register()

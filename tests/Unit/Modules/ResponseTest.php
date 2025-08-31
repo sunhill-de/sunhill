@@ -1,11 +1,15 @@
 <?php
+/**
+ * @file ResponseTest.php
+ * tests: /src/Modules/Response.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Modules\Module;
 use Sunhill\Tests\Unit\Modules\Examples\DummyResponse;
-use Illuminate\Support\Facades\Route;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('Sample homepage route', function()
 {

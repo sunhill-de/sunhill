@@ -1,14 +1,17 @@
 <?php
+/**
+ * @file LoadTest.php
+ * tests: /src/Properties/StorableRecordProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Properties\PooledRecordProperty;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Storage\AbstractStorage;
-use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
 use Sunhill\Storage\PersistentSingleStorage;
 use Sunhill\Properties\StorableRecordProperty;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Load calls storage load()', function()
 {

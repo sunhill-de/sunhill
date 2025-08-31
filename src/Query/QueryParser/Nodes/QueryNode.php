@@ -146,6 +146,15 @@ class QueryNode extends Node
     {
         return $this->handleReplacingChild('where_conditions', $node);
     }
+
+    /**
+     * @deprecated alias for where($node), replace by where()
+     * @param Node $node
+     */
+    public function setWhere(Node $node)
+    {
+        $this->where($node);    
+    }
     
     /**
      * When omitted no post grouping filter conditions are applied otherwise it's possible to filter the

@@ -1,12 +1,17 @@
 <?php
+/**
+ * @file ReadingTest.php
+ * tests: /src/PersistentPoolStorage
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Storages\DummyPersistentPoolStorage;
 use Sunhill\Storage\Exceptions\InvalidIDException;
 use Sunhill\Storage\Exceptions\IDNotFoundException;
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test("isInitialized() works when nothing loaded", function()
 {

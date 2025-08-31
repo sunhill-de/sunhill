@@ -5,11 +5,11 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Query\QueryParser\Nodes\AliasNode;
 use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('constructor works', function()
 {

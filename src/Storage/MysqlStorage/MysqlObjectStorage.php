@@ -15,7 +15,6 @@
 
 namespace Sunhill\Storage\MysqlStorage;
 
-use Sunhill\Query\QueryParser\QueryNode;
 use Illuminate\Support\Facades\Schema;
 use Sunhill\Storage\Exceptions\StorageTableMissingException;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +22,7 @@ use Illuminate\Support\Str;
 use Sunhill\Storage\Exceptions\InvalidTypeException;
 use Sunhill\Storage\AbstractObjectStorage\AbstractObjectStorage;
 use Sunhill\Parser\Executor;
+use Sunhill\Query\QueryParser\Nodes\QueryNode;
 
 class MysqlObjectStorage extends AbstractObjectStorage
 {

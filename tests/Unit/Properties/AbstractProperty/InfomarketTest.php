@@ -1,7 +1,14 @@
 <?php
+/**
+ * @file InfomarketTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
+
+uses(SunhillSimpleTestCase::class);
 
 test('get metadata', function () 
 {

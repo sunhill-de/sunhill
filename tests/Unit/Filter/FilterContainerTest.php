@@ -1,13 +1,14 @@
 <?php
-
-/*
- * Tests src/Filters/FilterContainer.php
+/**
+ * @file FilterContainerTest.php
+ * tests: /src/Filter/FilterContainer.php
+ * free of dependent units: yes
  */
 
-use Sunhill\Tests\TestCase;
 use Sunhill\Filter\FilterContainer;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(TestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('setCondition() and getCondition() works with scalar', function()
 {

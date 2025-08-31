@@ -1,11 +1,14 @@
 <?php
+/**
+ * @file StructureTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: dependent of helper functions
+ */
 
-use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Tests\TestSupport\Objects\Dummy;
-use Sunhill\Tests\TestSupport\Objects\SkippingDummyGrandChild;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\TestSupport\Objects\ParentReference;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('ParentReference structure is returned as expected', function()
 {

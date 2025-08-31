@@ -5,23 +5,11 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Parser\Nodes\BooleanNode;
-use Sunhill\Parser\Nodes\IntegerNode;
-use Sunhill\Parser\Nodes\FloatNode;
-use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\IdentifierNode;
-use Sunhill\Parser\Nodes\FunctionNode;
-use Sunhill\Parser\Nodes\ArrayNode;
-use Sunhill\Parser\Nodes\UnaryNode;
-use Sunhill\Parser\Nodes\BinaryNode;
-use Sunhill\Parser\Nodes\DateNode;
-use Sunhill\Parser\Nodes\DateTimeNode;
-use Sunhill\Parser\Nodes\TimeNode;
 use Sunhill\Parser\Exceptions\AnalyzerException;
-use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getDatatype()', function($modifier, $expect)
 {

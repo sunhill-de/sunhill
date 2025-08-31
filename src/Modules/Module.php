@@ -7,7 +7,8 @@
  * @author Klaus Dimde
  * ----------------------------------------------------------------------
  * Lang en
- * Reviewstatus: 2025-03-20
+ * Reviewstatus: 2025-08-12
+ * Create date: 2025-03-20
  * Localization: unknown
  * Documentation: all public
  * Tests: Unit/Modules/ModulesTest.php

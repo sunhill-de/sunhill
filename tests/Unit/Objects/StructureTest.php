@@ -1,10 +1,14 @@
 <?php
+/**
+ * @file StructureTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: not fully (uses helper functions)
+ */
 
-use Sunhill\Tests\SimpleTestCase;
 use Sunhill\Tests\TestSupport\Objects\Dummy;
-use Sunhill\Tests\TestSupport\Objects\DummyChild;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class); // It uses helper functions 
 
 test('getStructure()', function($classname)
 {

@@ -5,14 +5,14 @@
  * free of dependent units: no (QueryNode->fields() creates an ArrayNode()
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Query\QueryParser\Nodes\QueryNode;
 use Sunhill\Query\Exceptions\InvalidStatementException;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\Node;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('validating an all empty query works', function()
 {

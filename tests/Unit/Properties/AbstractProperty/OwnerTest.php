@@ -1,7 +1,15 @@
 <?php
+/**
+ * @file OwnerTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
+
+uses(SunhillSimpleTestCase::class);
+
 test('set owner', function () {
     $test1 = new NonAbstractProperty();
     $test1->setName('parent');

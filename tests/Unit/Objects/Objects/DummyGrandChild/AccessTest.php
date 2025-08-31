@@ -1,12 +1,15 @@
 <?php
+/**
+ * @file AccessTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Storage\PersistentPoolStorage;
-use Sunhill\Tests\TestSupport\Objects\Dummy;
-use Sunhill\Tests\TestSupport\Objects\DummyChild;
 use Sunhill\Tests\TestSupport\Objects\DummyGrandChild;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('read of dummy grand child value', function()
 {

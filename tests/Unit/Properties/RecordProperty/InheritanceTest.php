@@ -1,9 +1,14 @@
 <?php
+/**
+ * @file InheritanceTest.php
+ * tests: /src/Properties/RecordProperty.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Properties\ChildRecordProperty;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('inheriteted embedded properties', function()
 {

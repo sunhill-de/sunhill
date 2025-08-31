@@ -1,6 +1,11 @@
 <?php
+/**
+ * @file QueryNodeCreationTest.php
+ * tests: /src/Query/Node.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Query\Query;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\FloatNode;
@@ -15,7 +20,7 @@ use Sunhill\Parser\Nodes\BooleanNode;
 use Sunhill\Parser\Nodes\FunctionNode;
 use Sunhill\Parser\Nodes\ArrayNode;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Create identifier node', function()
 {

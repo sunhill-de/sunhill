@@ -1,12 +1,18 @@
 <?php
-
 /**
- * Tests: src/Checker/Checks
+ * @file ChecksTest.php
+ * tests: src/Checker/Checks.php
+ * free of dependent units: yes
  */
+
 namespace Sunhill\Tests\Unit\Checker;
 
 use Sunhill\Checker\Checks;
+use Sunhill\Tests\SunhillSimpleTestCase;
+use Sunhill\Tests\Unit\Checker\Examples\DummyChecker;
+use Sunhill\Tests\Unit\Checker\Examples\AnotherDummyChecker;
 
+uses(SunhillSimpleTestCase::class);
 
 /**
  * Tests: installChecker(), purge()

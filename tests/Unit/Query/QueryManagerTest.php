@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file QueryManagerTest.php
+ * tests: /src/Query/Helpers/QueryManager.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
 use Sunhill\Facades\Queries;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('parseQueryString parses an expression', function()
 {

@@ -3,7 +3,8 @@
  * @file Filter.php
  * The basic class of the filter subsystem
  * Lang en
- * Reviewstatus: 2024-10-05
+ * Reviewstatus: 2025-08-10
+ * Create date: 2024-10-05
  * Localization: incomplete
  * Documentation: complete
  * Coverage Unit: 92.59% (2025-06-06)

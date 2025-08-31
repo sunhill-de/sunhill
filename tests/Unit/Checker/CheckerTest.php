@@ -1,10 +1,18 @@
 <?php
+/**
+ * @file CheckerTest.php
+ * tests: /src/Checker/Checker.php
+ * free of dependent units: yes
+ */
+
 
 namespace Sunhill\Tests\Unit\Checker;
 
-use Sunhill\Checker\Checker;
-use Sunhill\Checker\CheckException;
-use Sunhill\Test\SunhillTestCase;
+use Sunhill\Tests\Unit\Checker\Examples\DummyChecker;
+use Sunhill\Tests\SunhillSimpleTestCase;
+use Sunhill\Checker\Exceptions\CheckException;
+
+uses(SunhillSimpleTestCase::class);
 
 /**
  * Tests: src/Checker/Checker::pass()

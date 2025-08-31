@@ -1,15 +1,15 @@
 <?php
 /**
- * @file OperatorDesciptorTest.php
+ * @file LanguageDesciptorTest.php
  * tests: /src/Parser/LanguageDescriptor/LanguageDescriptor.php
  * free of dependent units: no (addOperator creates an instance of OperatorDescriptor
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Parser\Exceptions\LanguageDescriptorException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('addDefaultTerminal', function()
 {

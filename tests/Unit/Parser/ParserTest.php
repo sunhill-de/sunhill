@@ -1,14 +1,19 @@
 <?php
 
-use Sunhill\Tests\SunhillTestCase;
+/**
+ * @file ParserTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: yes
+ */
+
 use Sunhill\Parser\Lexer;
 use Sunhill\Tests\Unit\Parser\Examples\DummyParser;
 use Sunhill\Parser\Token;
-use Sunhill\Query\Exceptions\InvalidStatementException;
 use Sunhill\Parser\Exceptions\InputNotParsableException;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Simple integer [4]', function()
 {

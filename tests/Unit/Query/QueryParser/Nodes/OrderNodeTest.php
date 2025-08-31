@@ -5,13 +5,13 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Query\QueryParser\Nodes\OrderNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('constructor works', function()
 {

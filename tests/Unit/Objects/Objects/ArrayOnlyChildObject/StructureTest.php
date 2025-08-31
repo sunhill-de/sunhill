@@ -1,9 +1,15 @@
 <?php
 
-use Sunhill\Tests\SimpleTestCase;
-use Sunhill\Tests\TestSupport\Objects\ArrayOnlyChildObject;
+/**
+ * @file StructureTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: is dependend on helper functions
+ */
 
-uses(SimpleTestCase::class);
+use Sunhill\Tests\TestSupport\Objects\ArrayOnlyChildObject;
+use Sunhill\Tests\SunhillLaravelTestCase;
+
+uses(SunhillLaravelTestCase::class);
 
 test('ArrayOnlyChildObject structure is returned as expected', function()
 {

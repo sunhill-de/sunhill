@@ -1,9 +1,14 @@
 <?php
+/**
+ * @file AccessTest.php
+ * tests: /src/Objects/ORMObject.php
+ * free of dependent units: no, depends on helper functions
+ */
 
-use Sunhill\Tests\SimpleTestCase;
 use Sunhill\Tests\TestSupport\Objects\DummyChild;
+use Sunhill\Tests\SunhillLaravelTestCase;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('DummyChild structure is returned as expected', function()
 {

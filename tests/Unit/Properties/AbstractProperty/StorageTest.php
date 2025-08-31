@@ -1,6 +1,9 @@
 <?php
-
-uses(\Sunhill\Tests\TestCase::class);
+/**
+ * @file StorageTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
 use Sunhill\Properties\Exceptions\NoStorageSetException;
 use Sunhill\Properties\Exceptions\PropertyNotReadableException;
@@ -14,6 +17,9 @@ use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\NoUserManagerSetException;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
 
 test('set storage', function () 
 {

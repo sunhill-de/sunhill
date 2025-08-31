@@ -1,43 +1,20 @@
 <?php
+/**
+ * @file SemanticsHumanValueTest.php
+ * tests: /src/Semantics/*
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
-use Sunhill\Types\TypeVarchar;
-use Sunhill\Exceptions\InvalidValueException;
-use Sunhill\Types\TypeInteger;
-use Sunhill\Types\TypeFloat;
-use Sunhill\Types\TypeBoolean;
-use Sunhill\Types\TypeDateTime;
-use Sunhill\Tests\ReadonlyDatabaseTestCase;
-use Sunhill\Types\TypeDate;
-use Sunhill\Types\TypeTime;
-use Sunhill\Types\TypeText;
-use Sunhill\Types\TypeEnum;
-use Sunhill\Types\TypeCollection;
-use Sunhill\Tests\Testobjects\DummyCollection;
-use Sunhill\Tests\Testobjects\ComplexCollection;
-use Sunhill\Tests\Testobjects\AnotherDummyCollection;
 
 use Sunhill\Semantics\Duration;
-use Sunhill\Semantics\Illuminance;
-use Sunhill\Semantics\Speed;
-use Sunhill\Semantics\IPv4Address;
-use Sunhill\Semantics\MACAddress;
-use Sunhill\Semantics\IPv6Address;
-use Sunhill\Semantics\EMail;
-use Sunhill\Semantics\Domain;
-use Sunhill\Semantics\URL;
-use Sunhill\Semantics\UUID4;
-use Sunhill\Semantics\MD5;
-use Sunhill\Semantics\SHA1;
-use Sunhill\Semantics\Count;
 use Sunhill\Semantics\Capacity;
 use Sunhill\Semantics\Direction;
 use Sunhill\Semantics\Age;
 use Sunhill\Semantics\Airpressure;
-use Sunhill\Semantics\Pressure;
 use Sunhill\Semantics\Airtemperature;
-use Sunhill\Semantics\Temperature;
-use Sunhill\Semantics\Timestamp;
+use Sunhill\Tests\SunhillLaravelTestCase;
+
+uses(SunhillLaravelTestCase::class);
 
 test('get human value', function ($type, $setters, $test_input, $expect, $expect_mod = null) {
     $test = new $type();

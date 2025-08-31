@@ -1,19 +1,20 @@
 <?php
-
-/*
- * Tests src/Properties/ArrayProperty.php
+/**
+ * @file ArrayProeprtyTest.php
+ * tests: /src/Properties/ArrayProperty.php
+ * free of dependent units: yes
  */
-
-uses(\Sunhill\Tests\TestCase::class);
 
 use Sunhill\Types\TypeInteger;
 use Sunhill\Types\TypeVarchar;
-use Sunhill\Properties\Exceptions\InvalidValueException;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Properties\Exceptions\InvalidIndexException;
-use Sunhill\Properties\Exceptions\InvalidIndexTypeException;
 use Sunhill\Properties\MapProperty;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
+
 
 test('return array element count', function () {
     $test = new ArrayProperty();

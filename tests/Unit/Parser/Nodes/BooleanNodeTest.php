@@ -5,13 +5,10 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Parser\Nodes\ArrayNode;
-use Sunhill\Parser\Nodes\Node;
-use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\BooleanNode;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getDatatype()', function()
 {

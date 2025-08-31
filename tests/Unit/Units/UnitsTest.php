@@ -1,20 +1,15 @@
 <?php
+/**
+ * @file UnitsTest.php
+ * tests: /src/SunhillServiceProvider.php
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
-use Sunhill\Semantic\Name;
-use Sunhill\Properties\Property;
-use Sunhill\Properties\Exceptions\PropertyException;
-use Sunhill\Units\None;
-use Sunhill\Objects\ORMObject;
-use Sunhill\Properties\Exceptions\InvalidNameException;
-use Sunhill\Properties\AbstractProperty;
-use Sunhill\Properties\ValidatorBase;
-use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Facades\Properties;
-function getUnits()
-{
-    return include(dirname(__FILE__).'/../../../src/Units.php');
-}
+
+uses(SunhillLaravelTestCase::class);
+
 function calculate($item, $direction, $value)
 {
     $field = 'calculate'.$direction.'Basic';

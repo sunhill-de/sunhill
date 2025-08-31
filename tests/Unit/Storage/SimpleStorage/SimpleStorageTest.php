@@ -1,8 +1,14 @@
 <?php
-
-uses(\Sunhill\Tests\TestCase::class);
+/**
+ * @file SimpleStorageTest.php
+ * tests: /src/Storage/SimpleStorage
+ * free of dependent units: yes
+ */
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 use Sunhill\Tests\TestSupport\Storages\DummySimpleStorage;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
 
 
 test('read value', function () {

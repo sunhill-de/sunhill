@@ -5,11 +5,11 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\LanguageDescriptor\OperatorDescriptor;
 use Sunhill\Parser\Exceptions\LanguageDescriptorException;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('getOperator()', function()
 {

@@ -1,8 +1,16 @@
 <?php
+/**
+ * @file NameTest.php
+ * tests: /src/Properties/AbstractProperty.php
+ * free of dependent units: yes
+ */
 
-uses(\Sunhill\Tests\TestCase::class);
 use Sunhill\Properties\Exceptions\InvalidNameException;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
+use Sunhill\Tests\SunhillSimpleTestCase;
+
+uses(SunhillSimpleTestCase::class);
+
 test('names', function ($name, bool $forbidden) {
     if ($forbidden) {
         $this->expectException(InvalidNameException::class);

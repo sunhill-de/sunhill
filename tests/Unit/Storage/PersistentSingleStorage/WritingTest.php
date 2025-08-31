@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file WritingTest.php
+ * tests: /src/PersistentSingleStorage
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Storages\DummyPersistentSingleStorage;
 use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 
-uses(SimpleTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('Write unknown value', function()
 {

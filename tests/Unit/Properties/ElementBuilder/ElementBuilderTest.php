@@ -1,18 +1,17 @@
 <?php
-
 /**
-Tests src/Properties/ElementBuilder.php
+ * @file ElementBuilderTest.php
+ * tests: /src/Properties/ElementBuilder.php
+ * free of dependent units: yes
  */
 use Sunhill\Properties\ElementBuilder;
-use Sunhill\Properties\Exceptions\PropertyNotSetException;
-use Sunhill\Properties\RecordProperty;
-use Sunhill\Properties\AbstractProperty;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Facades\Properties;
 use Sunhill\Properties\Exceptions\NotAPropertyException;
 use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(\Sunhill\Tests\TestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('addProperty() and getElememts() work', function()
 {

@@ -1,9 +1,9 @@
 <?php
 
-use Sunhill\Tests\SimpleTestCase;
+use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
-uses(SimpleTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('ChildObject structure is returned as expected', function()
 {

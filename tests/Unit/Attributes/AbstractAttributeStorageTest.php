@@ -5,12 +5,12 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Tests\Unit\Attributes\Examples\DummyAttributeStorage;
 use Sunhill\Attributes\Exceptions\AttributeNotAssignedException;
 use Sunhill\Attributes\Exceptions\AttributeNotFoundException;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('loadAttribute() pass', function()
 {

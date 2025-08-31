@@ -1,12 +1,18 @@
 <?php
+/**
+ * @file CreatePropertyTest.php
+ * tests: /src/Managers/PropertiesManagaer.php
+ * free of dependent units: yes
+ */
 
-use Sunhill\Tests\SunhillTestCase;
 use Sunhill\Facades\Properties;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Tests\TestSupport\Storages\DummyStorage;
 use Sunhill\Storage\CallbackStorage;
+use Sunhill\Tests\SunhillLaravelTestCase;
+use Sunhill\Storage\AbstractStorage;
 
-uses(SunhillTestCase::class);
+uses(SunhillLaravelTestCase::class);
 
 test('createProperty() with an instance', function()
 {
@@ -44,7 +50,7 @@ test('createProperty() without a name', function()
 
 test('createProperty() with storage object', function()
 {
-    $storage = new DummyStorage();
+    $storage = \Mockery::mock(AbstractStorage::class);
     Properties::registerProperty(NonAbstractProperty::class, 'testProperty');
     $property = Properties::createProperty('testProperty', 'test', $storage);
     

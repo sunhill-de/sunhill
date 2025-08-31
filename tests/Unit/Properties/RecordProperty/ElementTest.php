@@ -1,24 +1,23 @@
 <?php
+/**
+ * @file InheritanceTest.php
+ * tests: /src/Properties/RecordProperty.php
+ * free of dependent units: yes
+ */
 
 use Sunhill\Properties\RecordProperty;
-use Sunhill\Tests\SunhillTestCase;
-use Sunhill\Facades\Properties;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
-use Sunhill\Properties\Exceptions\NotAPropertyException;
 use Sunhill\Properties\Exceptions\PropertyNameAlreadyGivenException;
 use Sunhill\Properties\Exceptions\PropertyHasNoNameException;
 use Sunhill\Properties\Exceptions\PropertyAlreadyInListException;
-use Sunhill\Properties\Exceptions\InvalidInclusionException;
 use Sunhill\Properties\Exceptions\NotAllowedInclusionException;
-use Sunhill\Tests\TestSupport\Properties\ChildRecordProperty;
-use Sunhill\Tests\TestSupport\Properties\ParentRecordProperty;
 use Sunhill\Storage\AbstractStorage;
 use Sunhill\Properties\Exceptions\PropertyNotFoundException;
 use Sunhill\Properties\ArrayProperty;
 use Sunhill\Types\TypeInteger;
-use Sunhill\Properties\AbstractProperty;
 
-uses(SunhillTestCase::class);
+uses(SunhillSimpleTestCase::class);
 
 test('appendElement() with only an element object', function()
 {

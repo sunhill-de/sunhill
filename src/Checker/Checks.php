@@ -3,7 +3,8 @@
  * @file Checks.php
  * Provides a class that performs checks
  * Lang en
- * Reviewstatus: 2024-09-01
+ * Reviewstatus: 2025-08-10
+ * Create date: 2024-09-01
  * Localization: incomplete
  * Documentation: complete
  * Tests: BasicTest.php
@@ -12,6 +13,7 @@
 namespace Sunhill\Checker;
 
 use Sunhill\Basic\Base;
+use Sunhill\Checker\Exceptions\CheckException;
 
 /**
  The class for the check performer. This class is called via the Checks facade which is normally called via an command line. 
