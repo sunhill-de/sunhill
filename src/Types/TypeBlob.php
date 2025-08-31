@@ -7,7 +7,7 @@
  * Reviewstatus: 2024-02-05
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 20 % (2025-06-06)
  */
 
@@ -17,11 +17,11 @@ use Sunhill\Properties\AbstractSimpleProperty;
 
 class TypeBlob extends AbstractSimpleProperty
 {
-   
     /**
-     * Is only has to be scalar 
-     * 
+     * Is only has to be scalar
+     *
      * {@inheritDoc}
+     *
      * @see Sunhill\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
@@ -33,7 +33,7 @@ class TypeBlob extends AbstractSimpleProperty
     {
         return 'blob';
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -44,5 +44,4 @@ class TypeBlob extends AbstractSimpleProperty
         static::addInfo('description', 'The basic type blob.', true);
         static::addInfo('type', 'basic');
     }
-        
 }

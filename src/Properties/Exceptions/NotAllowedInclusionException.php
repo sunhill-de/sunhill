@@ -16,9 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when appendElement() is called with the inclusion "embed" and
  * the passed property is not an ancestor of the owning property.
- * 
+ *
  * @author Klaus Dimde
  */
-class NotAllowedInclusionException extends PropertyException 
-{
-}
+class NotAllowedInclusionException extends PropertyException {}

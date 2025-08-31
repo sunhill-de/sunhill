@@ -16,9 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when a relation is used that is not allowed with this
  * property
- * 
+ *
  * @author Klaus Dimde
  */
-class NotAllowedRelationException extends PropertyException 
-{
-}
+class NotAllowedRelationException extends PropertyException {}

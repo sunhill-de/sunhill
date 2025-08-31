@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file SunhillUserException.php
  * Provides root for all sunhill user exceptions. A user exception is an exception that may be displayed
@@ -7,10 +8,9 @@
 
 namespace Sunhill\Exceptions;
 
-
 /**
  * Root for sunhill user exceptions
- * @author lokal
  *
+ * @author lokal
  */
 class SunhillUserException extends \Exception {}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file Module.php
  * A basic class for a sunhill module. A module bundles functions of the site. A module could
@@ -18,96 +19,85 @@
 namespace Sunhill\Modules;
 
 use Sunhill\Basic\Base;
-use Sunhill\Modules\Exceptions\InvalidModuleNameException;
-use Sunhill\Modules\Exceptions\ChildNotFoundException;
 use Sunhill\Modules\Exceptions\CantProcessModuleException;
+use Sunhill\Modules\Exceptions\ChildNotFoundException;
+use Sunhill\Modules\Exceptions\InvalidModuleNameException;
 
 /**
- * The basic class for a sunhill module. Modules have a parent->child relation with "site" being 
- * the root of the module tree. 
+ * The basic class for a sunhill module. Modules have a parent->child relation with "site" being
+ * the root of the module tree.
  * Modules have a name and a visible name. The difference between those is, that a name only may
- * contain ascii chars because it is used for the genration of urls. The visible name is a 
+ * contain ascii chars because it is used for the genration of urls. The visible name is a
  * user friedly version of the name that can contain spaces and non-ascii chars
- * @author klaus
  *
+ * @author klaus
  */
 class Module extends Base
 {
-    
     /**
      * The current name of this module
-     * @var string
      */
     protected string $name = '';
-    
+
     /**
      * The visible name of this module
+     *
      * @var unknown
      */
     protected ?string $visible_name = null;
-    
+
     /**
      * The parent module of this module
+     *
      * @var unknown
      */
     protected ?Module $parent = null;
-    
+
     /**
-     * The description of this module. 
-     * 
+     * The description of this module.
+     *
      * @var unknown
      */
     protected ?string $description = null;
-    
+
     /**
      * Stores the children. Children are always identifed by a name (that has to be returned by getName())
-     * @var array
      */
     protected array $children = [];
-        
+
     /**
      * Sets the name of the module. It checks if this name is valid
-     * 
-     * @param string $name
-     * @return static
      */
     public function setName(string $name): static
     {
-        if (!preg_match("/^([a-zA-Z_])([a-zA-Z0-9])*$/", $name)) {
+        if (! preg_match('/^([a-zA-Z_])([a-zA-Z0-9])*$/', $name)) {
             throw new InvalidModuleNameException("The name '$name' is not allowed for a module name");
         }
         $this->name = $name;
-        
+
         return $this;
     }
-    
+
     /**
      * Returns the name of the module
-     * 
-     * @return string
      */
     public function getName(): string
     {
         return $this->name;
     }
-    
+
     /**
      * Sets the visible user freidly name of this module
-     * 
-     * @param string $name
-     * @return static
      */
     public function setVisibleName(string $name): static
     {
         $this->visible_name = $name;
-        
+
         return $this;
     }
-    
+
     /**
      * Returns the userfriedly name of the module
-     * 
-     * @return string
      */
     public function getVisibleName(): string
     {
@@ -117,45 +107,35 @@ class Module extends Base
             return $this->visible_name;
         }
     }
-    
+
     /**
      * Sets the parent of the module
-     * 
-     * @param Module $parent
-     * @return Module
      */
     public function setParent(Module $parent): Module
     {
         $this->parent = $parent;
-        
+
         return $parent;
     }
-    
+
     /**
      * Returns the parent of the module
-     * 
-     * @return Module|NULL
      */
     public function getParent(): ?Module
     {
         return $this->parent;
     }
-    
+
     /**
      * Returns true when this module has an owner
-     * 
-     * @return bool
      */
     public function hasParent(): bool
     {
-        return !is_null($this->parent);    
+        return ! is_null($this->parent);
     }
-    
+
     /**
      * Returns the object of all arent objects (wen includde_self is set even its own)
-     * 
-     * @param bool $include_self
-     * @return array
      */
     public function getParents(bool $include_self = false): array
     {
@@ -165,17 +145,16 @@ class Module extends Base
             $result = [];
         }
         if ($include_self) {
-            $result[] = $this;   
+            $result[] = $this;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Returns the name of the parent object incluing its own name. Dependig on separator
      * as an array or a string
-     * 
-     * @param string $separator
+     *
      * @return string|string|string[]
      */
     public function getParentNames(?string $separator = null)
@@ -186,6 +165,7 @@ class Module extends Base
             } else {
                 $result = $this->parent->getParentNames($separator);
                 $result[] = $this->name;
+
                 return $result;
             }
         } else {
@@ -193,6 +173,7 @@ class Module extends Base
                 return $this->name;
             } else {
                 $result = [$this->name];
+
                 return $result;
             }
         }
@@ -201,7 +182,7 @@ class Module extends Base
     /**
      * Returns the breadcrumbs array. Ths array is an associative array which keys are the link
      * and its values are the description of the module
-     * 
+     *
      * @return string
      */
     public function getBreadcrumbs()
@@ -212,39 +193,33 @@ class Module extends Base
             $result = [];
         }
         $result['/'.$this->getParentNames('/').'/'] = $this->getVisibleName();
-        
+
         return $result;
     }
-    
+
     /**
      * Setter for description
-     * 
-     * @param string $description
-     * @return static
      */
     public function setDescription(string $description): static
     {
         $this->description = $description;
-        
+
         return $this;
     }
-    
+
     /**
      * Getter for description
-     * 
-     * @return string
      */
     public function getDescription(): ?string
     {
         return $this->description;
     }
-    
+
     /**
      * Adds the child to the list. If no name is passed it fetches it via getName(). if one is submitted
      * it sets the name in the child
      *
-     * @param unknown $child
-     * @param string $name
+     * @param  unknown  $child
      */
     public function addChild($child, string $name = '')
     {
@@ -253,22 +228,21 @@ class Module extends Base
         } else {
             $child->setName($name);
         }
-        
+
         $this->children[$name] = $child;
         $child->setParent($this);
+
         return $this;
     }
-    
+
     /**
      * Returns true when this object has any children
-     *
-     * @return bool
      */
     public function hasChildren(): bool
     {
-        return !empty($this->children);
+        return ! empty($this->children);
     }
-    
+
     /**
      * Clears the list of children
      */
@@ -276,22 +250,19 @@ class Module extends Base
     {
         $this->children = [];
     }
-    
+
     /**
      * Returns true when the object has a child with this name
      *
-     * @param string $name
      * @return unknown
      */
     public function hasChild(string $name)
     {
         return isset($this->children[$name]);
     }
-    
+
     /**
      * Returns the child with the given name of raises an exception when it doesn't exist
-     *
-     * @param string $name
      */
     public function getChild(string $name)
     {
@@ -300,11 +271,9 @@ class Module extends Base
         }
         throw new ChildNotFoundException("There is no child named '$name'");
     }
-    
+
     /**
      * Deletes the child with the given name or raises an exception when it doesn't exist
-     *
-     * @param string $name
      */
     public function deleteChild(string $name)
     {
@@ -314,31 +283,27 @@ class Module extends Base
             throw new ChildNotFoundException("There is no child named '$name'");
         }
     }
-    
+
     /**
      * Adds a new submodule. This is a wrapper around addChild()
-     * 
-     * @param unknown $module
-     * @param string $name
-     * @param callable $callback
-     * @return Module
+     *
+     * @param  unknown  $module
      */
     public function addSubmodule($module, string $name = '', ?callable $callback = null): Module
     {
         if (is_string($module) && class_exists($module)) {
-            $module = new $module();
+            $module = new $module;
         }
         if (is_a($module, Module::class)) {
             $this->addChild($module, $name);
         } else {
             throw new CantProcessModuleException(getScalarMessage("The passed parameter :variable can't be processed to a module", $module));
         }
-        
-        if (!is_null($callback)) {
+
+        if (! is_null($callback)) {
             $callback($module);
         }
+
         return $module;
     }
-    
-    
 }

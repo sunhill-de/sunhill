@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file WrongActionException.php
  * Provides the WrongActionException
@@ -12,7 +13,7 @@ namespace Sunhill\Query\Exceptions;
 
 /**
  * Is raised when a wrong action is passed for a method signature
- * @author klaus
  *
+ * @author klaus
  */
 class WrongActionException extends QueryException {}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file TypeNotExpectedException.php
  * Provides the TypeNotExpectedException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * Basic exception that is raised inside an analyzer when the result of the tree is not expected
- * @author klaus
  *
+ * @author klaus
  */
 class TypeNotExpectedException extends AnalyzerException {}

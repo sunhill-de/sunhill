@@ -7,7 +7,7 @@
  * Reviewstatus: 2024-02-05
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 100 % (2025-06-06)
  */
 
@@ -15,17 +15,16 @@ namespace Sunhill\Types;
 
 class TypeInteger extends TypeNumeric
 {
-   
     protected function isNumericType($input): bool
     {
-        return (ctype_digit((string)$input) || is_int($input));
+        return ctype_digit((string) $input) || is_int($input);
     }
-    
+
     public static function getAccessType(): string
     {
         return 'integer';
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -36,5 +35,4 @@ class TypeInteger extends TypeNumeric
         static::addInfo('description', 'The basic type integer.', true);
         static::addInfo('type', 'basic');
     }
-    
 }

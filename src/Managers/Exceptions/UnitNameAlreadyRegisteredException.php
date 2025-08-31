@@ -4,7 +4,7 @@
  * @file UnitNameAlreadyRegisteredException.php
  * This exception is raised when register unit is given a unit with a name that is already
  * registred.
- * 
+ *
  * @author Klaus Dimde
  * ---------------------------------------------------------------------------------------------------------
  * Lang en
@@ -14,6 +14,7 @@
  * Tests: none
  * Coverage Unit: none
  */
+
 namespace Sunhill\Managers\Exceptions;
 
 class UnitNameAlreadyRegisteredException extends PropertiesManagerException {}

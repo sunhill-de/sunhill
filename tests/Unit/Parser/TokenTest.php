@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file TokenTest.php
  * tests: /src/Parser/Token.php
@@ -10,35 +11,31 @@ use Sunhill\Tests\SunhillSimpleTestCase;
 
 uses(SunhillSimpleTestCase::class);
 
-test('Simple token', function()
-{
-   $test = new Token('+');
-   
-   expect($test->getSymbol())->toBe('+');
+test('Simple token', function () {
+    $test = new Token('+');
+
+    expect($test->getSymbol())->toBe('+');
 });
 
-test('Position', function()
-{
+test('Position', function () {
     $test = new Token('+');
     $test->setPosition(10, 15);
-    
+
     expect($test->getLine())->toBe(10);
     expect($test->getColumn())->toBe(15);
 });
 
-test('Value', function()
-{
-   $test = new Token('+');
-   $test->setValue(10);
-   
-   expect($test->getValue())->toBe(10);
+test('Value', function () {
+    $test = new Token('+');
+    $test->setValue(10);
+
+    expect($test->getValue())->toBe(10);
 });
 
-test('TypeHint', function()
-{
+test('TypeHint', function () {
     $test = new Token('+');
     expect($test->getTypeHint())->toBe('unknown');
     $test->setTypeHint('int');
-    
+
     expect($test->getTypeHint())->toBe('int');
 });

@@ -16,8 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when the name of a property was already given in
  * a record property
+ *
  * @author lokal
  */
-class PropertyNameAlreadyGivenException extends PropertyException 
-{
-}
+class PropertyNameAlreadyGivenException extends PropertyException {}

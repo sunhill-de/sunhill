@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file base.php
  * Provides a common basic class for all sunhill project classes
@@ -7,7 +8,7 @@
  * Reviewstatus: 2025-08-10
  * Localization: incomplete
  * Documentation: complete
- * 
+ *
  * Tests: Unit/Basic/BasicTest.php
  * Coverage Unit: 100% (2025-06-06)
  * Coverage Feature: 54.55% (2025-06-06)
@@ -15,69 +16,67 @@
 
 namespace Sunhill\Basic;
 
-
 use Sunhill\Exceptions\SunhillException;
 
 /**
- * Basic common class for all classes of the sunhill project 
+ * Basic common class for all classes of the sunhill project
+ *
  * @author klaus
  *
  * @wiki /Utility_classes
  */
-class Base 
+class Base
 {
-	
     /**
      * Empty constructur so parent::__construct() always works
      */
-    public function __construct() 
-    {        
-    }
-    
+    public function __construct() {}
+
     /**
-     * Catchall for unknown variables. It tries to find a get_$varname method and calls it if found. Otherwiese it throws 
-     * an excpetion. 
-     * @param string $varname Name of the variable
-     * @throws SunhillException is throws if no getter is found
+     * Catchall for unknown variables. It tries to find a get_$varname method and calls it if found. Otherwiese it throws
+     * an excpetion.
+     *
+     * @param  string  $varname  Name of the variable
      * @return any The value of the variable (return of the getter)
+     *
+     * @throws SunhillException is throws if no getter is found
      */
-    public function __get(string $varname) 
+    public function __get(string $varname)
     {
-		$method = "get".ucfirst($varname);
-		if (method_exists($this,$method)) {
-			return $this->$method();
-		} else {
-			throw new SunhillException("Variable '$varname' was not found.");
-		}
-	}
-	
+        $method = 'get'.ucfirst($varname);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        } else {
+            throw new SunhillException("Variable '$varname' was not found.");
+        }
+    }
+
     /**
-     * Set-Catchall for unknown variables. It tries to find a set_$varname method and calls it if found. 
-     * @param string $varname Name of the variable
-     * @param unknown $value Value of the variable
-     * @throws SunhillException Is thrown if there is no setter
+     * Set-Catchall for unknown variables. It tries to find a set_$varname method and calls it if found.
+     *
+     * @param  string  $varname  Name of the variable
+     * @param  unknown  $value  Value of the variable
      * @return unknown
+     *
+     * @throws SunhillException Is thrown if there is no setter
      */
-	public function __set(string $varname, $value) 
-	{
-		$method = "set".ucfirst($varname);
-		if (method_exists($this,$method)) {
-			return $this->$method($value);
-		} else {
-		    throw new SunhillException("Variable '$varname' was not found.");
-		}
-	}
-	
-	/**
-	 * Returns true, if the given class defines a method with the name '$method_name' and doesn't just inherited it
-	 * 
-	 * @param string $method_name
-	 * @return bool
-	 */
-	public static function definesOwnMethod(string $method_name): bool
-	{
-	    $method = new \ReflectionMethod(static::class, $method_name);
-	    return $method->getDeclaringClass()->name == static::class;
-	}
-		
+    public function __set(string $varname, $value)
+    {
+        $method = 'set'.ucfirst($varname);
+        if (method_exists($this, $method)) {
+            return $this->$method($value);
+        } else {
+            throw new SunhillException("Variable '$varname' was not found.");
+        }
+    }
+
+    /**
+     * Returns true, if the given class defines a method with the name '$method_name' and doesn't just inherited it
+     */
+    public static function definesOwnMethod(string $method_name): bool
+    {
+        $method = new \ReflectionMethod(static::class, $method_name);
+
+        return $method->getDeclaringClass()->name == static::class;
+    }
 }

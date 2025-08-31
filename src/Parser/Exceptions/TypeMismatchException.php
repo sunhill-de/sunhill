@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file TypeMismatchException.php
  * Provides the TypeMismatchException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * Basic exception that is raised when a unexpected type was found
- * @author klaus
  *
+ * @author klaus
  */
 class TypeMismatchException extends AnalyzerException {}

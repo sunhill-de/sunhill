@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised when a wrong value is assigned to a property
+ *
  * @author lokal
  */
-class InvalidValueException extends PropertyException 
-{
-}
+class InvalidValueException extends PropertyException {}

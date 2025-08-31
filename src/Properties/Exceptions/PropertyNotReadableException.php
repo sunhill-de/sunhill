@@ -16,8 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when a read attempt is performed on a property that
  * is not readable
+ *
  * @author lokal
  */
-class PropertyNotReadableException extends PropertyException 
-{
-}
+class PropertyNotReadableException extends PropertyException {}

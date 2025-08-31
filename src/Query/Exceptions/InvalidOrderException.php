@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InvalidOrderException.php
  * Provides the InvalidOrderException
@@ -13,8 +14,7 @@ namespace Sunhill\Query\Exceptions;
 /**
  * This excpetion is raised when an order direction other that asc or desc or a not sortable
  * key was used.
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class InvalidOrderException extends QueryException {}

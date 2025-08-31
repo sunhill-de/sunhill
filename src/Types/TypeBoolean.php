@@ -7,7 +7,7 @@
  * Reviewstatus: 2024-02-05
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 100 % (2025-06-06)
  */
 
@@ -17,28 +17,29 @@ use Sunhill\Properties\AbstractSimpleProperty;
 
 class TypeBoolean extends AbstractSimpleProperty
 {
-    
     /**
      * Tests if input can be solved to an boolean (always true, because everything can be solved to
      * a boolean
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see Sunhill\\ValidatorBase::isValid()
      */
     public function isValid($input): bool
     {
         return true;
     }
-    
+
     protected function convertString(string $input)
     {
-        return in_array(strtolower($input),[1,'1','y','true','+'])?1:0;        
+        return in_array(strtolower($input), [1, '1', 'y', 'true', '+']) ? 1 : 0;
     }
-    
+
     /**
      * Translates the given input to 1 or 0
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see Sunhill\\ValidatorBase::doConvertToInput()
      */
     protected function formatForStorage($input)
@@ -46,7 +47,8 @@ class TypeBoolean extends AbstractSimpleProperty
         if (is_string($input)) {
             return $this->convertString($input);
         }
-        return empty($input)?0:1;
+
+        return empty($input) ? 0 : 1;
     }
 
     protected function formatForHuman($input)
@@ -57,12 +59,12 @@ class TypeBoolean extends AbstractSimpleProperty
             return __('false');
         }
     }
-    
+
     public static function getAccessType(): string
     {
         return 'boolean';
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -73,5 +75,4 @@ class TypeBoolean extends AbstractSimpleProperty
         static::addInfo('description', 'The basic type boolean.', true);
         static::addInfo('type', 'basic');
     }
-    
 }

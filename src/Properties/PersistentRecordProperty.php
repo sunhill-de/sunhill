@@ -1,14 +1,15 @@
 <?php
+
 /**
  * @file PersistentRecordProperty.php
  * A base for PooledRecordProperty and StorableRecordProperty. It defines a create method, that
  * prefills all values with their default value.
- * 
+ *
  * Lang en
  * Reviewstatus: 2024-11-02
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 100 % (2025-06-06)
  *
  * Wiki: /PooledRecordProperties
@@ -19,10 +20,8 @@ namespace Sunhill\Properties;
 
 class PersistentRecordProperty extends RecordProperty
 {
-    
     /**
      * Creates a empty record, prefills the storage with the default values
-     * 
      */
     public function create()
     {
@@ -32,5 +31,4 @@ class PersistentRecordProperty extends RecordProperty
             }
         }
     }
-    
 }

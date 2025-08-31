@@ -3,6 +3,7 @@
 /**
  * @file Properties.php
  * A facade to the PropertyManager
+ *
  * @author Klaus Dimde
  * ---------------------------------------------------------------------------------------------------------
  * Lang en

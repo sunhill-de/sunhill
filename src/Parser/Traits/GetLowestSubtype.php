@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file GetLowestSubtype.php
  * A trait for nodes that have to compare datatype to detect a resulting datatype
@@ -15,7 +16,6 @@ namespace Sunhill\Parser\Traits;
 
 trait GetLowestSubtype
 {
-    
     protected function getLowestSubtype(?string $first, ?string $second): ?string
     {
         if ($first == $second) {
@@ -26,16 +26,16 @@ trait GetLowestSubtype
         }
         if ((($first == 'integer') && ($second == 'float')) ||
             (($first == 'float') && ($second == 'integer'))) {
-                return 'float';
-            }
-            if ((($first == 'date') && ($second == 'datetime')) ||
-                (($first == 'datetime') && ($second == 'date'))) {
-                    return 'datetime';
-                }
-                if (is_null($first) || is_null($second)) {
-                    return null;
-                }
-                return 'mixed';
+            return 'float';
+        }
+        if ((($first == 'date') && ($second == 'datetime')) ||
+            (($first == 'datetime') && ($second == 'date'))) {
+            return 'datetime';
+        }
+        if (is_null($first) || is_null($second)) {
+            return null;
+        }
+
+        return 'mixed';
     }
-        
 }

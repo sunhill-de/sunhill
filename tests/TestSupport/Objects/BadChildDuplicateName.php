@@ -7,10 +7,8 @@ use Sunhill\Types\TypeInteger;
 
 class BadChildDuplicateName extends Dummy
 {
-    
     protected static function initializeRecord(ElementBuilder $builder)
     {
-        $builder->addProperty(TypeInteger::class,'dummyint');
+        $builder->addProperty(TypeInteger::class, 'dummyint');
     }
-    
 }

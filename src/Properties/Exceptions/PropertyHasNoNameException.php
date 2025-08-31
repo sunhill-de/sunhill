@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, A property needs a name but has none
+ *
  * @author lokal
  */
-class PropertyHasNoNameException extends PropertyException 
-{
-}
+class PropertyHasNoNameException extends PropertyException {}

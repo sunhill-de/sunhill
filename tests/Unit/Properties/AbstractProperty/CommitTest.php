@@ -1,45 +1,43 @@
 <?php
+
 /**
  * @file CommitTest.php
  * tests: /src/Properties/AbstractProperty.php
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Storage\AbstractStorage;
+use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 
 uses(SunhillSimpleTestCase::class);
 
-test('commit() is passed to the storage', function()
-{
+test('commit() is passed to the storage', function () {
     $storage = \Mockery::mock(AbstractStorage::class);
     $storage->expects('commit')->once();
 
-    $test = new NonAbstractProperty();
+    $test = new NonAbstractProperty;
     $test->setStorage($storage);
-    
+
     $test->commit();
 });
 
-test('rollback() is passed to the storage', function()
-{
+test('rollback() is passed to the storage', function () {
     $storage = \Mockery::mock(AbstractStorage::class);
     $storage->expects('rollback')->once();
-    
-    $test = new NonAbstractProperty();
+
+    $test = new NonAbstractProperty;
     $test->setStorage($storage);
-    
+
     $test->rollback();
 });
 
-test('isDirty() is passed to the storage', function()
-{
+test('isDirty() is passed to the storage', function () {
     $storage = \Mockery::mock(AbstractStorage::class);
     $storage->expects('isDirty')->with('test')->once();
-    
-    $test = new NonAbstractProperty();
+
+    $test = new NonAbstractProperty;
     $test->setStorage($storage)->setName('test');
-    
+
     $test->isDirty();
 });

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file AliasNode.php
  * A node that represents an alias (like "field as alias")
@@ -17,42 +18,39 @@ use Sunhill\Parser\Nodes\Node;
 use Sunhill\Query\Exceptions\InvalidAliasException;
 
 /**
- * An alias node represents the result of an expression like "expr as alias". The alias than stands for the 
+ * An alias node represents the result of an expression like "expr as alias". The alias than stands for the
  * whole expression and could be used in other statements like "where".
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class AliasNode extends Node
 {
-   
     /**
      * The constructor for an AliasNode. "alias" is then the same as "expression"
-     * 
-     * @param unknown $expression
-     * @param unknown $alias
+     *
+     * @param  unknown  $expression
+     * @param  unknown  $alias
      */
     public function __construct(Node $expression, string $alias)
     {
-        parent::__construct('alias',['expression'=>$expression,'alias'=>$alias]);
+        parent::__construct('alias', ['expression' => $expression, 'alias' => $alias]);
     }
-    
+
     /**
      * The getter and setter for expression (depending whether $node is set.
-     * 
-     * @param Node $node
-     * @return \Sunhill\Query\QueryParser\Nodes\AliasNode|NULL|mixed
+     *
+     * @return \Sunhill\Query\QueryParser\Nodes\AliasNode|null|mixed
      */
     public function expression(?Node $node = null)
     {
         return $this->handleReplacingChild('expression', $node);
     }
-    
+
     /**
      * The getter and setter for the alias for the former expression (depending on $alias is set)
-     * 
-     * @param Node $node
-     * @return \Sunhill\Query\QueryParser\Nodes\AliasNode|NULL|mixed
+     *
+     * @param  Node  $node
+     * @return \Sunhill\Query\QueryParser\Nodes\AliasNode|null|mixed
      */
     public function alias(?string $alias = null)
     {
@@ -61,8 +59,9 @@ class AliasNode extends Node
 
     /**
      * Converts this alias node into a string
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Parser\Nodes\Node::toString()
      */
     public function toString(): string
@@ -72,16 +71,16 @@ class AliasNode extends Node
 
     /**
      * Validates the alias node. It first checks if the expression is valid then if the alias is valid
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Parser\Nodes\Node::validate()
      */
     public function validate()
     {
         $this->expression()->validate();
-        if (!preg_match('/^[a-zA-Z_]([a-zA-Z_0-9]*)$/',$this->alias())) {
+        if (! preg_match('/^[a-zA-Z_]([a-zA-Z_0-9]*)$/', $this->alias())) {
             throw new InvalidAliasException("The alias '".$this->alias()."' is not allowed.");
         }
     }
-
 }

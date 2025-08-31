@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file DiffCreator.php
  * Provides a class that creates diffs out of two arrays
@@ -16,27 +17,22 @@ namespace Sunhill\Helpers;
 use Sunhill\Basic\Base;
 
 /**
- * A helper class that is used by the get_diff() function 
- * 
- * @author klaus
+ * A helper class that is used by the get_diff() function
  *
+ * @author klaus
  */
 class DiffCreator extends Base
 {
-    
     /**
      * Traverses the given structure and searches for elements that are removed in the new structure
-     * @param \stdClass $given
-     * @param \stdClass $new
-     * @param bool $accept_given_asterik
-     * @param bool $accept_new_asterik
+     *
      * @return \stdClass
      */
     private function traverseGiven(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         foreach ($given as $key => $entry) {
-            if (!isset($new->$key)) {
+            if (! isset($new->$key)) {
                 $result->$key = $entry;
             } else {
                 if ($this->isTraversable($entry)) {
@@ -44,33 +40,30 @@ class DiffCreator extends Base
                         continue;
                     }
                     $subdiff = $this->traverseGiven($given->$key, $new->$key, $accept_given_asterik, $accept_new_asterik);
-                    if (!empty((array)$subdiff)) {
+                    if (! empty((array) $subdiff)) {
                         $result->$key = $subdiff;
                     }
                 } else {
-                    if (($entry !== '*') && !(($new->$key == '*') && ($accept_new_asterik)) && ($given->$key !== $new->$key)) {
+                    if (($entry !== '*') && ! (($new->$key == '*') && ($accept_new_asterik)) && ($given->$key !== $new->$key)) {
                         $result->$key = $given->$key;
                     }
                 }
             }
-        }        
+        }
+
         return $result;
     }
-    
+
     /**
      * Traverses the new structures and searches for elements that are newly added
-     * 
-     * @param \stdClass $given
-     * @param \stdClass $new
-     * @param bool $accept_given_asterik
-     * @param bool $accept_new_asterik
+     *
      * @return \stdClass
      */
     private function traverseNew(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         foreach ($new as $key => $entry) {
-            if (!isset($given->$key)) {
+            if (! isset($given->$key)) {
                 $result->$key = $entry;
             } else {
                 if ($this->isTraversable($entry)) {
@@ -78,98 +71,94 @@ class DiffCreator extends Base
                         continue;
                     }
                     $subdiff = $this->traverseNew($given->$key, $new->$key, $accept_given_asterik, $accept_new_asterik);
-                    if (!empty((array)$subdiff)) {
+                    if (! empty((array) $subdiff)) {
                         $result->$key = $subdiff;
                     }
                 } else {
-                    if (($entry !== '*') && !(($given->$key == '*') && ($accept_given_asterik)) && ($given->$key !== $new->$key)) {
+                    if (($entry !== '*') && ! (($given->$key == '*') && ($accept_given_asterik)) && ($given->$key !== $new->$key)) {
                         $result->$key = $new->$key;
                     }
                 }
             }
         }
+
         return $result;
     }
-    
+
     /**
-     * Retraverses the given structure and searches for changees 
-     * 
-     * @param unknown $given
-     * @param unknown $new
-     * @param unknown $new_array
+     * Retraverses the given structure and searches for changees
+     *
+     * @param  unknown  $given
+     * @param  unknown  $new
+     * @param  unknown  $new_array
      */
     private function retraverseGiven($given, &$new, $new_array)
     {
         foreach ($given as $key => $entry) {
-            if (!isset($new->$key) && (isset($new_array->$key))) {
-                $new->$key = new \stdClass();
+            if (! isset($new->$key) && (isset($new_array->$key))) {
+                $new->$key = new \stdClass;
                 if ($this->isTraversable($given->$key)) {
                     $this->retraverseGiven($given->$key, $new->$key, $new_array->$key);
                 }
             }
         }
     }
-    
+
     /**
      * Retraverses the new structure and searches for changes
-     * 
-     * @param unknown $given
-     * @param unknown $new
-     * @param unknown $given_array
+     *
+     * @param  unknown  $given
+     * @param  unknown  $new
+     * @param  unknown  $given_array
      */
     private function retraverseNew(&$given, $new, $given_array)
     {
         foreach ($new as $key => $entry) {
-            if (!isset($given->$key) && (isset($given_array->$key))) {
-                $given->$key = new \stdClass();
+            if (! isset($given->$key) && (isset($given_array->$key))) {
+                $given->$key = new \stdClass;
                 if ($this->isTraversable($new->$key)) {
                     $this->retraverseNew($given->$key, $new->$key, $given_array->$key);
                 }
             }
         }
     }
-    
+
     /**
      * When both given structures are "traversable" performs the diff
-     * @param \stdClass $given
-     * @param \stdClass $new
-     * @param bool $accept_given_asterik
-     * @param bool $accept_new_asterik
+     *
      * @return \stdClass
      */
     private function getTraversableDiff(\stdClass $given, \stdClass $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         $result->given = $this->traverseGiven($given, $new, $accept_given_asterik, $accept_new_asterik);
         $result->new = $this->traverseNew($given, $new, $accept_given_asterik, $accept_new_asterik);
         $this->retraverseGiven($result->given, $result->new, $new);
         $this->retraverseNew($result->given, $result->new, $given);
+
         return $result;
     }
-   
+
     /**
      * Returns true when an diff could be performed on the given variable
-     * 
-     * @param unknown $test
-     * @return bool
+     *
+     * @param  unknown  $test
      */
     private function isTraversable($test): bool
     {
-        return is_array($test) || is_a($test, \Traversable::class) || is_a($test, \stdClass::class);    
+        return is_array($test) || is_a($test, \Traversable::class) || is_a($test, \stdClass::class);
     }
-    
+
     /**
      * The main function of the DiffCreator
-     * 
-     * @param unknown $given
-     * @param unknown $new
-     * @param bool $accept_given_asterik
-     * @param bool $accept_new_asterik
+     *
+     * @param  unknown  $given
+     * @param  unknown  $new
      * @return \stdClass
      */
     public function getDiff($given, $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false)
     {
-        if ($this->isTraversable($given) &&  ($this->isTraversable($new))) {
+        if ($this->isTraversable($given) && ($this->isTraversable($new))) {
             return $this->getTraversableDiff($given, $new, $accept_given_asterik, $accept_new_asterik);
         }
         throw new \Exception("Can't get a diff out of the input data");

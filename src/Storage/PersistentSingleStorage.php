@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @file PersistentSingleStorage.php
  * The class for storages that could be saved and loaded to or from a persistent media like a
  * database or a file. This class only represents one single property not a pool of properties.
- * 
+ *
  * @author Klaus Dimde
  * Lang en
  * Reviewstatus: 2024-10-17
@@ -16,47 +17,43 @@
 
 namespace Sunhill\Storage;
 
-use Sunhill\Storage\Exceptions\InvalidIDException;
 use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
-use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
-use Sunhill\Storage\Exceptions\StructureNeededException;
 
 abstract class PersistentSingleStorage extends AbstractPersistentStorage
 {
-    
-    
     /**
-     * Loads the data 
-     * 
+     * Loads the data
      */
     public function load()
     {
         if ($this->isLoaded()) {
-            throw new StorageAlreadyLoadedException("The storage was already loaded");
+            throw new StorageAlreadyLoadedException('The storage was already loaded');
         }
         $this->doLoad();
         $this->loaded = true;
     }
-    
+
     /**
-     * Performs the load of data from the persitent 
-     * @param mixed $id
+     * Performs the load of data from the persitent
+     *
+     * @param  mixed  $id
      */
     abstract protected function doLoad();
-    
+
     /**
      * Persistent single storages can initiated a load because there is only one entry
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Storage\AbstractPersistentStorage::handleUnloaded()
      */
     protected function handleUnloaded()
     {
         $this->load();
     }
-    
+
     /**
-     * Loading a storage when already loaded with data is forbidden. This resets 
+     * Loading a storage when already loaded with data is forbidden. This resets
      */
     public function reset()
     {

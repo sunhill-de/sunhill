@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file UnexpectedResultCountException.php
  * Provides the UnexpectedResultCountException

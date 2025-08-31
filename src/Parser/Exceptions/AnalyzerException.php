@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file AnalyzerException.php
  * Provides the AnalyzerException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * Basic exception that is raised inside an analyzer
- * @author klaus
  *
+ * @author klaus
  */
 class AnalyzerException extends ParsingSubsystemException {}

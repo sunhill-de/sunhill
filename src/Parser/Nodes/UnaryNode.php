@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file UnaryNode.php
  * A basic class for a node that has only one child
@@ -13,38 +14,33 @@
 
 namespace Sunhill\Parser\Nodes;
 
-use Sunhill\Basic\Base;
 use Sunhill\Parser\Exceptions\TypesMismatchException;
-
 
 class UnaryNode extends Node
 {
-        
     protected $allowed_types = [];
-    
+
     public function __construct(string $type)
     {
-        parent::__construct($type,[]);
+        parent::__construct($type, []);
     }
 
     /**
      * Simplified setter/getter for the child. When called with parameter it acts as a setter otherwise as a getter.
-     */              
+     */
     public function child(?Node $node = null): Node
     {
-        if (!is_null($node)) {
+        if (! is_null($node)) {
             $this->children['child'] = $node;
+
             return $this;
         } else {
             return $this->children['child'];
         }
     }
- 
+
     /**
      * Helper function that searches for a rule that fits to the given child datatype or null if none found.
-     * 
-     * @param string $child
-     * @return \stdClass|NULL
      */
     private function getOperatorDesciptor(string $child): ?\stdClass
     {
@@ -53,43 +49,46 @@ class UnaryNode extends Node
                 return $type;
             }
         }
+
         return null;
     }
-    
+
     /**
      * Returns the datatype of the child node
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Parser\Nodes\Node::getDatatype()
      */
     public function getDatatype(): ?string
     {
         if ($descriptor = $this->getOperatorDesciptor($this->child()->getDatatype())) {
-           return $descriptor->resulting;         
+            return $descriptor->resulting;
         }
+
         return null;
     }
- 
+
     public function toString(): string
     {
         return '('.$this->getType().$this->child()->toString().')';
     }
-        
+
     public function addAllowedType(string $child, string $resulting)
     {
-        $entry = new \stdClass();
+        $entry = new \stdClass;
         $entry->child = $child;
         $entry->resulting = $resulting;
         $this->allowed_types[] = $entry;
     }
-    
+
     protected function validateOperator(string $child_data_type)
     {
-        if (!$this->getOperatorDesciptor($child_data_type)) {
+        if (! $this->getOperatorDesciptor($child_data_type)) {
             throw new TypesMismatchException("The unary operator '".$this->getType()."' is not allowed for '$child_data_type'");
         }
     }
-    
+
     public function validate()
     {
         $this->child()->validate();

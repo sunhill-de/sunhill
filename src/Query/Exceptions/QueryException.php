@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file QueryException.php
  * Provides the QueryException
@@ -14,7 +15,7 @@ use Sunhill\Exceptions\SunhillException;
 
 /**
  * Basic exception that is raised inside a query
- * @author klaus
  *
+ * @author klaus
  */
 class QueryException extends SunhillException {}

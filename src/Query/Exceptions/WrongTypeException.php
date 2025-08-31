@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file WrongTypeException.php
  * Provides the WrongTypeException
@@ -12,7 +13,7 @@ namespace Sunhill\Query\Exceptions;
 
 /**
  * Is raised when a wrong type is used inside a query
- * @author klaus
  *
+ * @author klaus
  */
 class WrongTypeException extends QueryException {}

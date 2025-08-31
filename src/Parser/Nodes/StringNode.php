@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StringNode.php
  * A node that represents a string constant
@@ -14,20 +15,18 @@ namespace Sunhill\Parser\Nodes;
 
 class StringNode extends TerminalNode
 {
-        
     public function __construct($value)
     {
-        parent::__construct('string',$value);
+        parent::__construct('string', $value);
     }
 
     public function getDatatype(): ?string
     {
         return 'string';
     }
- 
+
     public function toString(): string
     {
         return '"'.$this->getValue().'"';
     }
-    
- }
+}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file DateTimeNode.php
  * A node that represents a date-time constant
@@ -14,20 +15,18 @@ namespace Sunhill\Parser\Nodes;
 
 class DateTimeNode extends TerminalNode
 {
-        
     public function __construct($value)
     {
-        parent::__construct('datetime',$value);
+        parent::__construct('datetime', $value);
     }
 
     public function getDatatype(): ?string
     {
         return 'datetime';
     }
- 
+
     public function toString(): string
     {
         return '"'.$this->getValue().'"';
     }
-    
 }

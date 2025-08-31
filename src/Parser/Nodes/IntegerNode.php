@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file IntegerNode.php
  * A node that represents an integer constant
@@ -14,20 +15,18 @@ namespace Sunhill\Parser\Nodes;
 
 class IntegerNode extends TerminalNode
 {
-        
     public function __construct($value)
     {
-        parent::__construct('integer',$value);
+        parent::__construct('integer', $value);
     }
 
     public function getDatatype(): ?string
     {
         return 'integer';
     }
-    
+
     public function toString(): string
     {
         return $this->getValue();
     }
-    
 }

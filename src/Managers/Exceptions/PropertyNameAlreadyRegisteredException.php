@@ -3,7 +3,7 @@
 /**
  * @file PropertyNameAlreadyRegisteredException.php
  * Provides the given exception
- * 
+ *
  * @author Klaus Dimde
  * ---------------------------------------------------------------------------------------------------------
  * Lang en
@@ -13,11 +13,12 @@
  * Tests: none
  * Coverage Unit: none
  */
+
 namespace Sunhill\Managers\Exceptions;
 
 /**
  * Is raised when registerProperty() is called with a property name that is already registered
- * @author klaus
  *
+ * @author klaus
  */
 class PropertyNameAlreadyRegisteredException extends PropertiesManagerException {}

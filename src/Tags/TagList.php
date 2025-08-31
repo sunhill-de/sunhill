@@ -1,7 +1,9 @@
 <?php
+
 /**
  * @file TagList.php
  * A class that provides access to the list of tags associated to an object
+ *
  * @author Klaus Dimde
  * Lang en
  * Create date: 2025-05-25
@@ -12,45 +14,47 @@
  * Coverage Unit: 93.33  (2025-06-06)
  * PSR-State: completed
  */
+
 namespace Sunhill\Tags;
 
 use Sunhill\Basic\Base;
-use Sunhill\Storage\AbstractStorage;
 use Sunhill\Facades\Properties;
+use Sunhill\Storage\AbstractStorage;
 
 class TagList extends Base implements \ArrayAccess, \Countable
 {
     protected $tag_list = [];
-    
+
     protected $storage;
-    
+
     public function __construct(AbstractStorage $storage)
     {
         $this->setStorage($storage);
-        $this->storage->setValue('_tags',[]);
+        $this->storage->setValue('_tags', []);
     }
-    
+
     public function setStorage(AbstractStorage $storage)
     {
         $this->storage = $storage;
+
         return $this;
     }
-    
+
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->tag_list[$offset]);
     }
-    
+
     public function offsetGet(mixed $offset): mixed
     {
         return $this->tag_list[$offset];
     }
-    
+
     public function offsetSet(mixed $offset, mixed $value): void
     {
         $value = $this->createTag($value);
         $index = $this->searchIDinList($value->getID());
-        if (!is_null($index) && ($index !== $offset)) {
+        if (! is_null($index) && ($index !== $offset)) {
             return;
         }
         if (is_null($offset)) {
@@ -60,19 +64,19 @@ class TagList extends Base implements \ArrayAccess, \Countable
         }
         $this->storage->setIndexedValue('_tags', $offset, $value->getID());
     }
-    
+
     public function offsetUnset(mixed $offset): void
     {
         unset($this->tag_list[$offset]);
         $this->tag_list = array_values($this->tag_list); // Reindex
         $this->storage->unsetIndexedValue('_tags', $offset);
     }
-    
+
     public function count(): int
     {
         return count($this->tag_list);
     }
-    
+
     private function searchIDinList(int $id): ?int
     {
         foreach ($this->tag_list as $index => $tag) {
@@ -80,40 +84,41 @@ class TagList extends Base implements \ArrayAccess, \Countable
                 return $index;
             }
         }
+
         return null;
     }
-    
+
     public function add($tag)
     {
         $this->offsetSet(null, $tag);
     }
-    
+
     public function remove($tag)
     {
         $tag = $this->createTag($tag);
-        if (!is_null($id = $this->searchIDinList($tag->id))) {
+        if (! is_null($id = $this->searchIDinList($tag->id))) {
             $this->offsetUnset($id);
         }
     }
-    
+
     protected function createTag($tag_id): Tag
     {
         if (is_a($tag_id, Tag::class)) {
             return $tag_id;
-        } else if (is_int($tag_id)) {
+        } elseif (is_int($tag_id)) {
             return Properties::loadTag($tag_id);
-        } else if (is_string($tag_id)) {
+        } elseif (is_string($tag_id)) {
             return Properties::searchTag($tag_id);
         }
         throw new \Exception("Can't handle given tag");
     }
-    
+
     public function clear()
     {
         $this->tag_list = [];
         $this->storage->clearArray('_tags');
     }
-    
+
     public function loadFromStorage()
     {
         foreach ($this->storage->getValue('_tags') as $tag) {

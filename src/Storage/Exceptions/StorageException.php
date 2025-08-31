@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StorageException.php
  * Provides the StorageException
@@ -14,7 +15,7 @@ use Sunhill\Exceptions\SunhillException;
 
 /**
  * Is throws when an error occurs inside a storage
- * @author klaus
  *
+ * @author klaus
  */
 class StorageException extends SunhillException {}

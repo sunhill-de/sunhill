@@ -1,36 +1,34 @@
 <?php
+
 /**
- * A helper fake check class for testing 
+ * A helper fake check class for testing
  */
+
 namespace Sunhill\Tests\Unit\Checker\Examples;
 
 use Sunhill\Checker\Checker;
 
 class DummyChecker extends Checker
 {
-    
     public function checkPass(bool $repair)
     {
         $this->pass();
     }
-    
+
     public function checkFailure(bool $repair)
     {
-        $this->fail("FAILED");
+        $this->fail('FAILED');
     }
-    
+
     public function checkRepair(bool $repair)
     {
-        $this->repair("REPAIRED");
+        $this->repair('REPAIRED');
     }
-    
+
     public function checkUnrepairable(bool $repair)
     {
-        $this->unrepairable("UNREPAIRABLE");
+        $this->unrepairable('UNREPAIRABLE');
     }
-    
-    public function dummyMethod()
-    {
-        
-    }
+
+    public function dummyMethod() {}
 }

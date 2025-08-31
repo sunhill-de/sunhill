@@ -1,24 +1,24 @@
 <?php
+
 /**
  * @file SemanticsHumanValueTest.php
  * tests: /src/Semantics/*
  * free of dependent units: yes
  */
 
-
-use Sunhill\Semantics\Duration;
-use Sunhill\Semantics\Capacity;
-use Sunhill\Semantics\Direction;
 use Sunhill\Semantics\Age;
 use Sunhill\Semantics\Airpressure;
 use Sunhill\Semantics\Airtemperature;
+use Sunhill\Semantics\Capacity;
+use Sunhill\Semantics\Direction;
+use Sunhill\Semantics\Duration;
 use Sunhill\Tests\SunhillLaravelTestCase;
 
 uses(SunhillLaravelTestCase::class);
 
 test('get human value', function ($type, $setters, $test_input, $expect, $expect_mod = null) {
-    $test = new $type();
-    
+    $test = new $type;
+
     if ($expect == 'except') {
         $this->expectException(InvalidValueException::class);
     }
@@ -27,7 +27,7 @@ test('get human value', function ($type, $setters, $test_input, $expect, $expect
     if (is_callable($expect_mod)) {
         expect($expect_mod($format))->toEqual($expect);
     } else {
-        expect($format)->toEqual($expect);            
+        expect($format)->toEqual($expect);
     }
 })->with('convertProvider');
 dataset('convertProvider', function () {
@@ -35,22 +35,22 @@ dataset('convertProvider', function () {
         [Age::class, [], 10, '10 s'],
         [Airpressure::class, [], 1024, '1024 hPa'],
         [Airtemperature::class, [], 10, '10 °C'],
-        
+
         [Capacity::class, [], 1, '1 Byte'],
         [Capacity::class, [], 1001, '1 kB'],
         [Capacity::class, [], 1101, '1.1 kB'],
-        [Capacity::class, [], 1000*1000, '1 MB'],
-        [Capacity::class, [], 1100*1000, '1.1 MB'],
-        [Capacity::class, [], 1000*1000*1000, '1 GB'],
-        [Capacity::class, [], 1100*1000*1000, '1.1 GB'],
-        [Capacity::class, [], 1000*1000*1000*1000, '1 TB'],
-        [Capacity::class, [], 1100*1000*1000*1000, '1.1 TB'],
-        
+        [Capacity::class, [], 1000 * 1000, '1 MB'],
+        [Capacity::class, [], 1100 * 1000, '1.1 MB'],
+        [Capacity::class, [], 1000 * 1000 * 1000, '1 GB'],
+        [Capacity::class, [], 1100 * 1000 * 1000, '1.1 GB'],
+        [Capacity::class, [], 1000 * 1000 * 1000 * 1000, '1 TB'],
+        [Capacity::class, [], 1100 * 1000 * 1000 * 1000, '1.1 TB'],
+
         [Direction::class, [], 0, 'N'],
         [Direction::class, [], 90, 'E'],
         [Direction::class, [], 180, 'S'],
         [Direction::class, [], 270, 'W'],
-        
+
         [Duration::class, [], 1, '1 seconds'],
         [Duration::class, [], 60, '1 minute 0 seconds'],
         [Duration::class, [], 61, '1 minute 1 second'],

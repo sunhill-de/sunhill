@@ -17,9 +17,7 @@ use Sunhill\Exceptions\SunhillException;
 
 /**
  * a basic exception class that deal with properties
- * @author lokal
  *
+ * @author lokal
  */
-class PropertyException extends SunhillException
-{
-}
+class PropertyException extends SunhillException {}

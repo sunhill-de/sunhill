@@ -1,12 +1,13 @@
 <?php
+
 /**
  * @file Bistate.php
- * Defines an abstract for values that can handle two values (like "on" and "off") 
+ * Defines an abstract for values that can handle two values (like "on" and "off")
  * Lang de,en
  * Reviewstatus: 2024-10-08
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 0 % (2025-06-06)
  */
 
@@ -16,25 +17,21 @@ use Sunhill\Types\TypeBoolean;
 
 abstract class Bistate extends TypeBoolean
 {
-    
     /**
      * Returns the value that represents the true state
-     * 
-     * @return string
      */
     abstract protected function getTrueValue(): string;
-    
+
     /**
      * Returns the value that represents the true state
-     *
-     * @return string
      */
     abstract protected function getFalseValue(): string;
-    
+
     /**
      * Depending on the given value return the according value
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see Sunhill\\\Types\TypeBoolean::formatForHuman()
      */
     protected function formatForHuman($input)
@@ -42,7 +39,7 @@ abstract class Bistate extends TypeBoolean
         if ($input) {
             return $this->getTrueValue();
         } else {
-            return $this->getFalseValue();            
+            return $this->getFalseValue();
         }
     }
 }

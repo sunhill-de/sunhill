@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StorageNotLoadedException.php
  * Provides the StorageNotLoadedException
@@ -13,8 +14,7 @@ namespace Sunhill\Storage\Exceptions;
 /**
  * This exception is thrown when a reading or writing access is performed and the storage was
  * not loaded before
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class StorageNotLoadedException extends StorageException {}

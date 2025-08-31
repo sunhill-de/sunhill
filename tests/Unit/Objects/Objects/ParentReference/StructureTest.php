@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StructureTest.php
  * tests: /src/Objects/ORMObject.php
@@ -10,10 +11,9 @@ use Sunhill\Tests\TestSupport\Objects\ParentReference;
 
 uses(SunhillLaravelTestCase::class);
 
-test('ParentReference structure is returned as expected', function()
-{
-    $test = new ParentReference();
+test('ParentReference structure is returned as expected', function () {
+    $test = new ParentReference;
     $one = ParentReference::getExpectedStructure();
     $two = $test->getStructure();
-    expect(checkStdClasses(ParentReference::getExpectedStructure(), $test->getStructure()))->toBe(true);    
+    expect(checkStdClasses(ParentReference::getExpectedStructure(), $test->getStructure()))->toBe(true);
 });

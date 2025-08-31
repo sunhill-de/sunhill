@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file checker.php
  * A Checker is a single entity. It contains at least one checkXXXX method. Each of which is
@@ -20,74 +21,71 @@ use Sunhill\Checker\Exceptions\CheckException;
 
 class Checker extends Base
 {
-    
-    /** 
+    /**
      * Stores the group this check belongs to. This is needed for grouping checks in the
      * check command
-     * @var string
      */
     protected static string $group = '';
-    
+
     /**
-     * Stores the result of the last check 
-     * @var string
+     * Stores the result of the last check
      */
     protected string $last_result = '';
-    
+
     /**
      * Stores the message of the last failure
-     * @var string
      */
     protected string $last_message = '';
-    
+
     /**
      * The check was passed
+     *
      * @test Unit/Checker/CheckerTest::testPass()
      */
     protected function pass()
     {
         $this->last_result = 'passed';
     }
-    
+
     /**
      * The check failed with the given error
-     * @param string $message
+     *
      * @test Unit/Checker/CheckerTest::testFailure()
      */
     protected function fail(string $message)
     {
         $this->last_result = 'failed';
         $this->last_message = $message;
-        throw new CheckException("Check failed");
+        throw new CheckException('Check failed');
     }
-    
+
     /**
      * The check failed with the given error but was repaired
-     * @param string $message
+     *
      * @test Unit/Checker/CheckerTest::testRepair()
      */
     protected function repair(string $message)
     {
         $this->last_result = 'repaired';
         $this->last_message = $message;
-        throw new CheckException("Check failed and repaired");
+        throw new CheckException('Check failed and repaired');
     }
-    
+
     /**
      * The check failed and was not repairable
-     * @param string $message
+     *
      * @test Unit/Checker/CheckerTest::testUnrepairable()
      */
     protected function unrepairable(string $message)
     {
         $this->last_result = 'unrepairable';
         $this->last_message = $message;
-        throw new CheckException("Check failed was not repairable");        
+        throw new CheckException('Check failed was not repairable');
     }
-    
+
     /**
      * Getter for $last_result
-     * @return string
+     *
      * @test Unit/Checker/CheckerTest::testFailure()
      * @test Unit/Checker/CheckerTest::testRepair()
      * @test Unit/Checker/CheckerTest::testUnrepairable()
@@ -96,17 +94,16 @@ class Checker extends Base
     {
         return $this->last_result;
     }
-    
+
     /**
      * Getter for $last_message
-     * @return string
+     *
      * @test Unit/Checker/CheckerTest::testFailure()
      * @test Unit/Checker/CheckerTest::testRepair()
      * @test Unit/Checker/CheckerTest::testUnrepairable()
      */
     public function getLastMessage(): string
     {
-        return $this->last_message;    
+        return $this->last_message;
     }
-    
 }

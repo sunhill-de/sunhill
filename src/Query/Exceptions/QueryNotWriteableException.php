@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file QueryNotWriteableException.php
  * Provides the QueryNotWriteableException
@@ -12,7 +13,7 @@ namespace Sunhill\Query\Exceptions;
 
 /**
  * Is raised when delete(), update() or insert() is called and the query is marked as not writeable
- * @author klaus
  *
+ * @author klaus
  */
 class QueryNotWriteableException extends QueryException {}

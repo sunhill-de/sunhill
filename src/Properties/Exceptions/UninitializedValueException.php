@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, if a reference is assigned an invalid value
+ *
  * @author lokal
  */
-class UninitializedValueException extends PropertyException 
-{
-}
+class UninitializedValueException extends PropertyException {}

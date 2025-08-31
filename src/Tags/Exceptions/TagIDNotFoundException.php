@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @file TagIDNotFoundException.php
  * Provides the TagIDNotFoundException
@@ -16,9 +15,7 @@ namespace Sunhill\Tags\Exceptions;
 
 /**
  * is raised when the id was not found
- * @author lokal
  *
+ * @author lokal
  */
-class TagIDNotFoundException extends TagException
-{
-}
+class TagIDNotFoundException extends TagException {}

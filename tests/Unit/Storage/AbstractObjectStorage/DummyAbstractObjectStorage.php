@@ -2,113 +2,113 @@
 
 namespace Sunhill\Tests\Unit\Storage\AbstractObjectStorage;
 
-use Sunhill\Storage\AbstractObjectStorage\AbstractObjectStorage;
-use Sunhill\Tests\TestSupport\Objects\ChildObject;
-use Sunhill\Parser\Nodes\Node;
+use Sunhill\Parser\Executor;
 use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\FloatNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
 use Sunhill\Parser\Nodes\IntegerNode;
-use Sunhill\Parser\Nodes\FloatNode;
+use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\StringNode;
-use Sunhill\Parser\Executor;
 use Sunhill\Query\QueryParser\Nodes\QueryNode;
+use Sunhill\Storage\AbstractObjectStorage\AbstractObjectStorage;
+use Sunhill\Tests\TestSupport\Objects\ChildObject;
 
 class DummyAbstractObjectStorage extends AbstractObjectStorage
 {
     public static $DataPool;
-    
+
     public static $Data = [
-        'objects'=>[
+        'objects' => [
             [
-                'id'=>1,
-                '_classname'=>'ChildObject',
-                '_uuid'=>'de4961ab-f548-4402-8adc-f6d33e80134e',
-                '_read_cap'=>null,
-                '_modify_cap'=>null,
-                '_delete_cap'=>null,
-                '_created_at'=>'2024-10-17 13:55:00',
-                '_updated_at'=>'2024-10-17 13:55:00',                
-            ],  
-            [
-                'id'=>2,
-                '_classname'=>'ChildObject',
-                '_uuid'=>'5a1f9541-4245-4e20-99c6-2229c9b95707',
-                '_read_cap'=>null,
-                '_modify_cap'=>null,
-                '_delete_cap'=>null,
-                '_created_at'=>'2024-10-17 13:55:00',
-                '_updated_at'=>'2024-10-17 13:55:00',
+                'id' => 1,
+                '_classname' => 'ChildObject',
+                '_uuid' => 'de4961ab-f548-4402-8adc-f6d33e80134e',
+                '_read_cap' => null,
+                '_modify_cap' => null,
+                '_delete_cap' => null,
+                '_created_at' => '2024-10-17 13:55:00',
+                '_updated_at' => '2024-10-17 13:55:00',
             ],
             [
-                'id'=>3,
-                '_classname'=>'ChildObject',
-                '_uuid'=>'e7e1dc3f-9db0-42b1-b141-41ae94db9c5c',
-                '_read_cap'=>'reader',
-                '_modify_cap'=>null,
-                '_delete_cap'=>null,
-                '_created_at'=>'2024-10-17 13:55:00',
-                '_updated_at'=>'2024-10-17 13:55:00',
+                'id' => 2,
+                '_classname' => 'ChildObject',
+                '_uuid' => '5a1f9541-4245-4e20-99c6-2229c9b95707',
+                '_read_cap' => null,
+                '_modify_cap' => null,
+                '_delete_cap' => null,
+                '_created_at' => '2024-10-17 13:55:00',
+                '_updated_at' => '2024-10-17 13:55:00',
             ],
             [
-                'id'=>4,
-                '_classname'=>'ChildObject',
-                '_uuid'=>'8807dbef-eb26-41f9-ac89-3744cfb262a0',
-                '_read_cap'=>null,
-                '_modify_cap'=>'modifier',
-                '_delete_cap'=>null,
-                '_created_at'=>'2024-10-17 13:55:00',
-                '_updated_at'=>'2024-10-17 20:55:00',
+                'id' => 3,
+                '_classname' => 'ChildObject',
+                '_uuid' => 'e7e1dc3f-9db0-42b1-b141-41ae94db9c5c',
+                '_read_cap' => 'reader',
+                '_modify_cap' => null,
+                '_delete_cap' => null,
+                '_created_at' => '2024-10-17 13:55:00',
+                '_updated_at' => '2024-10-17 13:55:00',
+            ],
+            [
+                'id' => 4,
+                '_classname' => 'ChildObject',
+                '_uuid' => '8807dbef-eb26-41f9-ac89-3744cfb262a0',
+                '_read_cap' => null,
+                '_modify_cap' => 'modifier',
+                '_delete_cap' => null,
+                '_created_at' => '2024-10-17 13:55:00',
+                '_updated_at' => '2024-10-17 20:55:00',
             ],
         ],
-        'parentobjects'=>[
-            ['id'=>1,'parent_int'=>123,'parent_string'=>'ABC'],
-            ['id'=>2,'parent_int'=>234,'parent_string'=>'BCE'],
-            ['id'=>3,'parent_int'=>345,'parent_string'=>'CDE'],
-            ['id'=>4,'parent_int'=>456,'parent_string'=>'DEF'],
+        'parentobjects' => [
+            ['id' => 1, 'parent_int' => 123, 'parent_string' => 'ABC'],
+            ['id' => 2, 'parent_int' => 234, 'parent_string' => 'BCE'],
+            ['id' => 3, 'parent_int' => 345, 'parent_string' => 'CDE'],
+            ['id' => 4, 'parent_int' => 456, 'parent_string' => 'DEF'],
         ],
-        'parentobjects_parent_sarray'=>[
-            ['container_id'=>1,'index'=>0,'element'=>321],
-            ['container_id'=>1,'index'=>1,'element'=>432],
-            ['container_id'=>1,'index'=>2,'element'=>543],
-            ['container_id'=>2,'index'=>0,'element'=>323],
-            ['container_id'=>2,'index'=>1,'element'=>434],
-            ['container_id'=>2,'index'=>2,'element'=>545],
+        'parentobjects_parent_sarray' => [
+            ['container_id' => 1, 'index' => 0, 'element' => 321],
+            ['container_id' => 1, 'index' => 1, 'element' => 432],
+            ['container_id' => 1, 'index' => 2, 'element' => 543],
+            ['container_id' => 2, 'index' => 0, 'element' => 323],
+            ['container_id' => 2, 'index' => 1, 'element' => 434],
+            ['container_id' => 2, 'index' => 2, 'element' => 545],
         ],
-        'childobjects'=>[
-            ['id'=>1,'child_int'=>111,'child_string'=>'AAA'],
-            ['id'=>2,'child_int'=>222,'child_string'=>'BBB'],
-            ['id'=>3,'child_int'=>333,'child_string'=>'CCC'],            
-            ['id'=>4,'child_int'=>444,'child_string'=>'DDD'],
+        'childobjects' => [
+            ['id' => 1, 'child_int' => 111, 'child_string' => 'AAA'],
+            ['id' => 2, 'child_int' => 222, 'child_string' => 'BBB'],
+            ['id' => 3, 'child_int' => 333, 'child_string' => 'CCC'],
+            ['id' => 4, 'child_int' => 444, 'child_string' => 'DDD'],
         ],
-        'childobjects_child_sarray'=>[
-            ['container_id'=>1,'index'=>0,'element'=>322],
-            ['container_id'=>1,'index'=>1,'element'=>433],
-            ['container_id'=>1,'index'=>2,'element'=>544],
-            ['container_id'=>3,'index'=>0,'element'=>329],
-            ['container_id'=>3,'index'=>1,'element'=>439],
-            ['container_id'=>3,'index'=>2,'element'=>549],            
+        'childobjects_child_sarray' => [
+            ['container_id' => 1, 'index' => 0, 'element' => 322],
+            ['container_id' => 1, 'index' => 1, 'element' => 433],
+            ['container_id' => 1, 'index' => 2, 'element' => 544],
+            ['container_id' => 3, 'index' => 0, 'element' => 329],
+            ['container_id' => 3, 'index' => 1, 'element' => 439],
+            ['container_id' => 3, 'index' => 2, 'element' => 549],
         ],
-        'tagobjectassigns'=>[
-            ['container_id'=>1,'tag_id'=>1],
-            ['container_id'=>1,'tag_id'=>2],
-            ['container_id'=>2,'tag_id'=>2],
-            ['container_id'=>2,'tag_id'=>3],
-            ['container_id'=>3,'tag_id'=>4],
+        'tagobjectassigns' => [
+            ['container_id' => 1, 'tag_id' => 1],
+            ['container_id' => 1, 'tag_id' => 2],
+            ['container_id' => 2, 'tag_id' => 2],
+            ['container_id' => 2, 'tag_id' => 3],
+            ['container_id' => 3, 'tag_id' => 4],
         ],
-        'attributeobjectassigns'=>[
-            ['container_id'=>1,'attribute_id'=>1],
-            ['container_id'=>1,'attribute_id'=>2],
-            ['container_id'=>2,'attribute_id'=>2],
-            ['container_id'=>2,'attribute_id'=>3],
-            ['container_id'=>3,'attribute_id'=>4],
+        'attributeobjectassigns' => [
+            ['container_id' => 1, 'attribute_id' => 1],
+            ['container_id' => 1, 'attribute_id' => 2],
+            ['container_id' => 2, 'attribute_id' => 2],
+            ['container_id' => 2, 'attribute_id' => 3],
+            ['container_id' => 3, 'attribute_id' => 4],
         ],
     ];
-    
+
     public function __construct()
     {
-        $this->setStructure(ChildObject::getExpectedStructure());    
+        $this->setStructure(ChildObject::getExpectedStructure());
     }
-    
+
     public static function getRecords(string $storage_id, string $key, $value)
     {
         $result = [];
@@ -117,50 +117,49 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 $result[] = $data_set;
             }
         }
+
         return $result;
     }
-    
+
     /**
      * Updates the storage with the subid. It uses $key to identiy the record(s) and sets the givenvalues
      *
-     * @param unknown $key
-     * @param unknown $values
+     * @param  unknown  $key
+     * @param  unknown  $values
      */
     protected function updateStorageSubid(string $subid, int $key, array $values, string $key_field = 'id')
-    {         
-        foreach ($values as $value_key=>$value) {
-            static::$DataPool[$subid][$key-1][$value_key] = $value;
+    {
+        foreach ($values as $value_key => $value) {
+            static::$DataPool[$subid][$key - 1][$value_key] = $value;
         }
     }
-    
+
     /**
      * Deletes all references to key from the given
      *
-     * @param unknown $key
+     * @param  unknown  $key
      */
     protected function deleteStorageSubid(string $subid, int $key, string $key_field = 'id')
     {
-        for ($i=0;$i<count(static::$DataPool[$subid]);$i++) {
+        for ($i = 0; $i < count(static::$DataPool[$subid]); $i++) {
             if (static::$DataPool[$subid][$i][$key_field] == $key) {
                 unset(static::$DataPool[$subid][$i]);
             }
         }
         static::$DataPool[$subid] = array_values(static::$DataPool[$subid]); // Reindex
     }
-    
+
     protected function insertObjects(array $values): int
     {
-        $this->setID(count(static::$DataPool['objects'])+1);
+        $this->setID(count(static::$DataPool['objects']) + 1);
         $values['id'] = $this->getID();
         $this->insertStorageSubid('objects', $values);
+
         return $this->getID();
     }
-    
+
     /**
      * Inserts into the given storage subid the given values. If value is a array of arrays then insert every entry as a separate record
-     *
-     * @param string $subid
-     * @param array $values
      */
     protected function insertStorageSubid(string $subid, array $values)
     {
@@ -172,22 +171,21 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
             static::$DataPool[$subid][] = $values;
         }
     }
-    
+
     /**
      * Loads from the given storage subif the values with the given key
      *
-     * @param string $subid
-     * @param int $key
      * @return array
      */
     protected function loadStorageSubid(string $subid, int $key, string $key_field = 'id'): array|\stdClass
     {
         $result = [];
-        foreach(static::$DataPool[$subid] as $record) {
+        foreach (static::$DataPool[$subid] as $record) {
             if ($record[$key_field] == $key) {
                 $result[] = makeStdClass($record);
             }
         }
+
         return $result;
         if (count($result) == 1) {
             return $result[0];
@@ -195,7 +193,7 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
             return $result;
         }
     }
-    
+
     private function getBinaryResult(\stdClass $record, BinaryNode $node)
     {
         $left = $this->getNodeResult($record, $node->left());
@@ -212,10 +210,10 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
             case '=':
                 return $left == $right;
             case '<>':
-                return $left <> $right;
+                return $left != $right;
         }
     }
-    
+
     private function getNodeResult(\stdClass $record, ?Node $node)
     {
         if (is_null($node)) {
@@ -226,22 +224,24 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 return $this->getBinaryResult($record, $node);
             case IdentifierNode::class:
                 $name = $node->getName();
+
                 return $record->$name;
-            case IntegerNode::class:    
+            case IntegerNode::class:
             case FloatNode::class:
             case StringNode::class:
-                return $node->getValue();                
+                return $node->getValue();
         }
     }
-    
+
     private function assembleRecord(array $main_record_storage): \stdClass
     {
         $this->setID(null);
         $this->loaded = false;
         $this->load($main_record_storage['id']);
+
         return makeStdClass($this->values);
     }
-    
+
     private function filterDatasets(string $main_storage_id, QueryNode $node)
     {
         $data_set = [];
@@ -250,23 +250,21 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
             if ($this->getNodeResult($record, $node->getWhere())) {
                 $data_set[] = $record;
             }
-        }        
+        }
+
         return $data_set;
     }
-    
-    private function sortDataset(array $data_set, QueryNode $node)
-    {
-            
-    }
-    
+
+    private function sortDataset(array $data_set, QueryNode $node) {}
+
     private function doExecuteSelect(QueryNode $node)
     {
         $data_set = $this->filterDatasets($this->structure->options['storage_id']->value, $node);
         $this->sortDataset($data_set, $node);
-        
+
         return $data_set;
     }
-    
+
     protected function doExecuteQuery(QueryNode $node)
     {
         switch ($node->verb()) {
@@ -274,12 +272,12 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 return $this->doExecuteSelect($node);
         }
     }
- 
+
     protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string
     {
         return '*';
     }
-    
+
     protected function getStoragesFor(string $storage_subid): array
     {
         $result = [];
@@ -288,25 +286,24 @@ class DummyAbstractObjectStorage extends AbstractObjectStorage
                 $result[] = $subid;
             }
         }
+
         return $result;
     }
-    
+
     protected function dropStorage(string $storage_name)
     {
-        unsset(static::$DataPool[$storage_name]);        
+        unsset(static::$DataPool[$storage_name]);
     }
-    
+
     protected function createStorage(string $storage_name, $info)
     {
-        static::$DataPool[$storage_name] = [];        
+        static::$DataPool[$storage_name] = [];
     }
-    
+
     protected function alterStorage(string $storage_name, $from, $to)
     {
-        // Do nothing here    
+        // Do nothing here
     }
-        
-    public function getQueryExecutor(): Executor
-    {
-    }
+
+    public function getQueryExecutor(): Executor {}
 }

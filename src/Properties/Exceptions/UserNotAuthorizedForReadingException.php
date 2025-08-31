@@ -16,8 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when a read attemped is performed and the user is
  * not authorized to do so.
+ *
  * @author lokal
  */
-class UserNotAuthorizedForReadingException extends PropertyException 
-{
-}
+class UserNotAuthorizedForReadingException extends PropertyException {}

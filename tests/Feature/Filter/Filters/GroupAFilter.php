@@ -4,13 +4,12 @@ namespace Sunhill\Tests\Feature\Filter\Filters;
 
 class GroupAFilter extends TestFilter
 {
-    
-    static protected $group = 'GroupA';
- 
+    protected static $group = 'GroupA';
+
     public function execute(): string
     {
-        $this->container->setCondition('groupA','executed');
+        $this->container->setCondition('groupA', 'executed');
+
         return 'CONTINUE';
     }
-    
 }

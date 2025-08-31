@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InfomarketTest.php
  * tests: /src/Properties/AbstractProperty.php
@@ -10,9 +11,8 @@ use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 
 uses(SunhillSimpleTestCase::class);
 
-test('get metadata', function () 
-{
-    $test = new NonAbstractProperty();
+test('get metadata', function () {
+    $test = new NonAbstractProperty;
 
     $metadata = $test->getMetadata();
 
@@ -21,16 +21,14 @@ test('get metadata', function ()
     expect($metadata['semantic'])->toEqual('none');
 });
 
-test('requestItem with empty', function()
-{
-   $test = new NonAbstractProperty();
-   
-   expect($test->requestItem([]))->toBe($test);
+test('requestItem with empty', function () {
+    $test = new NonAbstractProperty;
+
+    expect($test->requestItem([]))->toBe($test);
 });
 
-test('requestItem with non empty', function()
-{
-   $test = new NonAbstractProperty();
-   
-   expect($test->requestItem(['test']))->toBe(null);
+test('requestItem with non empty', function () {
+    $test = new NonAbstractProperty;
+
+    expect($test->requestItem(['test']))->toBe(null);
 });

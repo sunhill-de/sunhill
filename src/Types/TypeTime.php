@@ -2,54 +2,53 @@
 
 /**
  * @file TypeTime.php
- * Defines a type for time fields 
+ * Defines a type for time fields
  * Lang en
  * Reviewstatus: 2024-02-05
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 100 % (2025-06-06)
  */
 
 namespace Sunhill\Types;
 
-use Sunhill\Exceptions\InvalidParameterException;
-
 class TypeTime extends TypeDateTime
 {
-       
     /**
      * The storage stores a datetime as a string in the form 'Y-m-d H:i:s'
      *
-     * @param unknown $input
+     * @param  unknown  $input
      * @return unknown, by dafult just return the value
      */
     protected function formatForStorage($input)
     {
         return $input->format('H:i:s');
     }
-    
+
     /**
      * Formats the time in a human readable format
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see Sunhill\\Types\TypeDateTime::formatForHuman()
      */
     protected function formatForHuman($input)
     {
         return $input->format('H:i:s');
     }
-    
+
     /**
      * Returns the access type (in this case 'time')
      * {@inheritDoc}
+     *
      * @see Sunhill\\Types\TypeDateTime::getAccessType()
      */
     public static function getAccessType(): string
     {
         return 'time';
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -60,5 +59,4 @@ class TypeTime extends TypeDateTime
         static::addInfo('description', 'The basic type time.', true);
         static::addInfo('type', 'basic');
     }
-    
 }

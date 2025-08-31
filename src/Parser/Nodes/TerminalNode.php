@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file UnaryNode.php
  * A basic class for a node that has only one child
@@ -12,22 +13,18 @@
 
 namespace Sunhill\Parser\Nodes;
 
-use Sunhill\Basic\Base;
-
 abstract class TerminalNode extends Node
 {
-        
     public function __construct(string $type, $value)
     {
-        parent::__construct($type,['value'=>$value]);
+        parent::__construct($type, ['value' => $value]);
     }
 
     /**
      * Getter for value
-     */   
+     */
     public function getValue()
     {
         return $this->children['value'];
     }
-        
 }

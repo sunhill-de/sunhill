@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StructureMissingException.php
  * Provides the StructtureMissingException
@@ -12,8 +13,7 @@ namespace Sunhill\Query\Exceptions;
 
 /**
  * This excpetion is raised when a query is performed and no structure is set
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class StructureMissingException extends QueryException {}

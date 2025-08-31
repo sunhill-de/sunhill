@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StorageTableMissingException.php
  * Provides the StorageTableMissingExceptionException
@@ -12,8 +13,7 @@ namespace Sunhill\Storage\Exceptions;
 
 /**
  * This exception is thrown when a mysql storage expects a table that does not exist.
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class StorageTableMissingException extends StorageException {}

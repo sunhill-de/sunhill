@@ -8,16 +8,14 @@ use Sunhill\Types\TypeVarchar;
 
 class ChildRecordProperty extends ParentRecordProperty
 {
-    
     protected static function initializeRecord(ElementBuilder $builder)
     {
-        $builder->addProperty(TypeInteger::class,'child_int');
-        $builder->addProperty(TypeVarchar::class,'child_string');
+        $builder->addProperty(TypeInteger::class, 'child_int');
+        $builder->addProperty(TypeVarchar::class, 'child_string');
     }
-     
+
     public static function getStorageID(): string
     {
         return 'child';
     }
-    
 }

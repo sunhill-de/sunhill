@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file FirstName.php
  * Defines a derived name that represents a first name of a person or aninmal
@@ -6,27 +7,22 @@
  * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 75 % (2025-06-06)
  */
 
 namespace Sunhill\Semantics;
 
-use Sunhill\Types\TypeVarchar;
-
 class FirstName extends Name
 {
-    
     /**
      * Returns the unique id string for the semantic of this property
-     *
-     * @return string
      */
     public static function getSemantic(): string
     {
         return 'first_name';
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -37,5 +33,4 @@ class FirstName extends Name
         static::addInfo('description', 'The first name of a person or animal.', true);
         static::addInfo('type', 'semantic');
     }
-    
 }

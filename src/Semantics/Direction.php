@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file Direction.php
  * A semantic class that represents the direction of somthing regarding the cardinal direction
@@ -16,7 +17,6 @@ use Sunhill\Types\TypeFloat;
 
 class Direction extends TypeFloat
 {
- 
     /**
      * There is no negantive capacity
      */
@@ -25,21 +25,17 @@ class Direction extends TypeFloat
         $this->setMinimum(0);
         $this->setMaximum(360);
     }
-    
+
     /**
      * Returns the unique id string for the semantic of this property
-     *
-     * @return string
      */
     public static function getSemantic(): string
     {
         return 'direction';
     }
-    
+
     /**
      * Returns some keywords to the current semantic
-     *
-     * @return array
      */
     public static function getSemanticKeywords(): array
     {
@@ -48,14 +44,12 @@ class Direction extends TypeFloat
 
     /**
      * Returns the unique id string for the unit of this property
-     *
-     * @return string
      */
     public static function getUnit(): string
     {
         return 'degree';
     }
- 
+
     protected function formatForHuman($input)
     {
         if ($input < 22.5) {
@@ -103,9 +97,10 @@ class Direction extends TypeFloat
         if ($input < 337) {
             return __('NW');
         }
+
         return __('NNW');
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -116,5 +111,4 @@ class Direction extends TypeFloat
         static::addInfo('description', 'A geografic direction.', true);
         static::addInfo('type', 'semantic');
     }
-    
 }

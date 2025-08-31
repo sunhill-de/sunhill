@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InvalidTypeException.php
  * Provides the InvalidTypeException
@@ -10,11 +11,9 @@
 
 namespace Sunhill\Storage\Exceptions;
 
-use Sunhill\Exceptions\SunhillException;
-
 /**
  * Is thrown when an invalid type is passed to structure
- * @author klaus
  *
+ * @author klaus
  */
 class InvalidTypeException extends StorageException {}

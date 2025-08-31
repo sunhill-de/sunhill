@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * @file AbstractObjectStorage.php
  * This class defines the standard expected behavior of a PersistentPoolStorage:
@@ -6,29 +7,27 @@
  * - arrays are stores in subpools named like storage_id + _ + field_name
  * - associated tags are stored under a storage_id named tagobjectassigns
  * - associated attributes are stored under a storage_id named attributeobjectassigns
- * 
+ *
  * @author Klaus Dimde
  * Lang en
  * Reviewstatus: 2025-07-22
  * Creation date: 2025-04-17
  * Localization: none
  * Documentation: unknown
- * Tests: 
+ * Tests:
  * Coverage Unit: 80.71  (2025-06-06)
  */
 
 namespace Sunhill\Storage\AbstractObjectStorage;
 
 use Sunhill\Facades\Properties;
-use function PHPUnit\Framework\stringContains;
-use Sunhill\Storage\Exceptions\IDNotFoundException;
-use Sunhill\Properties\Exceptions\NoDefaultSetException;
-use Sunhill\Storage\PersistentPoolStorage;
 use Sunhill\Parser\Executor;
+use Sunhill\Properties\Exceptions\NoDefaultSetException;
+use Sunhill\Storage\Exceptions\IDNotFoundException;
+use Sunhill\Storage\PersistentPoolStorage;
 
 abstract class AbstractObjectStorage extends PersistentPoolStorage
 {
-  
     public function getClassOf(mixed $id): string
     {
         $this->checkIsValidID($id);
@@ -36,27 +35,27 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         if (count($data) == 0) {
             throw new IDNotFoundException("The id '$id' was not found");
         }
+
         return $data[0]->_classname;
     }
-    
+
     /**
      * Returns all distinct storage sub ids.
-     * @return array
      */
     protected function getStorageSubids(): array
     {
         $result = [];
         foreach ($this->structure->elements as $entry) {
-            if (!in_array($entry->storage_subid,$result)) {
+            if (! in_array($entry->storage_subid, $result)) {
                 $result[] = $entry->storage_subid;
             }
         }
+
         return $result;
     }
- 
+
     /**
      * Returns all field that are arrays
-     * @return array
      */
     protected function getArrays(): array
     {
@@ -66,13 +65,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                 $result[] = $entry;
             }
         }
+
         return $result;
     }
 
     /**
      * Returns all field that belong to the given subid
-     * 
-     * @param string $name
+     *
      * @return unknown[]
      */
     protected function getFieldsOf(string $name)
@@ -83,13 +82,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                 $result[] = $entry;
             }
         }
+
         return $result;
     }
-    
+
     /**
      * Returns alls fields that belong to the given subid and are not arrays
-     * 
-     * @param string $name
+     *
      * @return unknown[]
      */
     protected function getSimpleFieldsOf(string $name)
@@ -100,26 +99,25 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                 $result[] = $entry;
             }
         }
-        return $result;        
+
+        return $result;
     }
 
     protected function assembleValues(array $fields): array
     {
         $result = [];
         foreach ($fields as $field) {
-            if (!array_key_exists($field->name,$this->values)) {
+            if (! array_key_exists($field->name, $this->values)) {
                 throw new NoDefaultSetException("For the property '".$field->name."' no default value is set");
             }
             $result[$field->name] = $this->values[$field->name];
         }
+
         return $result;
     }
-    
+
     /**
      * Returns all array fields that belong to the given subid
-     * 
-     * @param string $table
-     * @return array
      */
     protected function getArraysOf(string $table): array
     {
@@ -129,90 +127,89 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                 $result[] = $entry;
             }
         }
+
         return $result;
     }
-        
+
     protected function getObjectFields(array $values)
     {
-        $object_fields = ['_classname','_uuid','_read_cap','_modify_cap','_delete_cap','_created_at','_updated_at'];
+        $object_fields = ['_classname', '_uuid', '_read_cap', '_modify_cap', '_delete_cap', '_created_at', '_updated_at'];
         $result = [];
-        
+
         foreach ($object_fields as $field) {
             if (array_key_exists($field, $values)) {
                 $result[$field] = $values[$field];
             }
         }
-        if (!isset($result['_classname'])) {
+        if (! isset($result['_classname'])) {
             $result['_classname'] = $this->structure->options['name']->value;
         }
+
         return $result;
     }
-    
+
     /**
      * Checks if the given id is a valid type (in this case an integer)
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Storage\PersistentPoolStorage::isValidID()
      */
     protected function isValidID(mixed $id): bool
     {
-        return (is_int($id));
+        return is_int($id);
     }
-    
+
     /**
      * Updates the storage with the subid. It uses $key to identiy the record(s) and sets the givenvalues
-     *  
-     * @param unknown $key
-     * @param unknown $values
+     *
+     * @param  unknown  $key
+     * @param  unknown  $values
      */
     abstract protected function updateStorageSubid(string $subid, int $key, array $values, string $key_field = 'id');
-    
+
     /**
      * Deletes all references to key from the given
-     *  
-     * @param unknown $key
+     *
+     * @param  unknown  $key
      */
     abstract protected function deleteStorageSubid(string $subid, int $key, string $key_field = 'id');
-    
+
     /**
      * Inserts into the given storage subid the given values. If value is a array of arrays then insert every entry as a separate record
-     * 
-     * @param string $subid
-     * @param array $values
      */
     abstract protected function insertStorageSubid(string $subid, array $values);
 
     abstract protected function insertObjects(array $values): int;
-    
+
     /**
      * Loads from the given storage subif the values with the given key
-     * 
-     * @param string $subid
-     * @param int $key
+     *
      * @return array
      */
     abstract protected function loadStorageSubid(string $subid, int $key, string $key_field = 'id'): array|\Traversable|\stdClass;
-    
+
     private function getDirtyFieldsOf(string $storage_subid)
     {
         $result = [];
         $fields = $this->getFieldsOf($storage_subid);
         foreach ($fields as $field) {
-            if ($this->isDirty($field->name) && (!($field->type == 'array'))) {
+            if ($this->isDirty($field->name) && (! ($field->type == 'array'))) {
                 $result[$field->name] = $this->values[$field->name];
             }
         }
+
         return $result;
     }
-    
+
     private function commitLoadedObjects()
     {
         $dirty = $this->getDirtyFieldsOf('objects');
-        if (!empty($dirty)) {
+        if (! empty($dirty)) {
             $this->updateStorageSubid('objects', $this->getID(), $dirty);
         }
     }
-    
+
     private function commitLoadedClasses()
     {
         $subids = $this->getStorageSubids();
@@ -221,65 +218,64 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
                 continue;
             }
             $values = $this->getDirtyFieldsOf($subid);
-            if (!empty($values)) {
+            if (! empty($values)) {
                 $this->updateStorageSubid($subid, $this->getID(), $values);
             }
-        }        
+        }
     }
-    
+
     private function updateArray($field)
     {
-        if (!$this->isDirty($field->name)) {
+        if (! $this->isDirty($field->name)) {
             return;
         }
         $table_name = $field->storage_subid.'_'.$field->name;
-        $this->deleteStorageSubid($table_name, $this->getID(),'container_id');
-        if (!empty($this->values[$field->name])) {
+        $this->deleteStorageSubid($table_name, $this->getID(), 'container_id');
+        if (! empty($this->values[$field->name])) {
             $this->insertStorageSubid($table_name, $this->assmbleArrayValues($this->values[$field->name]));
-        }        
+        }
     }
-    
+
     private function commitLoadedArrays()
     {
         $array_fields = $this->getArrays();
-        foreach ($array_fields as $array)
-        {
+        foreach ($array_fields as $array) {
             if ($this->isDirty($array->name)) {
                 $this->updateArray($array);
             }
         }
     }
-    
+
     private function commitLoadedTags()
     {
         if ($this->isDirty('_tags')) {
-            $this->deleteStorageSubid('tagobjectassigns',$this->getID(),'container_id');
-            if (!empty($this->values['_tags'])) {
+            $this->deleteStorageSubid('tagobjectassigns', $this->getID(), 'container_id');
+            if (! empty($this->values['_tags'])) {
                 $this->commitNewTags();
             }
         }
     }
-    
+
     private function commitAttribute(string $attribute, $value)
     {
         $attribute_id = Properties::getAttributeID($attribute);
-        $attributes = ['container_id'=>$this->getID(), 'attribute_id'=>$attribute_id];
+        $attributes = ['container_id' => $this->getID(), 'attribute_id' => $attribute_id];
         Properties::storeAttribute($attribute_id, $this->getID(), $value);
         $this->insertStorageSubid('attributeobjectassigns', $attributes);
     }
-    
+
     private function commitLoadedAttributes()
     {
         if ($this->isDirty('_attributes')) {
-            $this->deleteStorageSubid('attributeobjectassigns',$this->getID(),'container_id');
-            if (!empty($this->values['_attributes'])) {
+            $this->deleteStorageSubid('attributeobjectassigns', $this->getID(), 'container_id');
+            if (! empty($this->values['_attributes'])) {
                 foreach ($this->values['_attributes'] as $attribute => $value) {
                     $this->commitAttribute($attribute, $value);
                 }
             }
         }
     }
-    
+
     /**
      * Performs the commit of a existing entry, meaning transfering the data to the
      * persistent medium and overwriting the previously stored.
@@ -294,12 +290,12 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->commitLoadedTags();
         $this->commitLoadedAttributes();
     }
-    
+
     private function commitNewObject()
     {
-        $this->insertObjects($this->assembleValues($this->getSimpleFieldsOf('objects')));        
+        $this->insertObjects($this->assembleValues($this->getSimpleFieldsOf('objects')));
     }
-    
+
     private function commitNewClasses()
     {
         $subids = $this->getStorageSubids();
@@ -316,54 +312,54 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     /**
      * Handles these cases where a class doesn't define own members but is needed
      * in a form of organizing structure
-     * 
      */
     private function commitNewSkippingClasses()
     {
         foreach ($this->structure->skipping_members as $subid) {
             $values['id'] = $this->getID();
             $this->insertStorageSubid($subid, $values);
-        }        
+        }
     }
-    
+
     private function assmbleArrayValues(array $values)
     {
         $result = [];
         foreach ($values as $key => $value) {
-            $result[] = ['container_id'=>$this->getID(),'index'=>$key,'element'=>$value];
+            $result[] = ['container_id' => $this->getID(), 'index' => $key, 'element' => $value];
         }
+
         return $result;
     }
-    
+
     private function commitNewArrays()
     {
         $array_fields = $this->getArrays();
         foreach ($array_fields as $field) {
             $table_name = $field->storage_subid.'_'.$field->name;
-            if (!empty($this->values[$field->name])) {
+            if (! empty($this->values[$field->name])) {
                 $this->insertStorageSubid($table_name, $this->assmbleArrayValues($this->values[$field->name]));
             }
         }
     }
-    
+
     private function commitNewTags()
     {
         $tags = [];
         foreach ($this->values['_tags'] as $tag) {
-            $tags[] = ['container_id'=>$this->getID(),'tag_id'=>$tag];
+            $tags[] = ['container_id' => $this->getID(), 'tag_id' => $tag];
         }
-        $this->insertStorageSubid('tagobjectassigns',$tags);
+        $this->insertStorageSubid('tagobjectassigns', $tags);
     }
-    
+
     private function commitNewAttributes()
     {
-         $attributes = [];
-         foreach ($this->values['_attributes'] as $name => $value) {
-             $attribute_id = Properties::getAttributeID($name);
-             $attributes[] = ['container_id'=>$this->getID(), 'attribute_id'=>$attribute_id];
-             Properties::storeAttribute($attribute_id, $this->getID(), $value);
-         }
-         $this->insertStorageSubid('attributeobjectassigns', $attributes);
+        $attributes = [];
+        foreach ($this->values['_attributes'] as $name => $value) {
+            $attribute_id = Properties::getAttributeID($name);
+            $attributes[] = ['container_id' => $this->getID(), 'attribute_id' => $attribute_id];
+            Properties::storeAttribute($attribute_id, $this->getID(), $value);
+        }
+        $this->insertStorageSubid('attributeobjectassigns', $attributes);
     }
 
     /**
@@ -380,9 +376,10 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->commitNewArrays();
         $this->commitNewTags();
         $this->commitNewAttributes();
+
         return $this->getID();
     }
-        
+
     private function loadClasses()
     {
         $subids = $this->getStorageSubids();
@@ -393,29 +390,29 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             }
         }
     }
-    
+
     private function loadArrays()
     {
         $array_fields = $this->getArrays();
         foreach ($array_fields as $field) {
-           $this->values[$field->name] = [];
-           $table_name = $field->storage_subid.'_'.$field->name;
-           $data = $this->loadStorageSubid($table_name, $this->getID(), 'container_id');
-           foreach ($data as $record) {
-               $this->values[$field->name][$record->index] = $record->element;               
-           }
+            $this->values[$field->name] = [];
+            $table_name = $field->storage_subid.'_'.$field->name;
+            $data = $this->loadStorageSubid($table_name, $this->getID(), 'container_id');
+            foreach ($data as $record) {
+                $this->values[$field->name][$record->index] = $record->element;
+            }
         }
     }
-    
+
     private function loadTags()
     {
         $data = $this->loadStorageSubid('tagobjectassigns', $this->getID(), 'container_id');
         $this->values['_tags'] = [];
         foreach ($data as $entry) {
             $this->values['_tags'][] = $entry->tag_id;
-        }            
+        }
     }
-    
+
     private function loadAttributes()
     {
         $data = $this->loadStorageSubid('attributeobjectassigns', $this->getID(), 'container_id');
@@ -425,36 +422,34 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             $this->values['_attributes'][$attribute->name] = $attribute->value;
         }
     }
-    
+
     /**
      * Performs the load of data from the persitent
-     * @param mixed $id
      */
     protected function doLoad(mixed $id)
     {
         $this->loadClasses();
         $this->loadArrays();
         $this->loadTags();
-        $this->loadAttributes();        
+        $this->loadAttributes();
     }
-    
+
     private function deleteObjects(int $id)
     {
-        $this->deleteStorageSubid('objects',$id); 
+        $this->deleteStorageSubid('objects', $id);
     }
-    
+
     private function deleteClasses(int $id)
     {
         $subids = $this->getStorageSubids();
         foreach ($subids as $subid) {
             $this->deleteStorageSubid($subid, $id);
-        }        
+        }
     }
-    
+
     /**
      * Handles these cases where a class doesn't define own members but is needed
      * in a form of organizing structure
-     *
      */
     private function deleteSkippingClasses(int $id)
     {
@@ -462,30 +457,30 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             $this->deleteStorageSubid($subid, $id);
         }
     }
-    
+
     private function deleteArrays(int $id)
     {
         $array_fields = $this->getArrays();
         foreach ($array_fields as $field) {
             $table_name = $field->storage_subid.'_'.$field->name;
             $this->deleteStorageSubid($table_name, $id, 'container_id');
-        }        
+        }
     }
-    
+
     private function deleteTags(int $id)
     {
         $this->deleteStorageSubid('tagobjectassigns', $id, 'container_id');
     }
-    
+
     private function deleteAttributes(int $id)
     {
         $data = $this->loadStorageSubid('attributeobjectassigns', $id, 'container_id');
         foreach ($data as $entry) {
-            Properties::unsetAttribute($entry->attribute_id,$id);
+            Properties::unsetAttribute($entry->attribute_id, $id);
         }
         $this->deleteStorageSubid('attributeobjectassigns', $id, 'container_id');
     }
-    
+
     protected function doDelete(mixed $id)
     {
         $this->deleteObjects($id);
@@ -493,12 +488,12 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
         $this->deleteSkippingClasses($id);
         $this->deleteArrays($id);
         $this->deleteTags($id);
-        $this->deleteAttributes($id);        
+        $this->deleteAttributes($id);
     }
 
     private function testForSymbol($test, ?string $symbol = null): bool
     {
-        if (!isset($test->{0})) {
+        if (! isset($test->{0})) {
             return false;
         }
         if (is_null($symbol) || ($test->{0} == $symbol)) {
@@ -507,13 +502,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             return false;
         }
     }
-    
+
     /**
-     * Tests if the structure only exists of '*' or '€'- If yes, it returns. If not it traverses all keys of structure and 
+     * Tests if the structure only exists of '*' or '€'- If yes, it returns. If not it traverses all keys of structure and
      * creates an empty array for it.
-     * 
-     * @param unknown $result
-     * @param unknown $structure
+     *
+     * @param  unknown  $result
+     * @param  unknown  $structure
      */
     private function traverseStructure(&$result, $structure)
     {
@@ -521,63 +516,63 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             if ($key == 0) {
                 continue;
             }
-            if (!isset($result->key)) {
-                $result->$key = new \stdClass();
-                $result->$key->given = new \stdClass();
-                $result->$key->new = new \stdClass();
+            if (! isset($result->key)) {
+                $result->$key = new \stdClass;
+                $result->$key->given = new \stdClass;
+                $result->$key->new = new \stdClass;
             }
         }
     }
-    
+
     private function checkAttributes(&$key, $given_key, $expected_key)
     {
         if ($this->testForSymbol($given_key, '*')) {
             return; // Do nothing
         }
         foreach ($given_key as $attribute_key => $attribute_value) {
-            if (!isset($expected_key->$attribute_key)) {
+            if (! isset($expected_key->$attribute_key)) {
                 $key->given->$attribute_key = $attribute_value;
-            } else if (($given_key->$attribute_key !== '*') && ($given_key->$attribute_key !== $expected_key->$attribute_key)) {
+            } elseif (($given_key->$attribute_key !== '*') && ($given_key->$attribute_key !== $expected_key->$attribute_key)) {
                 $key->given->$attribute_key = $given_key->$attribute_key;
                 $key->new->$attribute_key = $expected_key->$attribute_key;
             }
         }
     }
-    
+
     private function checkGivenStructure(&$result, &$given_structure, $expected_structure)
     {
         foreach ($given_structure as $key => $value) {
             if (($key == 0) && ($value == '*')) {
                 continue;
-            } else if ((!isset($expected_structure->$key))) {
-                $result->$key->given = $value;                
+            } elseif ((! isset($expected_structure->$key))) {
+                $result->$key->given = $value;
             } else {
                 $this->checkAttributes($result->$key, $given_structure->$key, $expected_structure->$key);
             }
         }
     }
-    
+
     private function checkExpectedStructure(&$result, $given_structure, $expected_structure)
     {
         foreach ($expected_structure as $key => $value) {
-            if ($this->testForSymbol($given_structure,'*')) {
+            if ($this->testForSymbol($given_structure, '*')) {
                 if ($value->type === 'array') {
-                    if (!isset($given_structure->$key)) {
+                    if (! isset($given_structure->$key)) {
                         $result->$key->new = $value;
-                    } 
-                } 
-            } else if (($this->testForSymbol($given_structure,'€')) || (!isset($given_structure->$key))) {
+                    }
+                }
+            } elseif (($this->testForSymbol($given_structure, '€')) || (! isset($given_structure->$key))) {
                 $result->$key->new = $value;
-            } 
-        }        
+            }
+        }
     }
-    
+
     /**
      * Creates a diff object between the given_structure (e.g. the structure of the database, etc) and the expecte_structure
      * (The structure that is defined by the current objects). This "diff" can then be used to apply a "patch".
-     * 
-     * @param unknown $given_structure
-     * @param unknown $expected_structure
+     *
+     * @param  unknown  $given_structure
+     * @param  unknown  $expected_structure
      * @return \stdClass
      */
     public function getStructureDiff($given_structure, $expected_structure)
@@ -588,53 +583,52 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
     private function addSkippingObjects(\stdClass &$result)
     {
         foreach ($this->structure->skipping_members as $class => $storage_name) {
-            if (!isset($result->$storage_name)) {
-                $result->$storage_name = new \stdClass();
-                $result->$storage_name->id = new \stdClass();
+            if (! isset($result->$storage_name)) {
+                $result->$storage_name = new \stdClass;
+                $result->$storage_name->id = new \stdClass;
                 $result->$storage_name->id->type = 'integer';
             }
         }
     }
-    
+
     /**
      * Builds a structure descriptor for a diff
-     * 
-     * @param string $storage_subid
+     *
      * @return \stdClass
      */
     public function assembleStructure(string $storage_subid)
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         foreach ($this->structure->elements as $name => $field) {
             $subid = $field->storage_subid;
             if ($subid === 'objects') {
                 continue;
             }
-            $field_info = new \stdClass();
+            $field_info = new \stdClass;
             $field_info->type = $field->type;
             switch ($field->type) {
                 case 'array':
                     // This is for objects that only define arrays
-                    if (!isset($result->$subid)) {
-                        $result->$subid = new \stdClass();
-                        $result->$subid->id = new \stdClass();
+                    if (! isset($result->$subid)) {
+                        $result->$subid = new \stdClass;
+                        $result->$subid->id = new \stdClass;
                         $result->$subid->id->type = 'integer';
                     }
                     $subid = $subid.'_'.$name;
-                    $field_info->index_type   = new \stdClass();
+                    $field_info->index_type = new \stdClass;
                     $field_info->index_type->type = $field->index_type;
-                    $field_info->element_type = new \stdClass();
+                    $field_info->element_type = new \stdClass;
                     $field_info->element_type->type = $field->element_type;
                     $result->$subid = $field_info;
                     break;
                 case 'string':
                     $field_info->max_len = $field->max_length;
                 default:
-                    if (!isset($result->$subid)) {
-                        $result->$subid = new \stdClass();
-                    } 
-                    if (!isset($result->$subid->id)) {
-                        $result->$subid->id = new \stdClass();
+                    if (! isset($result->$subid)) {
+                        $result->$subid = new \stdClass;
+                    }
+                    if (! isset($result->$subid->id)) {
+                        $result->$subid->id = new \stdClass;
                         $result->$subid->id->type = 'integer';
                     }
                     $result->$subid->$name = $field_info;
@@ -648,43 +642,48 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             }
         }
         $this->addSkippingObjects($result);
+
         return $result;
     }
 
     protected function returnAsterik(): \stdClass
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         $result->{0} = '*';
-        return $result;        
+
+        return $result;
     }
+
     /**
      * Helper to mark a storage sub_id that doesn't exist
      */
     protected function returnEmptyStructure(): \stdClass
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         $result->{0} = '€';
+
         return $result;
     }
-    
+
     protected function returnField(string $type, array $attributes = []): \stdClass
     {
-        $return = new \stdClass();
+        $return = new \stdClass;
         $return->type = $type;
         foreach ($attributes as $key => $value) {
             $return->$key = $value;
         }
-        
+
         return $return;
     }
-    
+
     /**
      * This method returns the current structure as implemented in the storage. All fields and attributes that
      * are not defined explicitly in the storage can be marked with *. With the given parameter it is possible
      * for the storage to test if there is any table at all for this storage_subid. If not the function can just
      * return €
-     * 
-     * @param string $storage_subid The subid to search for. 
+     *
+     * @param  string  $storage_subid  The subid to search for.
+     *
      * @example
      * A storage that includes the asked table and one array table can return:
      * $return = new \stdClass();
@@ -696,9 +695,9 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      * $return->storage_subid_arrayfield->index_type = 'integer';
      * $return->storage_subid_arrayfield->element_type = 'string';
      * $return->storage_subid_arrayfield->type = 'array';
-     * 
+     *
      * or
-     * 
+     *
      * $return = new\stdClass();
      * $return->storage_subid = $this->returnField('string',['max_len'=>10);
      * $return->storage_subid_arrayfield = $this->returnField('array',['index_type'=>'integer','element_type'=>'string']);
@@ -707,9 +706,9 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      * ...
      * $return->storage_subid->field->max_len = "*";
      * ...
-     * 
+     *
      * When there is no storage at all with this id just return a stdclass with '€'
-     * 
+     *
      * return returnEmptyStructure();
      * or
      * $return = new \stdClass();
@@ -717,12 +716,13 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
      */
     protected function getCurrentStructure(string $storage_subid): \stdClass
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         $this->addNormalMembers($result);
         $this->addSkippiongMembers($result);
+
         return $result;
     }
-    
+
     private function addNormalMembers(\stdClass $result)
     {
         foreach ($this->getStorageSubids() as $subid) {
@@ -732,7 +732,7 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             foreach ($this->getStoragesFor($subid) as $storage) {
                 $result->$storage = $this->getCurrentStorageStructure($storage);
             }
-        }        
+        }
     }
 
     private function addSkippiongMembers(\stdClass $result)
@@ -743,64 +743,61 @@ abstract class AbstractObjectStorage extends PersistentPoolStorage
             }
         }
     }
-    
+
     /**
-     * 
-     * @param string $storage_subid
      * @return \stdClass
      */
     abstract protected function getCurrentStorageStructure(string $storage_subid): \stdClass|string;
-    
+
     abstract protected function getStoragesFor(string $storage_subid): array;
-    
+
     abstract protected function dropStorage(string $storage_name);
-    
+
     abstract protected function createStorage(string $storage_name, $info);
-    
+
     abstract protected function alterStorage(string $storage_name, $from, $to);
-    
+
     /**
      * This methos performs the  actual patching of the storage.
-     * 
-     * @param unknown $diff
+     *
+     * @param  unknown  $diff
      */
     private function patchGiven(\stdClass $diff)
     {
         foreach ($diff->given as $key => $value) {
-            if (!isset($diff->new->$key)) {
+            if (! isset($diff->new->$key)) {
                 $this->dropStorage($key);
             } else {
                 $this->alterStorage($key, $diff->given->$key, $diff->new->$key);
             }
         }
     }
-    
+
     private function patchNew(\stdClass $diff)
     {
         foreach ($diff->new as $key => $value) {
-            if (!isset($diff->given->$key)) {
+            if (! isset($diff->given->$key)) {
                 $this->createStorage($key, $value);
             }
         }
     }
-    
+
     protected function patchStructure(\stdClass $diff)
     {
         $this->patchGiven($diff);
         $this->patchNew($diff);
     }
-    
+
     public function migrate(?\stdClass $structure = null)
     {
-        if (!is_null($structure)) {
+        if (! is_null($structure)) {
             $this->setStructure($structure);
         }
-        $current  = $this->getCurrentStructure($this->structure->name);
+        $current = $this->getCurrentStructure($this->structure->name);
         $expected = $this->assembleStructure($this->structure->name);
         $diff = $this->getStructureDiff($current, $expected);
         $this->patchStructure($diff);
     }
-    
+
     abstract public function getQueryExecutor(): Executor;
-    
 }

@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, when an unexpected property was found
+ *
  * @author Klaus Dimde
  */
-class InvalidPropertyException extends PropertyException 
-{
-}
+class InvalidPropertyException extends PropertyException {}

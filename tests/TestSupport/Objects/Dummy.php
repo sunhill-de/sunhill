@@ -2,32 +2,33 @@
 
 /**
  * A very simple testing object with only one integer as a member
+ *
  * @file
  */
 
 namespace Sunhill\Tests\TestSupport\Objects;
 
 use Sunhill\Objects\ORMObject;
-use Sunhill\Types\TypeInteger;
 use Sunhill\Properties\ElementBuilder;
-use Sunhill\Tests\Database\Seeds\ObjectsSeeder;
-use Sunhill\Tests\Database\Seeds\DummiesSeeder;
-use Sunhill\Tests\Database\Seeds\TagsSeeder;
-use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
-use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
-use Sunhill\Tests\Database\Seeds\AttributesSeeder;
+use Sunhill\Tests\Database\Seeds\Attr_float_attributeSeeder;
+use Sunhill\Tests\Database\Seeds\Attr_int_attributeSeeder;
 use Sunhill\Tests\Database\Seeds\Attr_str_attributeSeeder;
 use Sunhill\Tests\Database\Seeds\AttributeObjectAssignsSeeder;
-use Sunhill\Tests\Database\Seeds\Attr_int_attributeSeeder;
-use Sunhill\Tests\Database\Seeds\Attr_float_attributeSeeder;
+use Sunhill\Tests\Database\Seeds\AttributesSeeder;
+use Sunhill\Tests\Database\Seeds\DummiesSeeder;
+use Sunhill\Tests\Database\Seeds\ObjectsSeeder;
+use Sunhill\Tests\Database\Seeds\TagCacheSeeder;
+use Sunhill\Tests\Database\Seeds\TagObjectAssignsSeeder;
+use Sunhill\Tests\Database\Seeds\TagsSeeder;
+use Sunhill\Types\TypeInteger;
 
 class Dummy extends ORMObject
 {
     protected static function initializeRecord(ElementBuilder $builder)
     {
-        $builder->addProperty(TypeInteger::class,'dummyint');
+        $builder->addProperty(TypeInteger::class, 'dummyint');
     }
-    
+
     protected static function setupInfos()
     {
         static::addInfo('name', 'Dummy');
@@ -44,82 +45,83 @@ class Dummy extends ORMObject
                 $data = $set;
             }
         }
-        if (!isset($data)) {
+        if (! isset($data)) {
             throw new \Exception("Invalid id given: $id");
         }
         foreach (DummiesSeeder::DATA as $set) {
             if ($set['id'] == $id) {
-                $data = array_merge($data,$set);
+                $data = array_merge($data, $set);
             }
         }
+
         return $data;
     }
-    
+
     public static function getExpectedStructure()
     {
-        $result = new \stdClass();
-        $result->name = "dummies";
-        $result->type = "record";
+        $result = new \stdClass;
+        $result->name = 'dummies';
+        $result->type = 'record';
         $result->elements = [];
-        
+
         $result->elements['dummyint'] = makeStdClass([
-            'name'=>'dummyint',
-            'type'=>'integer',
-            'storage_subid'=>'dummies'
+            'name' => 'dummyint',
+            'type' => 'integer',
+            'storage_subid' => 'dummies',
         ]);
         $result->elements['_uuid'] = makeStdClass([
-            'name'=>'_uuid',
-            'type'=>'string',
-            'max_length'=>40,
-            'storage_subid'=>'objects'
+            'name' => '_uuid',
+            'type' => 'string',
+            'max_length' => 40,
+            'storage_subid' => 'objects',
         ]);
         $result->elements['_classname'] = makeStdClass([
-            'name'=>'_classname',
-            'type'=>'string',
-            'max_length'=>40,
-            'storage_subid'=>'objects'
+            'name' => '_classname',
+            'type' => 'string',
+            'max_length' => 40,
+            'storage_subid' => 'objects',
         ]);
         $result->elements['_read_cap'] = makeStdClass([
-            'name'=>'_read_cap',
-            'type'=>'string',
-            'max_length'=>20,
-            'storage_subid'=>'objects'
+            'name' => '_read_cap',
+            'type' => 'string',
+            'max_length' => 20,
+            'storage_subid' => 'objects',
         ]);
         $result->elements['_modify_cap'] = makeStdClass([
-            'name'=>'_modify_cap',
-            'type'=>'string',
-            'max_length'=>20,
-            'storage_subid'=>'objects'
+            'name' => '_modify_cap',
+            'type' => 'string',
+            'max_length' => 20,
+            'storage_subid' => 'objects',
         ]);
         $result->elements['_delete_cap'] = makeStdClass([
-            'name'=>'_delete_cap',
-            'type'=>'string',
-            'max_length'=>20,
-            'storage_subid'=>'objects'
+            'name' => '_delete_cap',
+            'type' => 'string',
+            'max_length' => 20,
+            'storage_subid' => 'objects',
         ]);
         $result->elements['_created_at'] = makeStdClass([
-            'name'=>'_created_at',
-            'type'=>'datetime',
-            'storage_subid'=>'objects'
+            'name' => '_created_at',
+            'type' => 'datetime',
+            'storage_subid' => 'objects',
         ]);
         $result->elements['_updated_at'] = makeStdClass([
-            'name'=>'_updated_at',
-            'type'=>'datetime',
-            'storage_subid'=>'objects'
+            'name' => '_updated_at',
+            'type' => 'datetime',
+            'storage_subid' => 'objects',
         ]);
-        
+
         $result->options = [
-            'name'=>makeStdClass(['key'=>'name','translatable'=>false,'value'=>'Dummy']),
-            'description'=>makeStdClass(['key'=>'description','translatable'=>true,'value'=>'A simple object with only one integer member.']),
-            'storage_id'=>makeStdClass(['key'=>'storage_id','translatable'=>false,'value'=>'dummies']),
-            'taggable'=>makeStdClass(['key'=>'taggable','translatable'=>false,'value'=>true]),
-            'attributable'=>makeStdClass(['key'=>'attributable','translatable'=>false,'value'=>true]),
+            'name' => makeStdClass(['key' => 'name', 'translatable' => false, 'value' => 'Dummy']),
+            'description' => makeStdClass(['key' => 'description', 'translatable' => true, 'value' => 'A simple object with only one integer member.']),
+            'storage_id' => makeStdClass(['key' => 'storage_id', 'translatable' => false, 'value' => 'dummies']),
+            'taggable' => makeStdClass(['key' => 'taggable', 'translatable' => false, 'value' => true]),
+            'attributable' => makeStdClass(['key' => 'attributable', 'translatable' => false, 'value' => true]),
         ];
         $result->skipping_members = [];
-        
+
         return $result;
     }
-    
+
     public static function prepareDatabase($test)
     {
         $test->seed([
@@ -132,8 +134,7 @@ class Dummy extends ORMObject
             AttributeObjectAssignsSeeder::class,
             Attr_str_attributeSeeder::class,
             Attr_int_attributeSeeder::class,
-            Attr_float_attributeSeeder::class
-        ]);        
+            Attr_float_attributeSeeder::class,
+        ]);
     }
 }
-

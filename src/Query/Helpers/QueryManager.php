@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file QueryManager.php
  * The manager for the Query facade. It capsulates some utilities for queries and makes
@@ -9,35 +10,28 @@
  * Create date: 2025-ß4-01
  * Localization: complete
  * Documentation: complete
- * @subpackage query
- * Tests: 
- * Coverage Unit: 
  */
 
 namespace Sunhill\Query\Helpers;
 
-
 use Sunhill\Basic\Base;
 use Sunhill\Parser\Nodes\Node;
-use Sunhill\Query\QueryParser\QueryParser;
 use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Query\QueryParser\QueryParser;
 
 class QueryManager extends Base
 {
-    
     /**
-     * Builds a absgract structure tree out of the given query_string. It does no validation of the syntax. 
-     * Depending on $create_string_on_error it creates a string node with the $query_string or re-throws 
+     * Builds a absgract structure tree out of the given query_string. It does no validation of the syntax.
+     * Depending on $create_string_on_error it creates a string node with the $query_string or re-throws
      * any exception that raise while parsing.
-     * 
-     * @param string $query_string
-     * @param bool $create_string_on_error if true (default) it creates a string node oout of $query_string
-     * if an error occurs while parsing. Otherwise it re throws the \Exception
-     * @return Node
+     *
+     * @param  bool  $create_string_on_error  if true (default) it creates a string node oout of $query_string
+     *                                        if an error occurs while parsing. Otherwise it re throws the \Exception
      */
     public function parseQueryString(string $query_string, bool $create_string_on_error = true): Node
     {
-        $parser = new QueryParser();
+        $parser = new QueryParser;
         try {
             $result = $parser->parseQueryString($query_string);
         } catch (\Sunhill\Parser\Exceptions\ParsingSubsystemException $e) {
@@ -47,8 +41,7 @@ class QueryManager extends Base
                 throw $e;
             }
         }
-        
+
         return $result;
     }
-    
 }

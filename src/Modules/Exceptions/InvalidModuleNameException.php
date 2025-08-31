@@ -2,7 +2,4 @@
 
 namespace Sunhill\Modules\Exceptions;
 
-class InvalidModuleNameException extends ModuleException
-{
-    
-}
+class InvalidModuleNameException extends ModuleException {}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InputNotParsableException.php
  * Provides the InputNotParsableException
@@ -11,8 +12,8 @@
 namespace Sunhill\Parser\Exceptions;
 
 /**
- * An exception that is raised, when the input string was not parsable 
- * @author klaus
+ * An exception that is raised, when the input string was not parsable
  *
+ * @author klaus
  */
 class InputNotParsableException extends ParserException {}

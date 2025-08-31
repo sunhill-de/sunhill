@@ -1,29 +1,27 @@
 <?php
+
 /**
  * @file QueryManagerTest.php
  * tests: /src/Query/Helpers/QueryManager.php
  * free of dependent units: yes
  */
 
+use Sunhill\Facades\Queries;
 use Sunhill\Tests\SunhillLaravelTestCase;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
-use Sunhill\Facades\Queries;
 
 uses(SunhillLaravelTestCase::class);
 
-test('parseQueryString parses an expression', function()
-{
-   $ast = Queries::parseQueryString('5+4');
-   
-   $executor = new DummyExecutor();
-   expect($executor->execute($ast))->toBe('(5)+(4)');
+test('parseQueryString parses an expression', function () {
+    $ast = Queries::parseQueryString('5+4');
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($ast))->toBe('(5)+(4)');
 });
 
-
-test('parseQueryString parses an string that is no expression', function()
-{
+test('parseQueryString parses an string that is no expression', function () {
     $ast = Queries::parseQueryString('5+4+');
-    
-    $executor = new DummyExecutor();
+
+    $executor = new DummyExecutor;
     expect($executor->execute($ast))->toBe('"5+4+"');
 });

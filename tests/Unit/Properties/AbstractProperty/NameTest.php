@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file NameTest.php
  * tests: /src/Properties/AbstractProperty.php
@@ -6,8 +7,8 @@
  */
 
 use Sunhill\Properties\Exceptions\InvalidNameException;
-use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 use Sunhill\Tests\SunhillSimpleTestCase;
+use Sunhill\Tests\TestSupport\Properties\NonAbstractProperty;
 
 uses(SunhillSimpleTestCase::class);
 
@@ -15,18 +16,18 @@ test('names', function ($name, bool $forbidden) {
     if ($forbidden) {
         $this->expectException(InvalidNameException::class);
     }
-    $test = new NonAbstractProperty();
+    $test = new NonAbstractProperty;
 
     $test->setName($name);
 
     expect(true)->toBeTrue();
 })->with('NamesProvider');
 test('is valid property name', function ($name, bool $expect) {
-    $test = new NonAbstractProperty();
-    expect($test->isValidPropertyName($name))->toEqual(!$expect);
+    $test = new NonAbstractProperty;
+    expect($test->isValidPropertyName($name))->toEqual(! $expect);
 })->with('NamesProvider');
 dataset('NamesProvider', function () {
-    return [            
+    return [
         ['_forbidden', true],
         ['string', true],
         ['object', true],
@@ -36,39 +37,36 @@ dataset('NamesProvider', function () {
         ['collection', true],
         ['name_with_underscores', false],
         ['namewith1digit', false],
-        ['', true]
+        ['', true],
     ];
 });
 
 test('set name', function () {
-    $test = new NonAbstractProperty();
+    $test = new NonAbstractProperty;
     expect($test->getName())->toEqual('test_int');
     $test->setName('another');
-    
+
     expect($test->getName())->toEqual('another');
 });
 
-test('set name alias', function () 
-{
-    $test = new NonAbstractProperty();
+test('set name alias', function () {
+    $test = new NonAbstractProperty;
 
     $test->name('another');
-    
+
     expect($test->getName())->toEqual('another');
 });
-        
-test('force name', function () 
-{
-    $test = new NonAbstractProperty();
+
+test('force name', function () {
+    $test = new NonAbstractProperty;
 
     $test->forceName('_test');
 
     expect($test->getName())->toEqual('_test');
 });
 
-test('additional getter', function ($item, $value) 
-{
-    $test = new NonAbstractProperty();
+test('additional getter', function ($item, $value) {
+    $test = new NonAbstractProperty;
     $method = 'set_'.$item;
     $test->$method($value);
     $method = 'get_'.$item;
@@ -76,8 +74,8 @@ test('additional getter', function ($item, $value)
 })->with('AdditionalGetterProvider');
 dataset('AdditionalGetterProvider', function () {
     return [
-        ['test','TEST'],
-        ['Test','TEST'],
-        ['_Test','TEST']
+        ['test', 'TEST'],
+        ['Test', 'TEST'],
+        ['_Test', 'TEST'],
     ];
 });

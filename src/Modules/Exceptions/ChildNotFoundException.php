@@ -2,7 +2,4 @@
 
 namespace Sunhill\Modules\Exceptions;
 
-class ChildNotFoundException extends ModuleException
-{
-    
-}
+class ChildNotFoundException extends ModuleException {}

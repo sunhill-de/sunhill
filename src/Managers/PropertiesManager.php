@@ -1,10 +1,10 @@
 <?php
- 
+
 /**
  * @file PropertyManager.php
  * Provides the PropertyManager object for accessing information about properties.
  * Replaces the classes and collection manager
- * 
+ *
  * @author Klaus Dimde
  * ----------------------------------------------------------------------
  * Lang en
@@ -16,43 +16,37 @@
  * Coverage Unit: 73.58 (2025-06-06)
  * PSR-State: complete
  */
+
 namespace Sunhill\Managers;
 
-use Sunhill\Managers\Exceptions\PropertyClassDoesntExistException;
 use Sunhill\Managers\Exceptions\GivenClassNotAPropertyException;
+use Sunhill\Managers\Exceptions\PropertyClassDoesntExistException;
 use Sunhill\Managers\Exceptions\PropertyNameAlreadyRegisteredException;
 use Sunhill\Managers\Exceptions\PropertyNotRegisteredException;
 use Sunhill\Managers\Exceptions\UnitNameAlreadyRegisteredException;
 use Sunhill\Managers\Exceptions\UnitNotRegisteredException;
-use Sunhill\Objects\AbstractPersistantRecord;
-use Sunhill\Objects\ObjectDescriptor;
-use Sunhill\Storage\AbstractStorage;
-use Sunhill\Objects\Mysql\MysqlStorage;
 use Sunhill\Properties\AbstractProperty;
 use Sunhill\Query\BasicQuery;
+use Sunhill\Storage\AbstractStorage;
 use Sunhill\Storage\CallbackStorage;
-use Sunhill\Tags\Tag;
-use Sunhill\Storage\MysqlStorage\MysqlTagStorage;
 use Sunhill\Storage\MysqlStorage\MysqlAttributeStorage;
+use Sunhill\Storage\MysqlStorage\MysqlTagStorage;
+use Sunhill\Tags\Tag;
 
 /**
  * The PropertiesManager is accessed via the Properties facade. It's a singelton class
  */
-class PropertiesManager 
+class PropertiesManager
 {
-
     /**
      * Stores the currently registered properties.
      *
      * @var array
      */
     protected $registered_properties = [];
-    
-    public function PropertyQuery(): BasicQuery
-    {
-        
-    }
-    
+
+    public function PropertyQuery(): BasicQuery {}
+
     /**
      * Clears all registered properties
      */
@@ -60,43 +54,38 @@ class PropertiesManager
     {
         $this->registered_properties = [];
     }
-    
+
     /**
      * After the checks this method does the registering
-     *
-     * @param string $property
      */
     protected function doRegisterProperty(string $property, ?string $alias)
     {
-        $name = is_null($alias)?$property::getInfo('name'):$alias;
+        $name = is_null($alias) ? $property::getInfo('name') : $alias;
         if (isset($this->registered_properties[$name])) {
             throw new PropertyNameAlreadyRegisteredException("The name '$name' of '$property' is already regsitered.");
         }
         $this->registered_properties[$name] = $property;
     }
-    
+
     /**
      * Registered a new property to the manager
-     *
-     * @param string $property
      */
     public function registerProperty(string $property, ?string $alias = null)
     {
-        if (!class_exists($property)) {
+        if (! class_exists($property)) {
             throw new PropertyClassDoesntExistException("The class '$property' is not accessible.");
         }
-        if (!is_a($property, AbstractProperty::class, true)) {
+        if (! is_a($property, AbstractProperty::class, true)) {
             throw new GivenClassNotAPropertyException("The class '$property' is not a descendant of AbstractProperty.");
         }
         $this->doRegisterProperty($property, $alias);
     }
-    
+
     /**
      * Internal helper that tries to translate the given $property parameter into the name (and therefore
      * key in the registered_properties array) of the property.
      *
-     * @param unknown $property
-     * @return string|false
+     * @param  unknown  $property
      */
     protected function searchProperty($property): string|false
     {
@@ -111,9 +100,10 @@ class PropertiesManager
         if (is_object($property)) {
             return $this->searchProperty($property::class);
         }
+
         return false;
     }
-    
+
     protected function searchOrThrow($property): string
     {
         if ($key = $this->searchProperty($property)) {
@@ -122,166 +112,173 @@ class PropertiesManager
         if (is_scalar($property)) {
             throw new PropertyNotRegisteredException("The property '$property' is not regsitered.");
         } else {
-            throw new PropertyNotRegisteredException("The given non scalar property is not registered.");
+            throw new PropertyNotRegisteredException('The given non scalar property is not registered.');
         }
     }
-    
+
     /**
      * Returns true, when the given name or class was already registered
-     *
-     * @param $property
-     * @return boolean
      */
     public function isPropertyRegistered($property): bool
     {
-        return ($this->searchProperty($property))==false?false:true;
+        return $this->searchProperty($property) == false ? false : true;
     }
-    
+
     /**
      * Returns the full classname with namespace of the given property
      *
-     * @param unknown $property
+     * @param  unknown  $property
+     *
      * @tests PropertiesManagerTest::testGetNamespaceOfProperty
      */
     public function getNamespaceOfProperty($property)
     {
         $key = $this->searchOrThrow($property);
+
         return $this->registered_properties[$key];
     }
-    
+
     /**
      * Returns the name of the given property
      *
-     * @param unknown $property
+     * @param  unknown  $property
      * @return string
+     *
      * @tests PropertiesManagerTest::testGetNameOfProperty
      */
     public function getNameOfProperty($property)
     {
         $key = $this->searchOrThrow($property);
+
         return $key;
     }
+
     /**
      * Returns the structure of this property
      *
-     * @param unknown $property Any kind of reference to a property.
+     * @param  unknown  $property  Any kind of reference to a property.
      * @return The structure of this property
      */
     public function getStructureOfProperty($property)
     {
-         $namespace = $this->getNamespaceOfrProperty($property);
-         $object = new $namespace(); // getStructure() is not static !
-         return $object->getStructure();
+        $namespace = $this->getNamespaceOfrProperty($property);
+        $object = new $namespace; // getStructure() is not static !
+
+        return $object->getStructure();
     }
- 
+
     /**
      * Testss if the given property has a method with the given name
      *
-     * @param unknown $property
-     * @param unknown $method
-     * @return boolean
+     * @param  unknown  $property
+     * @param  unknown  $method
+     * @return bool
      */
     public function propertyHasMethod($property, $method)
     {
         $namespace = $this->getNamespaceOfProperty($property);
+
         return method_exists($namespace, $method);
     }
-    
+
     /**
      * Creates a property of the given type
      *
-     * @param unknown $property
+     * @param  unknown  $property
      * @return unknown
      */
     public function createProperty($property, ?string $name = null, mixed $storage = null)
     {
-        if (!is_a($property, AbstractProperty::class)) {
+        if (! is_a($property, AbstractProperty::class)) {
             $namespace = $this->getNamespaceOfProperty($property);
-            $property = new $namespace();
+            $property = new $namespace;
         }
-        if (!is_null($name)) {
+        if (! is_null($name)) {
             $property->setName($name);
         }
         if (is_null($storage)) {
             return $property;
         }
         if (is_callable($storage)) {
-            $storage_obj = new CallbackStorage();
+            $storage_obj = new CallbackStorage;
             $storage_obj->setCallback($storage);
             $property->setStorage($storage_obj);
+
             return $property;
         }
         if (is_string($storage) && class_exists($storage)) {
-            $storage = new $storage();
+            $storage = new $storage;
         }
         if (is_a($storage, AbstractStorage::class)) {
             $property->setStorage($storage);
+
             return $property;
         }
+
         return false;
     }
-    
+
     /**
      * The reimplementation of is_a() that works with class names too
      *
-     * @param unknown $test
-     * @param unknown $class
-     * @return boolean
+     * @param  unknown  $test
+     * @param  unknown  $class
+     * @return bool
      *
      * Test: testIsA
      */
-    public function isA($test,$class)
+    public function isA($test, $class)
     {
         $namespace_class = $this->getNamespaceOfProperty($class);
         $namespace_test = $this->getNamespaceOfProperty($test);
-        
-        return is_a($namespace_test,$namespace_class, true);
+
+        return is_a($namespace_test, $namespace_class, true);
     }
-    
+
     /**
      * Returns true is $test is exactly a $class and not of its children
      *
-     * @param unknown $test
-     * @param unknown $class
-     * @return boolean
+     * @param  unknown  $test
+     * @param  unknown  $class
+     * @return bool
      *
      * Test: isAClass
      */
-    public function isAClass($test,$class)
+    public function isAClass($test, $class)
     {
         $namespace_class = $this->getNamespaceOfProperty($class);
         $namespace_test = $this->getNamespaceOfProperty($test);
-        return is_a($namespace_test,$namespace_class, true) && !is_subclass_of($namespace_test,$namespace_class);
+
+        return is_a($namespace_test, $namespace_class, true) && ! is_subclass_of($namespace_test, $namespace_class);
     }
+
     /**
      * Naming convention compatible method
      * The reimplementation of is_subclass_of() that works with class names too
      *
-     * @param unknown $test
-     * @param unknown $class
-     * @return boolean
+     * @param  unknown  $test
+     * @param  unknown  $class
+     * @return bool
      *
      * Test: isSubclassOf
      */
-    public function isSubclassOf($test,$class)
+    public function isSubclassOf($test, $class)
     {
         $namespace = $this->getNamespaceOfProperty($class);
         $test_space = $this->getNamespaceOfProperty($test);
-        return is_subclass_of($test_space,$namespace);
+
+        return is_subclass_of($test_space, $namespace);
     }
-    
+
     /**
      * Stores the currently registered units.
      *
      * @var array
      */
     protected $registered_units = [];
-    
-    public function UnitQuery(): BasicQuery
-    {
-        
-    }
-    
+
+    public function UnitQuery(): BasicQuery {}
+
     /**
      * Clears the currently registered units
      */
@@ -289,7 +286,7 @@ class PropertiesManager
     {
         $this->registered_units = [];
     }
-    
+
     public function registerUnit(string $name, string $unit, string $group, string $basic = '',
         ?callable $calculate_to = null, ?callable $calculate_from = null)
     {
@@ -297,218 +294,196 @@ class PropertiesManager
             throw new UnitNameAlreadyRegisteredException("The unit '$name' is already registered.");
         }
         $this->registered_units[$name] = [
-            'unit'=>$unit,
-            'group'=>$group,
-            'basic'=>($basic == '')?$name:$basic,
-            'calculate_to'=>$calculate_to,
-            'calculate_from'=>$calculate_from
+            'unit' => $unit,
+            'group' => $group,
+            'basic' => ($basic == '') ? $name : $basic,
+            'calculate_to' => $calculate_to,
+            'calculate_from' => $calculate_from,
         ];
     }
-    
+
     /**
      * Returns true if the unit is registered otherwise false
-     *
-     * @param string $property
-     * @return bool
      */
     public function isUnitRegistered(string $property): bool
     {
         return isset($this->registered_units[$property]);
     }
-    
+
     /**
      * Checks if the given unit is registered. If not throws exception.
-     * @param string $unit
      */
     protected function checkOrThrowUnit(string $unit)
     {
-        if (!$this->isUnitRegistered($unit)) {
+        if (! $this->isUnitRegistered($unit)) {
             throw new UnitNotRegisteredException("The unit '$unit' is not registered.");
         }
     }
-    
+
     /**
      * Return the unit of the given unit name
-     *
-     * @param string $unit
-     * @return string
      */
     public function getUnit(string $unit): string
     {
         $this->checkOrThrowUnit($unit);
-        
+
         return $this->registered_units[$unit]['unit'];
     }
-    
+
     /**
      * Returns the group of the given unit name
-     *
-     * @param string $unit
-     * @return string
      */
     public function getUnitGroup(string $unit): string
     {
         $this->checkOrThrowUnit($unit);
-        
+
         return $this->registered_units[$unit]['group'];
     }
-    
+
     /**
      * Returns the basic unit name of the given unit name
-     *
-     * @param string $unit
-     * @return string
      */
     public function getUnitBasic(string $unit): string
     {
         $this->checkOrThrowUnit($unit);
-        
+
         return $this->registered_units[$unit]['basic'];
     }
-    
+
     /**
      * Calculates the given $value to the basic unit
-     *
-     * @param string $unit
-     * @param float $value
-     * @return float
      */
     public function calculateToBasic(string $unit, float $value): float
     {
         $this->checkOrThrowUnit($unit);
-        
+
         $calc = $this->registered_units[$unit]['calculate_to'];
         if (is_null($calc)) {
             return $value;
         }
-        
+
         return $calc($value);
     }
-    
+
     /**
      * Calculates the given $value from the basic unit
-     *
-     * @param string $unit
-     * @param float $value
-     * @return float
      */
     public function calculateFromBasic(string $unit, float $value): float
     {
         $this->checkOrThrowUnit($unit);
-        
+
         $calc = $this->registered_units[$unit]['calculate_from'];
         if (is_null($calc)) {
             return $value;
         }
+
         return $calc($value);
     }
-    
+
     public function getTagStorage(): string
     {
         return MysqlTagStorage::class;
     }
-    
+
     public function loadTag(int $id): Tag
     {
         return new Tag($id);
     }
-    
+
     public function loadTagData(int $id): \stdClass
     {
         $storage_class = $this->getTagStorage();
         $this->state = 'normal';
-        $storage = new $storage_class();
+        $storage = new $storage_class;
         $data = $storage->load($id);
-        
+
         return $data;
     }
-    
+
     public function searchTag(string $tagname): ?Tag
     {
         $tag_storage_class = $this->getTagStorage();
-        $tag_storage = new $tag_storage_class();
+        $tag_storage = new $tag_storage_class;
+
         return new Tag($tag_storage->searchName($tagname));
     }
-    
+
     public function getAttributeStorage(): string
     {
         return MysqlAttributeStorage::class;
     }
-    
+
     private function getAttributeStorageObject()
     {
         $attr_storage_class = $this->getAttributeStorage();
-        $attr_storage = new $attr_storage_class();
-        
+        $attr_storage = new $attr_storage_class;
+
         return $attr_storage;
     }
-    
+
     /**
      * Loads the attribute with the attribute_id $id that belongs to the object identified by $object_id
-     * 
-     * @param int $id The id of the attribute
-     * @param int $object_id The id of the object
+     *
+     * @param  int  $id  The id of the attribute
+     * @param  int  $object_id  The id of the object
      * @return array associative array with one row. The key is the name of the attribute the value is the value of the attribute
      */
     public function loadAttribute(int $id, int $object_id): \stdClass
     {
         $attr_storage = $this->getAttributeStorageObject();
+
         return $attr_storage->loadAttribute($object_id, $id);
     }
-    
+
     /**
      * Returns the id of the attribute with the given name of null if no attribute with this name exists
-     * 
-     * @param string $name The name of the attribute to search for
-     * @return int|NULL the id of the attribute or null if none exists
+     *
+     * @param  string  $name  The name of the attribute to search for
+     * @return int|null the id of the attribute or null if none exists
      */
     public function getAttributeID(string $name): ?int
     {
         $attr_storage = $this->getAttributeStorageObject();
-        if (is_null($attribute = $attr_storage->searchAttribute(['name'=>$name]))) {
+        if (is_null($attribute = $attr_storage->searchAttribute(['name' => $name]))) {
             return null;
         }
+
         return $attribute->id;
     }
-    
+
     /**
      * Returns the type of the attribute with the given name of null if no attribute with this name exists
      *
-     * @param string $name The name of the attribute to search for
-     * @return string|NULL the type of the attribute or null if none exists
+     * @param  string  $name  The name of the attribute to search for
+     * @return string|null the type of the attribute or null if none exists
      */
     public function getAttributeType(string $name): ?string
     {
         $attr_storage = $this->getAttributeStorageObject();
-        if (is_null($attribute = $attr_storage->searchAttribute(['name'=>$name]))) {
+        if (is_null($attribute = $attr_storage->searchAttribute(['name' => $name]))) {
             return null;
         }
-        return $attribute->type;        
+
+        return $attribute->type;
     }
-    
+
     /**
      * Stores the value $value for the attribute $id and the object $object_id in the attribute storage
-     * 
-     * @param int $id
-     * @param int $object_id
-     * @param unknown $value
+     *
+     * @param  unknown  $value
      */
     public function storeAttribute(int $id, int $object_id, $value)
     {
         $attr_storage = $this->getAttributeStorageObject();
         $attr_storage->storeAttribute($id, $object_id, $value);
     }
-    
+
     /**
      * Deletes the attribute with the id $id for the object identified by $object_id
-     * 
-     * @param int $id
-     * @param int $object_id
      */
     public function unsetAttribute(int $id, int $object_id)
     {
         $attr_storage = $this->getAttributeStorageObject();
-        $attr_storage->unsetAttribute($id, $object_id);        
+        $attr_storage->unsetAttribute($id, $object_id);
     }
-    
 }

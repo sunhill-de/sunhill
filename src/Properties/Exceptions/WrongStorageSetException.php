@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * This storage is thrown when a certain kind of storage is expected but not set.
+ *
  * @author lokal
  */
-class WrongStorageSetException extends PropertyException 
-{
-}
+class WrongStorageSetException extends PropertyException {}

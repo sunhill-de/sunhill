@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InvalidIDException.php
  * Provides the InvalidIDException
@@ -13,8 +14,7 @@ namespace Sunhill\Storage\Exceptions;
 /**
  * This exception is thrown when a load() of a persistent storage was called with an invalid
  * id (or no id at all if thats not allowed)
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class InvalidIDException extends StorageException {}

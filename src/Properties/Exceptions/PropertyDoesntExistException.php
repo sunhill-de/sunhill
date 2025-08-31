@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, __get or __set is called with an unknown element
+ *
  * @author lokal
  */
-class PropertyDoesntExistException extends PropertyException 
-{
-}
+class PropertyDoesntExistException extends PropertyException {}

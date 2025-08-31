@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @file TagNameNotFoundException.php
  * Provides the TagNameNotFoundException
@@ -16,9 +15,7 @@ namespace Sunhill\Tags\Exceptions;
 
 /**
  * is raised when the name was not found
- * @author lokal
  *
+ * @author lokal
  */
-class TagNameNotFoundException extends TagException
-{
-}
+class TagNameNotFoundException extends TagException {}

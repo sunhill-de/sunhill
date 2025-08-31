@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StorableRecordProperty.php
  * Defines a property as a base for all record that can load themself out of a persistent data storage
@@ -6,7 +7,7 @@
  * Reviewstatus: 2024-11-02
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 100 % (2025-06-06)
  *
  * Wiki: /PooledRecordProperties
@@ -20,10 +21,8 @@ use Sunhill\Storage\PersistentSingleStorage;
 
 class StorableRecordProperty extends PersistentRecordProperty
 {
-    
     /**
      * Loads the record from the storage
-     * 
      */
     public function load()
     {
@@ -31,10 +30,9 @@ class StorableRecordProperty extends PersistentRecordProperty
         $storage = $this->getStorage();
         $storage->load();
     }
-    
+
     protected function isValidStorage(AbstractStorage $storage): bool
     {
         return is_a($storage, PersistentSingleStorage::class);
     }
-    
 }

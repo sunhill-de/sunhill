@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, if a function was passed a parameter that could not be parsed
+ *
  * @author Klaus Dimde
  */
-class InvalidParameterException extends PropertyException 
-{
-}
+class InvalidParameterException extends PropertyException {}

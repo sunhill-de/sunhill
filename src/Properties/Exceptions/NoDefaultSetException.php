@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, if a reference got an invalid name
+ *
  * @author lokal
  */
-class NoDefaultSetException extends PropertyException 
-{
-}
+class NoDefaultSetException extends PropertyException {}

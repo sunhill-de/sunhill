@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file TooManyResultsException.php
  * Provides the TooManyResultsException

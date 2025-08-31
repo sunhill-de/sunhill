@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, getInfo is called with a non existing key
+ *
  * @author lokal
  */
-class PropertyKeyDoesntExistException extends PropertyException 
-{
-}
+class PropertyKeyDoesntExistException extends PropertyException {}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file IDNotFoundException.php
  * Provides the IDNotFoundException
@@ -12,10 +13,7 @@ namespace Sunhill\Storage\Exceptions;
 
 /**
  * This exception is raised when load() was called with a valid id that does not exists.
- * @author klaus
  *
+ * @author klaus
  */
-class IDNotFoundException extends StorageException
-{
-    
-}
+class IDNotFoundException extends StorageException {}

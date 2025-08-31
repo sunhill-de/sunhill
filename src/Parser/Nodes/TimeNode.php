@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file TimeNode.php
  * A node that represents a time constant
@@ -14,10 +15,9 @@ namespace Sunhill\Parser\Nodes;
 
 class TimeNode extends TerminalNode
 {
-        
     public function __construct($value)
     {
-        parent::__construct('time',$value);
+        parent::__construct('time', $value);
     }
 
     public function getDatatype(): ?string
@@ -29,5 +29,4 @@ class TimeNode extends TerminalNode
     {
         return '"'.$this->getValue().'"';
     }
-    
 }

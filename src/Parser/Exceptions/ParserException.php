@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file ParserException.php
  * Provides the ParserException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * Basic exception that is raised inside a parser
- * @author klaus
  *
+ * @author klaus
  */
 class ParserException extends ParsingSubsystemException {}

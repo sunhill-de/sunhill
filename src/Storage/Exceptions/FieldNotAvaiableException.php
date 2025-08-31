@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file FieldNotAvaiabaleException.php
  * Provides the FieldNotAvaiableException
@@ -13,8 +14,7 @@ namespace Sunhill\Storage\Exceptions;
 /**
  * This exception is thrown when a field in a storage was requested that doesn't exist in the
  * storage
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class FieldNotAvaiableException extends StorageException {}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file AbstractProperty.php
  * Defines an abstract property as base for all other properties
@@ -8,195 +9,193 @@
  * Documentation: complete
  * Tests: Unit/Properties/AbstractPropertyTest.php
  * Coverage Unit: 96.51 % (2025-06-06)
- * 
+ *
  * Wiki: /Properties
  * tests /tests/Unit/Properties/AbstractProperties/*
  */
 
 namespace Sunhill\Properties;
 
-use Sunhill\Properties\Exceptions\InvalidNameException;
-use Sunhill\Properties\Exceptions\NoStorageSetException;
-use Sunhill\Properties\Exceptions\UninitializedValueException;
-use Sunhill\Storage\AbstractStorage;
-use Sunhill\Properties\Exceptions\PropertyException;
-use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
-use Sunhill\Facades\Properties;
-use Sunhill\Query\Exceptions\WrongTypeException;
 use Sunhill\Basic\Base;
+use Sunhill\Facades\Properties;
+use Sunhill\Properties\Exceptions\InvalidNameException;
 use Sunhill\Properties\Exceptions\InvalidValueException;
+use Sunhill\Properties\Exceptions\NoStorageSetException;
 use Sunhill\Properties\Exceptions\NotAllowedRelationException;
 use Sunhill\Properties\Exceptions\NoUserManagerSetException;
+use Sunhill\Properties\Exceptions\PropertyException;
+use Sunhill\Properties\Exceptions\PropertyKeyDoesntExistException;
 use Sunhill\Properties\Exceptions\PropertyNotReadableException;
 use Sunhill\Properties\Exceptions\PropertyNotWriteableException;
+use Sunhill\Properties\Exceptions\UninitializedValueException;
+use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyingException;
 use Sunhill\Properties\Exceptions\UserNotAuthorizedForReadingException;
 use Sunhill\Properties\Exceptions\UserNotAuthorizedForWritingException;
-use Sunhill\Properties\Exceptions\UserNotAuthorizedForModifyingException;
 use Sunhill\Properties\Exceptions\WrongStorageSetException;
+use Sunhill\Query\Exceptions\WrongTypeException;
+use Sunhill\Storage\AbstractStorage;
 
 abstract class AbstractProperty extends Base
 {
-
     /**
      * Stores the current owner of this property (if any)
-     * 
+     *
      * @var unknown
      */
     protected $owner;
-    
+
     /**
      * Sets the current owner of this property
-     * 
-     * @param AbstractProperty $owner
-     * @return AbstractProperty
-     * 
+     *
+     *
      * @wiki Properties#Ownership of propeties
      */
     public function setOwner(AbstractProperty $owner): AbstractProperty
     {
         $this->owner = $owner;
-        
+
         return $this;
     }
-    
+
     /**
      * Returns the current owner of this property or null
-     * 
-     * @return AbstractProperty|NULL
-     * 
+     *
+     *
      * @wiki Properties#Ownership of propeties
      */
     public function getOwner(): ?AbstractProperty
     {
         return $this->owner;
     }
-    
+
     /**
      * Return the path of this element (the names of all ancestors until this element)
-     * 
-     * @return string
-     * 
+     *
+     *
      * @wiki Properties#Ownership of propeties
      */
     public function getPath(): string
     {
         if (is_null($this->getOwner())) {
-            return $this->getName()??'undefined';
+            return $this->getName() ?? 'undefined';
         } else {
-            return $this->getOwner()->getPath().'.'.($this->getName()??'undefined');
+            return $this->getOwner()->getPath().'.'.($this->getName() ?? 'undefined');
         }
     }
-    
+
     /**
      * Stores the current storage
-     * 
+     *
      * @var unknown
      */
     private $storage;
-    
+
     protected function createStorage(): ?AbstractStorage
     {
-        if (!empty(static::getStorageClass())) {
+        if (! empty(static::getStorageClass())) {
             $class = static::getStorageClass();
-            $storage = new $class();
+            $storage = new $class;
             $storage->setStructure($this->getStructure());
+
             return $storage;
         }
-        return null;    
+
+        return null;
     }
-    
+
     /**
      * Setter for $storage
-     * 
-     * @param AbstractStorage $storage
+     *
      * @return Sunhill\\Properties\AbstractProperty
-     * 
+     *
      * @wiki /Properties#setStorage()_and_getStorage()
-     * 
+     *
      * @test AbstractPropertyTest::testSetStorage()
      */
     public function setStorage(AbstractStorage $storage)
     {
         $this->storage = $storage;
+
         return $this;
     }
-    
+
     /**
      * Getter for storage
-     * 
-     * @return AbstractStorage
-     * 
+     *
+     *
      * @wiki /Properties#setStorage()_and_getStorage()
-     * 
+     *
      * @test AbstractPropertyTest::testSetStorage()
      */
     public function getStorage(): ?AbstractStorage
     {
         $this->checkForStorage(false);
+
         return $this->storage;
     }
-    
+
     /**
      * Checks if the given storage is a valid storage for this property. By default returns
      * true.
-     * 
-     * @param AbstractStorage $storage
-     * @return bool
      */
     protected function isValidStorage(AbstractStorage $storage): bool
     {
         return true;
     }
-    
+
     /**
      * Checks if a storage is set. If not raises an exception
-     * 
-     * @param string $action
+     *
+     * @param  string  $action
+     *
      * @throes NoStorageExcveption
-     * 
+     *
      * @test AbstractPropertyTest::testNoStorage()
      */
     protected function checkForStorage(bool $throw = true)
     {
-        if (!empty($this->storage)) {
-            if (!$this->isValidStorage($this->storage)) {
-                throw new WrongStorageSetException("A storage of a different type was expected.");
+        if (! empty($this->storage)) {
+            if (! $this->isValidStorage($this->storage)) {
+                throw new WrongStorageSetException('A storage of a different type was expected.');
             }
+
             return;
         }
         $this->storage = $this->createStorage();
-        if (!empty($this->storage)) {
-            if (!$this->isValidStorage($this->storage)) {
-                throw new WrongStorageSetException("A storage of a different type was expected.");
+        if (! empty($this->storage)) {
+            if (! $this->isValidStorage($this->storage)) {
+                throw new WrongStorageSetException('A storage of a different type was expected.');
             }
+
             return;
         }
-        if (!$throw) {
+        if (! $throw) {
             return;
         }
-        throw new NoStorageSetException("There is no storage set.");
+        throw new NoStorageSetException('There is no storage set.');
     }
-    
-// ====================================== Name =====================================================    
+
+    // ====================================== Name =====================================================
     /**
      * The name of this property
      * Property->getName() reads, Property->setName() writes
+     *
      * @var string
      */
-    protected $_name = "";
-    
+    protected $_name = '';
+
     /**
      * A class constant for defining forbidden names for properties
+     *
      * @var array
      */
-    const FORBIDDEN_NAMES = ['object','string','integer','float','boolean','collection', 'id', 'classname'];
+    const FORBIDDEN_NAMES = ['object', 'string', 'integer', 'float', 'boolean', 'collection', 'id', 'classname'];
 
     /**
      * Checks the designated name for this property if it is valid. If not is raises an exception
-     * 
-     * @param string $name
+     *
      * @exception InvalidNameException When the given name is not valid
-     * 
+     *
      * @test AbstractPropertyTest::testNames()
      */
     protected function checkName(string $name)
@@ -211,10 +210,11 @@ abstract class AbstractProperty extends Base
             throw new InvalidNameException("The property name '$name' is reserved and not allowed.");
         }
     }
-    
+
     /**
      * sets the field Property->name
-     * @param $name The name of the property
+     *
+     * @param  $name  The name of the property
      * @return PropertyOld a reference to this to make setter chains possible
      *
      * Test Unit/Properties/PropertyTest::testNames()
@@ -225,12 +225,13 @@ abstract class AbstractProperty extends Base
     {
         $this->checkName($name);
         $this->_name = $name;
+
         return $this;
     }
-    
+
     /**
      * Skips the name checking (for system properties)
-     * @param string $name
+     *
      * @return Proeprty
      *
      * Test Unit/Properties/PropertyTest::forceNames()
@@ -240,13 +241,13 @@ abstract class AbstractProperty extends Base
     public function forceName(string $name): AbstractProperty
     {
         $this->_name = $name;
+
         return $this;
     }
-    
+
     /**
      * Alias for setName()
      *
-     * @param string $name
      * @return PropertyOld
      *
      * Test Unit/Properties/PropertyTest::testNames
@@ -257,7 +258,7 @@ abstract class AbstractProperty extends Base
     {
         return $this->setName($name);
     }
-    
+
     /**
      * Returns the name of this property
      *
@@ -269,11 +270,10 @@ abstract class AbstractProperty extends Base
     {
         return $this->_name;
     }
-    
+
     /**
      * Returns true, when the passed name is a valid property name otherwise false
-     * 
-     * @param string $test
+     *
      * @return bool
      *
      * Test Unit/Properties/PropertyTest::testNames
@@ -287,128 +287,124 @@ abstract class AbstractProperty extends Base
         } catch (InvalidNameException $e) {
             return false;
         }
+
         return true;
     }
 
-// ==================================== Value handling ======================================    
+    // ==================================== Value handling ======================================
     /**
      * A static variable that stores the current user manager (a facade or static interface
      * that implements a "hasCapability()" method
-     * 
+     *
      * @var string
      */
     protected static $current_usermanager_fascade = '';
-    
+
     /**
      * Initializes a user mangement interface for all properties. If any other user mangement than
      * the one from the sunhill framework is installed, here has to be an interface than defines the
-     * hasCapability() method. This should return true when the current user has the given capability 
-     * otherwise false. 
-     * 
-     * @param string $user_manager
-     * 
+     * hasCapability() method. This should return true when the current user has the given capability
+     * otherwise false.
+     *
+     *
      * @test AbstractPropertyTest::testGetCapabilities
-     * 
+     *
      * @wiki /Properties#Capabilities
      */
     public static function setUserManager(string $user_manager)
     {
-        self::$current_usermanager_fascade = $user_manager;    
+        self::$current_usermanager_fascade = $user_manager;
     }
-    
+
     protected string $read_capability = '';
-    
+
     /**
      * Returns the required capability to read this property or null if none is required
-     * 
-     * @return string|NULL
-     * 
+     *
+     *
      * @test AbstractPropertyTest::testGetCapabilities
-     * 
+     *
      * @wiki /Properties#Capabilities
      */
     public function readCapability(): ?string
     {
         return $this->read_capability;
     }
-    
+
     /**
      * Alias for readCapability
-     * 
-     * @return string|NULL
-     * 
+     *
+     *
      * @wiki /Properties#Capabilities
      */
     public function getReadCapability(): ?string
     {
         return $this->readCapability();
     }
-    
+
     /**
      * Sets the read capabilities for this property
      *
-     * @return AbstractProperty
      *
      * @wiki /Properties#Capabilities
      */
     public function setReadCapability(string $capability): AbstractProperty
     {
         $this->read_capability = $capability;
+
         return $this;
     }
-    
+
     protected bool $is_readable = true;
-    
+
     /**
      * Returns true, when the property is readable
-     * 
+     *
      * @return bool true, if the property is readable otherwise false
-     * 
+     *
      * @test AbstractPropertyTest::testPropertyNotReadable
-     * 
+     *
      * @wiki /Properties#Capabilities
      */
     public function isReadable(): bool
     {
         return $this->is_readable;
     }
-    
+
     /**
      * Alias to isReadable()
-     * 
-     * @return bool
-     * 
+     *
+     *
      * @wiki /Properties#Capabilities
      */
     public function getReadable(): bool
     {
         return $this->isReadable();
     }
-    
+
     /**
      * Marks the property as readable or not readable
-     * 
-     * @param bool $readable
-     * @return AbstractProperty
-     * 
+     *
+     *
      * @wiki /Properties#Capabilities
      */
     public function setReadable(bool $readable = true): AbstractProperty
     {
         $this->is_readable = $readable;
+
         return $this;
     }
-    
+
     /**
      * Checks if this property is readable. If not it raises an exception
-     * 
+     *
      * @throws PropertyNotReadableException::class When this property is not readbale
-     * 
+     *
      * @test AbstractPropertyTest::testPropertyNotReadable()
      */
     private function checkIsReadable()
     {
-        if (!$this->isReadable()) {
+        if (! $this->isReadable()) {
             throw new PropertyNotReadableException("The property '".$this->_name."' is not readable.");
         }
     }
@@ -416,11 +412,10 @@ abstract class AbstractProperty extends Base
     /**
      * Checks if a user manager is installed. If yes it checks if the current user has the capability
      * to read this property
-     * 
-     * @param string $capability
+     *
      * @throws NoUserManagerSetException::class When no user manager is installed
      * @throws UserNotAuthorizedForReadingException::class When the current user is not authorized to read
-     * 
+     *
      *  @test AbstractPropertyTest::testNoUserManagerInstalled()
      *  @test AbstractPropertyTest::testUserNotAuthorizedForReading()
      *  @test AbstractPropertyTest::testUserAuthorizedForReading()
@@ -428,36 +423,36 @@ abstract class AbstractProperty extends Base
     private function doCheckReadCapability(string $capability)
     {
         if (empty(static::$current_usermanager_fascade)) {
-            throw new NoUserManagerSetException("Property has a read restriction but no user manager is installed.");
+            throw new NoUserManagerSetException('Property has a read restriction but no user manager is installed.');
         }
-        if (!static::$current_usermanager_fascade::hasCapability($capability)) {
+        if (! static::$current_usermanager_fascade::hasCapability($capability)) {
             throw new UserNotAuthorizedForReadingException("The current user is not authorized to read '".$this->_name."'");
         }
     }
-    
+
     /**
-     * Checks if this property has any restrictions for reading at all and if yes if the 
+     * Checks if this property has any restrictions for reading at all and if yes if the
      * current user has this capability.
-     * 
-     * 
+     *
+     *
      *  @test AbstractPropertyTest::testNoUserManagerInstalled()
      *  @test AbstractPropertyTest::testUserNotAuthorizedForReading()
      *  @test AbstractPropertyTest::testUserAuthorizedForReading()
      */
     private function checkIsAuthorizedForReading()
     {
-       $capability = $this->readCapability();
-       
-       if (empty($capability)) {
-           return; // If capability is empty, just leave
-       }
-       
-       $this->doCheckReadCapability($capability);
+        $capability = $this->readCapability();
+
+        if (empty($capability)) {
+            return; // If capability is empty, just leave
+        }
+
+        $this->doCheckReadCapability($capability);
     }
-    
+
     /**
      * Call this method before any reading attempts
-     * 
+     *
      *  @test AbstractPropertyTest::testPropertyNotReadable()
      *  @test AbstractPropertyTest::testNoUserManagerInstalled()
      *  @test AbstractPropertyTest::testUserNotAuthorizedForReading()
@@ -466,12 +461,12 @@ abstract class AbstractProperty extends Base
     protected function checkForReading()
     {
         $this->checkIsReadable();
-        $this->checkIsAuthorizedForReading();        
+        $this->checkIsAuthorizedForReading();
     }
-    
+
     /**
      * Performs the reading process
-     * 
+     *
      *  @test AbstractPropertyTest::testPropertyNotReadable()
      *  @test AbstractPropertyTest::testNoUserManagerInstalled()
      *  @test AbstractPropertyTest::testUserNotAuthorizedForReading()
@@ -485,40 +480,42 @@ abstract class AbstractProperty extends Base
             return $this->handleUninitialized();
         }
     }
-    
+
     protected function handleUninitialized()
     {
         if ($this->hasDefault()) {
             return $this->getDefault();
         }
-        throw new UninitializedValueException("Reading access to uninitialized property: ".$this->getName());    
+        throw new UninitializedValueException('Reading access to uninitialized property: '.$this->getName());
     }
-    
+
     /**
      * Checks the reading restrictions and if passed performs the reading
-     * 
+     *
      * @return unknown
-     * 
+     *
      *  @test AbstractPropertyTest::testPropertyNotReadable()
      *  @test AbstractPropertyTest::testNoUserManagerInstalled()
      *  @test AbstractPropertyTest::testUserNotAuthorizedForReading()
      *  @test AbstractPropertyTest::testUserAuthorizedForReading()
-     *  
+     *
      * @wiki /Properties#Reading_a_property_value
      */
     public function getValue()
     {
         $this->checkForReading();
         $this->checkForStorage('read');
+
         return $this->doGetValue();
     }
 
     /**
      * Returns the value in a human readable format. The possible read restrictions are already
      * checked
-     * @param unknown $input
+     *
+     * @param  unknown  $input
      * @return unknown
-     * 
+     *
      * @wiki /Writing_own_property_classes#Human_readable_format_/_storage_format
      */
     protected function formatForHuman($input)
@@ -527,131 +524,127 @@ abstract class AbstractProperty extends Base
             return $input;
         } else {
             $unit = Properties::getUnit($this->getUnit());
+
             return $input.' '.$unit;
         }
     }
-    
+
     /**
      * Returns the value for saving in the storafge
-     * 
-     * @param unknown $input
+     *
+     * @param  unknown  $input
      * @return unknown
-     * 
+     *
      * @wiki /Writing_own_property_classes#Human_readable_format_/_storage_format
      */
     protected function formatForStorage($input)
     {
         return $input;
     }
-    
+
     /**
      * Returns the value as loaded from a storage
-     * 
-     * @param unknown $input
+     *
+     * @param  unknown  $input
      * @return unknown
-     * 
+     *
      * @wiki /Writing_own_property_classes#Human_readable_format_/_storage_format
      */
     protected function formatFromStorage($input)
     {
         return $input;
     }
-    
+
     /**
-     * Returns the value in a human readable form 
-     * 
+     * Returns the value in a human readable form
+     *
      * @return Sunhill\\Properties\unknown
-     * 
+     *
      * @tests AbstractPropertyTest::testFormatForHuman
-     * 
+     *
      * @wiki /Properties#Readubg_a_property_value
      */
     public function getHumanValue()
     {
         $this->checkForStorage('read');
         $this->checkForReading();
+
         return $this->formatForHuman($this->doGetValue());
     }
 
     protected $default;
-    
+
     /**
      * Sets a default value for this storage
-     * 
-     * @param mixed $default
-     * @return static
-     * 
+     *
+     *
      * @wiki /Properties#Default_value
      */
     public function setDefault(mixed $default): static
     {
         if (is_null($default)) {
-            $this->default = new DefaultNull();
+            $this->default = new DefaultNull;
             $this->nullable = true;
         } else {
             $this->default = $default;
         }
+
         return $this;
     }
 
     /**
-     * Sets a default value for this storage (alias for setDefault()) 
+     * Sets a default value for this storage (alias for setDefault())
      *
-     * @param mixed $default
-     * @return static
      *
      * @wiki /Properties#Default_value
-     */    
+     */
     public function default(mixed $default): static
     {
-        return $this->setDefault($default);    
+        return $this->setDefault($default);
     }
-    
+
     /**
      * Returns the current set default value
-     * 
-     * @return mixed
+     *
      *
      * @wiki /Properties#Default_value
      */
     public function getDefault(): mixed
     {
-        if (is_a($this->default,DefaultNull::class)) {
+        if (is_a($this->default, DefaultNull::class)) {
             return null;
         }
+
         return $this->default;
     }
 
     /**
      * Returns if the default value for this property is null
-     * 
-     * @return bool
+     *
      *
      * @wiki /Properties#Default_value
      */
     public function defaultsNull(): bool
     {
-        return is_a($this->default,DefaultNull::class);
+        return is_a($this->default, DefaultNull::class);
     }
 
     /**
      * Returns if this property has a default value
-     * 
-     * @return bool
+     *
      *
      * @wiki /Properties#Default_value
      */
     public function hasDefault(): bool
     {
-        return !is_null($this->default);
+        return ! is_null($this->default);
     }
-    
+
     protected string $write_capability = '';
-    
+
     /**
      * Returns the required capability to write this property or null if none is required
      *
-     * @return string|NULL
      *
      * @test AbstractPropertyTest::testGetCapabilities
      *
@@ -661,11 +654,10 @@ abstract class AbstractProperty extends Base
     {
         return $this->write_capability;
     }
-    
+
     /**
      * Alias for writeCapability
      *
-     * @return string|NULL
      *
      * @wiki /Properties#Capabilities
      */
@@ -673,22 +665,22 @@ abstract class AbstractProperty extends Base
     {
         return $this->writeCapability();
     }
-    
+
     /**
      * Sets the write capabilities for this property
      *
-     * @return AbstractProperty
      *
      * @wiki /Properties#Capabilities
      */
     public function setWriteCapability(string $capability): AbstractProperty
     {
         $this->write_capability = $capability;
+
         return $this;
     }
-    
+
     protected bool $is_writeable = true;
-    
+
     /**
      * Returns true, when the property is writeable
      *
@@ -702,11 +694,10 @@ abstract class AbstractProperty extends Base
     {
         return $this->is_writeable;
     }
-    
+
     /**
      * Alias to isWriteable()
      *
-     * @return bool
      *
      * @wiki /Properties#Capabilities
      */
@@ -714,108 +705,104 @@ abstract class AbstractProperty extends Base
     {
         return $this->isWriteable();
     }
-    
+
     /**
      * Marks the property as readable or not readable
      *
-     * @param bool $readable
-     * @return AbstractProperty
+     * @param  bool  $readable
      *
      * @wiki /Properties#Capabilities
      */
     public function setWriteable(bool $writeable = true): AbstractProperty
     {
         $this->is_writeable = $writeable;
+
         return $this;
     }
-        
+
     /**
      * Returns true, when this property was already modified by an user. This is important for
      * a eventually existing modifyCapability
-     * 
-     * @return bool
      */
     public function isInitialized(): bool
     {
         $this->checkForStorage('isInitialized');
+
         return $this->getStorage()->getIsInitialized($this->getName());
     }
-    
+
     protected $modify_capability = '';
-    
+
     /**
      * Returns the required capability to modify this property or null if none is required
      *
-     * @return string|NULL
-     * 
+     *
      * @test AbstractPropertyTest::testGetCapabilities
-     * 
+     *
      * @wiki /Properties#Capabilities
      */
     public function modifyCapability(): ?string
     {
         return $this->modify_capability;
     }
-    
+
     /**
      * Alias for modifyCapability()
-     * 
-     * @return string|NULL
-     * 
+     *
+     *
      * @wiki /Properties#Capabilities
      */
     public function getModifyCapability(): ?string
     {
-        return $this->modifyCapability();    
+        return $this->modifyCapability();
     }
-    
+
     /**
      * Setter for modify_capability
-     * 
-     * @param string $capability
-     * @return static
-     * 
+     *
+     *
      * @wiki /Properties#Capabilities
      */
     public function setModifyCapability(string $capability): static
     {
         $this->modify_capability = $capability;
+
         return $this;
     }
-    
+
     /**
      * Checks if this property is writeable. If not it raises an exception
      *
      * @throws PropertyNotWriteableException::class When this property is not writeable
+     *
      * @test AbstractPropertyTest::testPropertyNotWriteable
      */
     private function checkIsWriteable()
     {
-        if (!$this->isWriteable()) {
+        if (! $this->isWriteable()) {
             throw new PropertyNotWriteableException("The property '".$this->_name."' is not writeable.");
         }
     }
-    
+
     /**
      * Checks if a user manager is installed. If yes it checks if the current user has the capability
      * to write this property
      *
-     * @param string $capability
      * @throws NoUserManagerInstalledException::class When no user manager is installed
      * @throws UserNotAuthorizedForWritingException::class When the current user is not authorized to write
+     *
      * @test AbstractPropertyTest::testNoUserManagerInstalledWhileWriting()
-     * 
      */
     private function doCheckWriteCapability(string $capability)
     {
         if (empty(static::$current_usermanager_fascade)) {
-            throw new NoUserManagerSetException("Property has a read restriction but no user manager is installed.");
+            throw new NoUserManagerSetException('Property has a read restriction but no user manager is installed.');
         }
-        if (!static::$current_usermanager_fascade::hasCapability($capability)) {
+        if (! static::$current_usermanager_fascade::hasCapability($capability)) {
             throw new UserNotAuthorizedForWritingException("The current user is not authorized to write '".$this->_name."'");
         }
     }
-    
+
     /**
      * Checks if this property has any restrictions for writing at all and if yes if the
      * current user has this capability.
@@ -826,17 +813,17 @@ abstract class AbstractProperty extends Base
     private function checkIsAuthorizedForWriting()
     {
         $capability = $this->writeCapability();
-        
+
         if (empty($capability)) {
             return; // If capability is empty, just leave
         }
-        
+
         $this->doCheckWriteCapability($capability);
     }
-    
+
     /**
      * Call this method before any writing attempts
-     * 
+     *
      * @test AbstractPropertyTest::testPropertyNotWriteable
      * @test AbstractPropertyTest::testUserNotAuthorizedForWriting()
      * @test AbstractPropertyTest::testUserAuthorizedForWriting()
@@ -851,22 +838,22 @@ abstract class AbstractProperty extends Base
      * Checks if a user manager is installed. If yes it checks if the current user has the capability
      * to write this property
      *
-     * @param string $capability
      * @throws NoUserManagerInstalledException::class When no user manager is installed
      * @throws UserNotAuthorizedForWritingException::class When the current user is not authorized to write
+     *
      * @test AbstractPropertyTest::testUserAuthorizedForModify
      * @test AbstractPropertyTest::testUserNotAuthorizedForModify
      */
     private function doCheckModifyCapability(string $capability)
     {
         if (empty(static::$current_usermanager_fascade)) {
-            throw new NoUserManagerSetException("Property has a modify restriction but no user manager is installed.");
+            throw new NoUserManagerSetException('Property has a modify restriction but no user manager is installed.');
         }
-        if (!static::$current_usermanager_fascade::hasCapability($capability)) {
+        if (! static::$current_usermanager_fascade::hasCapability($capability)) {
             throw new UserNotAuthorizedForModifyingException("The current user is not authorized to modify '".$this->_name."'");
         }
     }
-    
+
     /**
      * Checks if this property has any restrictions for modifying at all and if yes if the
      * current user has this capability.
@@ -877,16 +864,17 @@ abstract class AbstractProperty extends Base
     private function checkIsAuthorizedForModify()
     {
         $capability = $this->modifyCapability();
-        
+
         if (empty($capability)) {
             return; // If capability is empty, just leave
         }
-        
+
         $this->doCheckModifyCapability($capability);
     }
-    
+
     /**
      * Call this method before any modify attempts
+     *
      * @test AbstractPropertyTest::testUserAuthorizedForModify
      * @test AbstractPropertyTest::testUserNotAuthorizedForModify
      * @test AbstractPropertyTest::testPropertyNoWriteableWhileModify
@@ -896,71 +884,74 @@ abstract class AbstractProperty extends Base
         $this->checkIsWriteable();
         $this->checkIsAuthorizedForModify();
     }
-    
+
     /**
      * Sometimes a property accepts several different input types. With this method those inputs
      * can be normalized
-     * @param unknown $input
+     *
+     * @param  unknown  $input
      * @return unknown
-     * 
+     *
      * @wiki /Writing_own_property_classes#formatFromInput
      */
     protected function formatFromInput($input)
     {
-        return $input;    
+        return $input;
     }
-    
+
     /**
      * Performs the writing process
      *
-     * @test AbstractPropertyTest::testDoSetValue  
+     * @test AbstractPropertyTest::testDoSetValue
      */
     protected function doSetValue($value)
     {
         if (is_null($value)) {
-            $this->getStorage()->setValue($this->getName(), null);            
+            $this->getStorage()->setValue($this->getName(), null);
         } else {
             $this->getStorage()->setValue($this->getName(), $this->formatForStorage($this->formatFromInput($value)));
         }
     }
-    
+
     /**
      * Returns true, if the given value is accepted as an input value for this validator
      *
-     * @param unknown $input The value to test
+     * @param  unknown  $input  The value to test
      * @return bool true if valid otherwise false
+     *
      * @test AbstractPropertyTest::testValidateInput
-     * 
+     *
      *  @wiki /Properties#Writing_a_proeprty_value
      *  @wiki /Writing_own_properties
      */
     abstract public function isValid($input): bool;
-    
+
     /**
      * Checks if the given input value is acceptes, If not it raises an exception
      *
-     * @param unknown $input
+     * @param  unknown  $input
+     *
      * @throws InvalidValudException is thrown when the given valu is not valid
-     * @test AbstractPropertyTest::testValidateInput  
+     *
+     * @test AbstractPropertyTest::testValidateInput
      */
     protected function validateInput($input)
     {
-        if (!$this->isValid($input)) {
+        if (! $this->isValid($input)) {
             if (is_scalar($input)) {
                 throw new InvalidValueException("The value '$input' is not valid.");
             } else {
-                throw new InvalidValueException("The value is not valuid.");
+                throw new InvalidValueException('The value is not valuid.');
             }
         }
     }
-   
+
     protected $nullable = false;
-    
+
     /**
      * Marks this property as nullable (null may be assigned as value). If there is
      * not already a default value, set null as default too
      *
-     * @param bool $value
      * @return PropertyOld
      *
      * Test: Unit/Properties/PropertyTest::testDefault
@@ -969,15 +960,15 @@ abstract class AbstractProperty extends Base
     {
         $this->nullable = $value;
         if (is_null($this->default)) {
-            $this->default = new DefaultNull();
+            $this->default = new DefaultNull;
         }
+
         return $this;
     }
-    
+
     /**
      * Alias for nullable()
      *
-     * @param bool $value
      * @return PropertyOld
      *
      * Test: Unit/Properties/PropertyTest::testDefault
@@ -986,7 +977,7 @@ abstract class AbstractProperty extends Base
     {
         return $this->nullable($value);
     }
-    
+
     /**
      * Alias for nullable(false)
      *
@@ -998,7 +989,7 @@ abstract class AbstractProperty extends Base
     {
         return $this->nullable(false);
     }
-    
+
     /**
      * Getter for nullable
      *
@@ -1010,12 +1001,12 @@ abstract class AbstractProperty extends Base
     {
         return $this->nullable;
     }
-        
+
     /**
      * Checks the writing restrictions and if passed performs the writing
      *
      * @return unknown
-     * 
+     *
      *  @wiki /Properties#Writing_a_proeprty_value
      */
     public function setValue($value)
@@ -1031,31 +1022,32 @@ abstract class AbstractProperty extends Base
             $this->validateInput($value);
         }
         $this->checkForStorage('write');
+
         return $this->doSetValue($value);
     }
- 
+
     /**
      * Is called whenever null is assigned as a value for this property.
-     * 
+     *
      * @wiki /Writing_own_property_classes#handleNullValue()
      */
     protected function handleNullValue()
     {
-        if (!$this->nullable) {
-            throw new InvalidValueException("Null is not allowed as a value");            
+        if (! $this->nullable) {
+            throw new InvalidValueException('Null is not allowed as a value');
         }
     }
-    
+
     /**
      * Is called to make a change to this property persistant
-     * 
+     *
      * @wiki /Properties#commit()_and_rollback()
      */
     public function commit()
     {
         $this->getStorage()->commit();
     }
-    
+
     /**
      * Is called to undo a change to this property
      *
@@ -1063,75 +1055,72 @@ abstract class AbstractProperty extends Base
      */
     public function rollback()
     {
-        $this->checkForStorage('rollback');    
+        $this->checkForStorage('rollback');
         $this->getStorage()->rollback();
     }
-    
+
     public function isDirty()
     {
         $this->checkForStorage('rollback');
-        return $this->getStorage()->isDirty($this->getName());        
+
+        return $this->getStorage()->isDirty($this->getName());
     }
-// *************************************** Metadata **********************************************
+    // *************************************** Metadata **********************************************
 
     /**
      * Returns the unique id string for the semantic of this property
-     * 
-     * @return string
-     * 
+     *
+     *
      * @wiki /Properties#Metadata
      */
     public static function getSemantic(): string
     {
         return 'none';
     }
-    
+
     /**
      * Returns some keywords to the current semantic
      *
-     * @return array
-     * 
+     *
      * @wiki /Properties#Metadata
      */
     public static function getSemanticKeywords(): array
     {
         return [];
     }
-    
+
     /**
      * Returns the unique id string for the unit of this property
-     * 
-     * @return string
-     * 
+     *
+     *
      * @wiki /Properties#Metadata
      */
     public static function getUnit(): string
     {
         return 'none';
     }
-    
+
     /**
      * Returns ths suggested update frequency
-     * 
+     *
      * The ressults mean:
      * - ASAP = No caching suggested, always request value directly
      * - second = A short time caching for a couple of seconds is possible
      * - minute = Cache for about one minutze
      * - hour = Cache for about one hour
      * - late = The value doesn't change often, update only from time to time
-     * @return string
-     * 
+     *
      * @wiki /Properties#Metadata
      */
     public static function getUpdate(): string
     {
-        return 'ASAP';    
+        return 'ASAP';
     }
-    
+
     /**
      * Returns the access type of this property. The access type is the hint in the metadata how
      * this property could be processed. The access type is not equivalent to the type of the property
-     * 
+     *
      * Access type could be:
      * - string
      * - ingteger
@@ -1142,29 +1131,26 @@ abstract class AbstractProperty extends Base
      * - boolean
      * - array
      * - record
-     * 
-     * @return string
-     * 
+     *
+     *
      * @wiki /Properties#Metadata
      */
     abstract public static function getAccessType(): string;
-    
+
     /**
      * The storage type is a hint for the storages how to store this property. By default this is the same as
-     * the access type. 
-     * 
-     * @return string
+     * the access type.
      */
     public static function getStorageType(): string
     {
         return static::getAccessType();
     }
-    
+
     /**
      * Assembles the metadata of this property and returns them as a associative array
-     * 
+     *
      * @return string[]
-     * 
+     *
      * @wiki /Properties#Metadata
      */
     public static function getMetadata()
@@ -1176,42 +1162,42 @@ abstract class AbstractProperty extends Base
         $result['type'] = static::getAccessType();
         $result['update'] = static::getUpdate();
         $result['storage_type'] = static::getStorageType();
+
         return $result;
     }
-    
-// ========================= Infomarket functionallity =========================================
+
+    // ========================= Infomarket functionallity =========================================
     /**
      * Some atomar properties could have pseudo child elements (like count for arrays)
-     * @param string $name
-     * @return NULL
-     * 
+     *
+     * @return null
+     *
      * @wiki /Writing_own_property_classes#InfoMarket_interaction
      */
     protected function requestTerminalItem(string $name)
     {
         return null;
     }
-    
+
     /**
      * Try to pass the request to a child element. If none is found return null
-     * @param string $name
-     * @param array $path
-     * @return NULL
-     * 
+     *
+     * @return null
+     *
      * @wiki /Writing_own_property_classes#InfoMarket_interaction
      */
     protected function passItemRequest(string $name, array $path)
     {
         return null;
     }
-    
+
     /**
      * When no path elements are left return $this, if only one is left check for
      * terminal item (pseudo child, see requestTerminalItem. Otherwise try to pass
      * The request to a child.
-     * @param array $path
+     *
      * @return Sunhill\\Properties\Property|NULL
-     * 
+     *
      * @wiki /Properties#InfoMarket_interaction
      */
     public function requestItem(array $path)
@@ -1223,20 +1209,19 @@ abstract class AbstractProperty extends Base
         if (empty($path) && ($result = $this->requestTerminalItem($next))) {
             return $result;
         }
+
         return $this->passItemRequest($next, $path);
     }
-    
+
     // ================================= Additional Fields ======================================
     /**
      * Properties get the possibility to add additinal fields (like property->set_additional)
      */
     private $additional_fields = [];
-    
+
     /**
      * Extends the property with the possibility to deal with additional getters and setters
      *
-     * @param string $method
-     * @param array $params
      * @return mixed|NULL|Sunhill\\Properties\Property
      *
      * Test: /Unit/Properties/PropertyTest::testAdditionalGetter
@@ -1244,39 +1229,41 @@ abstract class AbstractProperty extends Base
      */
     public function __call(string $method, array $params)
     {
-        if (substr($method,0,4) == 'get_') {
-            $name = strtolower(substr($method,4));
+        if (substr($method, 0, 4) == 'get_') {
+            $name = strtolower(substr($method, 4));
             if (isset($this->additional_fields[$name])) {
                 return $this->additional_fields[$name];
             } else {
                 return null;
             }
-        } else if (substr($method,0,4) == 'set_') {
-            $name = strtolower(substr($method,4));
+        } elseif (substr($method, 0, 4) == 'set_') {
+            $name = strtolower(substr($method, 4));
             $this->additional_fields[$name] = $params[0];
+
             return $this;
         }
         throw new PropertyException(static::class.": Unknown method '$method' called");
     }
-        
+
     // ================================== Infos ===============================================
     protected static function getStorageClass(): string
     {
-        return '';    
+        return '';
     }
-    
+
     /**
      * Stores the collection infos
+     *
      * @var unknown
      */
     protected static $infos;
-    
+
     /**
      * Creates an empty array for infos and calls setupInfos()
      * Infos are class wide additional informations that are stored to a class. Useful for information
      * like name, table-name, editable, etc.
      * Test: /Unit/Objects/PropertyCollection_infoTest
-     * 
+     *
      * @wiki /Writing_own_property_classes#Information
      */
     protected static function initializeInfos()
@@ -1284,11 +1271,11 @@ abstract class AbstractProperty extends Base
         static::$infos = [];
         static::setupInfos();
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
-     * 
+     *
      * @wiki /Writing_own_property_classes#Information
      */
     protected static function setupInfos()
@@ -1296,38 +1283,40 @@ abstract class AbstractProperty extends Base
         static::addInfo('name', 'AbstractProperty');
         static::addInfo('description', 'A base class for a property.', true);
     }
-    
+
     /**
      * Adds an entry to the class definition
-     * @param string $key: The key for the piece of information
-     * @param unknown $value: The value of this information
-     * @param bool $translatable: A boolean that indicates, if the return should pass the __() function
-     * Test: /Unit/Objects/PropertyCollection_infoTest
-     * 
+     *
+     * @param  string  $key:  The key for the piece of information
+     * @param  unknown  $value:  The value of this information
+     * @param  bool  $translatable:  A boolean that indicates, if the return should pass the __() function
+     *                               Test: /Unit/Objects/PropertyCollection_infoTest
+     *
      * @wiki /Writing_own_property_classes#Information
      */
     protected static function addInfo(string $key, $value, bool $translatable = false)
     {
-        $info = new \StdClass();
+        $info = new \StdClass;
         $info->key = $key;
         $info->value = $value;
         $info->translatable = $translatable;
         static::$infos[$key] = $info;
     }
-    
+
     /**
      * returns the Information named $key
-     * @param string $key
+     *
+     * @return string|array|null|unknown
+     *                                   Test: /Unit/Objects/PropertyCollection_infoTest
+     *
      * @throws PropertiesCollectionException
-     * @return string|array|NULL|unknown
-     * Test: /Unit/Objects/PropertyCollection_infoTest
-     * 
+     *
      * @wiki /Properties#Information
      */
     public static function getInfo(string $key, $default = null)
     {
         static::initializeInfos();
-        if (!isset(static::$infos[$key])) {
+        if (! isset(static::$infos[$key])) {
             if (is_null($default)) {
                 throw new PropertyKeyDoesntExistException("The key '$key' is not defined.");
             } else {
@@ -1341,75 +1330,80 @@ abstract class AbstractProperty extends Base
             return $info->value;
         }
     }
-    
+
     /**
      * Return all avaiable infos
+     *
      * @return unknown
      *
      * Test: /unit/Ovhects/PropertyCollection_infoTest
-     * 
+     *
      * @wiki /Properties#Information
      */
     public static function getAllInfos()
     {
         static::initializeInfos();
+
         return static::$infos;
     }
-    
+
     /**
      * Checks if the given info is defined
-     * @param string $key
+     *
      * @return bool
-     * Test: /unit/Ovhects/PropertyCollection_infoTest
-     * 
+     *              Test: /unit/Ovhects/PropertyCollection_infoTest
+     *
      * @wiki /Properties#Information
      */
     public static function hasInfo(string $key): bool
     {
         static::initializeInfos();
+
         return isset(static::$infos[$key]);
     }
-    
+
     /**
      * Wrapper for the __() function
-     * @param unknown $info
-     * @return string|array|NULL
-     * Test: /Unit/Objects/PropertyCollection_infoTest
+     *
+     * @param  unknown  $info
+     * @return string|array|null
+     *                           Test: /Unit/Objects/PropertyCollection_infoTest
      */
     protected static function translate(string $info): string
     {
         return __($info);
     }
-    
-    const EQUALITY = ['=','==','<>','!=','in','notin'];
-    const SIZE = ['<','<=','>','>=','between'];
-    const WITHNULL = ['isnull','isnotnull'];
+
+    const EQUALITY = ['=', '==', '<>', '!=', 'in', 'notin'];
+
+    const SIZE = ['<', '<=', '>', '>=', 'between'];
+
+    const WITHNULL = ['isnull', 'isnotnull'];
+
     /**
      * A static array that lists all allowed relations for this property
+     *
      * @var array
-     * 
+     *
      * @wiki Writing_own_properties#Relations
      */
     protected static $allowed_relations = [];
-    
+
     /**
      * Returns the static variable $allowed_relations
-     * 
-     * @return array
-     * 
+     *
+     *
      * @wiki Writing_own_properties#Relations
      */
     public static function getAllowedRelations(): array
     {
         return static::$allowed_relations;
     }
-    
+
     /**
      * Tests if the given relation is in the $allowed_relations array
-     * 
-     * @param string $relation
-     * @return bool
-     * 
+     *
+     *
      * @wiki Writing_own_properties#Relations
      */
     public static function isAllowedRelation(string $relation): bool
@@ -1417,35 +1411,34 @@ abstract class AbstractProperty extends Base
         return in_array($relation, static::getAllowedRelations());
     }
 
-    private function hasParents() 
+    private function hasParents()
     {
-        return (bool)class_parents($this);
+        return (bool) class_parents($this);
     }
 
     /**
      * Tests if the relation is allowed. If yes it test if the relation is true
-     * 
-     * @param string $relation
-     * @param unknown $compare
-     * @return bool
-     * 
+     *
+     * @param  unknown  $compare
+     *
      * @wiki Writing_own_properties#Relations
      */
     public function testRelation(string $relation, $compare): bool
     {
-        if (!static::isAllowedRelation($relation)) {
+        if (! static::isAllowedRelation($relation)) {
             throw new NotAllowedRelationException("The relation '$relation' is not allowed for this property.");
         }
-       return $this->doTestRelation($relation, $compare);
+
+        return $this->doTestRelation($relation, $compare);
     }
-    
+
     private function testIn($values): bool
     {
         if (is_scalar($values)) {
             $values = [$values];
         }
-        if (!is_array($values)) {
-            throw new WrongTypeException("The given type is not expected.");
+        if (! is_array($values)) {
+            throw new WrongTypeException('The given type is not expected.');
         }
         $own_value = $this->getValue();
         foreach ($values as $value) {
@@ -1453,9 +1446,10 @@ abstract class AbstractProperty extends Base
                 return true;
             }
         }
+
         return false;
     }
-    
+
     protected function doTestRelation(string $relation, $compare): ?bool
     {
         switch ($relation) {
@@ -1468,7 +1462,7 @@ abstract class AbstractProperty extends Base
             case 'in':
                 return $this->testIn($compare);
             case 'notin':
-                return !$this->testIn($compare);
+                return ! $this->testIn($compare);
             case '<':
                 return $this->getValue() < $compare;
             case '<=':
@@ -1480,13 +1474,13 @@ abstract class AbstractProperty extends Base
             case 'isnull':
                 return is_null($this->getValue());
             case 'isnotnull':
-                return !is_null($this->getValue());
+                return ! is_null($this->getValue());
         }
     }
-   
+
     public function getStructure(): \stdClass
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         $result->name = $this->getName();
         $result->type = static::getStorageType();
         if ($this->default) {
@@ -1499,7 +1493,7 @@ abstract class AbstractProperty extends Base
         if ($this->nullable) {
             $result->nullable = $this->nullable;
         }
+
         return $result;
     }
-    
 }

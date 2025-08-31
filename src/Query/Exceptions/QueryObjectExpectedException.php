@@ -2,6 +2,4 @@
 
 namespace Sunhill\Query\Exceptions;
 
-class QueryObjectExpectedException extends QueryException
-{
-}
+class QueryObjectExpectedException extends QueryException {}

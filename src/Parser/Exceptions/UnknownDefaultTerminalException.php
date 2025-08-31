@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file UnknownDefaultTerminalException.php
  * Provides the UnknownDefsaultTerminalException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * An exception that is raised, when the lexer method ->addDefaultTerminall() is oassed an unknown name
- * @author klaus
  *
+ * @author klaus
  */
 class UnknownDefaultTerminalException extends LexerException {}

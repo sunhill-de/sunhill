@@ -3,6 +3,7 @@
 /**
  * @file StorageSystemNotFoundException.php
  * Defines the StorageSystemNotFoundException
+ *
  * @author Klaus Dimde
  * ---------------------------------------------------------------------------------------------------------
  * Lang en
@@ -12,12 +13,12 @@
  * Tests: none
  * Coverage Unit: none
  */
+
 namespace Sunhill\Managers\Exceptions;
 
 /**
  * This exception is thrown when a storage system is requested that isn't implemented
- * 
- * @author lokal
  *
+ * @author lokal
  */
 class StorageSystemNotFoundException extends ManagerException {}

@@ -1,42 +1,40 @@
 <?php
+
 /**
  * @file BinaryNodeTest.php
  * tests: /src/Parser/Nodes/BinaryNode.php
  * free of dependent units: yes
  */
 
-use Sunhill\Parser\Nodes\Node;
-use Sunhill\Parser\Nodes\BinaryNode;
 use Sunhill\Parser\Exceptions\TypesMismatchException;
+use Sunhill\Parser\Nodes\BinaryNode;
+use Sunhill\Parser\Nodes\Node;
 use Sunhill\Tests\SunhillSimpleTestCase;
 
 uses(SunhillSimpleTestCase::class);
 
-test('getType()', function()
-{
+test('getType()', function () {
     $left = \Mockery::mock(Node::class);
     $right = \Mockery::mock(Node::class);
     $test = new BinaryNode('+');
     $test->left($left);
     $test->right($right);
-    
+
     expect($test->getType())->toBe('+');
 });
 
-test('left() and right()', function()
-{
+test('left() and right()', function () {
     $left = \Mockery::mock(Node::class);
     $right = \Mockery::mock(Node::class);
     $test = new BinaryNode('+');
     $test->left($left);
     $test->right($right);
-    
+
     expect($test->left())->toBe($left);
     expect($test->right())->toBe($right);
 });
 
-test('getDatatype()', function()
-{
+test('getDatatype()', function () {
     $left = \Mockery::mock(Node::class);
     $left->shouldReceive('getDatatype')->andReturn('integer');
     $right = \Mockery::mock(Node::class);
@@ -44,15 +42,14 @@ test('getDatatype()', function()
     $test = new BinaryNode('+');
     $test->left($left);
     $test->right($right);
-    $test->addAllowedType('integer', 'integer', 'integer');    
+    $test->addAllowedType('integer', 'integer', 'integer');
     $test->addAllowedType('float', 'float', 'float');
     $test->addAllowedType('float', 'integer', 'float');
     $test->addAllowedType('integer', 'float', 'float');
     expect($test->getDatatype())->toBe('float');
 });
 
-test('validate() passes', function()
-{
+test('validate() passes', function () {
     $left = \Mockery::mock(Node::class);
     $left->shouldReceive('getDatatype')->once()->andReturn('integer');
     $left->shouldReceive('validate')->once();
@@ -69,8 +66,7 @@ test('validate() passes', function()
     $test->validate();
 });
 
-test('validate() fails', function()
-{
+test('validate() fails', function () {
     $left = \Mockery::mock(Node::class);
     $left->shouldReceive('getDatatype')->once()->andReturn('integer');
     $left->shouldReceive('validate')->once();
@@ -86,4 +82,3 @@ test('validate() fails', function()
     $test->addAllowedType('integer', 'float', 'float');
     $test->validate();
 })->throws(TypesMismatchException::class);
-

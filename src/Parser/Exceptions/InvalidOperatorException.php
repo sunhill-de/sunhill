@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InvalidOperatorException.php
  * Provides the InvalidOperatorException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * Exception that is raised when the analyzer gets an node with an unexpected operator
- * @author klaus
  *
+ * @author klaus
  */
 class InvalidOperatorException extends AnalyzerException {}

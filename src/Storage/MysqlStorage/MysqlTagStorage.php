@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file MysqlTagStorage.php
  * A tag storage that uses mysql/mariadb to store tags
@@ -16,15 +17,13 @@
 
 namespace Sunhill\Storage\MysqlStorage;
 
-use Sunhill\Tags\AbstractTagStorage;
 use Illuminate\Support\Facades\DB;
+use Sunhill\Tags\AbstractTagStorage;
 
 class MysqlTagStorage extends AbstractTagStorage
 {
-    
     protected function searchTag(array $condition)
     {
         return DB::table('tags')->where($condition)->get();
     }
-    
 }

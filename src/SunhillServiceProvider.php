@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file SunhillServiceprovider.php
  * The service provider for the sunhill framework
@@ -11,26 +12,20 @@
 
 namespace Sunhill;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Sunhill\Checker\Checks;
-use Sunhill\Console\Check;
-use Sunhill\Managers\PropertiesManager;
-use Sunhill\InfoMarket\Market;
-use Sunhill\Managers\PluginManager;
-use Sunhill\Managers\SiteManager;
 use Sunhill\Components\OptionalLink;
-use Illuminate\Support\Facades\Blade;
-use Sunhill\Facades\Site;
+use Sunhill\Console\Check;
 use Sunhill\Facades\Properties;
-use Sunhill\Types\TypeBoolean;
-use Sunhill\Types\TypeDate;
-use Sunhill\Types\TypeDateTime;
-use Sunhill\Types\TypeEnum;
-use Sunhill\Types\TypeFloat;
-use Sunhill\Types\TypeInteger;
-use Sunhill\Types\TypeText;
-use Sunhill\Types\TypeTime;
-use Sunhill\Types\TypeVarchar;
+use Sunhill\Facades\Site;
+use Sunhill\InfoMarket\Market;
+use Sunhill\Managers\FilterManager;
+use Sunhill\Managers\PluginManager;
+use Sunhill\Managers\PropertiesManager;
+use Sunhill\Managers\SiteManager;
+use Sunhill\Properties\ArrayProperty;
+use Sunhill\Query\Helpers\QueryManager;
 use Sunhill\Semantics\Age;
 use Sunhill\Semantics\Airpressure;
 use Sunhill\Semantics\Airtemperature;
@@ -58,114 +53,182 @@ use Sunhill\Semantics\Temperature;
 use Sunhill\Semantics\Timestamp;
 use Sunhill\Semantics\URL;
 use Sunhill\Semantics\UUID4;
-use Sunhill\Managers\FilterManager;
-use Sunhill\Properties\ArrayProperty;
-use Sunhill\Query\Helpers\QueryManager;
+use Sunhill\Types\TypeBoolean;
+use Sunhill\Types\TypeDate;
+use Sunhill\Types\TypeDateTime;
+use Sunhill\Types\TypeEnum;
+use Sunhill\Types\TypeFloat;
+use Sunhill\Types\TypeInteger;
+use Sunhill\Types\TypeText;
+use Sunhill\Types\TypeTime;
+use Sunhill\Types\TypeVarchar;
 
-require_once(dirname(__FILE__).'/Helpers/sunhill_helpers.php');
+require_once dirname(__FILE__).'/Helpers/sunhill_helpers.php';
 
 class SunhillServiceProvider extends ServiceProvider
 {
     public function register()
-    {        
+    {
         // Checks facade
-        $this->app->singleton(Checks::class, function () { return new Checks(); } );
-        $this->app->alias(Checks::class,'checks');
-    
+        $this->app->singleton(Checks::class, function () {
+            return new Checks;
+        });
+        $this->app->alias(Checks::class, 'checks');
+
         // Filter facade
-        $this->app->singleton(FilterManager::class, function () { return new FilterManager(); } );
-        $this->app->alias(FilterManager::class,'filters');
-    
-        $this->app->singleton(PropertiesManager::class, function () { return new PropertiesManager(); } );
-        $this->app->alias(PropertiesManager::class,'properties');
-        
-        $this->app->singleton(QueryManager::class, function () { return new QueryManager(); } );
-        $this->app->alias(QueryManager::class,'queries');
-        
-        $this->app->singleton(Market::class, function () { return new Market(); } );
-        $this->app->alias(Market::class,'infomarket');
-    
+        $this->app->singleton(FilterManager::class, function () {
+            return new FilterManager;
+        });
+        $this->app->alias(FilterManager::class, 'filters');
+
+        $this->app->singleton(PropertiesManager::class, function () {
+            return new PropertiesManager;
+        });
+        $this->app->alias(PropertiesManager::class, 'properties');
+
+        $this->app->singleton(QueryManager::class, function () {
+            return new QueryManager;
+        });
+        $this->app->alias(QueryManager::class, 'queries');
+
+        $this->app->singleton(Market::class, function () {
+            return new Market;
+        });
+        $this->app->alias(Market::class, 'infomarket');
+
         // Plugin manager facade
-        $this->app->singleton(PluginManager::class, function () { return new PluginManager(); } );
-        $this->app->alias(PluginManager::class,'plugins');
-        
+        $this->app->singleton(PluginManager::class, function () {
+            return new PluginManager;
+        });
+        $this->app->alias(PluginManager::class, 'plugins');
+
         // Site manager facade
-        $this->app->singleton(SiteManager::class, function () { return new SiteManager(); } );
-        $this->app->alias(SiteManager::class,'site');
+        $this->app->singleton(SiteManager::class, function () {
+            return new SiteManager;
+        });
+        $this->app->alias(SiteManager::class, 'site');
     }
-    
+
     protected function registerUnits()
     {
-        Properties::registerUnit('none','','none');
-        
+        Properties::registerUnit('none', '', 'none');
+
         // *********************************** Length ******************************************
-        Properties::registerUnit('meter','m','length');
-        Properties::registerUnit('centimeter','cm','length','meter',
-            function($input) { return $input / 100; },
-            function($input) { return $input * 100; });
-        Properties::registerUnit('millimeter','mm','length','meter',
-            function($input) { return $input / 1000; },
-            function($input) { return $input * 1000; });
-        Properties::registerUnit('kilometer','km','length','meter',
-            function($input) { return $input * 1000; },
-            function($input) { return $input / 1000; });
-        
+        Properties::registerUnit('meter', 'm', 'length');
+        Properties::registerUnit('centimeter', 'cm', 'length', 'meter',
+            function ($input) {
+                return $input / 100;
+            },
+            function ($input) {
+                return $input * 100;
+            });
+        Properties::registerUnit('millimeter', 'mm', 'length', 'meter',
+            function ($input) {
+                return $input / 1000;
+            },
+            function ($input) {
+                return $input * 1000;
+            });
+        Properties::registerUnit('kilometer', 'km', 'length', 'meter',
+            function ($input) {
+                return $input * 1000;
+            },
+            function ($input) {
+                return $input / 1000;
+            });
+
         // ************************************ weight *****************************************
-        Properties::registerUnit('kilogramm','kg','weight');
-        Properties::registerUnit('gramm','g','weight','kilogramm',
-            function($input) { return $input / 1000; },
-            function($input) { return $input * 1000; });
-        
+        Properties::registerUnit('kilogramm', 'kg', 'weight');
+        Properties::registerUnit('gramm', 'g', 'weight', 'kilogramm',
+            function ($input) {
+                return $input / 1000;
+            },
+            function ($input) {
+                return $input * 1000;
+            });
+
         // ************************************ Temperature ***************************************
-        Properties::registerUnit('degreecelsius','°C','temperature');
-        Properties::registerUnit('degreekelvin','K','temperature','degreecelsius',
-            function($input) { return $input - 273.15; },
-            function($input) { return $input + 273.15; });
-        Properties::registerUnit('degreefahrenheit','F','temperature','degreecelsius',
-            function($input) { return ($input - 32) * 5/9; },
-            function($input) { return $input * 1.8 + 32; });
-        
+        Properties::registerUnit('degreecelsius', '°C', 'temperature');
+        Properties::registerUnit('degreekelvin', 'K', 'temperature', 'degreecelsius',
+            function ($input) {
+                return $input - 273.15;
+            },
+            function ($input) {
+                return $input + 273.15;
+            });
+        Properties::registerUnit('degreefahrenheit', 'F', 'temperature', 'degreecelsius',
+            function ($input) {
+                return ($input - 32) * 5 / 9;
+            },
+            function ($input) {
+                return $input * 1.8 + 32;
+            });
+
         // ********************************** Speed ************************************************
-        Properties::registerUnit('meterpersecond','m/s','speed');
-        Properties::registerUnit('kilometerperhour','km/h','speed','meterpersecond',
-            function($input) { return $input / 3.6; },
-            function($input) { return $input * 3.6; });
-        
+        Properties::registerUnit('meterpersecond', 'm/s', 'speed');
+        Properties::registerUnit('kilometerperhour', 'km/h', 'speed', 'meterpersecond',
+            function ($input) {
+                return $input / 3.6;
+            },
+            function ($input) {
+                return $input * 3.6;
+            });
+
         // ********************************* Time ****************************************
-        Properties::registerUnit('second','s','duration');
-        Properties::registerUnit('minute','min','duration','second',
-            function($input) { return $input * 60; },
-            function($input) { return $input / 60; });
-        Properties::registerUnit('hour','h','duration','second',
-            function($input) { return $input * 3600; },
-            function($input) { return $input / 3600; });
-        
+        Properties::registerUnit('second', 's', 'duration');
+        Properties::registerUnit('minute', 'min', 'duration', 'second',
+            function ($input) {
+                return $input * 60;
+            },
+            function ($input) {
+                return $input / 60;
+            });
+        Properties::registerUnit('hour', 'h', 'duration', 'second',
+            function ($input) {
+                return $input * 3600;
+            },
+            function ($input) {
+                return $input / 3600;
+            });
+
         // ******************************** Angle ****************************************
-        Properties::registerUnit('degree','°','angle');
-        
+        Properties::registerUnit('degree', '°', 'angle');
+
         // ******************************** Ratio **********************************************
-        Properties::registerUnit('percent','%','ratio');
-        
+        Properties::registerUnit('percent', '%', 'ratio');
+
         // ********************************* Capacity ****************************************
-        Properties::registerUnit('byte','B','capacity');
-        Properties::registerUnit('kilobyte','KB','capacity','byte',
-            function($input) { return $input * 1000; },
-            function($input) { return $input / 1000; });
-        Properties::registerUnit('megabyte','MB','capacity','byte',
-            function($input) { return $input * 1000000; },
-            function($input) { return $input / 1000000; });
-        
+        Properties::registerUnit('byte', 'B', 'capacity');
+        Properties::registerUnit('kilobyte', 'KB', 'capacity', 'byte',
+            function ($input) {
+                return $input * 1000;
+            },
+            function ($input) {
+                return $input / 1000;
+            });
+        Properties::registerUnit('megabyte', 'MB', 'capacity', 'byte',
+            function ($input) {
+                return $input * 1000000;
+            },
+            function ($input) {
+                return $input / 1000000;
+            });
+
         // ****************************** Pressure ***************************************
         Properties::registerUnit('pascal', 'Pa', 'pressure');
         Properties::registerUnit('hectopascal', 'hPa', 'pressure', 'pascal',
-            function($input) { return $input * 100; },
-            function($input) { return $input / 100; }
-            );
-        
+            function ($input) {
+                return $input * 100;
+            },
+            function ($input) {
+                return $input / 100;
+            }
+        );
+
         Properties::registerUnit('lux', 'lx', 'light');
-        
+
     }
-    
+
     protected function registerTypes()
     {
         Properties::registerProperty(TypeBoolean::class);
@@ -175,16 +238,16 @@ class SunhillServiceProvider extends ServiceProvider
         Properties::registerProperty(TypeEnum::class);
         Properties::registerProperty(TypeFloat::class);
         Properties::registerProperty(TypeInteger::class);
-        Properties::registerProperty(TypeInteger::class,'int');
+        Properties::registerProperty(TypeInteger::class, 'int');
         Properties::registerProperty(TypeText::class);
         Properties::registerProperty(TypeTime::class);
         Properties::registerProperty(TypeVarchar::class);
-        Properties::registerProperty(TypeVarchar::class,'string');
+        Properties::registerProperty(TypeVarchar::class, 'string');
 
         Properties::registerProperty(ArrayProperty::class);
-        
+
     }
-    
+
     protected function registerSemantics()
     {
         Properties::registerProperty(Age::class);
@@ -215,7 +278,7 @@ class SunhillServiceProvider extends ServiceProvider
         Properties::registerProperty(URL::class);
         Properties::registerProperty(UUID4::class);
     }
-    
+
     public function boot()
     {
         if ($this->app->runningInConsole()) {
@@ -226,10 +289,10 @@ class SunhillServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views','sunhill');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang','sunhill');
-/*        Blade::component('optional_link', OptionalLink::class);
-        Site::setupRoutes(); */
+        /*        Blade::component('optional_link', OptionalLink::class);
+                Site::setupRoutes(); */
         $this->registerTypes();
         $this->registerSemantics();
-        $this->registerUnits(); 
+        $this->registerUnits();
     }
 }

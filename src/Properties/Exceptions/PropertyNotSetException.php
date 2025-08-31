@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, when ElementBuilder is called and no property is set
+ *
  * @author lokal
  */
-class PropertyNotSetException extends PropertyException 
-{
-}
+class PropertyNotSetException extends PropertyException {}

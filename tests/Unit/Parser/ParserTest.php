@@ -6,76 +6,73 @@
  * free of dependent units: yes
  */
 
-use Sunhill\Parser\Lexer;
-use Sunhill\Tests\Unit\Parser\Examples\DummyParser;
-use Sunhill\Parser\Token;
 use Sunhill\Parser\Exceptions\InputNotParsableException;
-use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
+use Sunhill\Parser\Lexer;
+use Sunhill\Parser\Token;
 use Sunhill\Tests\SunhillSimpleTestCase;
+use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
+use Sunhill\Tests\Unit\Parser\Examples\DummyParser;
 
 uses(SunhillSimpleTestCase::class);
 
-test('Simple integer [4]', function()
-{
-   $lexer = \Mockery::mock(Lexer::class);
-   $lexer->shouldReceive('getNextToken')->andReturn(
-       (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-       null
-       );
-   $lexer->shouldReceive('previewOperator')->andReturn(null);   
-   $test = new DummyParser();
-   $result = $test->parse($lexer);
-   
-   $executor = new DummyExecutor();
-   expect($executor->execute($result))->toBe("4");
-   
-   expect($result->getType())->toBe('integer');
-   expect($result->getValue())->toBe(4);
-});
-
-test('Simple addition [4+3]', function()
-{
+test('Simple integer [4]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('+'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->andReturn('+','+','+','+','+',null,null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->andReturn(null);
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-   
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(4)+(3)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('4');
+
+    expect($result->getType())->toBe('integer');
+    expect($result->getValue())->toBe(4);
+});
+
+test('Simple addition [4+3]', function () {
+    $lexer = \Mockery::mock(Lexer::class);
+    $lexer->shouldReceive('getNextToken')->andReturn(
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('+'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(2, 0)->setValue(3)->setTypeHint('int'),
+        null
+    );
+    $lexer->shouldReceive('previewOperator')->andReturn('+', '+', '+', '+', '+', null, null, null, null, null);
+
+    $test = new DummyParser;
+    $result = $test->parse($lexer);
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(4)+(3)');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
     expect($result->right()->getType())->toBe('integer');
-    expect($result->right()->getValue())->toBe(3);    
+    expect($result->right()->getValue())->toBe(3);
 });
 
-test('Addition with three summands [4+3+2]', function()
-{
+test('Addition with three summands [4+3+2]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4),
-        (new Token('+'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(2,0)->setValue(3),
-        (new Token('+'))->setPosition(3,0),
-        (new Token('integer'))->setPosition(4,0)->setValue(2),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4),
+        (new Token('+'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(2, 0)->setValue(3),
+        (new Token('+'))->setPosition(3, 0),
+        (new Token('integer'))->setPosition(4, 0)->setValue(2),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('+','+','+','+','+','+','+','+','+','+',null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('+', '+', '+', '+', '+', '+', '+', '+', '+', '+', null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("((4)+(3))+(2)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('((4)+(3))+(2)');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('+');
     expect($result->left()->left()->getType())->toBe('integer');
@@ -86,27 +83,26 @@ test('Addition with three summands [4+3+2]', function()
     expect($result->right()->getValue())->toBe(2);
 });
 
-test('Addition with three summands and brackets [4+(3+2)]', function()
-{
+test('Addition with three summands and brackets [4+(3+2)]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('+'))->setPosition(1,0),
-        (new Token('('))->setPosition(2,0),
-        (new Token('integer'))->setPosition(3,0)->setValue(3)->setTypeHint('int'),
-        (new Token('+'))->setPosition(4,0),
-        (new Token('integer'))->setPosition(5,0)->setValue(2)->setTypeHint('int'),
-        (new Token(')'))->setPosition(6,0),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('+'))->setPosition(1, 0),
+        (new Token('('))->setPosition(2, 0),
+        (new Token('integer'))->setPosition(3, 0)->setValue(3)->setTypeHint('int'),
+        (new Token('+'))->setPosition(4, 0),
+        (new Token('integer'))->setPosition(5, 0)->setValue(2)->setTypeHint('int'),
+        (new Token(')'))->setPosition(6, 0),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(17)->andReturn('+','+','+','+','+','+','+','+',null,null,null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(17)->andReturn('+', '+', '+', '+', '+', '+', '+', '+', null, null, null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(4)+((3)+(2))");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(4)+((3)+(2))');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -115,23 +111,22 @@ test('Addition with three summands and brackets [4+(3+2)]', function()
     expect($result->right()->right()->getType())->toBe('integer');
     expect($result->right()->right()->getValue())->toBe(2);
 });
-test('Simple product [4*3]', function()
-{
+test('Simple product [4*3]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('*'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('*'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(2, 0)->setValue(3)->setTypeHint('int'),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(9)->andReturn('*','*','*','*','*',null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(9)->andReturn('*', '*', '*', '*', '*', null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(4)*(3)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(4)*(3)');
+
     expect($result->getType())->toBe('*');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -139,25 +134,24 @@ test('Simple product [4*3]', function()
     expect($result->right()->getValue())->toBe(3);
 });
 
-test('Multiplication with three factors [4*3*2]', function()
-{
+test('Multiplication with three factors [4*3*2]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('*'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
-        (new Token('*'))->setPosition(3,0),
-        (new Token('integer'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('*'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(2, 0)->setValue(3)->setTypeHint('int'),
+        (new Token('*'))->setPosition(3, 0),
+        (new Token('integer'))->setPosition(4, 0)->setValue(2)->setTypeHint('int'),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('*','*','*','*','*','*','*','*','*','*',null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('*', '*', '*', '*', '*', '*', '*', '*', '*', '*', null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("((4)*(3))*(2)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('((4)*(3))*(2)');
+
     expect($result->getType())->toBe('*');
     expect($result->left()->getType())->toBe('*');
     expect($result->left()->left()->getType())->toBe('integer');
@@ -168,26 +162,24 @@ test('Multiplication with three factors [4*3*2]', function()
     expect($result->right()->getValue())->toBe(2);
 });
 
-test('Sum with product left [4*3+2]', function()
-{
+test('Sum with product left [4*3+2]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('*'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
-        (new Token('+'))->setPosition(3,0),
-        (new Token('integer'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('*'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(2, 0)->setValue(3)->setTypeHint('int'),
+        (new Token('+'))->setPosition(3, 0),
+        (new Token('integer'))->setPosition(4, 0)->setValue(2)->setTypeHint('int'),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('*','*','*','*','*','+','+','+','+','+',null,null,null);
-    
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(14)->andReturn('*', '*', '*', '*', '*', '+', '+', '+', '+', '+', null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("((4)*(3))+(2)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('((4)*(3))+(2)');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('*');
     expect($result->left()->left()->getType())->toBe('integer');
@@ -198,25 +190,24 @@ test('Sum with product left [4*3+2]', function()
     expect($result->right()->getValue())->toBe(2);
 });
 
-test('Sum with product right [4+3*2]', function()
-{
+test('Sum with product right [4+3*2]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('+'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(2,0)->setValue(3)->setTypeHint('int'),
-        (new Token('*'))->setPosition(3,0),
-        (new Token('integer'))->setPosition(4,0)->setValue(2)->setTypeHint('int'),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('+'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(2, 0)->setValue(3)->setTypeHint('int'),
+        (new Token('*'))->setPosition(3, 0),
+        (new Token('integer'))->setPosition(4, 0)->setValue(2)->setTypeHint('int'),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('+','+','+','+','+','*','*','*','*','*',null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(15)->andReturn('+', '+', '+', '+', '+', '*', '*', '*', '*', '*', null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(4)+((3)*(2))");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(4)+((3)*(2))');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -227,28 +218,26 @@ test('Sum with product right [4+3*2]', function()
     expect($result->right()->right()->getValue())->toBe(2);
 });
 
-
-test('Product with sum in brackets (4*(3+2))', function()
-{
+test('Product with sum in brackets (4*(3+2))', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('*'))->setPosition(1,0),
-        (new Token('('))->setPosition(2,0),
-        (new Token('integer'))->setPosition(3,0)->setValue(3)->setTypeHint('int'),
-        (new Token('+'))->setPosition(4,0),
-        (new Token('integer'))->setPosition(5,0)->setValue(2)->setTypeHint('int'),
-        (new Token(')'))->setPosition(6,0),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('*'))->setPosition(1, 0),
+        (new Token('('))->setPosition(2, 0),
+        (new Token('integer'))->setPosition(3, 0)->setValue(3)->setTypeHint('int'),
+        (new Token('+'))->setPosition(4, 0),
+        (new Token('integer'))->setPosition(5, 0)->setValue(2)->setTypeHint('int'),
+        (new Token(')'))->setPosition(6, 0),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->times(17)->andReturn('*','*','*','*','*','+','+','+','+','+',null,null,null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->times(17)->andReturn('*', '*', '*', '*', '*', '+', '+', '+', '+', '+', null, null, null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(4)*((3)+(2))");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(4)*((3)+(2))');
+
     expect($result->getType())->toBe('*');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -259,45 +248,43 @@ test('Product with sum in brackets (4*(3+2))', function()
     expect($result->right()->right()->getValue())->toBe(2);
 });
 
-test('Simple unary minus [-4]', function()
-{
+test('Simple unary minus [-4]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('-'))->setPosition(1,0),
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
+        (new Token('-'))->setPosition(1, 0),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
         null
-        );
+    );
     $lexer->shouldReceive('previewOperator')->times(4)->andReturn(null);
-    
-    $test = new DummyParser();
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("u-(4)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('u-(4)');
+
     expect($result->getType())->toBe('u-');
     expect($result->child()->getType())->toBe('integer');
-    expect($result->child()->getValue())->toBe(4);    
+    expect($result->child()->getValue())->toBe(4);
 });
 
-test('Simple addition with unary minus [4+-3]', function()
-{
+test('Simple addition with unary minus [4+-3]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('integer'))->setPosition(0,0)->setValue(4)->setTypeHint('int'),
-        (new Token('+'))->setPosition(1,0),
-        (new Token('-'))->setPosition(2,0),
-        (new Token('integer'))->setPosition(3,0)->setValue(3)->setTypeHint('int'),
+        (new Token('integer'))->setPosition(0, 0)->setValue(4)->setTypeHint('int'),
+        (new Token('+'))->setPosition(1, 0),
+        (new Token('-'))->setPosition(2, 0),
+        (new Token('integer'))->setPosition(3, 0)->setValue(3)->setTypeHint('int'),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->andReturn('+','+','+','+',null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->andReturn('+', '+', '+', '+', null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(4)+(u-(3))");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(4)+(u-(3))');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->getType())->toBe('integer');
     expect($result->left()->getValue())->toBe(4);
@@ -306,72 +293,69 @@ test('Simple addition with unary minus [4+-3]', function()
     expect($result->right()->child()->getValue())->toBe(3);
 });
 
-test('Simple function [sin(3)]', function()
-{
+test('Simple function [sin(3)]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
-        (new Token('('))->setPosition(3,0),
-        (new Token('integer'))->setPosition(4,0)->setValue(3)->setTypeHint('int'),
-        (new Token(')'))->setPosition(5,0),
+        (new Token('ident'))->setPosition(0, 0)->setValue('sin'),
+        (new Token('('))->setPosition(3, 0),
+        (new Token('integer'))->setPosition(4, 0)->setValue(3)->setTypeHint('int'),
+        (new Token(')'))->setPosition(5, 0),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->andReturn('(', ')', ')', ')', ')', null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("sin({3})");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('sin({3})');
+
     expect($result->getType())->toBe('func');
     expect($result->name())->toBe('sin');
     expect($result->arguments()->getType())->toBe('integer');
     expect($result->arguments()->getValue())->toBe(3);
 });
 
-test('Simple function with no argument [sin()]', function()
-{
+test('Simple function with no argument [sin()]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
-        (new Token('('))->setPosition(3,0),
-        (new Token(')'))->setPosition(4,0),
+        (new Token('ident'))->setPosition(0, 0)->setValue('sin'),
+        (new Token('('))->setPosition(3, 0),
+        (new Token(')'))->setPosition(4, 0),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->andReturn('(', ')', ')', ')', ')', null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("sin({})");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('sin({})');
+
     expect($result->getType())->toBe('func');
     expect($result->name())->toBe('sin');
     expect($result->arguments())->toBe(null);
 });
 
-test('Function in sum [sin(4)+3]', function()
-{
+test('Function in sum [sin(4)+3]', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
-        (new Token('('))->setPosition(3,0),
-        (new Token('integer'))->setPosition(3,0)->setValue(4)->setTypeHint('int'),
-        (new Token(')'))->setPosition(4,0),
-        (new Token('+'))->setPosition(5,0),
-        (new Token('integer'))->setPosition(6,0)->setValue(3),
+        (new Token('ident'))->setPosition(0, 0)->setValue('sin'),
+        (new Token('('))->setPosition(3, 0),
+        (new Token('integer'))->setPosition(3, 0)->setValue(4)->setTypeHint('int'),
+        (new Token(')'))->setPosition(4, 0),
+        (new Token('+'))->setPosition(5, 0),
+        (new Token('integer'))->setPosition(6, 0)->setValue(3),
         null
-        );
-    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
-    
-    $test = new DummyParser();
+    );
+    $lexer->shouldReceive('previewOperator')->andReturn('(', ')', ')', ')', ')', null, null, null, null);
+
+    $test = new DummyParser;
     $result = $test->parse($lexer);
-    
-    $executor = new DummyExecutor();
-    expect($executor->execute($result))->toBe("(sin({4}))+(3)");
-    
+
+    $executor = new DummyExecutor;
+    expect($executor->execute($result))->toBe('(sin({4}))+(3)');
+
     expect($result->getType())->toBe('+');
     expect($result->left()->name())->toBe('sin');
     expect($result->left()->arguments()->getType())->toBe('integer');
@@ -380,17 +364,16 @@ test('Function in sum [sin(4)+3]', function()
     expect($result->right()->getValue())->toBe(3);
 });
 
-it('Fails when an unexpected token comes', function()
-{
+it('Fails when an unexpected token comes', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
         (new Token('ident'))->setPosition(0,0)->setValue('sin'),
         (new Token('('))->setPosition(3,0),
         (new Token('+'))->setPosition(4,0),
         null
-        );
+    );
     $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
-    
-    $test = new DummyParser();
-    $test->parse($lexer);    
+
+    $test = new DummyParser;
+    $test->parse($lexer);
 })->throws(InputNotParsableException::class);

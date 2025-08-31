@@ -14,10 +14,9 @@
 namespace Sunhill\Properties\Exceptions;
 
 /**
- * An exception that is raised, when a property was added to a record that is already 
+ * An exception that is raised, when a property was added to a record that is already
  * in this record
+ *
  * @author lokal
  */
-class PropertyAlreadyInListException extends PropertyException 
-{
-}
+class PropertyAlreadyInListException extends PropertyException {}

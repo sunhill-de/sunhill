@@ -1,26 +1,25 @@
 <?php
+
 /**
  * @file OrderNodeTest.php
  * tests: /src/Query/QueryParser/OrderNode.php
  * free of dependent units: yes
  */
 
-use Sunhill\Tests\SunhillSimpleTestCase;
-use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\IdentifierNode;
-use Sunhill\Query\QueryParser\Nodes\OrderNode;
+use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
+use Sunhill\Query\QueryParser\Nodes\OrderNode;
+use Sunhill\Tests\SunhillSimpleTestCase;
 
 uses(SunhillSimpleTestCase::class);
 
-test('constructor works', function()
-{
-   $test = new OrderNode(); 
-   expect($test->direction())->toBe('asc');
+test('constructor works', function () {
+    $test = new OrderNode;
+    expect($test->direction())->toBe('asc');
 });
 
-test('constructor works with passed parameters', function()
-{
+test('constructor works with passed parameters', function () {
     $expression = \Mockery::mock(IdentifierNode::class);
     $expression->shouldReceive('getName')->once()->andReturn('str_id');
     $test = new OrderNode($expression, 'desc');
@@ -28,60 +27,54 @@ test('constructor works with passed parameters', function()
     expect($test->direction())->toBe('desc');
 });
 
-test('setter works', function()
-{
+test('setter works', function () {
     $expression = \Mockery::mock(IdentifierNode::class);
     $expression->shouldReceive('getName')->once()->andReturn('str_id');
-    $test = new OrderNode();
+    $test = new OrderNode;
     $test->field($expression);
     $test->direction('desc');
     expect($test->field()->getName())->toBe('str_id');
     expect($test->direction())->toBe('desc');
 });
 
-test('setter trims', function()
-{
+test('setter trims', function () {
     $expression = \Mockery::mock(IdentifierNode::class);
     $expression->shouldReceive('getName')->once()->andReturn('str_id');
-    $test = new OrderNode();
+    $test = new OrderNode;
     $test->field($expression);
     $test->direction(' desc ');
     expect($test->field()->getName())->toBe('str_id');
     expect($test->direction())->toBe('desc');
 });
 
-test('toString() works', function()
-{
+test('toString() works', function () {
     $expression = \Mockery::mock(IdentifierNode::class);
     $expression->shouldReceive('toString')->once()->andReturn('str_id');
-    $test = new OrderNode();
+    $test = new OrderNode;
     $test->field($expression);
     expect($test->toString())->toBe('str_id ASC');
 });
 
-test('validate() works and passes', function()
-{
+test('validate() works and passes', function () {
     $expression = \Mockery::mock(IdentifierNode::class);
     $expression->shouldReceive('validate')->once();
-    $test = new OrderNode();
+    $test = new OrderNode;
     $test->field($expression);
     $test->validate();
 });
 
-test('validate() fails when field is something different', function()
-{
+test('validate() fails when field is something different', function () {
     $expression = \Mockery::mock(IntegerNode::class);
     $expression->shouldReceive('validate')->once();
-    $test = new OrderNode();
+    $test = new OrderNode;
     $test->field($expression);
     $test->validate();
 })->throws(InvalidOrderException::class);
 
-test('validate() handles direction correctly', function($direction, $pass)
-{
+test('validate() handles direction correctly', function ($direction, $pass) {
     $expression = \Mockery::mock(IdentifierNode::class);
     $expression->shouldReceive('validate')->once();
-    $test = new OrderNode();
+    $test = new OrderNode;
     $test->field($expression);
     $test->direction($direction);
     $result = true;
@@ -96,5 +89,5 @@ test('validate() handles direction correctly', function($direction, $pass)
     ['Asc', true],
     ['ASC', true],
     ['desc', true],
-    ['random', false]
+    ['random', false],
 ]);

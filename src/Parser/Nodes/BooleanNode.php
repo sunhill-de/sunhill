@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file BooleanNode.php
  * A node that represents a boolean constant
@@ -14,20 +15,18 @@ namespace Sunhill\Parser\Nodes;
 
 class BooleanNode extends TerminalNode
 {
-        
     public function __construct(bool $value)
-    {        
-        parent::__construct('boolean',$value);
+    {
+        parent::__construct('boolean', $value);
     }
 
     public function getDatatype(): ?string
     {
         return 'boolean';
     }
-    
+
     public function toString(): string
     {
-        return $this->getValue()?'true':'false';        
+        return $this->getValue() ? 'true' : 'false';
     }
-    
 }

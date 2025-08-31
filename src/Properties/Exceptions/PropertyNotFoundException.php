@@ -16,8 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when a property of a record property is called that
  * doesn't exist.
+ *
  * @author lokal
  */
-class PropertyNotFoundException extends PropertyException 
-{
-}
+class PropertyNotFoundException extends PropertyException {}

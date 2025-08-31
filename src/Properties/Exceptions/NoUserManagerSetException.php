@@ -15,9 +15,8 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * This storage is thrown when a property requires a capability but no user manager
- * was set 
+ * was set
+ *
  * @author lokal
  */
-class NoUserManagerSetException extends PropertyException 
-{
-}
+class NoUserManagerSetException extends PropertyException {}

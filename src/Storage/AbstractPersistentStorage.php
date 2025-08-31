@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @file AbstractPersistentStorage.php
  * A common ancestor for PersistentStorage and PesistantPoolStorage. The main difference between
  * these two is:
  * - PersistentStorage is a single property that is accessed via this storage (like a single file ebntry)
  * - PersistentPoolStorage is a pool of properties identified by any kind of id
- * 
+ *
  * @author Klaus Dimde
  * Lang en
  * Reviewstatus: 2024-10-12
@@ -18,110 +19,106 @@
 
 namespace Sunhill\Storage;
 
-use Sunhill\Storage\Exceptions\InvalidIDException;
-use Sunhill\Storage\Exceptions\StorageAlreadyLoadedException;
-use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
-use Sunhill\Storage\Exceptions\StructureNeededException;
 use League\CommonMark\Extension\CommonMark\Node\Block\ThematicBreak;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 
 abstract class AbstractPersistentStorage extends CommonStorage
 {
-    
     protected $shadow = [];
-    
+
     /**
      * Returns if the storage itself or an entry is dirty
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Storage\AbstractStorage::isDirty()
      */
     public function isDirty(string $name = ''): bool
-    {        
+    {
         if (empty($name)) {
-            return !empty($this->shadow); // The storage is dirty when there is any entry in shadow
+            return ! empty($this->shadow); // The storage is dirty when there is any entry in shadow
         }
-        if (!array_key_exists($name, $this->values)) { // Is this field known?
+        if (! array_key_exists($name, $this->values)) { // Is this field known?
             throw new FieldNotAvaiableException("The field '$name' is not defined.");
         }
+
         return isset($this->shadow[$name]);
     }
-    
+
     /**
      * Checks if the is a need of a shadow entry
-     * @param string $name
      */
     private function checkShadow(string $name)
     {
-        if (!isset($this->values[$name])) {
-            $this->shadow[$name] = new IsDirty();
+        if (! isset($this->values[$name])) {
+            $this->shadow[$name] = new IsDirty;
         }
         if (isset($this->shadow[$name])) {
             return; // Already in shadow, ignore it
         }
         $this->shadow[$name] = $this->values[$name];
     }
-    
+
     private function arrayValueDifferent(string $name, $index, $new_value): bool
     {
-        if (is_null($index) || !isset($this->values[$name][$index])) {
+        if (is_null($index) || ! isset($this->values[$name][$index])) {
             return true; // Appending is always different
         }
+
         return $this->values[$name][$index] !== $new_value;
     }
-    
+
     /**
      * Returns if there even is a difference bewtween new and old value
-     * 
-     * @param string $name
-     * @param unknown $new_value
-     * @return bool
+     *
+     * @param  unknown  $new_value
      */
     private function valueDifferent(string $name, $new_value): bool
     {
-        if (!isset($this->values[$name])) {
+        if (! isset($this->values[$name])) {
             return true; // When unknown field always assume different
         }
-        return ($new_value !== $this->values[$name]);    
+
+        return $new_value !== $this->values[$name];
     }
-    
+
     /**
      * This method is called when a read or write attemt on an unloaded storage takes place
      */
     abstract protected function handleUnloaded();
-    
+
     protected function checkAccess()
     {
-        if (!$this->isLoaded()) {
+        if (! $this->isLoaded()) {
             $this->handleUnloaded();
         }
     }
-    
+
     /**
      * Performs the setting of the value
      *
-     * @param string $name
-     * @param unknown $value
+     * @param  unknown  $value
      */
     protected function doSetValue(string $name, $value)
     {
-        if ($this->valueDifferent($name,$value)) {
+        if ($this->valueDifferent($name, $value)) {
             $this->checkShadow($name);
             $this->values[$name] = $value;
         }
     }
-    
+
     protected function doSetIndexedValue(string $name, $index, $value)
     {
         if ($this->arrayValueDifferent($name, $index, $value)) {
             $this->checkShadow($name);
-            if (is_null($index)) {         
+            if (is_null($index)) {
                 $this->values[$name][] = $value;
             } else {
                 $this->values[$name][$index] = $value;
             }
         }
     }
- 
+
     protected function doUnsetIndexedValue(string $name, $index)
     {
         $this->checkShadow($name);
@@ -130,85 +127,85 @@ abstract class AbstractPersistentStorage extends CommonStorage
             $this->values[$name] = array_values($this->values[$name]);
         }
     }
-    
+
     public function clearArray(string $name)
     {
         $this->checkShadow($name);
         $this->values[$name] = [];
     }
-    
+
     /**
      * Returns the values that where modified in an already loaded storage
-     * 
-     * @return array
      */
     protected function getModifiedValues(): array
     {
-       $result = [];
-       foreach ($this->shadow as $key => $value) {
-           $entry = new \stdClass();
-           if (!is_a($value,IsDirty::class)) {
-               $entry->old = $value;
-           } else {
-               $entry->old = null;
-           }
-           $entry->new = $this->values[$key];
-           $result[$key] = $entry;
-       }
-       return $result;
+        $result = [];
+        foreach ($this->shadow as $key => $value) {
+            $entry = new \stdClass;
+            if (! is_a($value, IsDirty::class)) {
+                $entry->old = $value;
+            } else {
+                $entry->old = null;
+            }
+            $entry->new = $this->values[$key];
+            $result[$key] = $entry;
+        }
+
+        return $result;
     }
- 
+
     /**
      * This method has to be overwritten to perform the commit itself
      */
     abstract protected function doCommit();
-    
+
     /**
      * Performs a commit only if something changed
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Storage\AbstractStorage::commit()
      */
     public function commit()
     {
-        if (!$this->isDirty()) { // When not dirty then there is nothing to do
+        if (! $this->isDirty()) { // When not dirty then there is nothing to do
             return;
         }
         $this->doCommit();
         $this->shadow = [];
     }
-    
-    
+
     /**
      * Writes any modified value (except the newly created ones) back to the original value
      * stored in $shadow.
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Storage\AbstractStorage::rollback()
      */
     public function rollback()
     {
         foreach ($this->shadow as $key => $value) {
-            if (!is_a($value,IsDirty::class)) {
+            if (! is_a($value, IsDirty::class)) {
                 $this->values[$key] = $value;
             }
         }
         $this->shadow = [];
     }
-    
+
     /**
      * Due the fact that id could be null we need a way to determine if the storage was
      * already loaded.
      *
-     * @var boolean
+     * @var bool
      */
     protected $loaded = false;
-    
+
     public function isLoaded(): bool
     {
         return $this->loaded;
     }
-    
+
     /**
      * This method should prepare the persistent storage to store
      * values to it (like creating database tables, files, etc.)
@@ -217,7 +214,7 @@ abstract class AbstractPersistentStorage extends CommonStorage
     {
         // Does nothing by default
     }
-    
+
     /**
      * This method should update the persistent storage so that it
      * fits to the current structure (like modifying database tables, files, etc.)
@@ -226,36 +223,35 @@ abstract class AbstractPersistentStorage extends CommonStorage
     {
         // Does nothing by default
     }
-    
+
     /**
      * Checks if the persistent storage medium was alread prepared for storage
-     * @return boolean
      */
     protected function isAlreadyMigrated(): bool
     {
         return true;
     }
-    
+
     /**
      * Checks if the persistent storage medium is on its current state
-     * 
+     *
      * @return false if nothing to do otherwise this method can return any information to refresh ThematicBreak
-     * migration (to avoid getting twice the same information)=
+     *               migration (to avoid getting twice the same information)=
      */
     protected function migrationDirty()
     {
         return false;
     }
-    
+
     public function migrate()
     {
-        if (!$this->isAlreadyMigrated()) {
+        if (! $this->isAlreadyMigrated()) {
             $this->doMigrateNew();
+
             return;
         }
         if (($info = $this->migrationDirty())) {
             $this->doMigrateUpdate($info);
         }
     }
-    
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file StorageAlreadyLoadedException.php
  * Provides the StorageAlreadyLoadedException
@@ -13,8 +14,7 @@ namespace Sunhill\Storage\Exceptions;
 /**
  * This exception is thrown when a load() of a persistent storage was called and the storage
  * was already loaded
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class StorageAlreadyLoadedException extends StorageException {}

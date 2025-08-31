@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, when appendElement() is called with an unknwon inclusion
+ *
  * @author Klaus Dimde
  */
-class InvalidInclusionException extends PropertyException 
-{
-}
+class InvalidInclusionException extends PropertyException {}

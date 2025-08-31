@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file LanguageDescriptorException.php
  * Provides the ParserException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * Basic exception that is raised when an exception is raised in the LanguageDescriptor
- * @author klaus
  *
+ * @author klaus
  */
 class LanguageDescriptorException extends ParsingSubsystemException {}

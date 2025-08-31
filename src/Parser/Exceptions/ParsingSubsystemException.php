@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file ParsingSubsystemException.php
  * Provides the ParsingSubsystemException
@@ -14,7 +15,7 @@ use Sunhill\Exceptions\SunhillException;
 
 /**
  * Basic exception that is raised inside the parsing subsystem
- * @author klaus
  *
+ * @author klaus
  */
 class ParsingSubsystemException extends SunhillException {}

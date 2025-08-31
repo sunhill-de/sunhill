@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file LexerException.php
  * Provides the LexerException
@@ -12,7 +13,7 @@ namespace Sunhill\Parser\Exceptions;
 
 /**
  * An exception that is raised, when the lexer meets a token it can't handle
- * @author klaus
  *
+ * @author klaus
  */
 class InvalidTokenException extends LexerException {}

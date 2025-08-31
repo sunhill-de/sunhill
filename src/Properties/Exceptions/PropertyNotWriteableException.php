@@ -16,8 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when a write attempt is performed on a property that
  * is not writeable
+ *
  * @author lokal
  */
-class PropertyNotWriteableException extends PropertyException 
-{
-}
+class PropertyNotWriteableException extends PropertyException {}

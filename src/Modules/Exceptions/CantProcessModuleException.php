@@ -2,7 +2,4 @@
 
 namespace Sunhill\Modules\Exceptions;
 
-class CantProcessModuleException extends ModuleException
-{
-    
-}
+class CantProcessModuleException extends ModuleException {}

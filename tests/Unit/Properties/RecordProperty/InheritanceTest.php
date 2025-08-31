@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file InheritanceTest.php
  * tests: /src/Properties/RecordProperty.php
@@ -10,20 +11,18 @@ use Sunhill\Tests\TestSupport\Properties\ChildRecordProperty;
 
 uses(SunhillSimpleTestCase::class);
 
-test('inheriteted embedded properties', function()
-{
+test('inheriteted embedded properties', function () {
     ChildRecordProperty::setInclusion('embed');
-    
-    $test = new ChildRecordProperty();
+
+    $test = new ChildRecordProperty;
     expect($test->hasElement('child_int'))->toBe(true);
     expect($test->hasElement('parent_int'))->toBe(true);
 });
 
-test('inhertited embedded structure', function()
-{
+test('inhertited embedded structure', function () {
     ChildRecordProperty::setInclusion('embed');
-    
-    $test = new ChildRecordProperty();
+
+    $test = new ChildRecordProperty;
     $structure = $test->getStructure();
     expect(is_array($structure->elements))->toBe(true);
     expect($structure->elements['parent_int']->name)->toBe('parent_int');
@@ -34,20 +33,18 @@ test('inhertited embedded structure', function()
     expect($structure->elements['child_int']->storage_subid)->toBe('child');
 });
 
-test('inherited included properties', function()
-{
-    ChildRecordProperty::setInclusion('include');    
+test('inherited included properties', function () {
+    ChildRecordProperty::setInclusion('include');
 
-    $test = new ChildRecordProperty();
+    $test = new ChildRecordProperty;
     expect($test->hasElement('child_int'))->toBe(true);
-    expect($test->hasElement('parent_int'))->toBe(true);    
+    expect($test->hasElement('parent_int'))->toBe(true);
 });
 
-test('inhertited included structure', function()
-{
+test('inhertited included structure', function () {
     ChildRecordProperty::setInclusion('include');
-    
-    $test = new ChildRecordProperty();
+
+    $test = new ChildRecordProperty;
     $structure = $test->getStructure();
     expect(is_array($structure->elements))->toBe(true);
     expect($structure->elements['parent_int']->name)->toBe('parent_int');
@@ -57,4 +54,3 @@ test('inhertited included structure', function()
     expect($structure->elements['child_int']->type)->toBe('integer');
     expect($structure->elements['child_int']->storage_subid)->toBe('child');
 });
-

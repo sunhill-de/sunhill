@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file CallbackMissingException.php
  * Provides the CallbackMissingException
@@ -12,8 +13,7 @@ namespace Sunhill\Storage\Exceptions;
 
 /**
  * This exception is thrown when an expected callback is missing
- * 
- * @author klaus
  *
+ * @author klaus
  */
 class CallbackMissingException extends StorageException {}

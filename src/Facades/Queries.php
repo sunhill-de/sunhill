@@ -3,6 +3,7 @@
 /**
  * @file Query.php
  * A facade to the QueryManager
+ *
  * @author Klaus Dimde
  * ---------------------------------------------------------------------------------------------------------
  * Lang en
@@ -10,9 +11,6 @@
  * Create date: 2025-04-01
  * Localization: none
  * Documentation: complete
- * @subpackage query
- * Tests: none
- * Coverage Unit: unknown
  */
 
 namespace Sunhill\Facades;

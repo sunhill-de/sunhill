@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @file TagNameAmbiguousException.php
  * Provides the TagNameAmbiguousException
@@ -17,9 +16,7 @@ namespace Sunhill\Tags\Exceptions;
 
 /**
  * is raised when the name was not not unique
- * @author lokal
  *
+ * @author lokal
  */
-class TagNameAmbiguousException extends TagException
-{
-}
+class TagNameAmbiguousException extends TagException {}

@@ -15,8 +15,7 @@ namespace Sunhill\Properties\Exceptions;
 
 /**
  * An exception that is raised, if a invalid array index was used in a ArrayProperty
+ *
  * @author lokal
  */
-class InvalidIndexException extends PropertyException 
-{
-}
+class InvalidIndexException extends PropertyException {}

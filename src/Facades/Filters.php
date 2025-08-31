@@ -1,4 +1,5 @@
 <?php
+
 namespace Sunhill\Facades;
 
 use Illuminate\Support\Facades\Facade;

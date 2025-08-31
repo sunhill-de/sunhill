@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file NoResultException.php
  * Provides the NoResultException

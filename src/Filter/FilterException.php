@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file FilterException.php
  * An exception that is raised inside a filter
@@ -12,7 +13,4 @@ namespace Sunhill\Filter;
 
 use Sunhill\Exceptions\SunhillException;
 
-class FilterException extends SunhillException
-{
-    
-}
+class FilterException extends SunhillException {}

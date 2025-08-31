@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @file TagException.php
  * Provides the basic exception for tags
@@ -18,9 +17,7 @@ use Sunhill\Exceptions\SunhillException;
 
 /**
  * a basic exception class that deal with tags
- * @author lokal
  *
+ * @author lokal
  */
-class TagException extends SunhillException
-{
-}
+class TagException extends SunhillException {}

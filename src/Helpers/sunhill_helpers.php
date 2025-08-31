@@ -1,10 +1,11 @@
 <?php
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\SQLiteConnection;
+
 use Illuminate\Database\MySqlConnection;
-use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
+use Illuminate\Database\SQLiteConnection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Sunhill\Helpers\DiffCreator;
+use Sunhill\Storage\Exceptions\FieldNotAvaiableException;
 
 /**
  * @file sunhill_helpers.php
@@ -19,50 +20,41 @@ use Sunhill\Helpers\DiffCreator;
  * Documentation: all public
  * Wiki: /Little_helper
  * Tests: Unit/Helpers/DatabaseUtilsTest.php, DiffCreatorTest.php, HelpersTest.php
- * Coverage Unit: 
+ * Coverage Unit:
  * PSR-State: complete
  */
 
 /**
  * Creates a stdClass out of an associated array.
- * 
- * @param array $values
- * @return \StdClass
- * 
+ *
+ *
  * @wiki: /Little_helper#makeStdClass()
  */
 function makeStdclass(array $values): \StdClass
 {
-    $expected = new \stdClass();
-    foreach ($values as $field=>$info) {
+    $expected = new \stdClass;
+    foreach ($values as $field => $info) {
         if (is_array($info)) {
             $expected->$field = makeStdClass($info);
         } else {
             $expected->$field = $info;
         }
     }
+
     return $expected;
 }
 
 /**
  * Returns an message depending on $variable is a scalar. If it is a scalar, the message part :variable is replaced by it otherwise
  * it is replaces by replace (by default an empty string)
- * 
- * @param string $message
- * @param mixed $variable
- * @param string $replace
- * @return string
  */
-function getScalarMessage(string $message, mixed $variable,string $replace = ""): string
+function getScalarMessage(string $message, mixed $variable, string $replace = ''): string
 {
-    return str_replace(':variable',(is_scalar($variable))?"'$variable'":$replace,$message);
+    return str_replace(':variable', (is_scalar($variable)) ? "'$variable'" : $replace, $message);
 }
 
 /**
  * Returns true if the table with the given name exists in the current database
- * 
- * @param string $table_name
- * @return bool
  */
 function DBTableExists(string $table_name): bool
 {
@@ -71,10 +63,6 @@ function DBTableExists(string $table_name): bool
 
 /**
  * Returns true if the table $table_name in the current database provides a column with the name $column_name
- * 
- * @param string $table_name
- * @param string $column_name
- * @return bool
  */
 function DBTableHasColumn(string $table_name, string $column_name): bool
 {
@@ -83,26 +71,20 @@ function DBTableHasColumn(string $table_name, string $column_name): bool
 
 /**
  * Helper that unifies column types
- * 
- * @param string $input
- * @return string
  */
 function DBUnifyType(string $input): string
 {
     $input = strtolower($input);
-    switch ($input) { 
+    switch ($input) {
         case 'varchar':
-            return 'string';           
+            return 'string';
     }
+
     return $input;
 }
 
 /**
  * Returns the column type of the given column of the given table
- * 
- * @param string $table_name
- * @param string $column_name
- * @return string
  */
 function DBTableColumnType(string $table_name, string $column_name): string
 {
@@ -111,45 +93,41 @@ function DBTableColumnType(string $table_name, string $column_name): string
 
 /**
  * Returns additional parameters of the column
- * 
- * @param string $table_name
- * @param string $column_name
- * @return \stdClass
  */
 function DBTableColumnAdditional(string $table_name, string $column_name): \stdClass
 {
-    $result = new \stdClass();
+    $result = new \stdClass;
 
     if (DB::connection() instanceof SQLiteConnection) {
         $query = DB::select("PRAGMA table_info($table_name)");
         $i = 0;
-        while (($i < count($query)) && ($query[$i]->name !== $column_name)) { $i++; }
+        while (($i < count($query)) && ($query[$i]->name !== $column_name)) {
+            $i++;
+        }
         if ($i == count($query)) {
             throw new FieldNotAvaiableException("The column $column_name does not exist in this table");
         }
         $result->name = $column_name;
         $result->type = DBUnifyType($query[$i]->type);
-        $result->nullable = !$query[$i]->notnull;
+        $result->nullable = ! $query[$i]->notnull;
         $result->default = $query[$i]->dflt_value;
-    } else if (DB::connection() instanceof MySqlConnection) {
+    } elseif (DB::connection() instanceof MySqlConnection) {
         $query = DB::select('show full columns from $table_name where Field = "$column_name"');
-        
+
     }
-    
+
     return $result;
 }
 
 /**
  * Creates a diff of the two arrays
- * 
- * @param unknown $given
- * @param unknown $new
- * @param bool $accept_given_asterik
- * @param bool $accept_new_asterik
- * @return \stdClass
+ *
+ * @param  unknown  $given
+ * @param  unknown  $new
  */
 function get_diff($given, $new, bool $accept_given_asterik = false, bool $accept_new_asterik = false): \stdClass
 {
-    $result = new DiffCreator();
+    $result = new DiffCreator;
+
     return $result->getDiff($given, $new, $accept_given_asterik, $accept_new_asterik);
 }

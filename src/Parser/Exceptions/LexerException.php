@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file LexerException.php
  * Provides the LexerException
@@ -10,11 +11,9 @@
 
 namespace Sunhill\Parser\Exceptions;
 
-use Sunhill\Exceptions\SunhillException;
-
 /**
  * Basic exception that is raised inside a lexer
- * @author klaus
  *
+ * @author klaus
  */
 class LexerException extends ParsingSubsystemException {}

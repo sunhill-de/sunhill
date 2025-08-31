@@ -17,8 +17,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * an exception that is raised when a function expects an property but something else
  * was passed
+ *
  * @author lokal
  */
-class NotAPropertyException extends PropertyException 
-{
-}
+class NotAPropertyException extends PropertyException {}

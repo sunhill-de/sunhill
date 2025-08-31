@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file IdentifierNode.php
  * A node that represents an identifier
@@ -8,22 +9,21 @@
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/NodeTest.php
- * Coverage Unit: 
+ * Coverage Unit:
  */
 
 namespace Sunhill\Parser\Nodes;
 
-use Sunhill\Parser\Traits\UnknownDatatype;
 use Sunhill\Parser\Exceptions\IdentifierNotFoundException;
+use Sunhill\Parser\Traits\UnknownDatatype;
 
 class IdentifierNode extends TerminalNode
 {
-
     use UnknownDatatype;
-    
+
     public function __construct($value)
     {
-        parent::__construct('identifier',$value);
+        parent::__construct('identifier', $value);
     }
 
     /**
@@ -33,22 +33,24 @@ class IdentifierNode extends TerminalNode
     {
         return $this->getValue();
     }
-    
+
     /**
      * Just return the name of the identifier
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Parser\Nodes\Node::toString()
      */
     public function toString(): string
     {
         return $this->getName();
     }
-    
+
     /**
      * A identifier is valid if it exists. This function does not check if the value fits to the type
-     * 
+     *
      * {@inheritDoc}
+     *
      * @see \Sunhill\Parser\Nodes\Node::validate()
      */
     public function validate()
@@ -57,5 +59,4 @@ class IdentifierNode extends TerminalNode
             throw new IdentifierNotFoundException("The identifier '".$this->getName()."' was not found.");
         }
     }
-    
 }

@@ -7,7 +7,7 @@
  * Reviewstatus: 2024-02-28
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 87.5 % (2025-06-06)
  */
 
@@ -15,28 +15,26 @@ namespace Sunhill\Types;
 
 class TypeFloat extends TypeNumeric
 {
-   
     /**
      * Tells getHumanValue how many digits after the comma should be diaplayed
-     * 
-     * @var integer
+     *
+     * @var int
      */
     protected $precision = 2;
-    
+
     public function setPrecision(int $digits)
     {
-       $this->precision = $digits; 
+        $this->precision = $digits;
     }
-    
+
     /**
-     * Getter for precision 
-     * @return int
+     * Getter for precision
      */
     public function getPrecision(): int
     {
-        return $this->precision;    
+        return $this->precision;
     }
-    
+
     protected function isNumericType($input): bool
     {
         return is_numeric($input);
@@ -46,12 +44,12 @@ class TypeFloat extends TypeNumeric
     {
         return 'float';
     }
-    
+
     protected function formatForHuman($input)
     {
         return parent::formatForHuman(round($input, $this->precision));
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -62,5 +60,4 @@ class TypeFloat extends TypeNumeric
         static::addInfo('description', 'The basic type float.', true);
         static::addInfo('type', 'basic');
     }
-    
 }

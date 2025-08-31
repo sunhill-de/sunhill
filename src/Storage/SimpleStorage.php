@@ -1,7 +1,9 @@
 <?php
+
 /**
  * @file SimpleStorage.php
  * A very simple storage that stores the values in an array
+ *
  * @author Klaus Dimde
  * Lang en
  * Reviewstatus: 2024-02-11
@@ -16,13 +18,10 @@ namespace Sunhill\Storage;
 
 abstract class SimpleStorage extends CommonStorage
 {
-    
     abstract protected function readValues(): array;
-        
+
     /**
      * Prepares the retrievement of the value
-     * 
-     * @param string $name
      */
     protected function prepareGetValue(string $name)
     {
@@ -33,33 +32,31 @@ abstract class SimpleStorage extends CommonStorage
 
     protected function doClearArray($name)
     {
-        // Should not be called    
+        // Should not be called
     }
-    
+
     /**
      * Performs the setting of the value
-     * 
-     * @param string $name
-     * @param unknown $value
+     *
+     * @param  unknown  $value
      */
     protected function doSetValue(string $name, $value)
     {
         // Should not be called
     }
-    
+
     protected function doSetIndexedValue(string $name, $index, $value)
     {
         // Should not be called
     }
-    
+
     protected function doUnsetIndexedValue(string $name, $index)
     {
-        // Should not be called        
+        // Should not be called
     }
-    
+
     protected function doGetIsInitialized(string $name): bool
     {
         return true;
     }
-    
 }

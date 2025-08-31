@@ -3,6 +3,7 @@
 /**
  * @file PropertiesManagerException.php
  * Defines the basic class for exceptions that are raised inside the properties manager facade
+ *
  * @author Klaus Dimde
  * ---------------------------------------------------------------------------------------------------------
  * Lang en
@@ -12,6 +13,7 @@
  * Tests: none
  * Coverage Unit: none
  */
+
 namespace Sunhill\Managers\Exceptions;
 
 class PropertiesManagerException extends ManagerException {}

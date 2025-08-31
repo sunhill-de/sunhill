@@ -16,8 +16,7 @@ namespace Sunhill\Properties\Exceptions;
 /**
  * An exception that is raised, when a Modify attemped is performed and the user is
  * not authorized to do so.
+ *
  * @author lokal
  */
-class UserNotAuthorizedForModifyingException extends PropertyException 
-{
-}
+class UserNotAuthorizedForModifyingException extends PropertyException {}

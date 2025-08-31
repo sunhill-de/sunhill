@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file FloatNode.php
  * A node that represents an float constant
@@ -14,20 +15,18 @@ namespace Sunhill\Parser\Nodes;
 
 class FloatNode extends TerminalNode
 {
-        
     public function __construct($value)
     {
-        parent::__construct('float',$value);
+        parent::__construct('float', $value);
     }
 
     public function getDatatype(): ?string
     {
         return 'float';
     }
-  
+
     public function toString(): string
     {
         return $this->getValue();
     }
-    
 }

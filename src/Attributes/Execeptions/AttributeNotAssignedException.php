@@ -2,7 +2,4 @@
 
 namespace Sunhill\Attributes\Exceptions;
 
-class AttributeNotAssignedException extends AttributeException
-{
-    
-}
+class AttributeNotAssignedException extends AttributeException {}

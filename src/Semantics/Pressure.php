@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file Pressure.php
  * Defines a float that represents the pressure of something
@@ -6,7 +7,7 @@
  * Reviewstatus: 2024-10-09
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 50 % (2025-06-06)
  */
 
@@ -16,37 +17,30 @@ use Sunhill\Types\TypeFloat;
 
 class Pressure extends TypeFloat
 {
-    
     /**
      * Returns the unique id string for the semantic of this property
-     *
-     * @return string
      */
     public static function getSemantic(): string
     {
         return 'pressure';
     }
-    
+
     /**
      * Returns some keywords to the current semantic
-     *
-     * @return array
      */
     public static function getSemanticKeywords(): array
     {
         return ['pressure'];
     }
-   
+
     /**
      * Returns the unique id string for the unit of this property
-     *
-     * @return string
      */
     public static function getUnit(): string
     {
         return 'pascal';
     }
-    
+
     /**
      * This method must be overwritten by the derrived class to define its infos
      * Test: /Unit/Objects/PropertyCollection_infoTest
@@ -57,5 +51,4 @@ class Pressure extends TypeFloat
         static::addInfo('description', 'The pressure of something.', true);
         static::addInfo('type', 'semantic');
     }
-    
 }

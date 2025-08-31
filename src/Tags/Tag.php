@@ -1,7 +1,9 @@
 <?php
+
 /**
  * @file Tag.php
  * A class that represents as tag
+ *
  * @author Klaus Dimde
  * Lang en
  * Reviewstatus: 2024-10-09
@@ -14,28 +16,28 @@
 
 namespace Sunhill\Tags;
 
-use Sunhill\Basic\Base;
 use Illuminate\Support\Facades\DB;
+use Sunhill\Basic\Base;
 use Sunhill\Facades\Properties;
 use Sunhill\Tags\Exceptions\TagIDNotFoundException;
 
 class Tag extends Base
 {
-    
     const TO_LEAFABLE = 0x0001;
-    
+
     protected $tag_id;
-    
+
     protected $options = 0;
-    
+
     protected $parent = null;
-    
+
     protected $name = '';
-    
+
     protected $state = 'normal';
-    
+
     /**
      * Returns the tag-ID
+     *
      * @return number
      */
     public function getID(): int
@@ -46,19 +48,17 @@ class Tag extends Base
             return 0;
         }
     }
-    
+
     /**
      * When a id is given to the constructor that this tag is loaded
-     * 
-     * @param int $id
      */
     public function __construct(?int $id = null)
     {
-        if (!is_null($id)) {
+        if (! is_null($id)) {
             $this->load($id);
         }
     }
-    
+
     public function load(int $id)
     {
         $data = Properties::loadTagData($id);
@@ -72,97 +72,105 @@ class Tag extends Base
             $this->parent = new Tag($data->parent_id);
         }
     }
-    
+
     protected function checkLoadingState()
     {
         if ($this->state == 'preloading') {
-            if (!($query = DB::table('tags')->where('id',$this->getID())->first())) {
+            if (! ($query = DB::table('tags')->where('id', $this->getID())->first())) {
                 throw new ("The ID '".$this->getID()."' was not found");
             }
             $this->name = $query->name;
             $this->options = $query->options;
             if ($query->parent_id) {
-                $this->parent = new Tag();
+                $this->parent = new Tag;
                 $this->parent->load($query->parent_id);
                 $this->state = 'normal';
             }
         }
     }
-    
+
     /**
      * Returns the parent tag or null if there is none
-     * @return Tag|null
      */
     public function getParent(): ?Tag
     {
         $this->checkLoadingState();
+
         return $this->parent;
     }
-    
+
     /**
      * Setzt das Eltern-Tag
-     * @param Tag $parent
+     *
      * @return \Crawler\Tag
      */
     public function setParent(Tag $parent): Tag
     {
         $this->parent = $parent;
+
         return $this;
     }
-    
+
     /**
      * returns the simple name of the tag
-     * @return string
      */
     public function getName(): string
     {
         $this->checkLoadingState();
+
         return $this->name;
     }
-    
+
     /**
      * Sets the simple name of the tag
-     * @param string $name
-     * @return Tag
+     *
+     * @param  string  $name
      */
     public function setName($name): Tag
     {
         $this->name = $name;
+
         return $this;
     }
-    
+
     public function getOptions(): int
     {
         $this->checkLoadingState();
+
         return $this->options;
     }
-    
+
     public function setOptions(int $options): Tag
     {
         $this->options = $options;
+
         return $this;
     }
-    
+
     public function isLeafable(): bool
     {
         $this->checkLoadingState();
+
         return $this->options & Tag::TO_LEAFABLE;
     }
-    
+
     public function setLeafable(): Tag
     {
         $this->options |= Tag::TO_LEAFABLE;
+
         return $this;
     }
-    
+
     public function unsetLeafable(): Tag
     {
-        $this->options &= !Tag::TO_LEAFABLE;
+        $this->options &= ! Tag::TO_LEAFABLE;
+
         return $this;
     }
-    
+
     /**
      * Creates a fully assembled path of this tag and all parent tags
+     *
      * @return string
      */
     public function getFullPath()
@@ -171,7 +179,7 @@ class Tag extends Base
         if (is_null($this->parent)) {
             return $this->getName();
         } else {
-            return $this->parent->getFullPath().".".$this->getName();
+            return $this->parent->getFullPath().'.'.$this->getName();
         }
     }
 }

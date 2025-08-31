@@ -6,7 +6,6 @@ use Sunhill\Parser\Lexer;
 
 class DummyLexer extends Lexer
 {
-    
     public function __construct(string $parse_string = '')
     {
         parent::__construct($parse_string);
@@ -18,8 +17,8 @@ class DummyLexer extends Lexer
         $this->addDefaultTerminal('DATE');
         $this->addDefaultTerminal('IDENTIFIER');
         $this->addDefaultTerminal('STRING');
-        $this->addTerminal('or','||');
-        $this->addTerminal('and','&&');
+        $this->addTerminal('or', '||');
+        $this->addTerminal('and', '&&');
         $this->addTerminal('&&');
         $this->addTerminal('||');
         $this->addTerminal('+');
@@ -28,6 +27,6 @@ class DummyLexer extends Lexer
         $this->addTerminal('*');
         $this->addTerminal('(');
         $this->addTerminal(')');
-        $this->addTerminal('->');        
+        $this->addTerminal('->');
     }
 }

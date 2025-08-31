@@ -7,7 +7,7 @@
  * Reviewstatus: 2024-02-05
  * Localization: complete
  * Documentation: complete
- * Tests: 
+ * Tests:
  * Coverage Unit: 100 % (2025-06-06)
  */
 
@@ -15,23 +15,22 @@ namespace Sunhill\Types;
 
 class TypeDate extends TypeDateTime
 {
-       
     /**
      * The storage stores a datetime as a string in the form 'Y-m-d H:i:s'
      *
-     * @param unknown $input
+     * @param  unknown  $input
      * @return unknown, by dafult just return the value
      */
     protected function formatForStorage($input)
     {
         return $input->format('Y-m-d');
     }
-    
+
     protected function formatForHuman($input)
     {
-        return $input->format('j.n.Y');    
+        return $input->format('j.n.Y');
     }
-    
+
     public static function getAccessType(): string
     {
         return 'date';
@@ -47,5 +46,4 @@ class TypeDate extends TypeDateTime
         static::addInfo('description', 'The basic type date.', true);
         static::addInfo('type', 'basic');
     }
-    
 }

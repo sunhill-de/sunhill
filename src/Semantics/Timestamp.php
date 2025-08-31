@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file Timestamp.php
- * A semantic class for a timestamp 
+ * A semantic class for a timestamp
  * Lang en
  * Reviewstatus: 2024-10-09
  * Localization: complete
@@ -16,21 +17,16 @@ use Sunhill\Types\TypeDateTime;
 
 class Timestamp extends TypeDateTime
 {
-    
     /**
      * Returns the unique id string for the semantic of this property
-     *
-     * @return string
      */
     public static function getSemantic(): string
     {
         return 'timestamp';
     }
-    
+
     /**
      * Returns some keywords to the current semantic
-     *
-     * @return array
      */
     public static function getSemanticKeywords(): array
     {
@@ -47,5 +43,4 @@ class Timestamp extends TypeDateTime
         static::addInfo('description', 'A timestamp.', true);
         static::addInfo('type', 'semantic');
     }
-    
 }
