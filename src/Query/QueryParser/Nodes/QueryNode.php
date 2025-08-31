@@ -363,7 +363,7 @@ class QueryNode extends Node
             return '';
         }
 
-        return ' OFFSET '.$this->offset();
+        return ' OFFSET '.$this->offset()->getValue();
     }
 
     private function limitToString(): string
@@ -372,7 +372,7 @@ class QueryNode extends Node
             return '';
         }
 
-        return ' LIMIT '.$this->limit();
+        return ' LIMIT '.$this->limit()->getValue();
     }
 
     /**
