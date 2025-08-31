@@ -54,7 +54,7 @@ test('Offset signatures', function ($input, $expect) {
         }, '5'],
         'expression' => ['5+3', '(5)+(3)'],
         'integer expression' => ['5', '5'],
-        'string' => ["'5'", '"5"'],
+        'string' => ["'5'", '5'],
     ]);
 
 test('Offset: A node', function () {
@@ -90,7 +90,7 @@ test('Limit signatures', function ($input, $expect) {
         }, '5'],
         'expression' => ['5+3', '(5)+(3)'],
         'integer expression' => ['5', '5'],
-        'string' => ["'5'", '"5"'],
+        'string' => ["'5'", '5'],
     ]);
 
 test('Limit: A node', function () {
