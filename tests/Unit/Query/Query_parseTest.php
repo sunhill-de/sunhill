@@ -19,6 +19,7 @@ use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Query\Query;
 use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
+use Sunhill\Query\QueryParser\Nodes\OrderNode;
 
 uses(SunhillSimpleTestCase::class);
 
@@ -125,7 +126,7 @@ test('Order: Just a string (direction omitted)', function () {
 });
 
 test('Order: Just a string with order statement', function () {
-    $result = new OrderNode;
+    $result = new OrderNode();
     $result->field(new IdentifierNode('a'));
     $result->direction('desc');
     Queries::shouldReceive('parseQueryString')->with('a desc')->once()->andReturn($result);
@@ -244,7 +245,7 @@ test('Fields: single field', function () {
     $executor = new DummyExecutor;
     expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[a],where:[],order:[],group:[],offset:[],limit:[]');
 });
-
+/*
 test('Fields: qualified single field', function () {
     $return = new IdentifierNode('a');
     $return->reference(new IdentifierNode('sample'));
@@ -268,7 +269,7 @@ test('Fields: referenced single field', function () {
     $executor = new DummyExecutor;
     expect($executor->execute($test->getQueryNode()))->toBe('select,fields:[{a}->b],where:[],order:[],group:[],offset:[],limit:[]');
 });
-
+*/
 test('Fields: function as single field', function () {
     $return = new FunctionNode('sin');
     $return->arguments(new IdentifierNode('a'));

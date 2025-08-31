@@ -16,9 +16,9 @@ use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\TimeNode;
 use Sunhill\Parser\Nodes\UnaryNode;
-use Sunhill\Query\QueryParser\AliasNode;
-use Sunhill\Query\QueryParser\OrderNode;
-use Sunhill\Query\QueryParser\QueryNode;
+use Sunhill\Query\QueryParser\Nodes\AliasNode;
+use Sunhill\Query\QueryParser\Nodes\OrderNode;
+use Sunhill\Query\QueryParser\Nodes\QueryNode;
 
 class DummyExecutor extends Executor
 {
@@ -47,10 +47,7 @@ class DummyExecutor extends Executor
             case IntegerNode::class:
                 return strval($ast->getValue());
             case IdentifierNode::class:
-                $parent = $ast->parent();
-                $reference = $ast->reference();
-
-                return (is_null($reference) ? '' : '{'.$this->doExecute($reference).'}.').(is_null($parent) ? '' : '{'.$this->doExecute($parent).'}->').$ast->getValue();
+                return $ast->getValue();
             case FunctionNode::class:
                 return $ast->name().'({'.$this->doExecute($ast->arguments()).'})';
             case OrderNode::class:

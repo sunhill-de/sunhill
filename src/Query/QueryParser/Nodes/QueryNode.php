@@ -20,6 +20,7 @@ namespace Sunhill\Query\QueryParser\Nodes;
 use Sunhill\Parser\Nodes\ArrayNode;
 use Sunhill\Parser\Nodes\Node;
 use Sunhill\Query\Exceptions\InvalidStatementException;
+use Sunhill\Parser\Nodes\IntegerNode;
 
 /**
  * The QueryNode is a collector for all informations that is needed to execute a query
@@ -89,7 +90,7 @@ class QueryNode extends Node
      * @param  int  $node
      * @return int|null
      */
-    public function offset(?int $offset = null)
+    public function offset(?Node $offset = null)
     {
         return $this->handleReplacingChild('offset', $offset);
     }
@@ -101,7 +102,7 @@ class QueryNode extends Node
      * @param  Node  $limit
      * @return \Sunhill\Query\QueryParser\Nodes\QueryNode|null|mixed
      */
-    public function limit(?int $limit = null)
+    public function limit(?Node $limit = null)
     {
         return $this->handleReplacingChild('limit', $limit);
     }
