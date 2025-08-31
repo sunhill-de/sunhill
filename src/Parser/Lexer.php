@@ -513,7 +513,7 @@ function getLogicalLexer(string $parse_string): Lexer
     $result->addTerminal('=', '==');
     $result->addTerminal('and', '&&');
     $result->addTerminal('or', '||');
-    $result->addTerminal('not','!');
+    $result->addTerminal('not', '!');
 
     return $result;
 

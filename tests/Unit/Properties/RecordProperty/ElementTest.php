@@ -225,7 +225,7 @@ test('getStructure returns an array of things', function () {
     $element2 = new NonAbstractProperty;
 
     $container->appendElement($element1, 'test1');
-    $container->appendElement($element2,'test2');
+    $container->appendElement($element2, 'test2');
 
     expect(array_keys($container->getStructure()->elements))->toBe(['test1', 'test2']);
 });

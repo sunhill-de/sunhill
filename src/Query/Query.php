@@ -36,8 +36,8 @@ use Sunhill\Query\Exceptions\QueryNotWriteableException;
 use Sunhill\Query\Exceptions\UnexpectedResultCountException;
 use Sunhill\Query\Exceptions\WrongActionException;
 use Sunhill\Query\Helpers\MethodSignature;
-use Sunhill\Query\QueryParser\Nodes\QueryNode;
 use Sunhill\Query\QueryParser\Nodes\OrderNode;
+use Sunhill\Query\QueryParser\Nodes\QueryNode;
 
 /**
  * The common ancestor for other queries. Defines the interface and some fundamental functions
@@ -167,7 +167,7 @@ class Query extends Base
 
                 return;
             }
-            $new_node = new OrderNode();
+            $new_node = new OrderNode;
             $new_node->field($parsed);
             $new_node->direction('asc');
 
@@ -180,14 +180,14 @@ class Query extends Base
             if (! isset($order->direction)) {
                 $order->direction = 'asc';
             }
-            $new_node = new OrderNode();
+            $new_node = new OrderNode;
             $new_node->field(Queries::parseQueryString($order->field));
             $new_node->direction($order->direction);
 
             $node->order($new_node);
         });
         $this->addMethod('order')->addParameter('string')->addParameter('string')->setAction(function (&$node, $order, $direction) {
-            $new_node = new OrderNode();
+            $new_node = new OrderNode;
             $new_node->field(Queries::parseQueryString($order));
             $direction = strtolower($direction);
             if (($direction !== 'asc') && ($direction !== 'desc')) {

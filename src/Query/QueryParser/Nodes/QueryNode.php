@@ -18,10 +18,10 @@
 namespace Sunhill\Query\QueryParser\Nodes;
 
 use Sunhill\Parser\Nodes\ArrayNode;
-use Sunhill\Parser\Nodes\Node;
-use Sunhill\Query\Exceptions\InvalidStatementException;
 use Sunhill\Parser\Nodes\IntegerNode;
+use Sunhill\Parser\Nodes\Node;
 use Sunhill\Parser\Nodes\StringNode;
+use Sunhill\Query\Exceptions\InvalidStatementException;
 
 /**
  * The QueryNode is a collector for all informations that is needed to execute a query
@@ -95,9 +95,10 @@ class QueryNode extends Node
     {
         if (is_a($offset, StringNode::class)) {
             $offset = new IntegerNode($offset->getValue());
-        } else if (is_int($offset)) {
-            $offset = new IntegerNode($offset);            
+        } elseif (is_int($offset)) {
+            $offset = new IntegerNode($offset);
         }
+
         return $this->handleReplacingChild('offset', $offset);
     }
 
@@ -112,9 +113,10 @@ class QueryNode extends Node
     {
         if (is_a($limit, StringNode::class)) {
             $limit = new IntegerNode($limit->getValue());
-        } else if (is_int($limit)) {
+        } elseif (is_int($limit)) {
             $limit = new IntegerNode($limit);
         }
+
         return $this->handleReplacingChild('limit', $limit);
     }
 

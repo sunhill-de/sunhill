@@ -13,8 +13,7 @@ use Sunhill\Tests\TestSupport\Objects\Dummy;
 
 uses(SunhillLaravelTestCase::class);
 
-test('add an attribute', function ($type, $value, $throw) 
-{
+test('add an attribute', function ($type, $value, $throw) {
     Properties::shouldReceive('getAttributeID')->with('attribute')->andReturn(1);
     Properties::shouldReceive('getAttributeType')->with('attribute')->andReturn($type);
     $q_type = Properties::getAttributeType('attribute');

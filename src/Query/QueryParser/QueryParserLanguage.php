@@ -84,14 +84,14 @@ class QueryParserLanguage extends LanguageDescriptor
             ->addTypes('integer', 'float', 'float')
             ->addTypes('float', 'float', 'float')
             ->addTypes('float', 'integer', 'float');
-/*        $this->addBinaryOperator('->')
-            ->setType('binary')
-            ->setPrecedence(105)
-            ->addTypes('identifier', 'identifier');
-        $this->addBinaryOperator('.')
-            ->setType('binary')
-            ->setPrecedence(110)
-            ->addTypes('identifier', 'identifier'); */
+        /*        $this->addBinaryOperator('->')
+                    ->setType('binary')
+                    ->setPrecedence(105)
+                    ->addTypes('identifier', 'identifier');
+                $this->addBinaryOperator('.')
+                    ->setType('binary')
+                    ->setPrecedence(110)
+                    ->addTypes('identifier', 'identifier'); */
 
         $this->addRule('EXPRESSION', ['EXPRESSION', '+', 'EXPRESSION'])->setASTCallback('twoSideOperator');
         $this->addRule('EXPRESSION', ['EXPRESSION', '-', 'EXPRESSION'])->setASTCallback('twoSideOperator');

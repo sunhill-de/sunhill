@@ -17,9 +17,9 @@ use Sunhill\Parser\Nodes\StringNode;
 use Sunhill\Parser\Nodes\TimeNode;
 use Sunhill\Query\Exceptions\InvalidOrderException;
 use Sunhill\Query\Query;
+use Sunhill\Query\QueryParser\Nodes\OrderNode;
 use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\Unit\Parser\Examples\DummyExecutor;
-use Sunhill\Query\QueryParser\Nodes\OrderNode;
 
 uses(SunhillSimpleTestCase::class);
 
@@ -126,7 +126,7 @@ test('Order: Just a string (direction omitted)', function () {
 });
 
 test('Order: Just a string with order statement', function () {
-    $result = new OrderNode();
+    $result = new OrderNode;
     $result->field(new IdentifierNode('a'));
     $result->direction('desc');
     Queries::shouldReceive('parseQueryString')->with('a desc')->once()->andReturn($result);

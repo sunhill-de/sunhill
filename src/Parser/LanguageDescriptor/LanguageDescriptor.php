@@ -27,7 +27,7 @@ class LanguageDescriptor extends Base
     protected array $default_terminals = [];
 
     protected array $operators = [];
-    
+
     /**
      * The list of unary operators
      */

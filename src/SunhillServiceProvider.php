@@ -286,9 +286,9 @@ class SunhillServiceProvider extends ServiceProvider
                 Check::class,
             ]);
         }
-        $this->loadViewsFrom(__DIR__.'/../resources/views','sunhill');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'sunhill');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang','sunhill');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'sunhill');
         /*        Blade::component('optional_link', OptionalLink::class);
                 Site::setupRoutes(); */
         $this->registerTypes();

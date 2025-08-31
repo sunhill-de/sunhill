@@ -367,12 +367,12 @@ test('Function in sum [sin(4)+3]', function () {
 it('Fails when an unexpected token comes', function () {
     $lexer = \Mockery::mock(Lexer::class);
     $lexer->shouldReceive('getNextToken')->andReturn(
-        (new Token('ident'))->setPosition(0,0)->setValue('sin'),
-        (new Token('('))->setPosition(3,0),
-        (new Token('+'))->setPosition(4,0),
+        (new Token('ident'))->setPosition(0, 0)->setValue('sin'),
+        (new Token('('))->setPosition(3, 0),
+        (new Token('+'))->setPosition(4, 0),
         null
     );
-    $lexer->shouldReceive('previewOperator')->andReturn('(',')',')',')',')',null,null,null,null);
+    $lexer->shouldReceive('previewOperator')->andReturn('(', ')', ')', ')', ')', null, null, null, null);
 
     $test = new DummyParser;
     $test->parse($lexer);
