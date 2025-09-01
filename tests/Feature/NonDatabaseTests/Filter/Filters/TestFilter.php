@@ -1,6 +1,9 @@
 <?php
-
-namespace Sunhill\Tests\Feature\Filter\Filters;
+/**
+ * @file TestFilter.php
+ * Type: Support file for tests
+ */
+namespace Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters;
 
 use Sunhill\Filter\Filter;
 

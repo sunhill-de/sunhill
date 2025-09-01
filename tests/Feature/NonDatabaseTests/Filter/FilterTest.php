@@ -9,14 +9,14 @@
 
 use Sunhill\Facades\Filters;
 use Sunhill\Filter\FilterContainer;
-use Sunhill\Tests\Feature\Filter\Filters\GroupAFilter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_10Filter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_20Filter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_25Filter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_30Filter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_40Filter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_50Filter;
-use Sunhill\Tests\Feature\Filter\Filters\GroupB_60Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupAFilter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_10Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_20Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_25Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_30Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_40Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_50Filter;
+use Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters\GroupB_60Filter;
 use Sunhill\Tests\SunhillLaravelTestCase;
 
 uses(SunhillLaravelTestCase::class);

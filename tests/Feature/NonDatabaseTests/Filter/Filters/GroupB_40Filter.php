@@ -1,6 +1,10 @@
 <?php
+/**
+ * @file GroupB_40Filter.php
+ * Type: Support file for tests
+ */
 
-namespace Sunhill\Tests\Feature\Filter\Filters;
+namespace Sunhill\Tests\Feature\NonDatabaseTests\Filter\Filters;
 
 class GroupB_40Filter extends TestFilter
 {
