@@ -6,7 +6,6 @@
 
 use Sunhill\Parser\Lexer;
 use Sunhill\Tests\TestSupport\Parser\DummyLanguage;
-use Sunhill\Parser\Exceptions\StringNotClosedException;
 use Sunhill\Parser\Exceptions\InputNotParsableException;
 use Sunhill\Parser\Parser;
 use Sunhill\Parser\Token;

@@ -1,6 +1,9 @@
 <?php
-
-namespace Sunhill\Tests\Feature\Parser\Examples;
+/**
+ * @file DummyLanguage.php
+ * Type: Test support file
+ */
+namespace Sunhill\Tests\Feature\NonDatabaseTests\Parser\Examples;
 
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 

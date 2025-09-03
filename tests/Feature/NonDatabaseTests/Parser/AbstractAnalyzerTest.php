@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @file AbstractAnalyzerTest.php
+ * Type: Feature test
+ * Tests: parser subsystem
+ */
 use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Parser\Nodes\IntegerNode;
 use Sunhill\Parser\Nodes\FloatNode;
