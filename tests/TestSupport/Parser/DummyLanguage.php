@@ -3,25 +3,32 @@
 namespace Sunhill\Tests\TestSupport\Parser;
 
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
+use Sunhill\Parser\LanguageDescriptor\TerminalDescriptor;
 
 class DummyLanguage extends LanguageDescriptor
 {
     public function __construct()
     {
-        $this->addDefaultTerminal('INTEGER');
-        $this->addDefaultTerminal('BOOLEAN');
-        $this->addDefaultTerminal('FLOAT');
-        $this->addDefaultTerminal('DATETIME');
-        $this->addDefaultTerminal('TIME');
-        $this->addDefaultTerminal('DATE');
-        $this->addDefaultTerminal('IDENTIFIER');
-        $this->addDefaultTerminal('STRING');
-
-        $this->addTerminal('or', '||');
-        $this->addTerminal('and', '&&');
+        $this->addTerminal(TerminalDescriptor::INTEGER_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::BOOLEAN_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::FLOAT_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::DATETIME_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::TIME_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::DATE_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::IDENTIFIER_TERMINAL);
+        $this->addTerminal(TerminalDescriptor::STRING_TERMINAL);
+        $this->addTerminal('or')->aliasFor('||');
+        $this->addTerminal('and')->aliasFor('&&');
         $this->addTerminal(')');
-        $this->addBracketOperator('(')->setPrecedence(150);
-
+        $this->addTerminal('(');
+        $this->addTerminal('||');
+        $this->addTerminal('&&');
+        $this->addTerminal('+');
+        $this->addTerminal('-');
+        $this->addTerminal('*');
+        $this->addTerminal('/');
+        $this->addTerminal('->');
+/*        
         $this->addBinaryOperator('||')
             ->setType('binary')
             ->setPrecedence(5)
@@ -65,7 +72,7 @@ class DummyLanguage extends LanguageDescriptor
             ->setType('binary')
             ->setPrecedence(55)
             ->addTypes('identifier', 'identifier');
-
+*/
         $this->addRule('EXPRESSION', ['EXPRESSION', '+', 'EXPRESSION'])->setASTCallback('twoSideOperator');
         $this->addRule('EXPRESSION', ['EXPRESSION', '-', 'EXPRESSION'])->setASTCallback('twoSideOperator');
         $this->addRule('EXPRESSION', ['EXPRESSION', '*', 'EXPRESSION'])->setASTCallback('twoSideOperator');
