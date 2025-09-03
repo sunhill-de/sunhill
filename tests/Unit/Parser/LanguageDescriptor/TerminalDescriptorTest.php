@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file TerminalDesciptorTest.php
  * tests: /src/Parser/LanguageDescriptor/TerminalDescriptor.php
@@ -44,3 +43,18 @@ it('fails when setting a wrong ID', function () {
     $test = new TerminalDescriptor(-1);
 })->throws(LanguageDescriptorException::class);
 
+test('aliasFor() works', function()
+{
+    $test = new TerminalDescriptor('&&');
+    expect($test->getReturnTerminal())->toBe('&&');
+    $test->aliasFor('and');
+    expect($test->getReturnTerminal())->toBe('and');
+});
+
+test('set/getCaseSensitive works', function()
+{
+    $test = new TerminalDescriptor('and');
+    expect($test->getCaseSensititve())->toBe(false);
+    $test->setCaseSesitive();
+    expect($test->getCaseSensititve())->toBe(true);    
+});

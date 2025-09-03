@@ -22,177 +22,32 @@ use Sunhill\Parser\ParserRule;
 class LanguageDescriptor extends Base
 {
     /**
-     * The default terminals the lexer for this language should parse
+     * Stores the accepted terminals for the lexer and for the parser (look ahead)
+     * @var array
      */
-    protected array $default_terminals = [];
-
-    protected array $operators = [];
-
+    protected $terminals = [];
+    
     /**
-     * The list of unary operators
+     * Adds a terminal to this language. A terminal is a piece that the lexer returns on request. 
+     * There are some default terminals and some user defined. The default terminals are identified by
+     * an integer, the user defined have to represent the string that should be in the input stream.
+     *  
+     * @param string|int $terminal
+     * @return TerminalDescriptor
      */
-    protected array $unary_operators = [];
-
-    /**
-     * The list of binary operators
-     */
-    protected array $binary_operators = [];
-
-    /**
-     * A list of all other terminals that are not operators
-     */
-    protected array $other_terminals = [];
-
-    /**
-     * The parser rules for this language
-     */
-    protected array $parser_rules = [];
-
-    protected array $accepted_symbols = [];
-
-    /**
-     * Adds a default terminal to the list of default terminals (needed for the lexer)
-     */
-    public function addDefaultTerminal(string $default_terminal): static
+    public function addTerminal(string|int $terminal): TerminalDescriptor
     {
-        $default_terminal = strtoupper($default_terminal);
-        if (! in_array($default_terminal, ['INTEGER', 'BOOLEAN', 'FLOAT', 'DATETIME', 'TIME', 'DATE', 'IDENTIFIER', 'STRING'])) {
-            throw new LanguageDescriptorException("The default terminal '$default_terminal' is unknown.");
-        }
-
-        $this->default_terminals[] = $default_terminal;
-
-        return $this;
+        $terminal = new TerminalDescriptor($terminal);
+        $this->terminals[$terminal->getTerminal()] = $terminal;
+        return $terminal;
     }
-
+    
     /**
-     * Returns the list of default terminals (needed for the lexer)
+     * Returns the list of terminals as an array of TerminalDescriptor objects. 
+     * @return array
      */
-    public function getDefaultTerminals(): array
-    {
-        return $this->default_terminals;
-    }
-
-    /**
-     * Helper function that checks if this kind of operator was already defined. if yes thows exception if not add it
-     */
-    private function addOperator(string $prefix, string $operator): OperatorDescriptor
-    {
-        $descriptor = new OperatorDescriptor($operator);
-        $descriptor->setType($prefix);
-        $varname = $prefix.'_operators';
-        if (isset($this->$varname[$operator])) {
-            throw new LanguageDescriptorException("The $prefix operator '$operator' is already defined.");
-        }
-        $this->$varname[$operator] = $descriptor;
-
-        return $descriptor;
-    }
-
-    /**
-     * Add a new unary operator to the descriptor
-     */
-    public function addUnaryOperator(string $operator): OperatorDescriptor
-    {
-        return $this->addOperator('unary', $operator);
-    }
-
-    /**
-     * Adds a new binary operator to the descriptor
-     */
-    public function addBinaryOperator(string $operator): OperatorDescriptor
-    {
-        return $this->addOperator('binary', $operator);
-    }
-
-    /**
-     * Helper function that Searches for an operator with the given prefix.
-     */
-    private function getOperator(string $prefix, string $operator): ?OperatorDescriptor
-    {
-        $varname = $prefix.'_operators';
-        if (! isset($this->$varname[$operator])) {
-            return null;
-        }
-
-        return $this->$varname[$operator];
-    }
-
-    /**
-     * Searches for the descriptor for a unary operator $operator. If found return it otherwise false
-     */
-    public function getUnaryOperator(string $operator): ?OperatorDescriptor
-    {
-        return $this->getOperator('unary', $operator);
-    }
-
-    /**
-     * Searches for the descriptor for a binary operator $operator. If found return it otherwise false
-     */
-    public function getBinaryOperator(string $operator): ?OperatorDescriptor
-    {
-        return $this->getOperator('binary', $operator);
-    }
-
-    public function addTerminal(string $terminal, ?string $alias_for = null): static
-    {
-        if (is_null($alias_for)) {
-            $this->other_terminals[$terminal] = $terminal;
-        } else {
-            $this->other_terminals[$terminal] = $alias_for;
-        }
-
-        return $this;
-    }
-
     public function getTerminals(): array
     {
-        $result = $this->other_terminals;
-        foreach ($this->operators as $operator => $descriptor) {
-            $result[$operator] = $operator;
-        }
-
-        return $result;
-    }
-
-    public function getOperatorPrecedences(): array
-    {
-        $result = [];
-        foreach ($this->operators as $operator => $descriptor) {
-            $result[$operator] = $descriptor->getPrecedence();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Adds a new rule to the parser
-     *
-     * @param  string  $left_hand  The symbol that the stack could be reduced to
-     * @param  array|string  $right_hand  The necessary top stack elements that have to match
-     */
-    public function addRule(string $left_hand, array|string $right_hand): ParserRule
-    {
-        $rule = new ParserRule($left_hand, $right_hand);
-        $this->parser_rules[] = $rule;
-
-        return $rule;
-    }
-
-    public function getParserRules(): array
-    {
-        return $this->parser_rules;
-    }
-
-    public function addAcceptedSymbol(string $symbol)
-    {
-        $this->accepted_symbols[] = $symbol;
-
-        return $this;
-    }
-
-    public function getAcceptedSymbols(): array
-    {
-        return $this->accepted_symbols;
+        return $this->terminals;
     }
 }

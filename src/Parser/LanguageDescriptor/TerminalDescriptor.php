@@ -34,6 +34,12 @@ class TerminalDescriptor extends Base
     protected string $terminal = '';
 
     /**
+     * The terminal that should be returned when the terminal was found
+     * 
+     * @var unknown
+     */
+    protected string $return_terminal = '';
+    /**
      * The look ahead precedence of this operator
      */
     protected int $la_precedence = 0;
@@ -43,6 +49,13 @@ class TerminalDescriptor extends Base
      */
     protected string $type = 'symbol';
 
+    /**
+     * Should the lexer ignore the case of the input stream
+     * 
+     * @var boolean
+     */
+    protected bool $case_sensitive = false;
+    
     /**
      * Processes a default terminal
      */
@@ -86,6 +99,7 @@ class TerminalDescriptor extends Base
     {
         $this->type = 'symbol';
         $this->terminal = $terminal;
+        $this->return_terminal = $terminal;
     }
 
     /**
@@ -107,6 +121,16 @@ class TerminalDescriptor extends Base
     public function getTerminal(): string
     {
         return $this->terminal;
+    }
+    
+    /**
+     * Returns the return terminal
+     * 
+     * @return string
+     */
+    public function getReturnTerminal(): string
+    {
+        return $this->return_terminal;
     }
     
     /**
@@ -136,4 +160,39 @@ class TerminalDescriptor extends Base
         return $this->la_precedence;
     }
 
+    /**
+     * When this terminal is in fact a alias termonal for another one.
+     * 
+     * @param string $alias
+     * @return static
+     */
+    public function aliasFor(string $alias): static
+    {
+        $this->return_terminal = $alias;
+        
+        return $this;
+    }
+    
+    /**
+     * Sets the information for the lexer if the input stream should be treated case sensitive or not
+     * 
+     * @param bool $sensitive
+     * @return static
+     */
+    public function setCaseSesitive(bool $sensitive = true): static
+    {
+        $this->case_sensitive = $sensitive;
+        
+        return $this;
+    }
+    
+    /**
+     * Rrturns if the lexer should treat the inut stream case sensititve
+     * 
+     * @return bool
+     */
+    public function getCaseSensititve(): bool
+    {
+        return $this->case_sensitive;
+    }
 }
