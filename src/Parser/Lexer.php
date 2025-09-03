@@ -52,6 +52,8 @@ class Lexer extends Base
 
     protected $terminals = [];
 
+    protected $terminal_casesesivities = [];
+    
     /**
      * Indicator, if the lexer was initialized when getting the first token
      */
@@ -61,11 +63,12 @@ class Lexer extends Base
 
     public function loadLanguageDescriptor(LanguageDescriptor $descriptor)
     {
-        foreach ($descriptor->getDefaultTerminals() as $terminal) {
-            $this->addDefaultTerminal($terminal);
-        }
-        foreach ($descriptor->getTerminals() as $terminal => $alias) {
-            $this->addTerminal($terminal, $alias);
+        foreach ($descriptor->getTerminals() as $terminal) {
+            if ($terminal->getType() == 'default') {
+                $this->addDefaultTerminal($terminal->getTerminal());
+            } else {
+                $this->addTerminal($terminal->getTerminal(), $terminal->getReturnTerminal(), $terminal->getCaseSesitive());
+            }
         }
     }
 
@@ -105,12 +108,13 @@ class Lexer extends Base
         return $this;
     }
 
-    public function addTerminal(string $terminal, ?string $alias = null): static
+    public function addTerminal(string $terminal, ?string $alias = null, bool $case_sensitiv = false): static
     {
         if (is_null($alias)) {
             $alias = $terminal;
         }
         $this->terminals[$terminal] = $alias;
+        $this->terminal_casesesivities[$terminal] = $case_sensitiv;
         $this->initialized = false;
 
         return $this;
@@ -226,9 +230,13 @@ class Lexer extends Base
     private function previewSymbol(int $start_position): ?string
     {
         for ($i = $this->longest_terminal; $i > 0; $i--) {
-            $next = strtolower($this->getNextCharactersFrom($start_position, $i));
-            if (array_key_exists($next, $this->terminals)) {
-                return $this->terminals[$next];
+            $next_lc = strtolower($this->getNextCharactersFrom($start_position, $i));
+            $next_norm = $this->getNextCharactersFrom($start_position, $i);
+            if (array_key_exists($next_norm, $this->terminals)) {
+                return $this->terminals[$next_norm];
+            }
+            if (array_key_exists($next_lc, $this->terminals) && !$this->terminal_casesesivities[$next_lc]) {
+                return $this->terminals[$next_lc];
             }
         }
 
