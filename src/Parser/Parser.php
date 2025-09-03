@@ -5,6 +5,7 @@
  * The shift-reduce-parser with look ahead
  * Lang en
  * Reviewstatus: 2025-03-11
+ * Create date: 2025-03-11
  * Localization: complete
  * Documentation: complete
  * Tests: Unit/Parser/ParserTest.php
@@ -81,7 +82,7 @@ class Parser extends Base
         $rule_size = count($right_hand_tokens);
 
         if ($rule_size > $stack_size) {
-            return false; // Stack to small, can't fit
+            return false; // Stack too small, can't fit
         }
         for ($i = 0; $i < $rule_size; $i++) {
             if ($right_hand_tokens[$i] !== $this->stack[$stack_size - $rule_size + $i]->getSymbol()) {
