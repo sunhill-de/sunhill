@@ -12,6 +12,7 @@ use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Parser\LanguageDescriptor\TerminalDescriptor;
 use Sunhill\Parser\Exceptions\LanguageDescriptorException;
 use Sunhill\Parser\ParserRule;
+use Sunhill\Parser\LanguageDescriptor\FunctionDescriptor;
 
 uses(SunhillSimpleTestCase::class);
 
@@ -45,4 +46,15 @@ test('addRule()', function ()
     expect(is_a($rule, ParserRule::class))->toBe(true);
     expect($test->getParserRules()[0]->getLeftHand())->toBe('SUM');
 });
+
+// ********************** addFunction() ***************************
+test('addFunction()', function ()
+{
+    $test = new LanguageDescriptor;
+    $rule = $test->addFunction('testfunct');
+    expect(is_a($rule, FunctionDescriptor::class))->toBe(true);
+    expect($test->getFunctions()[0]->getName())->toBe('testfunct');
+});
+
+
                     

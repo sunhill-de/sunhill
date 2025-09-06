@@ -42,6 +42,13 @@ class LanguageDescriptor extends Base
     protected $accepted_finals = [];
     
     /**
+     * The list of defined functions
+     * 
+     * @var array
+     */
+    protected $functions = [];
+    
+    /**
      * Adds a terminal to this language. A terminal is a piece that the lexer returns on request. 
      * There are some default terminals and some user defined. The default terminals are identified by
      * an integer, the user defined have to represent the string that should be in the input stream.
@@ -112,5 +119,29 @@ class LanguageDescriptor extends Base
     public function getAcceptedFinals(): array
     {
         return $this->accepted_finals;
+    }
+    
+    /**
+     * Adds an function
+     * 
+     * @param string $name
+     * @return FunctionDescriptor
+     */
+    public function addFunction(string $name): FunctionDescriptor
+    {
+        $result = new FunctionDescriptor($name);
+        $this->functions[] = $result;
+        
+        return $result;
+    }
+    
+    /**
+     * Returns the list of functions
+     * 
+     * @return array
+     */
+    public function getFunctions(): array
+    {
+        return $this->functions;
     }
 }
