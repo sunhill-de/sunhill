@@ -52,7 +52,7 @@ class LanguageDescriptor extends Base
     public function addTerminal(string|int $terminal): TerminalDescriptor
     {
         $terminal = new TerminalDescriptor($terminal);
-        $this->terminals[$terminal->getTerminal()] = $terminal;
+        $this->terminals[] = $terminal;
         return $terminal;
     }
     

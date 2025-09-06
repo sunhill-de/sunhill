@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file LanguageDesciptorTest.php
  * tests: /src/Parser/LanguageDescriptor/LanguageDescriptor.php
@@ -9,40 +8,28 @@
 use Sunhill\Parser\Exceptions\LanguageDescriptorException;
 use Sunhill\Parser\LanguageDescriptor\LanguageDescriptor;
 use Sunhill\Tests\SunhillSimpleTestCase;
+use Sunhill\Parser\LanguageDescriptor\TerminalDescriptor;
 
 uses(SunhillSimpleTestCase::class);
 
-test('addDefaultTerminal', function () {
-    $test = new LanguageDescriptor;
-    $test->addDefaultTerminal('integer');
-    expect($test->getDefaultTerminals()[0])->toBe('INTEGER');
+test('addAcceptedFinal() with string and getAcceptedFinals()', function()
+{
+    $test = new LanguageDescriptor();
+    $test->addAcceptedFinal('SOMETHING');
+    expect($test->getAcceptedFinals())->toBe(['SOMETHING']);
 });
 
-test('addDefaultTerminal fails', function () {
-    $test = new LanguageDescriptor;
-    $test->addDefaultTerminal('unknown');
-})->throws(LanguageDescriptorException::class);
-
-test('addUnaryperator() and getUnaryOperator()', function () {
-    $test = new LanguageDescriptor;
-    $operator = $test->addUnaryOperator('+');
-    expect($test->getUnaryOperator('+'))->toBe($operator);
+test('addAcceptedFinal() with array and getAcceptedFinals()', function()
+{
+    $test = new LanguageDescriptor();
+    $test->addAcceptedFinal(['SOMETHING','ELSE']);
+    expect($test->getAcceptedFinals())->toBe(['SOMETHING','ELSE']);
 });
 
-test('getUnaryOperator() with unknown operator', function () {
-    $test = new LanguageDescriptor;
-    $test->addUnaryOperator('+');
-    expect($test->getUnaryOperator('-'))->toBe(null);
-});
-
-test('addBinaryOperator() and getBinaryOperator()', function () {
-    $test = new LanguageDescriptor;
-    $operator = $test->addBinaryOperator('+');
-    expect($test->getBinaryOperator('+'))->toBe($operator);
-});
-
-test('getBinaryOperator() with unknown operator', function () {
-    $test = new LanguageDescriptor;
-    $test->addBinaryOperator('+');
-    expect($test->getBinaryOperator('-'))->toBe(null);
+test('addAcceptedFinal() with array and merge and getAcceptedFinals()', function()
+{
+    $test = new LanguageDescriptor();
+    $test->addAcceptedFinal(['SOMETHING','ELSE']);
+    $test->addAcceptedFinal(['SOME','MORE']);
+    expect($test->getAcceptedFinals())->toBe(['SOMETHING','ELSE','SOME','MORE']);
 });
