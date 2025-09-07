@@ -75,7 +75,7 @@ class DummyLanguage extends LanguageDescriptor
         $this->addRule('PRODUCT', ['FACTOR'])
             ->setASTCallback('passThrough')
             ->setPriority(20);
-        $this->addRule('FACTOR',['-','UNARYMINUS'])
+        $this->addRule('FACTOR',['-','FACTOR'])
             ->setASTCallback('oneSideOperator')
             ->setPriority(30)
             ->setTypes([
@@ -115,71 +115,8 @@ class DummyLanguage extends LanguageDescriptor
 
         $this->addFunction('sin')
              ->setReturnType('float')
-             ->setArguments([])
+             ->setArguments([]);
         $this->addAcceptedSymbol('EXPRESSION');
-        /*        
-        $this->addBinaryOperator('||')
-            ->setType('binary')
-            ->setPrecedence(5)
-            ->addTypes('boolean', 'boolean', 'boolean')
-            ->addTypes('boolean', 'pseudoboolean', 'boolean')
-            ->addTypes('pseudoboolean', 'boolean', 'boolean')
-            ->addTypes('pseudoboolean', 'pseudoboolean', 'boolean');
-        $this->addBinaryOperator('&&')
-            ->setType('binary')
-            ->setPrecedence(15)
-            ->addTypes('boolean', 'boolean', 'boolean')
-            ->addTypes('pseudoboolean', 'boolean', 'boolean')
-            ->addTypes('pseudoboolean', 'pseudoboolean', 'boolean');
-        $this->addBinaryOperator('+')
-            ->setType('binary')
-            ->setPrecedence(35)
-            ->addTypes('integer', 'integer', 'integer')
-            ->addTypes('integer', 'float', 'float')
-            ->addTypes('float', 'float', 'float')
-            ->addTypes('float', 'integer', 'float')
-            ->addTypes('string', 'string', 'string');
-        $this->addBinaryOperator('-')
-            ->setType('binary')
-            ->setPrecedence(35)
-            ->addTypes('integer', 'integer', 'integer')
-            ->addTypes('integer', 'float', 'float')
-            ->addTypes('float', 'float', 'float')
-            ->addTypes('float', 'integer', 'float');
-        $this->addBinaryOperator('/')
-            ->setType('binary')
-            ->setPrecedence(40)
-            ->addTypes('integer', 'float', 'float');
-        $this->addBinaryOperator('*')
-            ->setType('binary')
-            ->setPrecedence(40)
-            ->addTypes('integer', 'integer', 'integer')
-            ->addTypes('integer', 'float', 'float')
-            ->addTypes('float', 'float', 'float')
-            ->addTypes('float', 'integer', 'float');
-        $this->addBinaryOperator('->')
-            ->setType('binary')
-            ->setPrecedence(55)
-            ->addTypes('identifier', 'identifier');
-*/
-        $this->addRule('EXPRESSION', ['EXPRESSION', '+', 'EXPRESSION'])->setASTCallback('twoSideOperator');
-        $this->addRule('EXPRESSION', ['EXPRESSION', '-', 'EXPRESSION'])->setASTCallback('twoSideOperator');
-        $this->addRule('EXPRESSION', ['EXPRESSION', '*', 'EXPRESSION'])->setASTCallback('twoSideOperator');
-        $this->addRule('EXPRESSION', ['EXPRESSION', '/', 'EXPRESSION'])->setASTCallback('twoSideOperator');
-        $this->addRule('EXPRESSION', 'UNARYMINUS')->setPriority(50);
-        $this->addRule('UNARYMINUS', ['-', 'FACTOR'])->setPriority(50)->setASTCallback('unaryOperator');
-        $this->addRule('UNARYMINUS', 'FACTOR')->setPriority(50);
-        $this->addRule('FACTOR', ['(', 'EXPRESSION', ')'])->setPriority(100)->setASTCallback('bracket');
-        $this->addRule('FACTOR', 'CONST')->setPriority(100);
-        $this->addRule('FACTOR', 'ident')->setPriority(100);
-        $this->addRule('FACTOR', 'FUNCTION')->setPriority(100);
-        $this->addRule('FUNCTION', ['ident', 'EXPRESSION'])->setPriority(100)->setASTCallback('functionHandler');
-        $this->addRule('FUNCTION', ['ident', '(', ')'])->setPriority(100)->setASTCallback('functionHandler');
-        $this->addRule('CONST', 'integer')->setPriority(100);
-        $this->addRule('CONST', 'float')->setPriority(100);
-        $this->addRule('CONST', 'string')->setPriority(100);
-        $this->addRule('CONST', 'boolean')->setPriority(100);
-
         $this->addAcceptedSymbol('EXPRESSION');
     }
 }
