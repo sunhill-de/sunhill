@@ -17,8 +17,8 @@ class DummyLexer extends Lexer
         $this->addDefaultTerminal('DATE');
         $this->addDefaultTerminal('IDENTIFIER');
         $this->addDefaultTerminal('STRING');
-        $this->addTerminal('or', '||');
-        $this->addTerminal('and', '&&');
+        $this->addTerminal('or', '||', false);
+        $this->addTerminal('and', '&&', true);
         $this->addTerminal('&&');
         $this->addTerminal('||');
         $this->addTerminal('+');

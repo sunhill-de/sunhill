@@ -32,12 +32,12 @@ class Token extends Base
     /**
      * Constructor. Takes the symbol (because every token needs at least a symbol)
      */
-    public function __construct(string $symbol)
+    public function __construct(mixed $symbol)
     {
         $this->symbol = $symbol;
     }
 
-    public function getSymbol(): string
+    public function getSymbol(): mixed
     {
         return $this->symbol;
     }

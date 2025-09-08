@@ -9,6 +9,7 @@
 use Sunhill\Parser\Exceptions\StringNotClosedException;
 use Sunhill\Tests\SunhillSimpleTestCase;
 use Sunhill\Tests\Unit\Parser\Examples\DummyLexer;
+use Sunhill\Parser\Lexer;
 
 uses(SunhillSimpleTestCase::class);
 
@@ -72,6 +73,32 @@ test('Test special chars', function ($input, $token, $position, $next_pos, $valu
     '2025-02-25 02:02:22' => ['2025-02-25 02:02:22 def', 'datetime', 19, 20, '2025-02-25 02:02:22'],
     '02:02:22' => ['02:02:22 def', 'time', 8, 9, '02:02:22'],
 ]);
+
+test('Respects case sensitive', function()
+{
+    $test = new DummyLexer('AND def');
+    expect($test->getNextToken()->getSymbol())->toBe('ident');
+});
+
+test('Respects case insensitive', function()
+{
+    $test = new DummyLexer('OR def');
+    expect($test->getNextToken()->getSymbol())->toBe('||');
+});
+
+test('DefaultToken works with alias', function()
+{
+    $test = new Lexer('123 def');
+    $test->addDefaultTerminal('INTEGER',10);
+    expect($test->getNextToken()->getSymbol())->toBe(10);
+});
+
+test('Token works with alias', function()
+{
+    $test = new Lexer('&& def');
+    $test->addTerminal('&&',10);
+    expect($test->getNextToken()->getSymbol())->toBe(10);
+});
 
 test('Test move pointer and skip multiple whitespaces', function () {
     $test = new DummyLexer('abc    def');

@@ -48,7 +48,19 @@ class Lexer extends Base
      */
     protected int $row = 0;
 
+    /**
+     * Which default terminals are defined
+     * 
+     * @var array
+     */
     protected $default_terminals = [];
+    
+    /**
+     * What should be returnd if this terminal was found
+     * 
+     * @var array
+     */
+    protected $default_terminal_returns = [];
 
     protected $terminals = [];
 
@@ -67,39 +79,48 @@ class Lexer extends Base
             if ($terminal->getType() == 'default') {
                 $this->addDefaultTerminal($terminal->getTerminal());
             } else {
-                $this->addTerminal($terminal->getTerminal(), $terminal->getReturnTerminal(), $terminal->getCaseSesitive());
+                $this->addTerminal($terminal->getTerminal(), $terminal->getReturnTerminal(), $terminal->getCaseSensitive());
             }
         }
     }
 
-    public function addDefaultTerminal(string $terminal): static
+    public function addDefaultTerminal(string $terminal, $alias = null): static
     {
         switch (strtolower($terminal)) {
             case 'integer':
             case 'int':
                 $this->default_terminals[] = 'INTEGER';
+                $this->default_terminal_returns['integer']=$alias??'integer';
                 break;
             case 'float':
                 $this->default_terminals[] = 'FLOAT';
+                $this->default_terminal_returns['float']=$alias??'float';
                 break;
             case 'string':
                 $this->default_terminals[] = 'STRING';
+                $this->default_terminal_returns['string']=$alias??'string';
                 break;
             case 'bool':
             case 'boolean':
                 $this->default_terminals[] = 'BOOLEAN';
+                $this->default_terminal_returns['boolean']=$alias??'boolean';
                 break;
             case 'date':
                 $this->default_terminals[] = 'DATE';
+                $this->default_terminal_returns['date']=$alias??'date';
                 break;
             case 'time':
                 $this->default_terminals[] = 'TIME';
+                $this->default_terminal_returns['time']=$alias??'time';
                 break;
             case 'datetime':
                 $this->default_terminals[] = 'DATETIME';
+                $this->default_terminal_returns['datetime']=$alias??'datetime';
                 break;
             case 'identifier':
                 $this->default_terminals[] = 'IDENTIFIER';
+                $this->default_terminal_returns['ident']=$alias??'ident';
+                
                 break;
             default:
                 throw new UnknownDefaultTerminalException("The default terminal '$terminal' is not known");
@@ -108,13 +129,13 @@ class Lexer extends Base
         return $this;
     }
 
-    public function addTerminal(string $terminal, ?string $alias = null, bool $case_sensitiv = false): static
+    public function addTerminal(string $terminal, $alias = null, bool $case_sensitive = false): static
     {
         if (is_null($alias)) {
             $alias = $terminal;
         }
         $this->terminals[$terminal] = $alias;
-        $this->terminal_casesesivities[$terminal] = $case_sensitiv;
+        $this->terminal_casesesivities[$terminal] = $case_sensitive;
         $this->initialized = false;
 
         return $this;
@@ -187,7 +208,7 @@ class Lexer extends Base
         return null;
     }
 
-    private function createToken(string $symbol, int $row, int $column, $value = null, ?string $type_hint = null)
+    private function createToken(mixed $symbol, int $row, int $column, $value = null, ?string $type_hint = null)
     {
         $result = new Token($symbol);
         $result->setPosition($row, $column);
@@ -215,13 +236,20 @@ class Lexer extends Base
     private function getSymbol(): ?Token
     {
         for ($i = $this->longest_terminal; $i > 0; $i--) {
-            $next = strtolower($this->getNextCharacters($i));
-            if (array_key_exists($next, $this->terminals)) {
+            $next_lc = strtolower($this->getNextCharacters($i));
+            $next_norm = $this->getNextCharacters($i);
+            if (array_key_exists($next_norm, $this->terminals)) {
                 $current_position = $this->column;
-                $this->movePointer(strlen($next));
-
-                return $this->createToken($this->terminals[$next], $this->row, $current_position);
+                $this->movePointer(strlen($next_norm));
+                
+                return $this->createToken($this->terminals[$next_norm], $this->row, $current_position);
             }
+            if (array_key_exists($next_lc, $this->terminals) && !$this->terminal_casesesivities[$next_lc]) {
+                $current_position = $this->column;
+                $this->movePointer(strlen($next_lc));
+
+                return $this->createToken($this->terminals[$next_lc], $this->row, $current_position);
+            } 
         }
 
         return null;
@@ -256,7 +284,7 @@ class Lexer extends Base
      *
      * @param  unknown  $value
      */
-    public function consumeToken(string $token_str, string $symbol, $value = null): Token
+    public function consumeToken(string $token_str, $symbol, $value = null): Token
     {
         $current_position = $this->column;
         $this->movePointer(strlen($token_str));
@@ -270,7 +298,7 @@ class Lexer extends Base
     public function getBoolean(): ?Token
     {
         if (strtolower(substr($this->getRemainingParseString(), 0, 4)) == 'true') {
-            return $this->consumeToken('true', 'boolean', true);
+            return $this->consumeToken('true', $this->default_terminal_returns['boolean'], true);
         }
         if (strtolower(substr($this->getRemainingParseString(), 0, 5)) == 'false') {
             return $this->consumeToken('false', 'boolean', false);
@@ -285,7 +313,7 @@ class Lexer extends Base
     public function getFloat(): ?Token
     {
         if (preg_match('/^\d+\.\d+/', $this->getRemainingParseString(), $matches)) {
-            return $this->consumeToken($matches[0], 'float', $matches[0]);
+            return $this->consumeToken($matches[0], $this->default_terminal_returns['float'], $matches[0]);
         }
 
         return null;
@@ -297,7 +325,7 @@ class Lexer extends Base
     public function getInteger(): ?Token
     {
         if (preg_match('/^\d+/', $this->getRemainingParseString(), $matches)) {
-            return $this->consumeToken($matches[0], 'integer', $matches[0]);
+            return $this->consumeToken($matches[0], $this->default_terminal_returns['integer'], $matches[0]);
         }
 
         return null;
@@ -309,7 +337,7 @@ class Lexer extends Base
     public function getDatetime(): ?Token
     {
         if (preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/", $this->getRemainingParseString(), $matches)) {
-            return $this->consumeToken($matches[0], 'datetime', $matches[0]);
+            return $this->consumeToken($matches[0], $this->default_terminal_returns['datetime'], $matches[0]);
         }
 
         return null;
@@ -325,7 +353,7 @@ class Lexer extends Base
     public function getDate(): ?Token
     {
         if (preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[01])/", $this->getRemainingParseString(), $matches)) {
-            return $this->consumeToken($matches[0], 'date', $matches[0]);
+            return $this->consumeToken($matches[0], $this->default_terminal_returns['date'], $matches[0]);
         }
 
         return null;
@@ -337,7 +365,7 @@ class Lexer extends Base
     public function getTime(): ?Token
     {
         if (preg_match('/^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/', $this->getRemainingParseString(), $matches)) {
-            return $this->consumeToken($matches[0], 'time', $matches[0]);
+            return $this->consumeToken($matches[0], $this->default_terminal_returns['time'], $matches[0]);
         }
 
         return null;
@@ -377,7 +405,7 @@ class Lexer extends Base
         }
         $this->movePointer(1);
 
-        return $this->createToken('string', $this->row, $current_position, $result);
+        return $this->createToken($this->default_terminal_returns['string'], $this->row, $current_position, $result);
     }
 
     /**
@@ -389,7 +417,7 @@ class Lexer extends Base
             $current_position = $this->column; // Mark the current position
             $this->movePointer(strlen($identifier));
 
-            return $this->createToken('ident', $this->row, $current_position, $identifier);
+            return $this->createToken($this->default_terminal_returns['ident'], $this->row, $current_position, $identifier);
         }
 
         return null;

@@ -115,8 +115,14 @@ class DummyLanguage extends LanguageDescriptor
 
         $this->addFunction('sin')
              ->setReturnType('float')
-             ->setArguments([]);
-        $this->addAcceptedSymbol('EXPRESSION');
-        $this->addAcceptedSymbol('EXPRESSION');
+             ->addMandatoryParameter('numeric');
+        $this->addFunction('random')
+             ->setReturnType('float');
+        $this->addFunction('concat')
+             ->addMandatoryParameter('string')
+             ->addEllipsis('string')
+             ->setReturnType('float');
+             
+        $this->addAcceptedFinal('EXPRESSION');
     }
 }
