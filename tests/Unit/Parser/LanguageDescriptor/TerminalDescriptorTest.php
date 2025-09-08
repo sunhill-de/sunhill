@@ -54,7 +54,7 @@ test('aliasFor() works', function()
 test('set/getCaseSensitive works', function()
 {
     $test = new TerminalDescriptor('and');
-    expect($test->getCaseSensititve())->toBe(false);
-    $test->setCaseSesitive();
-    expect($test->getCaseSensititve())->toBe(true);    
+    expect($test->getCaseSensitive())->toBe(false);
+    $test->setCaseSensitive();
+    expect($test->getCaseSensitive())->toBe(true);    
 });

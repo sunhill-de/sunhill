@@ -179,7 +179,7 @@ class TerminalDescriptor extends Base
      * @param bool $sensitive
      * @return static
      */
-    public function setCaseSesitive(bool $sensitive = true): static
+    public function setCaseSensitive(bool $sensitive = true): static
     {
         $this->case_sensitive = $sensitive;
         
@@ -191,7 +191,7 @@ class TerminalDescriptor extends Base
      * 
      * @return bool
      */
-    public function getCaseSensititve(): bool
+    public function getCaseSensitive(): bool
     {
         return $this->case_sensitive;
     }
