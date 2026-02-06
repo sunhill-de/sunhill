@@ -9,6 +9,17 @@
 
 namespace Sunhill\ORMRespository;
 
+/**
+ * Class ORMRepository
+ *
+ * This class respresents the short time data storage of an orm object. This class deals with thnings like
+ * initialization, dirtyness and default values
+ * 
+ * @package ORM
+ * @author klaus
+ * @since 1.0.0
+ *
+ */
 class ORMRepository
 {
     

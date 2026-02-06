@@ -10,6 +10,8 @@
 namespace Sunhill\ORMField;
 
 /**
+ * Class ORMField
+ * 
  * The basic class of a field. It stores at leat the following information:
  *  - name of the field
  *  - the type of the field
@@ -20,7 +22,9 @@ namespace Sunhill\ORMField;
  *  - neccessary read capabilities
  *  - neccessary write capabilities
  *   
+ * @package ORM
  * @author klaus
+ * @since 1.0.0
  *
  */
 class ORMField

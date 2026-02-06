@@ -10,6 +10,8 @@
 namespace Sunhill\ORMClassDescriptor;
 
 /**
+ * Class ORMClassDescriptor
+ * 
  * This class describes a sunhill orm class. That is in detalil:
  * - description of each field with at least type and name
  * - description of the class like
@@ -17,7 +19,9 @@ namespace Sunhill\ORMClassDescriptor;
  *   - class description
  *   - storage name
  *
+ * @package ORM
  * @author klaus
+ * @since 1.0.0
  */
 class ORMClassDescriptor
 {
