@@ -9,6 +9,9 @@
 
 namespace Sunhill\ORMClassDescriptor;
 
+use Sunhill\ORMField\ORMStringField;
+use Sunhill\ORMField\ORMField;
+
 /**
  * Class ORMClassDescriptor
  * 
@@ -26,15 +29,26 @@ namespace Sunhill\ORMClassDescriptor;
 class ORMClassDescriptor
 {
     
+    protected $fields = [];
+    
     /**
      * Adds a string field to the descriptor with the name $name and returns the field desciptor
      * 
      * @param string $name
      * @return ORMStringField
+     * @since 1.0.0
      */
     public function string(string $name): ORMStringField
     {
+        $field = new ORMStringField($name);
         
+        $this->addField($field);
+        
+        return $field;
     }
     
+    protected function addField(ORMField $field)
+    {
+        
+    }
 }
